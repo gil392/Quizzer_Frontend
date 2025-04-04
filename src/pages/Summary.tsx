@@ -1,5 +1,5 @@
-import React from 'react';
 import { Box, Card, CardContent, Typography, Button } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 interface SummaryPageProps {
     videoTitle: string;
@@ -7,13 +7,19 @@ interface SummaryPageProps {
 }
 
 const SummaryPage: React.FC<SummaryPageProps> = ({ videoTitle, videoSummary }) => {
+    const navigate = useNavigate(); 
+
+    const handleQuizNavigation = () => {
+        navigate('/quiz'); 
+    };
+
     return (
         <Box>
             <Typography variant="h5" component="div" gutterBottom>
                 {videoTitle}
-
             </Typography>
-            <Card sx={{
+            <Card
+                sx={{
                     maxWidth: '1000px',
                     boxShadow: 10,
                     paddingTop: 2,
@@ -32,11 +38,20 @@ const SummaryPage: React.FC<SummaryPageProps> = ({ videoTitle, videoSummary }) =
                     '&::-webkit-scrollbar-track': {
                         backgroundColor: '#f1f1f1',
                     },
-                }}>
-                
-                <CardContent> 
+                }}
+            >
+                <CardContent>
                     {videoSummary}
                 </CardContent>
+                <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleQuizNavigation}
+                    >
+                        Go to Quiz
+                    </Button>
+                </Box>
             </Card>
         </Box>
     );
