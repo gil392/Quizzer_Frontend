@@ -2,6 +2,7 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import './App.css'
 import SummaryPage from './pages/Summary'
 import QuizPage from './pages/Quiz';
+import HomePage from './pages/home/home'
 
 
 function App() {
@@ -40,7 +41,11 @@ function App() {
   return (
     <Router>
             <Routes>
-                <Route path="/" element={<Navigate to="/summary" replace />} />
+                <Route path="/" element={<Navigate to="/home" replace />} />
+                <Route
+                  path="/home"
+                  element={<HomePage />}
+                />
                 <Route path="/summary" element={<SummaryPage videoTitle="Sample Video" videoSummary="Lorem ipsum dolor sit amet consectetur adipisicing elit. Similique, harum reiciendis culpa natus nihil iure tenetur nesciunt, cumque alias repudiandae sint quasi suscipit, fuga pariatur eius eaque! Nulla, tenetur optio.
     Beatae, sequi deleniti! Excepturi mollitia ratione quisquam facere suscipit, culpa itaque sapiente? Corrupti hic totam dolor aut. Consequuntur in molestiae reprehenderit sunt maiores molestias modi, nostrum vero at, quis libero.
     Placeat a velit ipsam tenetur ex fugit corporis quo impedit, ratione architecto quasi, illum earum quam accusantium dolore? Nobis quisquam facere blanditiis illo quas quidem. Ipsa explicabo voluptates perferendis enim!

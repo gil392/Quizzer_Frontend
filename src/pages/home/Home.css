@@ -1,0 +1,27 @@
+
+.youtube-box{
+    width: max-content;
+}
+
+.youtube-form{
+    width: max-content;
+    display: flex;
+    
+    flex-direction: row;
+    align-items: center;
+    gap: 1rem;
+}
+
+.youtube-label{
+    text-align: left;
+    padding-bottom: 1rem;
+}
+.youtube-inpput{
+    
+
+}
+.youtube-button{
+    width: fit-content;
+    height: 3rem;
+    background-color:black;
+}
