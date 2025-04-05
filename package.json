@@ -12,11 +12,7 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
-<<<<<<< HEAD
     "@mui/material": "^7.0.1",
-=======
-    "@mui/material": "^6.3.1",
->>>>>>> 7d1eff3501795456ca72ca41b02b7d53c5a69436
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^7.4.1"

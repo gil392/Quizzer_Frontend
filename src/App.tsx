@@ -2,7 +2,7 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import './App.css'
 import SummaryPage from './pages/Summary'
 import QuizPage from './pages/Quiz';
-import HomePage from './pages/home/home'
+import HomePage from './pages/home/Home'
 
 
 function App() {
