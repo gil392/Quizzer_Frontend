@@ -35,13 +35,13 @@ const SummaryPage: React.FC = () => {
         }
 
         const quizSettings: QuizSettings = {
-            checkType: 'multiple-choice', 
+            checkType: 'onSubmit', 
             isRandomOrder: true,
             maxQuestionCount: 10,
             solvingTimeMs: 60000,
         };
 
-        const quizPromise = generateQuiz(lessonData.lessonId, quizSettings);
+        const quizPromise = generateQuiz(lessonData._id, quizSettings);
 
         navigate('/quiz', { state: { quizPromise, lessonData } });
     };
@@ -79,7 +79,7 @@ const SummaryPage: React.FC = () => {
                 >
                     <CardContent sx={{ textAlign: 'left' }}>
                         <Typography variant="h5" component="div" gutterBottom>
-                            {lessonData.lessonTitle}
+                            {lessonData.title}
                         </Typography>
                         <Typography variant="body1">{lessonData.summary}</Typography>
                     </CardContent>
