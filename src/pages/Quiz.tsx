@@ -31,15 +31,13 @@ const QuizPage: React.FC<QuizPageProps> = ({ videoTitle, questions }) => {
     };
 
     return (
-        <Box>
+        <Box sx={{ width: '50vw'}}>
             <Typography variant="h5" component="div" gutterBottom>
                 {videoTitle}
             </Typography>
             <Card
                 sx={{
-                    maxWidth: '1000px',
-                    boxShadow: 10,
-                    paddingTop: 2,
+                    maxWidth: '50vw',
                     maxHeight: '85vh',
                     overflowY: 'auto',
                     '&::-webkit-scrollbar': {
@@ -57,29 +55,37 @@ const QuizPage: React.FC<QuizPageProps> = ({ videoTitle, questions }) => {
                     },
                 }}
             >
-               <CardContent>
+               <Box>
                     {questions.map((question, index) => (
-                        <Box key={index} sx={{ marginBottom: 5, textAlign: 'left' }}>
-                            <Typography variant="h6" gutterBottom>
-                                {index + 1}. {question.question}
-                            </Typography>
-                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-                                {question.options.map((option) => (
-                                    <FormControlLabel
-                                        key={option.number}
-                                        control={
-                                            <Checkbox
-                                                checked={selectedAnswers[index] === option.number}
-                                                onChange={() => handleOptionChange(index, option.number)}
-                                            />
-                                        }
-                                        label={option.text}
-                                    />
-                                ))}
-                            </Box>
+                        <Box
+                            key={index}
+                            sx={{
+                                padding: 3, 
+                                backgroundColor: '#f5f5f5', 
+                            }}
+                        >
+                            <Card sx={{ boxShadow: 3, textAlign: 'left', borderRadius: 2, padding: 2 }}>
+                                <Typography variant="h6" gutterBottom>
+                                    {index + 1}. {question.question}
+                                </Typography>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
+                                    {question.options.map((option) => (
+                                        <FormControlLabel 
+                                            key={option.number}
+                                            control={
+                                                <Checkbox 
+                                                    checked={selectedAnswers[index] === option.number}
+                                                    onChange={() => handleOptionChange(index, option.number)}
+                                                />
+                                            }
+                                            label={option.text}
+                                        />
+                                    ))}
+                                </Box>
+                            </Card>
                         </Box>
                     ))}
-                </CardContent>
+                </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
                     <Button
                         variant="contained"

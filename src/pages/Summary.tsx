@@ -14,13 +14,13 @@ const SummaryPage: React.FC<SummaryPageProps> = ({ videoTitle, videoSummary }) =
     };
 
     return (
-        <Box>
+        <Box sx= {{ width: '50vw', margin: 'auto', padding: 2 }}>
             <Typography variant="h5" component="div" gutterBottom>
                 {videoTitle}
             </Typography>
             <Card
                 sx={{
-                    maxWidth: '1000px',
+                    maxWidth: '50vw',
                     boxShadow: 10,
                     paddingTop: 2,
                     maxHeight: '85vh',
@@ -40,7 +40,7 @@ const SummaryPage: React.FC<SummaryPageProps> = ({ videoTitle, videoSummary }) =
                     },
                 }}
             >
-                <CardContent>
+                <CardContent sx={{ textAlign: 'left'}}>
                     {videoSummary}
                 </CardContent>
                 <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
