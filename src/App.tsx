@@ -1,9 +1,11 @@
 import './App.css'
+import HomePage from './pages/home/home'
+
 
 function App() {
   return (
     <>  
-      <h1>Vite + React</h1>
+      <HomePage/>
     </>
   )
 }
