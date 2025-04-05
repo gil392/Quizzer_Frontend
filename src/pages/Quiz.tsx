@@ -1,13 +1,15 @@
 import { Box, Card, Typography, Button, FormControlLabel, Checkbox, Skeleton } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { QuizData } from '../services/backend/types';
+import { QuizData, QuizResult } from '../services/backend/types';
+import { submitQuiz } from '../services/backend/service';
 
 const QuizPage: React.FC = () => {
     const location = useLocation();
     const [quizData, setQuizData] = useState<QuizData | null>(null);
     const [loading, setLoading] = useState(true);
-    const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string | null }>({}); // Use question index as the key
+    const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: string | null }>({});
+    const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
     const lessonData = location.state?.lessonData;
 
@@ -35,9 +37,49 @@ const QuizPage: React.FC = () => {
         }));
     };
 
-    const handleQuizSubmission = () => {
-        console.log('Selected Answers:', selectedAnswers);
-        alert('Quiz submitted!');
+    const handleQuizSubmission = async () => {
+        if (!quizData) {
+            alert('Quiz data is not available.');
+            return;
+        }
+
+        try {
+            const submissionData = {
+                quizId: quizData._id,
+                questions: Object.entries(selectedAnswers)
+                    .filter(([_, answer]) => answer !== null)
+                    .map(([questionIndex, answer]) => ({
+                        questionId: quizData.questions[parseInt(questionIndex)]._id,
+                        selectedAnswer: answer as string,
+                    })),
+            };
+
+            const result: QuizResult = await submitQuiz(submissionData); // Call the backend service
+            setQuizResult(result); // Store the quiz result
+            console.log('Quiz submission result:', result);
+
+        } catch (error) {
+            console.error('Error submitting quiz:', error);
+            alert('Failed to submit quiz. Please try again.');
+        }
+    };
+
+    const allQuestionsAnswered = quizData
+        ? quizData.questions.every((_, index) => selectedAnswers[index] !== undefined && selectedAnswers[index] !== null)
+        : false;
+
+    const getAnswerOutlineColor = (questionId: string, option: string): string => {
+        if (!quizResult) return 'default'; 
+
+        const questionResult = quizResult.question.find((q) => q.questionId === questionId);
+
+        if (!questionResult) return 'default'; 
+
+        if (questionResult.correctAnswer === option) return 'green'; 
+
+        if (questionResult.selectedAnswer === option && questionResult.correctAnswer !== option) return 'red'; 
+
+        return 'default'; 
     };
 
     return (
@@ -96,6 +138,16 @@ const QuizPage: React.FC = () => {
                                                     <Checkbox
                                                         checked={selectedAnswers[index] === option}
                                                         onChange={() => handleOptionChange(index, option)}
+                                                        disabled={!!quizResult}
+                                                        sx={{
+                                                            '& .MuiSvgIcon-root': {
+                                                                border: `2px solid ${getAnswerOutlineColor(
+                                                                    question._id,
+                                                                    option
+                                                                )}`, 
+                                                                borderRadius: '4px',
+                                                            },
+                                                        }}
                                                     />
                                                 }
                                                 label={option}
@@ -106,7 +158,12 @@ const QuizPage: React.FC = () => {
                             </Box>
                         ))}
                         <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
-                            <Button variant="contained" color="primary" onClick={handleQuizSubmission}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                onClick={handleQuizSubmission}
+                                disabled={!allQuestionsAnswered} 
+                            >
                                 Submit
                             </Button>
                         </Box>
