@@ -74,9 +74,7 @@ const QuizPage: React.FC = () => {
         const questionResult = quizResult.question.find((q) => q.questionId === questionId);
 
         if (!questionResult) return 'default'; 
-
         if (questionResult.correctAnswer === option) return 'green'; 
-
         if (questionResult.selectedAnswer === option && questionResult.correctAnswer !== option) return 'red'; 
 
         return 'default'; 
