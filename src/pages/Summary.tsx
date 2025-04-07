@@ -2,7 +2,7 @@ import { Box, Card, CardContent, Typography, Button, Skeleton } from '@mui/mater
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { LessonData, QuizSettings } from '../services/backend/types';
-import { generateQuiz } from '../services/backend/service';
+import { generateLesson } from '../services/backend/service';
 
 const SummaryPage: React.FC = () => {
     const navigate = useNavigate();
@@ -11,21 +11,17 @@ const SummaryPage: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const lessonPromise = location.state?.lessonPromise;
-        if (lessonPromise) {
-            lessonPromise
-                .then((data: LessonData) => {
-                    setLessonData(data);
-                    setLoading(false);
-                })
-                .catch((error: any) => {
-                    console.error('Error loading lesson:', error);
-                    setLessonData(null);
-                    setLoading(false);
-                });
-        } else {
-            setLoading(false);
-        }
+        generateLesson(location.state?.videoUrl)
+            .then((data: LessonData) => {
+                setLessonData(data);
+                setLoading(false);
+            })
+            .catch((error: any) => {
+                console.error('Error loading lesson:', error);
+                setLessonData(null);
+                setLoading(false);
+            });
+
     }, [location.state]);
 
     const handleQuizNavigation = () => {
@@ -34,6 +30,8 @@ const SummaryPage: React.FC = () => {
             return;
         }
 
+
+        // TODO: move to home page
         const quizSettings: QuizSettings = {
             checkType: 'onSubmit', 
             isRandomOrder: true,
@@ -41,26 +39,17 @@ const SummaryPage: React.FC = () => {
             solvingTimeMs: 60000,
         };
 
-        const quizPromise = generateQuiz(lessonData._id, quizSettings);
-
-        navigate('/quiz', { state: { quizPromise, lessonData } });
+        navigate('/quiz', { state: { lessonData, quizSettings } });
     };
 
     return (
         <Box sx={{ width: '50vw', margin: 'auto', padding: 2 }}>
-            {loading ? (
-                <Box>
-                    <Skeleton variant="text" width="80%" height={40} />
-                    <Skeleton variant="rectangular" width="100%" height={200} sx={{ marginTop: 2 }} />
-                    <Skeleton variant="rectangular" width="100%" height={50} sx={{ marginTop: 2 }} />
-                </Box>
-            ) : lessonData ? (
                 <Card
                     sx={{
                         maxWidth: '50vw',
                         boxShadow: 10,
                         paddingTop: 2,
-                        maxHeight: '85vh',
+                        height: '85vh',
                         overflowY: 'auto',
                         '&::-webkit-scrollbar': {
                             width: '8px',
@@ -77,35 +66,43 @@ const SummaryPage: React.FC = () => {
                         },
                     }}
                 >
-                    <CardContent sx={{ textAlign: 'left' }}>
-                        <Typography variant="h5" component="div" gutterBottom>
-                            {lessonData.title}
-                        </Typography>
-                        <Typography variant="body1">{lessonData.summary}</Typography>
-                    </CardContent>
-                    <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
-                        <Button variant="contained" color="primary" onClick={handleQuizNavigation}>
-                            Go to Quiz
-                        </Button>
+                    
+                {loading ? (
+
+                    <Box sx= {{ padding: 2 }}>
+                        <Skeleton variant="text" width="80%" height={40} />
+                        <Skeleton variant="rectangular" width="100%" height={200} sx={{ marginTop: 2 }} />
+                        <Skeleton variant="rectangular" width="100%" height={50} sx={{ marginTop: 2 }} />
+                        <Skeleton variant="text" width="80%" height={40} sx={{ marginTop: 6 }} />
+                        <Skeleton variant="rectangular" width="100%" height={200} sx={{ marginTop: 2 }} />
+                        <Skeleton variant="rectangular" width="100%" height={50} sx={{ marginTop: 2 }} />
                     </Box>
-                </Card>
-            ) : (
-                <Card
-                    sx={{
-                        maxWidth: '50vw',
-                        boxShadow: 10,
-                        padding: 2,
-                        height: '85vh',
-                        textAlign: 'center',
-                    }}
-                >
+
+                ) : lessonData ? (
+
+                    <Box>
+                        <CardContent sx={{ textAlign: 'left' }}>
+                            <Typography variant="h5" component="div" gutterBottom>
+                                {lessonData.title}
+                            </Typography>
+                            <Typography variant="body1">{lessonData.summary}</Typography>
+                        </CardContent>
+
+                        <Box sx={{ display: 'flex', justifyContent: 'center', padding: 2 }}>
+                            <Button variant="contained" color="primary" onClick={handleQuizNavigation}>
+                                Go to Quiz
+                            </Button>
+                        </Box>
+                    </Box>
+
+                ) : (
                     <CardContent>
                         <Typography variant="h6" color="error">
                             Failed to load lesson data.
                         </Typography>
                     </CardContent>
+                )}  
                 </Card>
-            )}
         </Box>
     );
 };

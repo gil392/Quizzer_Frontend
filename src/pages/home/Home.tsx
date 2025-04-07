@@ -2,15 +2,13 @@ import { Box, Button, OutlinedInput } from '@mui/material';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
-import { generateLesson } from '../../services/backend/service';
 
 function HomePage() {
     const navigate = useNavigate();
     const [videoUrl, setVideoUrl] = useState('');
 
     const handleSummaryNavigation = () => {
-      const lessonPromise = generateLesson(videoUrl); 
-      navigate('/summary', { state: { lessonPromise } });
+      navigate('/summary', { state: { videoUrl } });
   };
 
     return (

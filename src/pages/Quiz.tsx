@@ -2,7 +2,7 @@ import { Box, Card, Typography, Button, FormControlLabel, Checkbox, Skeleton } f
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import { QuizData, QuizResult } from '../services/backend/types';
-import { submitQuiz } from '../services/backend/service';
+import { generateQuiz, submitQuiz } from '../services/backend/service';
 
 const QuizPage: React.FC = () => {
     const location = useLocation();
@@ -14,20 +14,16 @@ const QuizPage: React.FC = () => {
     const lessonData = location.state?.lessonData;
 
     useEffect(() => {
-        const quizPromise = location.state?.quizPromise;
-        if (quizPromise) {
-            quizPromise
-                .then((data: QuizData) => {
-                    setQuizData(data);
-                    setLoading(false);
-                })
-                .catch((error: any) => {
-                    console.error('Error loading quiz:', error);
-                    setLoading(false);
-                });
-        } else {
-            setLoading(false);
-        }
+        generateQuiz(lessonData._id, location.state?.quizSettings)
+            .then((data: QuizData) => {
+                setQuizData(data);
+                setLoading(false);
+            })
+            .catch((error: any) => {
+                console.error('Error loading quiz:', error);
+                setLoading(false);
+            });
+  
     }, [location.state]);
 
     const handleOptionChange = (questionIndex: number, option: string) => {
@@ -71,7 +67,7 @@ const QuizPage: React.FC = () => {
     const getAnswerOutlineColor = (questionId: string, option: string): string => {
         if (!quizResult) return 'default'; 
 
-        const questionResult = quizResult.question.find((q) => q.questionId === questionId);
+        const questionResult = quizResult.results.find((result) => result.questionId === questionId);
 
         if (!questionResult) return 'default'; 
         if (questionResult.correctAnswer === option) return 'green'; 
@@ -108,6 +104,9 @@ const QuizPage: React.FC = () => {
                 {loading ? (
                     <Box>
                         <Skeleton variant="text" width="80%" height={40} />
+                        <Skeleton variant="rectangular" width="100%" height={200} sx={{ marginTop: 2 }} />
+                        <Skeleton variant="rectangular" width="100%" height={50} sx={{ marginTop: 2 }} />
+                        <Skeleton variant="text" width="80%" height={40} sx={{ marginTop: 6 }}/>
                         <Skeleton variant="rectangular" width="100%" height={200} sx={{ marginTop: 2 }} />
                         <Skeleton variant="rectangular" width="100%" height={50} sx={{ marginTop: 2 }} />
                     </Box>

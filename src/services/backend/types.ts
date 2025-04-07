@@ -32,11 +32,11 @@ export type QuestionAnswerSubmittion = {
 
 export type QuizResult = {
     quizId: string;
-    question: QuestionResult[];
+    results: QuestionResults[];
     score: number;
 };
 
-export type QuestionResult = {
+export type QuestionResults = {
     questionId: string;
     selectedAnswer: string;
     correctAnswer: string;
