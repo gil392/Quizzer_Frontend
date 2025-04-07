@@ -112,6 +112,22 @@ const QuizPage: React.FC = () => {
                     </Box>
                 ) : quizData ? (
                     <Box>
+                        {quizResult && (
+                            <Box
+                                sx={{
+                                    textAlign: 'center',
+                                    marginBottom: 3,
+                                    padding: 2,
+                                    backgroundColor: quizResult.score >= 60 ? '#e8f5e9' : "#ffebee",  
+                                    borderRadius: '8px',
+                                    boxShadow: 2,
+                                }}
+                            >
+                                <Typography variant="h5" color={ quizResult.score >= 60 ?  "green" : "red" } >
+                                    Your Score: {quizResult.score} / 100 
+                                </Typography>
+                            </Box>
+                        )}
                         <Typography variant="h5" component="div" gutterBottom>
                             {lessonData.lessonTitle}
                         </Typography>
