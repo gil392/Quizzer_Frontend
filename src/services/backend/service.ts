@@ -121,27 +121,12 @@ export async function updateLesson(
   lessonId: string,
   updatedData: Partial<LessonData>
 ): Promise<LessonData> {
-  try {
-    const response = await fetch(`${backendUrl}/lesson/${lessonId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedData),
-    });
-
-    if (!response.ok) {
-      throw new Error("Failed to update lesson");
-    }
-
-    const data = await response.json();
-    console.log(`Lesson with ID ${lessonId} updated successfully:`, data);
-
-    return data;
-  } catch (error) {
-    console.error("Error updating lesson:", error);
-    throw error;
-  }
+  return updateItem<LessonData>(
+    lessonId,
+    updatedData,
+    "lesson/update",
+    "lesson"
+  );
 }
 
 export async function getQuizzesByLessonId(
@@ -202,4 +187,40 @@ export async function deleteLesson(lessonId: string): Promise<void> {
 
 export async function deleteQuiz(quizId: string): Promise<void> {
   return deleteItem(quizId, "quiz/delete", "quiz");
+}
+
+export async function updateItem<T>(
+  itemId: string,
+  updatedData: Partial<T>,
+  path: string,
+  itemType: string
+): Promise<T> {
+  try {
+    const response = await fetch(`http://localhost:8080/${path}/${itemId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to update ${itemType}`);
+    }
+
+    const data = await response.json();
+    console.log(`${itemType} with ID ${itemId} updated successfully:`, data);
+
+    return data;
+  } catch (error) {
+    console.error(`Error updating ${itemType}:`, error);
+    throw error;
+  }
+}
+
+export async function updateQuiz(
+  quizId: string,
+  updatedData: Partial<QuizData>
+): Promise<QuizData> {
+  return updateItem<QuizData>(quizId, updatedData, "quiz/update", "quiz");
 }

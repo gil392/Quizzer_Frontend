@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import {
   deleteQuiz,
   getQuizzesByLessonId,
+  updateQuiz,
 } from "../../services/backend/service";
 import QuizItem from "./QuizItem";
 
@@ -35,6 +36,13 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
     );
   };
 
+  const handleUpdateQuiz = async (quiz: QuizData) => {
+    await updateQuiz(quiz._id, quiz);
+    setQuizzes((prevQuizzes) =>
+      prevQuizzes.map((q) => (q._id === quiz._id ? quiz : q))
+    );
+  };
+
   return (
     <Box>
       <h2>{lesson.title}</h2>
@@ -44,6 +52,9 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
           key={quiz._id}
           quiz={quiz}
           deleteQuiz={() => handleDeleteQuiz(quiz._id)}
+          updateQuizTitle={(newTitle: string) => {
+            handleUpdateQuiz({ ...quiz, title: newTitle });
+          }}
         />
       ))}
       <button onClick={onClose}>Close</button>

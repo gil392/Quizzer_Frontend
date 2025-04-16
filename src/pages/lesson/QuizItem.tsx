@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import {
   Accordion,
@@ -5,17 +6,39 @@ import {
   AccordionDetails,
   Typography,
   IconButton,
+  TextField,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { QuizData } from "../../services/backend/types";
 import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
+import { QuizData } from "../../services/backend/types";
 
 type QuizItemProps = {
   quiz: QuizData;
   deleteQuiz: () => void;
+  updateQuizTitle: (newTitle: string) => void;
 };
 
-const QuizItem = ({ quiz, deleteQuiz }: QuizItemProps) => {
+const QuizItem = ({ quiz, deleteQuiz, updateQuizTitle }: QuizItemProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(quiz.title);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = () => {
+    updateQuizTitle(newTitle);
+    setIsEditing(false);
+  };
+
+  const handleCancelClick = () => {
+    setNewTitle(quiz.title);
+    setIsEditing(false);
+  };
+
   return (
     <Box
       sx={{
@@ -25,13 +48,46 @@ const QuizItem = ({ quiz, deleteQuiz }: QuizItemProps) => {
         padding: "1rem",
       }}
     >
-      <Box style={{ display: "flex", justifyContent: "space-between" }}>
-        <Typography variant="h6" sx={{ marginBottom: "0.5rem" }}>
-          Quiz: {quiz.title}
-        </Typography>
-        <IconButton onClick={deleteQuiz}>
-          <DeleteIcon />
-        </IconButton>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        {isEditing ? (
+          <TextField
+            value={newTitle}
+            onChange={(e) => setNewTitle(e.target.value)}
+            size="small"
+            sx={{ marginBottom: "0.5rem", flexGrow: 1, marginRight: "1rem" }}
+          />
+        ) : (
+          <Typography variant="h6" sx={{ marginBottom: "0.5rem" }}>
+            Quiz: {quiz.title}
+          </Typography>
+        )}
+        <Box>
+          {isEditing ? (
+            <>
+              <IconButton onClick={handleSaveClick}>
+                <CheckIcon />
+              </IconButton>
+              <IconButton onClick={handleCancelClick}>
+                <CloseIcon />
+              </IconButton>
+            </>
+          ) : (
+            <>
+              <IconButton onClick={handleEditClick}>
+                <EditIcon />
+              </IconButton>
+              <IconButton onClick={deleteQuiz}>
+                <DeleteIcon />
+              </IconButton>
+            </>
+          )}
+        </Box>
       </Box>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -49,6 +105,7 @@ const QuizItem = ({ quiz, deleteQuiz }: QuizItemProps) => {
       </Accordion>
     </Box>
   );
-};
+
+}
 
 export default QuizItem;
