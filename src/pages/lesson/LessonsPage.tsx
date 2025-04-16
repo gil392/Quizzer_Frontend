@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 import { LessonData } from "../../services/backend/types";
 import LessonItem from "./LessonItem";
-import { deleteLesson, getLessons } from "../../services/backend/service";
+import {
+  deleteLesson,
+  getLessons,
+  updateLesson,
+} from "../../services/backend/service";
 import LessonInfo from "./LessonInfo";
 
 const LessonsPage: React.FC = () => {
@@ -28,6 +32,15 @@ const LessonsPage: React.FC = () => {
     );
   };
 
+  const handleUpdateLesson = async (lesson: LessonData) => {
+    await updateLesson(lesson._id, lesson);
+    setLessons((prevLessons) =>
+      prevLessons.map((lessonToCheck) =>
+        lessonToCheck._id === lesson._id ? lesson : lessonToCheck
+      )
+    );
+  };
+
   return (
     <>
       {lessonToShow === null ? (
@@ -38,6 +51,9 @@ const LessonsPage: React.FC = () => {
             onLessonDeleted={handleLessonDeleted}
             openLesson={() => {
               setLessonToShow(lesson);
+            }}
+            updateLessonTitle={(newTitle: string) => {
+              handleUpdateLesson({ ...lesson, title: newTitle });
             }}
           />
         ))

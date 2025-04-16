@@ -9,27 +9,36 @@ type EditableActionsProps = {
   title: string;
   onSave: (newTitle: string) => void;
   onDelete: () => void;
+  onEditModeChange?: (isEditing: boolean) => void;
 };
 
-const EditableActions = ({ title, onSave, onDelete }: EditableActionsProps) => {
+const EditableActions = ({
+  title,
+  onSave,
+  onDelete,
+  onEditModeChange,
+}: EditableActionsProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 
   const handleEditClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     setIsEditing(true);
+    onEditModeChange?.(true);
   };
 
   const handleSaveClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     onSave(newTitle);
     setIsEditing(false);
+    onEditModeChange?.(false);
   };
 
   const handleCancelClick = (event: React.MouseEvent) => {
     event.stopPropagation();
     setNewTitle(title);
     setIsEditing(false);
+    onEditModeChange?.(false);
   };
 
   const handleDeleteClick = (event: React.MouseEvent) => {
