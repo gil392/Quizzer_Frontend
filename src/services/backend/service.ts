@@ -70,7 +70,7 @@ export async function submitQuiz(
   data: QuizAnswerSubmittion
 ): Promise<QuizResult> {
   try {
-    const response = await fetch(`http://localhost:8080/quiz/submit`, {
+    const response = await fetch(`${backendUrl}/quiz/submit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export async function submitQuiz(
 
 export async function getLessons(): Promise<LessonData[]> {
   try {
-    const response = await fetch(`http://localhost:8080/lesson/`, {
+    const response = await fetch(`${backendUrl}/lesson/`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -133,15 +133,12 @@ export async function getQuizzesByLessonId(
   lessonId: string
 ): Promise<QuizData[]> {
   try {
-    const response = await fetch(
-      `http://localhost:8080/quiz/lesson/${lessonId}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${backendUrl}/quiz/lesson/${lessonId}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
     if (!response.ok) {
       throw new Error("Failed to fetch quizzes");
@@ -163,7 +160,7 @@ export async function deleteItem(
   itemType: String
 ): Promise<void> {
   try {
-    const response = await fetch(`http://localhost:8080/${path}/${itemId}`, {
+    const response = await fetch(`${backendUrl}/${path}/${itemId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -196,7 +193,7 @@ export async function updateItem<T>(
   itemType: string
 ): Promise<T> {
   try {
-    const response = await fetch(`http://localhost:8080/${path}/${itemId}`, {
+    const response = await fetch(`${backendUrl}/${path}/${itemId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
