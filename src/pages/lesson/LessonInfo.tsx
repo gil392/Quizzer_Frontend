@@ -1,7 +1,10 @@
 import Box from "@mui/material/Box";
 import { LessonData, QuizData } from "../../services/backend/types";
 import { useState, useEffect } from "react";
-import { getQuizzesByLessonId } from "../../services/backend/service";
+import {
+  deleteQuiz,
+  getQuizzesByLessonId,
+} from "../../services/backend/service";
 import QuizItem from "./QuizItem";
 
 interface LessonInfoProps {
@@ -24,12 +27,24 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
 
     fetchQuizzesByLessonId();
   }, []);
+
+  const handleDeleteQuiz = async (quizId: string) => {
+    await deleteQuiz(quizId);
+    setQuizzes((prevQuizzes) =>
+      prevQuizzes.filter((quiz) => quiz._id !== quizId)
+    );
+  };
+
   return (
     <Box>
       <h2>{lesson.title}</h2>
       <p>{lesson.summary}</p>
       {quizzes.map((quiz) => (
-        <QuizItem key={quiz._id} quiz={quiz} />
+        <QuizItem
+          key={quiz._id}
+          quiz={quiz}
+          deleteQuiz={() => handleDeleteQuiz(quiz._id)}
+        />
       ))}
       <button onClick={onClose}>Close</button>
     </Box>

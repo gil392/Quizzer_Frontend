@@ -117,29 +117,6 @@ export async function getLessons(): Promise<LessonData[]> {
   }
 }
 
-export async function deleteLesson(lessonId: string): Promise<void> {
-  try {
-    const response = await fetch(
-      `http://localhost:8080/lesson/delete/${lessonId}`,
-      {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to delete lesson");
-    }
-
-    console.log(`Lesson with ID ${lessonId} deleted successfully.`);
-  } catch (error) {
-    console.error("Error deleting lesson:", error);
-    throw error;
-  }
-}
-
 export async function updateLesson(
   lessonId: string,
   updatedData: Partial<LessonData>
@@ -193,4 +170,36 @@ export async function getQuizzesByLessonId(
     console.error("Error fetching quizzes:", error);
     throw error;
   }
+}
+
+export async function deleteItem(
+  itemId: string,
+  path: string,
+  itemType: String
+): Promise<void> {
+  try {
+    const response = await fetch(`http://localhost:8080/${path}/${itemId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to delete ${itemType}`);
+    }
+
+    console.log(`${itemType} with ID ${itemId} deleted successfully.`);
+  } catch (error) {
+    console.error(`Error deleting ${itemType}:`, error);
+    throw error;
+  }
+}
+
+export async function deleteLesson(lessonId: string): Promise<void> {
+  return deleteItem(lessonId, "lesson/delete", "lesson");
+}
+
+export async function deleteQuiz(quizId: string): Promise<void> {
+  return deleteItem(quizId, "quiz/delete", "quiz");
 }

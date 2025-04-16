@@ -12,9 +12,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 type QuizItemProps = {
   quiz: QuizData;
+  deleteQuiz: () => void;
 };
 
-const QuizItem = ({ quiz }: QuizItemProps) => {
+const QuizItem = ({ quiz, deleteQuiz }: QuizItemProps) => {
   return (
     <Box
       sx={{
@@ -28,7 +29,7 @@ const QuizItem = ({ quiz }: QuizItemProps) => {
         <Typography variant="h6" sx={{ marginBottom: "0.5rem" }}>
           Quiz: {quiz.title}
         </Typography>
-        <IconButton onClick={() => {}}>
+        <IconButton onClick={deleteQuiz}>
           <DeleteIcon />
         </IconButton>
       </Box>
