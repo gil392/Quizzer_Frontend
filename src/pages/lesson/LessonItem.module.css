@@ -1,0 +1,19 @@
+.lessonItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2px;
+  margin: 1px 0;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+  transition: 0.3s;
+  width: 40vw;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+}
+
+.lessonItem:hover {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
