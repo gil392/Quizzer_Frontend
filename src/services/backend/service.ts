@@ -116,3 +116,53 @@ export async function getLessons(): Promise<LessonData[]> {
     throw error;
   }
 }
+
+export async function deleteLesson(lessonId: string): Promise<void> {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/lesson/delete/${lessonId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to delete lesson");
+    }
+
+    console.log(`Lesson with ID ${lessonId} deleted successfully.`);
+  } catch (error) {
+    console.error("Error deleting lesson:", error);
+    throw error;
+  }
+}
+
+export async function updateLesson(
+  lessonId: string,
+  updatedData: Partial<LessonData>
+): Promise<LessonData> {
+  try {
+    const response = await fetch(`${backendUrl}/lesson/${lessonId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(updatedData),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to update lesson");
+    }
+
+    const data = await response.json();
+    console.log(`Lesson with ID ${lessonId} updated successfully:`, data);
+
+    return data;
+  } catch (error) {
+    console.error("Error updating lesson:", error);
+    throw error;
+  }
+}

@@ -6,6 +6,7 @@ import classes from "./LessonItem.module.css";
 
 type LessonItemProps = {
   lesson: LessonData;
+  onLessonDeleted: (lessonId: string) => void;
 };
 
 const LessonItem = (props: LessonItemProps) => {
@@ -13,11 +14,15 @@ const LessonItem = (props: LessonItemProps) => {
     <Box className={classes.lessonItem}>
       <Typography
         variant="body1"
-        sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
+        sx={{
+          overflow: "hidden",
+          textOverflow: "ellipsis",
+          paddingLeft: "0.5vw",
+        }}
       >
         {props.lesson.title}
       </Typography>
-      <IconButton onClick={() => console.log("Delete lesson")}>
+      <IconButton onClick={() => props.onLessonDeleted(props.lesson._id)}>
         <DeleteIcon />
       </IconButton>
     </Box>
