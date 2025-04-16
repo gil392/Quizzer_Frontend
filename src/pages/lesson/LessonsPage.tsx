@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { LessonData } from "../../services/backend/types";
 import LessonItem from "./LessonItem";
 import { deleteLesson, getLessons } from "../../services/backend/service";
+import LessonInfo from "./LessonInfo";
 
 const LessonsPage: React.FC = () => {
   const [lessons, setLessons] = useState<LessonData[]>([]);
+  const [lessonToShow, setLessonToShow] = useState<LessonData | null>(null);
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -28,13 +30,25 @@ const LessonsPage: React.FC = () => {
 
   return (
     <>
-      {lessons.map((lesson) => (
-        <LessonItem
-          key={lesson._id}
-          lesson={lesson}
-          onLessonDeleted={handleLessonDeleted}
+      {lessonToShow === null ? (
+        lessons.map((lesson) => (
+          <LessonItem
+            key={lesson._id}
+            lesson={lesson}
+            onLessonDeleted={handleLessonDeleted}
+            openLesson={() => {
+              setLessonToShow(lesson);
+            }}
+          />
+        ))
+      ) : (
+        <LessonInfo
+          lesson={lessonToShow}
+          onClose={() => {
+            setLessonToShow(null);
+          }}
         />
-      ))}
+      )}
     </>
   );
 };

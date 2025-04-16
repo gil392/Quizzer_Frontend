@@ -7,11 +7,12 @@ import classes from "./LessonItem.module.css";
 type LessonItemProps = {
   lesson: LessonData;
   onLessonDeleted: (lessonId: string) => void;
+  openLesson: () => void;
 };
 
 const LessonItem = (props: LessonItemProps) => {
   return (
-    <Box className={classes.lessonItem}>
+    <Box className={classes.lessonItem} onClick={() => {props.openLesson()}}>
       <Typography
         variant="body1"
         sx={{
