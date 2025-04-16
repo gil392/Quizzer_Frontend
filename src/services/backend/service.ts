@@ -70,7 +70,7 @@ export async function submitQuiz(
   data: QuizAnswerSubmittion
 ): Promise<QuizResult> {
   try {
-    const response = await fetch(`${backendUrl}/quiz/submit`, {
+    const response = await fetch(`http://localhost:8080/quiz/submit`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -163,6 +163,34 @@ export async function updateLesson(
     return data;
   } catch (error) {
     console.error("Error updating lesson:", error);
+    throw error;
+  }
+}
+
+export async function getQuizzesByLessonId(
+  lessonId: string
+): Promise<QuizData[]> {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/quiz/lesson/${lessonId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch quizzes");
+    }
+
+    const data = await response.json();
+    console.log("Quizzes fetched:", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error fetching quizzes:", error);
     throw error;
   }
 }
