@@ -1,0 +1,91 @@
+import { useState } from "react";
+import { IconButton, TextField, Box, Typography } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import CheckIcon from "@mui/icons-material/Check";
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from "@mui/icons-material/Delete";
+
+type EditableActionsProps = {
+  title: string;
+  onSave: (newTitle: string) => void;
+  onDelete: () => void;
+};
+
+const EditableActions = ({ title, onSave, onDelete }: EditableActionsProps) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(title);
+
+  const handleEditClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsEditing(true);
+  };
+
+  const handleSaveClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onSave(newTitle);
+    setIsEditing(false);
+  };
+
+  const handleCancelClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setNewTitle(title);
+    setIsEditing(false);
+  };
+
+  const handleDeleteClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    onDelete();
+  };
+
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexGrow: 1,
+      }}
+    >
+      {isEditing ? (
+        <TextField
+          value={newTitle}
+          onChange={(e) => setNewTitle(e.target.value)}
+          size="small"
+          sx={{ marginRight: "1rem", flexGrow: 1 }}
+        />
+      ) : (
+        <Typography
+          variant="h6"
+          sx={{
+            paddingLeft: "0.5vw",
+          }}
+        >
+          {title}
+        </Typography>
+      )}
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        {isEditing ? (
+          <>
+            <IconButton onClick={handleSaveClick}>
+              <CheckIcon />
+            </IconButton>
+            <IconButton onClick={handleCancelClick}>
+              <CloseIcon />
+            </IconButton>
+          </>
+        ) : (
+          <>
+            <IconButton onClick={handleEditClick}>
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={handleDeleteClick}>
+              <DeleteIcon />
+            </IconButton>
+          </>
+        )}
+      </Box>
+    </Box>
+  );
+};
+
+export default EditableActions;
