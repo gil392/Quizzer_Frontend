@@ -75,19 +75,19 @@ const EditableActions = ({
       <Box sx={{ display: "flex", alignItems: "center" }}>
         {isEditing ? (
           <>
-            <IconButton onClick={handleSaveClick}>
+            <IconButton style={{ outline: "none" }} onClick={handleSaveClick}>
               <CheckIcon />
             </IconButton>
-            <IconButton onClick={handleCancelClick}>
+            <IconButton style={{ outline: "none" }} onClick={handleCancelClick}>
               <CloseIcon />
             </IconButton>
           </>
         ) : (
           <>
-            <IconButton onClick={handleEditClick}>
+            <IconButton style={{ outline: "none" }} onClick={handleEditClick}>
               <EditIcon />
             </IconButton>
-            <IconButton onClick={handleDeleteClick}>
+            <IconButton style={{ outline: "none" }} onClick={handleDeleteClick}>
               <DeleteIcon />
             </IconButton>
           </>

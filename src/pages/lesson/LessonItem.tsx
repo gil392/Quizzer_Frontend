@@ -19,6 +19,7 @@ const LessonItem = (props: LessonItemProps) => {
       className={`${classes.lessonItem} ${
         !isEditing ? classes.lessonItemHover : ""
       }`}
+      onClick={() => !isEditing && props.openLesson()}
     >
       <Box
         sx={{
@@ -26,7 +27,6 @@ const LessonItem = (props: LessonItemProps) => {
           justifyContent: "space-between",
           alignItems: "center",
         }}
-        onClick={() => !isEditing && props.openLesson()}
       >
         <EditableActions
           title={props.lesson.title}
