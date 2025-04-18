@@ -129,11 +129,9 @@ export async function updateLesson(
   );
 }
 
-export async function getQuizzesByLessonId(
-  lessonId: string
-): Promise<QuizData[]> {
+export async function getQuizzes(lessonId: string): Promise<QuizData[]> {
   try {
-    const response = await fetch(`${backendUrl}/quiz/lesson/${lessonId}`, {
+    const response = await fetch(`${backendUrl}/quiz?lessonId=${lessonId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

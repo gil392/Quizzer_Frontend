@@ -7,10 +7,15 @@ import {
   updateLesson,
 } from "../../services/backend/service";
 import LessonInfo from "./LessonInfo";
+import Typography from "@mui/material/Typography";
+import { usePopupNavigation } from "../../hooks/usePopupNavigation";
 
 const LessonsPage: React.FC = () => {
   const [lessons, setLessons] = useState<LessonData[]>([]);
-  const [lessonToShow, setLessonToShow] = useState<LessonData | null>(null);
+  const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
+  const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
+    setSelectedLesson(null)
+  );
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -41,29 +46,30 @@ const LessonsPage: React.FC = () => {
     );
   };
 
+  const openLesson = (lesson: LessonData) => {
+    setSelectedLesson(lesson);
+    openPopup();
+  };
+
   return (
     <>
-      {lessonToShow === null ? (
+      <Typography variant="h4" sx={{ marginBottom: "1rem" }}>
+        Lessons
+      </Typography>
+      {selectedLesson === null ? (
         lessons.map((lesson) => (
           <LessonItem
             key={lesson._id}
             lesson={lesson}
             onLessonDeleted={handleLessonDeleted}
-            openLesson={() => {
-              setLessonToShow(lesson);
-            }}
+            openLesson={() => openLesson(lesson)}
             updateLessonTitle={(newTitle: string) => {
               handleUpdateLesson({ ...lesson, title: newTitle });
             }}
           />
         ))
       ) : (
-        <LessonInfo
-          lesson={lessonToShow}
-          onClose={() => {
-            setLessonToShow(null);
-          }}
-        />
+        <LessonInfo lesson={selectedLesson} onClose={closePopup} />
       )}
     </>
   );

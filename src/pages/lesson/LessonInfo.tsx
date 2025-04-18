@@ -3,7 +3,7 @@ import { LessonData, QuizData } from "../../services/backend/types";
 import { useState, useEffect } from "react";
 import {
   deleteQuiz,
-  getQuizzesByLessonId,
+  getQuizzes,
   updateQuiz,
 } from "../../services/backend/service";
 import QuizItem from "./QuizItem";
@@ -19,7 +19,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   useEffect(() => {
     const fetchQuizzesByLessonId = async () => {
       try {
-        const response = await getQuizzesByLessonId(lesson._id);
+        const response = await getQuizzes(lesson._id);
         setQuizzes(response);
       } catch (error) {
         console.error("Error fetching lessons:", error);
