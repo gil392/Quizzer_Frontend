@@ -14,11 +14,11 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
+        <Route path="/" element={<Navigate to="/lesson" replace />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/summary" element={<SummaryPage />} />
         <Route path="/quiz" element={<QuizPage />} />
-        <Route path="/lesson" element={<LessonsPage />} />
+        <Route path="/lesson/*" element={<LessonsPage />} />
       </Routes>
     </Router>
   );
