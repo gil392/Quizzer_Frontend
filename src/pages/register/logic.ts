@@ -2,7 +2,7 @@ import { TextFieldProps } from '@mui/material';
 import { isNotNil } from 'ramda';
 import { ChangeEventHandler } from 'react';
 import { ZodError } from 'zod';
-import { RegisterFormData } from '../../api/users/types';
+import { RegisterFormData } from '../../api/authentication/types';
 import { RegisterFormErrors } from './types';
 
 export const createCustomTextField = ({

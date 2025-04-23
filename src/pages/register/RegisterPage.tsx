@@ -1,9 +1,9 @@
 import { Button, TextField, TextFieldProps, Typography } from '@mui/material';
 import { withStyles, WithStyles } from '@mui/styles';
 import { FunctionComponent, useState } from 'react';
-import { registerUser } from '../../api/users/api';
-import { registerSchema } from '../../api/users/schemas';
-import { RegisterFormData } from '../../api/users/types';
+import { registerUser } from '../../api/authentication/api';
+import { registerSchema } from '../../api/authentication/schemas';
+import { RegisterFormData } from '../../api/authentication/types';
 import {
     createRegisterButtonProps,
     createTextFieldProps,
