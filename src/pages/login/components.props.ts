@@ -1,5 +1,6 @@
 import { ButtonProps, TypographyProps } from '@mui/material';
 import { MouseEventHandler } from 'react';
+import { createRegisterTextFieldProps } from '../register/components.props';
 
 export const titleProps: TypographyProps = {
     component: 'h1',
@@ -30,3 +31,5 @@ export const createGoToRegisterButtonProps = (
     className,
     onClick: navigateToRegisterPage
 });
+
+export const createLoginTextFieldProps = createRegisterTextFieldProps;

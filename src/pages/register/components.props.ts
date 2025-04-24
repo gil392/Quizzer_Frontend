@@ -23,7 +23,7 @@ export const createRegisterButtonProps = (
     onClick: submit
 });
 
-export const createTextFieldProps = (
+export const createRegisterTextFieldProps = (
     label: string,
     handleChange: ChangeEventHandler,
     value: string,

@@ -1,49 +1,33 @@
 import { Button, TextField, TextFieldProps, Typography } from '@mui/material';
 import { withStyles, WithStyles } from '@mui/styles';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api/authentication/api';
 import { registerSchema } from '../../api/authentication/schemas';
 import { RegisterFormData } from '../../api/authentication/types';
-import { extractZodErrorMessagesByFields } from '../../utils/utils';
+import { useFormOf } from '../../hooks/form';
 import {
     createGoToLoginButtonProps,
     createRegisterButtonProps,
-    createTextFieldProps,
+    createRegisterTextFieldProps,
     subTitleProps,
     titleProps
 } from './components.props';
 import { styles } from './styles';
-import { RegisterFormErrors } from './types';
 
 export interface RegisterPageProps extends WithStyles<typeof styles> {}
 
 const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
     const { classes } = props;
     const navigate = useNavigate();
-    const [form, setForm] = useState<RegisterFormData>({
-        username: '',
-        email: '',
-        password: ''
-    });
-    const [errors, setErrors] = useState<RegisterFormErrors>({});
-
-    const handleChange =
-        (field: keyof RegisterFormData) =>
-        (event: React.ChangeEvent<HTMLInputElement>) => {
-            setForm({ ...form, [field]: event.target.value });
-            setErrors({ ...errors, [field]: undefined });
-        };
-
-    const validateForm = () => {
-        const { success, error } = registerSchema.safeParse(form);
-        if (!success) {
-            const fieldErrors = extractZodErrorMessagesByFields(error);
-            setErrors(fieldErrors);
+    const { form, errors, validateForm, fieldsChangeHandlers } = useFormOf(
+        registerSchema,
+        {
+            username: '',
+            email: '',
+            password: ''
         }
-
-        return success;
-    };
+    );
 
     const submitRegistration = () => {
         if (validateForm()) {
@@ -52,9 +36,9 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
     };
 
     const createRegisterFormFieldProps = (field: keyof RegisterFormData) =>
-        createTextFieldProps(
+        createRegisterTextFieldProps(
             field,
-            handleChange(field),
+            fieldsChangeHandlers(field),
             form[field],
             classes.textField,
             errors[field]

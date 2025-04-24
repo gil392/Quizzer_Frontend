@@ -1,70 +1,51 @@
 import { Button, TextField, TextFieldProps, Typography } from '@mui/material';
 import { withStyles, WithStyles } from '@mui/styles';
-import { FunctionComponent, useState } from 'react';
+import { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/authentication/api';
-import { registerSchema } from '../../api/authentication/schemas';
-import {
-    LoginFormData,
-    RegisterFormData
-} from '../../api/authentication/types';
-import { extractZodErrorMessagesByFields } from '../../utils/utils';
-import { createTextFieldProps } from '../register/components.props';
+import { loginSchema } from '../../api/authentication/schemas';
+import { LoginFormData } from '../../api/authentication/types';
+import { useFormOf } from '../../hooks/form';
 import {
     createGoToRegisterButtonProps,
     createLoginButtonProps,
+    createLoginTextFieldProps,
     subTitleProps,
     titleProps
 } from './components.props';
 import { styles } from './styles';
-import { LoginFormErrors } from './types';
 
 export interface LoginPageProps extends WithStyles<typeof styles> {}
 
 const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
     const { classes } = props;
     const navigate = useNavigate();
-    const [form, setForm] = useState<LoginFormData>({
-        username: '',
-        password: ''
-    });
-    const [errors, setErrors] = useState<LoginFormErrors>({});
-
-    const handleChange =
-        (field: keyof RegisterFormData) =>
-        (event: React.ChangeEvent<HTMLInputElement>) => {
-            setForm({ ...form, [field]: event.target.value });
-            setErrors({ ...errors, [field]: undefined });
-        };
-
-    const validateForm = () => {
-        const { success, error } = registerSchema.safeParse(form);
-        if (!success) {
-            const fieldErrors = extractZodErrorMessagesByFields(error);
-            setErrors(fieldErrors);
+    const { form, errors, validateForm, fieldsChangeHandlers } = useFormOf(
+        loginSchema,
+        {
+            username: '',
+            password: ''
         }
+    );
 
-        return success;
-    };
-
-    const submitRegistration = () => {
+    const submitLoginForm = () => {
         if (validateForm()) {
             loginUser(form);
         }
     };
 
-    const createLoginFormFieldProps = (field: keyof LoginFormData) =>
-        createTextFieldProps(
-            field,
-            handleChange(field),
-            form[field],
-            classes.textField,
-            errors[field]
-        );
     const navigateToRegisterPage = () => {
         navigate('/signup');
     };
 
+    const createLoginFormFieldProps = (field: keyof LoginFormData) =>
+        createLoginTextFieldProps(
+            field,
+            fieldsChangeHandlers(field),
+            form[field],
+            classes.textField,
+            errors[field]
+        );
     const usernameInputProps = createLoginFormFieldProps('username');
     const passwordTextFieldProps: TextFieldProps = {
         ...createLoginFormFieldProps('password'),
@@ -72,7 +53,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
     };
     const loginButtonProps = createLoginButtonProps(
         classes.loginButton,
-        submitRegistration
+        submitLoginForm
     );
     const goToRegisterButtonProps = createGoToRegisterButtonProps(
         classes.goToRegisterButton,
