@@ -20,6 +20,13 @@ const theme = createTheme({
             primary: '#1C1B1F',
             secondary: '#49454F'
         }
+    },
+    components: {
+        MuiButton: {
+            defaultProps: {
+                style: { textTransform: 'none' }
+            }
+        }
     }
 });
 

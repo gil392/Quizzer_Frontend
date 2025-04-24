@@ -39,3 +39,12 @@ export const createTextFieldProps = (
     className,
     value
 });
+
+export const createGoToLoginButtonProps = (
+    className: string,
+    navigateToLoginPage: MouseEventHandler
+): ButtonProps => ({
+    variant: 'outlined',
+    className,
+    onClick: navigateToLoginPage
+});

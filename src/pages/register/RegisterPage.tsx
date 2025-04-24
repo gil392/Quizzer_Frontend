@@ -1,16 +1,18 @@
 import { Button, TextField, TextFieldProps, Typography } from '@mui/material';
 import { withStyles, WithStyles } from '@mui/styles';
 import { FunctionComponent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api/authentication/api';
 import { registerSchema } from '../../api/authentication/schemas';
 import { RegisterFormData } from '../../api/authentication/types';
+import { extractZodErrorMessagesByFields } from '../../utils/utils';
 import {
+    createGoToLoginButtonProps,
     createRegisterButtonProps,
     createTextFieldProps,
     subTitleProps,
     titleProps
 } from './components.props';
-import { getRegisterFormErrors } from './logic';
 import { styles } from './styles';
 import { RegisterFormErrors } from './types';
 
@@ -18,6 +20,7 @@ export interface RegisterPageProps extends WithStyles<typeof styles> {}
 
 const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
     const { classes } = props;
+    const navigate = useNavigate();
     const [form, setForm] = useState<RegisterFormData>({
         username: '',
         email: '',
@@ -35,7 +38,7 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
     const validateForm = () => {
         const { success, error } = registerSchema.safeParse(form);
         if (!success) {
-            const fieldErrors = getRegisterFormErrors(error);
+            const fieldErrors = extractZodErrorMessagesByFields(error);
             setErrors(fieldErrors);
         }
 
@@ -56,6 +59,9 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
             classes.textField,
             errors[field]
         );
+    const navigateToLoginPage = () => {
+        navigate('/login');
+    };
 
     const usernameInputProps = createRegisterFormFieldProps('username');
     const emailTextFieldProps = createRegisterFormFieldProps('email');
@@ -64,8 +70,12 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
         type: 'password'
     };
     const registerButtonProps = createRegisterButtonProps(
-        classes.registerBtn,
+        classes.registerButton,
         submitRegistration
+    );
+    const gotToLoginButtonProps = createGoToLoginButtonProps(
+        classes.goToLoginButton,
+        navigateToLoginPage
     );
 
     return (
@@ -84,6 +94,8 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
 
                 <Button {...registerButtonProps}>Register</Button>
             </section>
+
+            <Button {...gotToLoginButtonProps}>Login</Button>
         </div>
     );
 };

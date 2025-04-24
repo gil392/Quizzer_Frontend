@@ -8,15 +8,23 @@ export const styles = createStyles({
         flexDirection: 'column',
         alignItems: 'center'
     },
-    formSection: { marginTop: '0.5em', width: '50%' },
+    formSection: { marginTop: '0.5em', width: '33%' },
     textField: {
         '&.MuiTextField-root': {
             margin: '0.5em 0'
         }
     },
-    registerBtn: {
+    registerButton: {
         '&.MuiButton-root': {
             margin: '1em 0'
+        }
+    },
+    goToLoginButton: {
+        '&.MuiButton-root': {
+            position: 'absolute',
+            top: 0,
+            right: 0,
+            margin: '1em'
         }
     }
 });
