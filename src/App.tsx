@@ -1,14 +1,15 @@
 import { ThemeProvider } from '@mui/material';
 import {
-    Navigate,
-    Route,
-    BrowserRouter as Router,
-    Routes
+  Navigate,
+  Route,
+  BrowserRouter as Router,
+  Routes
 } from 'react-router-dom';
 import './App.css';
 import QuizPage from './pages/Quiz';
 import SummaryPage from './pages/Summary';
 import HomePage from './pages/home/Home';
+import LoginPage from './pages/login/LoginPage';
 import RegisterPage from './pages/register/RegisterPage';
 import quizzerTheme from './theme';
 
@@ -22,6 +23,7 @@ function App() {
           <Route path='/summary' element={<SummaryPage />} />
           <Route path='/quiz' element={<QuizPage />} />
           <Route path='/signup' element={<RegisterPage />} />
+          <Route path='/login' element={<LoginPage />} />
         </Routes>
       </Router>
     </ThemeProvider>
