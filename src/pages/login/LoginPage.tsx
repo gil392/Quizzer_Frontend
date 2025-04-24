@@ -70,7 +70,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
             </section>
 
             <section className={classes.formSection}>
-                <TextField {...usernameInputProps} fullWidth />
+                <TextField {...usernameInputProps} />
                 <TextField {...passwordTextFieldProps} />
 
                 <Button {...loginButtonProps}>Login</Button>
