@@ -19,7 +19,7 @@ export interface RegisterPageProps extends WithStyles<typeof styles> {}
 const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
     const { classes } = props;
     const [form, setForm] = useState<RegisterFormData>({
-        name: '',
+        username: '',
         email: '',
         password: ''
     });
@@ -57,7 +57,7 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
             errors[field]
         );
 
-    const nameInputProps = createRegisterFormFieldProps('name');
+    const usernameInputProps = createRegisterFormFieldProps('username');
     const emailTextFieldProps = createRegisterFormFieldProps('email');
     const passwordTextFieldProps: TextFieldProps = {
         ...createRegisterFormFieldProps('password'),
@@ -78,7 +78,7 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
             </section>
 
             <section className={classes.formSection}>
-                <TextField {...nameInputProps} />
+                <TextField {...usernameInputProps} />
                 <TextField {...emailTextFieldProps} />
                 <TextField {...passwordTextFieldProps} />
 
