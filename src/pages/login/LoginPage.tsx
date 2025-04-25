@@ -4,7 +4,8 @@ import { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/authentication/api';
 import { loginSchema } from '../../api/authentication/schemas';
-import { LoginFormData } from '../../api/authentication/types';
+import { LoginFormData, LoginResponse } from '../../api/authentication/types';
+import { SetAccessTokenFunction } from '../../hooks/authentication/types';
 import { useFormOf } from '../../hooks/form';
 import {
     createGoToRegisterButtonProps,
@@ -15,10 +16,12 @@ import {
 } from './components.props';
 import { styles } from './styles';
 
-export interface LoginPageProps extends WithStyles<typeof styles> {}
+export interface LoginPageProps extends WithStyles<typeof styles> {
+    setAccessToken: SetAccessTokenFunction;
+}
 
 const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
-    const { classes } = props;
+    const { classes, setAccessToken } = props;
     const navigate = useNavigate();
     const { form, errors, validateForm, fieldsChangeHandlers } = useFormOf(
         loginSchema,
@@ -28,9 +31,15 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
         }
     );
 
-    const submitLoginForm = () => {
+    const onSuccessfulLogin = ({ token }: LoginResponse) => {
+        setAccessToken(token);
+        navigate('/home');
+    };
+
+    const submitLoginForm = async () => {
         if (validateForm()) {
-            loginUser(form);
+            const { data } = await loginUser(form);
+            onSuccessfulLogin(data);
         }
     };
 

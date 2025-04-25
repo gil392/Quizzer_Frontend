@@ -2,9 +2,12 @@ import { Button, TextField, TextFieldProps, Typography } from '@mui/material';
 import { withStyles, WithStyles } from '@mui/styles';
 import { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { registerUser } from '../../api/authentication/api';
+import { loginUser, registerUser } from '../../api/authentication/api';
 import { registerSchema } from '../../api/authentication/schemas';
-import { RegisterFormData } from '../../api/authentication/types';
+import {
+    LoginResponse,
+    RegisterFormData
+} from '../../api/authentication/types';
 import { useFormOf } from '../../hooks/form';
 import {
     createGoToLoginButtonProps,
@@ -14,11 +17,14 @@ import {
     titleProps
 } from './components.props';
 import { styles } from './styles';
+import { SetAccessTokenFunction } from '../../hooks/authentication/types';
 
-export interface RegisterPageProps extends WithStyles<typeof styles> {}
+export interface RegisterPageProps extends WithStyles<typeof styles> {
+    setAccessToken: SetAccessTokenFunction;
+}
 
 const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
-    const { classes } = props;
+    const { classes, setAccessToken } = props;
     const navigate = useNavigate();
     const { form, errors, validateForm, fieldsChangeHandlers } = useFormOf(
         registerSchema,
@@ -29,9 +35,16 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
         }
     );
 
-    const submitRegistration = () => {
+    const onSuccessfulLogin = ({ token }: LoginResponse) => {
+        setAccessToken(token);
+        navigate('/home');
+    };
+
+    const submitRegistration = async () => {
         if (validateForm()) {
-            registerUser(form);
+            await registerUser(form);
+            const { data } = await loginUser(form);
+            onSuccessfulLogin(data);
         }
     };
 
