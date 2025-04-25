@@ -8,7 +8,7 @@ import "./App.css";
 import SummaryPage from "./pages/Summary";
 import QuizPage from "./pages/Quiz";
 import HomePage from "./pages/home/Home";
-import LessonsPage from "./pages/lesson/LessonsPage";
+import LessonsPage from "./pages/lesson/LessonsPage/LessonsPage";
 
 function App() {
   return (

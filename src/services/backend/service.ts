@@ -7,7 +7,6 @@ import {
 } from "./types";
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
-
 export async function generateLesson(videoUrl: string): Promise<LessonData> {
   try {
     const response = await fetch(`${backendUrl}/lesson`, {
@@ -121,12 +120,7 @@ export async function updateLesson(
   lessonId: string,
   updatedData: Partial<LessonData>
 ): Promise<LessonData> {
-  return updateItem<LessonData>(
-    lessonId,
-    updatedData,
-    "lesson/update",
-    "lesson"
-  );
+  return updateItem<LessonData>(lessonId, updatedData, "lesson", "lesson");
 }
 
 export async function getQuizzes(lessonId: string): Promise<QuizData[]> {
@@ -177,11 +171,11 @@ export async function deleteItem(
 }
 
 export async function deleteLesson(lessonId: string): Promise<void> {
-  return deleteItem(lessonId, "lesson/delete", "lesson");
+  return deleteItem(lessonId, "lesson", "lesson");
 }
 
 export async function deleteQuiz(quizId: string): Promise<void> {
-  return deleteItem(quizId, "quiz/delete", "quiz");
+  return deleteItem(quizId, "quiz", "quiz");
 }
 
 export async function updateItem<T>(
@@ -217,5 +211,5 @@ export async function updateQuiz(
   quizId: string,
   updatedData: Partial<QuizData>
 ): Promise<QuizData> {
-  return updateItem<QuizData>(quizId, updatedData, "quiz/update", "quiz");
+  return updateItem<QuizData>(quizId, updatedData, "quiz", "quiz");
 }
