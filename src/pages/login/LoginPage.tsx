@@ -15,6 +15,7 @@ import {
     titleProps
 } from './components.props';
 import { styles } from './styles';
+import { PAGES_ROUTES } from '../../routes/routes.const';
 
 export interface LoginPageProps extends WithStyles<typeof styles> {
     setAccessToken: SetAccessTokenFunction;
@@ -33,7 +34,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
 
     const onSuccessfulLogin = ({ token }: LoginResponse) => {
         setAccessToken(token);
-        navigate('/home');
+        navigate(PAGES_ROUTES.HOME);
     };
 
     const submitLoginForm = async () => {
@@ -44,7 +45,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
     };
 
     const navigateToRegisterPage = () => {
-        navigate('/signup');
+        navigate(PAGES_ROUTES.REGISTER);
     };
 
     const createLoginFormFieldProps = (field: keyof LoginFormData) =>

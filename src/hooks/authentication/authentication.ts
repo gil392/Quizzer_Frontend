@@ -9,6 +9,7 @@ import {
     refreshTokenInAxiosRequest,
     shoulRefreshAccessToken
 } from './utils';
+import { PAGES_ROUTES } from '../../routes/routes.const';
 
 export const useAuthentication = (): SetAccessTokenFunction => {
     const [token, setToken] = useState<string | null>(
@@ -71,7 +72,7 @@ export const useAuthentication = (): SetAccessTokenFunction => {
                         setAccessToken(null);
                         console.error('refresh token error:', error);
 
-                        return navigate('/login');
+                        return navigate(PAGES_ROUTES.LOGIN);
                     }
                 }
 

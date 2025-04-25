@@ -8,7 +8,9 @@ import {
     LoginResponse,
     RegisterFormData
 } from '../../api/authentication/types';
+import { SetAccessTokenFunction } from '../../hooks/authentication/types';
 import { useFormOf } from '../../hooks/form';
+import { PAGES_ROUTES } from '../../routes/routes.const';
 import {
     createGoToLoginButtonProps,
     createRegisterButtonProps,
@@ -17,7 +19,6 @@ import {
     titleProps
 } from './components.props';
 import { styles } from './styles';
-import { SetAccessTokenFunction } from '../../hooks/authentication/types';
 
 export interface RegisterPageProps extends WithStyles<typeof styles> {
     setAccessToken: SetAccessTokenFunction;
@@ -37,7 +38,7 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
 
     const onSuccessfulLogin = ({ token }: LoginResponse) => {
         setAccessToken(token);
-        navigate('/home');
+        navigate(PAGES_ROUTES.HOME);
     };
 
     const submitRegistration = async () => {
@@ -57,7 +58,7 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
             errors[field]
         );
     const navigateToLoginPage = () => {
-        navigate('/login');
+        navigate(PAGES_ROUTES.LOGIN);
     };
 
     const usernameInputProps = createRegisterFormFieldProps('username');

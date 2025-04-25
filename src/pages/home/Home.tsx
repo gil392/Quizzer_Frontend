@@ -2,13 +2,14 @@ import { Box, Button, OutlinedInput } from '@mui/material';
 import './Home.css';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { PAGES_ROUTES } from '../../routes/routes.const';
 
 function HomePage() {
     const navigate = useNavigate();
     const [videoUrl, setVideoUrl] = useState('');
 
     const handleSummaryNavigation = () => {
-      navigate('/summary', { state: { videoUrl } });
+      navigate(PAGES_ROUTES.SUMMARY, { state: { videoUrl } });
   };
 
     return (

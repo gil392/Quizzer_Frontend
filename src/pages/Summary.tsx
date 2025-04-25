@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { LessonData, QuizSettings } from '../services/backend/types';
 import { generateLesson } from '../services/backend/service';
+import { PAGES_ROUTES } from '../routes/routes.const';
 
 const SummaryPage: React.FC = () => {
     const navigate = useNavigate();
@@ -39,7 +40,7 @@ const SummaryPage: React.FC = () => {
             solvingTimeMs: 60000,
         };
 
-        navigate('/quiz', { state: { lessonData, quizSettings } });
+        navigate(PAGES_ROUTES.QUIZ, { state: { lessonData, quizSettings } });
     };
 
     return (
