@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { IconButton, TextField, Box, Typography } from "@mui/material";
+import { TextField, Box, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { GenericIconButton } from "./GenericIconButton";
 
 type EditableActionsProps = {
   title: string;
@@ -75,21 +76,29 @@ const EditableActions = ({
       <Box sx={{ display: "flex", alignItems: "center" }}>
         {isEditing ? (
           <>
-            <IconButton style={{ outline: "none" }} onClick={handleSaveClick}>
-              <CheckIcon />
-            </IconButton>
-            <IconButton style={{ outline: "none" }} onClick={handleCancelClick}>
-              <CloseIcon />
-            </IconButton>
+            <GenericIconButton
+              icon={<CheckIcon />}
+              title={"Save"}
+              onClick={handleSaveClick}
+            />
+            <GenericIconButton
+              icon={<CloseIcon />}
+              title={"Cancel"}
+              onClick={handleCancelClick}
+            />
           </>
         ) : (
           <>
-            <IconButton style={{ outline: "none" }} onClick={handleEditClick}>
-              <EditIcon />
-            </IconButton>
-            <IconButton style={{ outline: "none" }} onClick={handleDeleteClick}>
-              <DeleteIcon />
-            </IconButton>
+            <GenericIconButton
+              icon={<EditIcon />}
+              title={"Edit"}
+              onClick={handleEditClick}
+            />
+            <GenericIconButton
+              icon={<DeleteIcon />}
+              title={"Delete"}
+              onClick={handleDeleteClick}
+            />
           </>
         )}
       </Box>

@@ -9,12 +9,13 @@ import {
 import LessonInfo from "./LessonInfo";
 import Typography from "@mui/material/Typography";
 import { usePopupNavigation } from "../../hooks/usePopupNavigation";
-import IconButton from "@mui/material/IconButton";
 import { Add } from "@mui/icons-material";
 import Box from "@mui/material/Box";
+import { useNavigate } from "react-router-dom";
+import { GenericIconButton } from "../../components/GenericIconButton";
 
 const LessonsPage: React.FC = () => {
-  const { openPopup: openCreateLesson } = usePopupNavigation("/home", "");
+  const navigate = useNavigate();
   const [lessons, setLessons] = useState<LessonData[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
@@ -74,29 +75,38 @@ const LessonsPage: React.FC = () => {
         >
           Lessons
         </Typography>
-        <IconButton
-          onClick={() => {
-            openCreateLesson();
-          }}
-          sx={{
-            marginLeft: "auto",
-          }}
-        >
-          <Add />
-        </IconButton>
+        {selectedLesson === null && (
+          <GenericIconButton
+            icon={<Add />}
+            onClick={() => {
+              navigate("/home");
+            }}
+            title="Create a new lesson"
+          />
+        )}
       </Box>
       {selectedLesson === null ? (
-        lessons.map((lesson) => (
-          <LessonItem
-            key={lesson._id}
-            lesson={lesson}
-            onLessonDeleted={handleLessonDeleted}
-            openLesson={() => openLesson(lesson)}
-            updateLessonTitle={(newTitle: string) => {
-              handleUpdateLesson({ ...lesson, title: newTitle });
-            }}
-          />
-        ))
+        lessons.length > 0 ? (
+          lessons.map((lesson) => (
+            <LessonItem
+              key={lesson._id}
+              lesson={lesson}
+              onLessonDeleted={handleLessonDeleted}
+              openLesson={() => openLesson(lesson)}
+              updateLessonTitle={(newTitle: string) => {
+                handleUpdateLesson({ ...lesson, title: newTitle });
+              }}
+            />
+          ))
+        ) : (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            style={{ marginBottom: "1rem" }}
+          >
+            No existing lessons.
+          </Typography>
+        )
       ) : (
         <LessonInfo lesson={selectedLesson} onClose={closePopup} />
       )}
