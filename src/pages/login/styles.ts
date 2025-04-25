@@ -24,7 +24,9 @@ export const styles = createStyles({
             position: 'absolute',
             top: 0,
             right: 0,
-            margin: '1em'
+            margin: '1em',
+            color: 'black',
+            borderColor: 'grey'
         }
     }
 });
