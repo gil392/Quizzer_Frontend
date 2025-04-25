@@ -5,6 +5,7 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GenericIconButton } from "./GenericIconButton";
+import useStyles from "./EditableActions.styles";
 
 type EditableActionsProps = {
   title: string;
@@ -19,6 +20,7 @@ const EditableActions = ({
   onDelete,
   onEditModeChange,
 }: EditableActionsProps) => {
+  const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 
@@ -48,42 +50,20 @@ const EditableActions = ({
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "space-between",
-        flexGrow: 1,
-        overflow: "hidden",
-      }}
-    >
+    <Box className={classes.root}>
       {isEditing ? (
         <TextField
           value={newTitle}
           onChange={(e) => setNewTitle(e.target.value)}
           size="small"
-          sx={{ marginRight: "1rem", flexGrow: 1 }}
+          className={classes.textField}
         />
       ) : (
-        <Typography
-          variant="h6"
-          sx={{
-            paddingLeft: "0.5vw",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            whiteSpace: "nowrap",
-          }}
-        >
+        <Typography variant="h6" className={classes.typography}>
           {title}
         </Typography>
       )}
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          flexShrink: 0, // Prevents the icons from shrinking
-        }}
-      >
+      <Box className={classes.iconsContainer}>
         {isEditing ? (
           <>
             <GenericIconButton

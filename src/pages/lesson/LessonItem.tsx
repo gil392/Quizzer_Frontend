@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
 import { LessonData } from "../../services/backend/types";
-import classes from "./LessonItem.module.css";
 import EditableActions from "../../components/EditableActions";
 import { useState } from "react";
 import { Typography } from "@mui/material";
+import useStyles from "./LessonItem.styles";
 
 type LessonItemProps = {
   lesson: LessonData;
@@ -14,6 +14,8 @@ type LessonItemProps = {
 
 const LessonItem = (props: LessonItemProps) => {
   const [isEditing, setIsEditing] = useState(false);
+  const classes = useStyles();
+
   return (
     <Box
       className={`${classes.lessonItem} ${
@@ -21,13 +23,7 @@ const LessonItem = (props: LessonItemProps) => {
       }`}
       onClick={() => !isEditing && props.openLesson()}
     >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <Box className={classes.flexContainer}>
         <EditableActions
           title={props.lesson.title}
           onSave={(newTitle) => props.updateLessonTitle(newTitle)}
@@ -35,9 +31,7 @@ const LessonItem = (props: LessonItemProps) => {
           onEditModeChange={(isEditing) => setIsEditing(isEditing)}
         />
       </Box>
-      <Typography
-        sx={{ marginTop: "0.5rem", paddingLeft: "0.5vw", textAlign: "left" }}
-      >
+      <Typography className={classes.successRateText}>
         Success rate: 100%
       </Typography>
     </Box>

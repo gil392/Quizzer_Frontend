@@ -13,6 +13,7 @@ import { Add } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { GenericIconButton } from "../../components/GenericIconButton";
+import useStyles from "./LessonsPage.styles";
 
 const LessonsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ const LessonsPage: React.FC = () => {
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
     setSelectedLesson(null)
   );
+  const classes = useStyles();
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -62,21 +64,8 @@ const LessonsPage: React.FC = () => {
         <LessonInfo lesson={selectedLesson} onClose={closePopup} />
       ) : (
         <>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1rem",
-            }}
-          >
-            <Typography
-              variant="h4"
-              sx={{
-                flexGrow: 1,
-                textAlign: "center",
-              }}
-            >
+          <Box className={classes.headerContainer}>
+            <Typography variant="h4" className={classes.title}>
               Lessons
             </Typography>
             {selectedLesson === null && (
@@ -106,7 +95,7 @@ const LessonsPage: React.FC = () => {
             <Typography
               variant="body2"
               color="text.secondary"
-              style={{ marginBottom: "1rem" }}
+              className={classes.noLessonsText}
             >
               No existing lessons.
             </Typography>

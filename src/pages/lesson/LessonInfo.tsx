@@ -20,6 +20,7 @@ import {
   Collapse,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import useStyles from "./LessonInfo.styles";
 
 interface LessonInfoProps {
   lesson: LessonData;
@@ -42,6 +43,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   const onCreateQuiz = () => {
     navigate("/quiz", { state: { lessonData: lesson, quizSettings } });
   };
+
   useEffect(() => {
     const fetchQuizzesByLessonId = async () => {
       try {
@@ -69,35 +71,21 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
     );
   };
 
+  const classes = useStyles();
+
   return (
-    <Box
-      sx={{
-        display: "flex",
-        gap: "2vw",
-        maxWidth: "100%",
-        overflowX: "hidden",
-      }}
-    >
-      <Box
-        sx={{
-          flex: 6,
-          minWidth: 0, // allows box to shrink if needed, to let overflow work
-        }}
-      >
+    <Box className={classes.container}>
+      <Box className={classes.leftBox}>
         <Typography
           sx={{
-            fontSize: "1.2rem",
-            fontWeight: "bold",
-            marginBottom: "0.5vh",
+            fontSize: "1.2rem", // Your desired font size
+            fontWeight: "bold", // Your desired font weight
+            marginBottom: "0.5vh", // Your desired margin
           }}
         >
           {lesson.title}
         </Typography>
-        <Card
-          sx={{
-            width: "100%",
-          }}
-        >
+        <Card className={classes.card}>
           <CardActions>
             <Button
               size="small"
@@ -110,9 +98,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
             in={isSummaryExpanded}
             timeout="auto"
             unmountOnExit
-            sx={{
-              width: "100%",
-            }}
+            className={classes.collapseContent}
           >
             <CardContent>
               <Typography variant="body2">{lesson.summary}</Typography>
@@ -121,12 +107,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
         </Card>
       </Box>
 
-      <Box
-        sx={{
-          flex: 4,
-          minWidth: 0, // allows box to shrink if needed, to let overflow work
-        }}
-      >
+      <Box className={classes.rightBox}>
         {quizzes.length > 0 ? (
           quizzes.map((quiz) => (
             <QuizItem
@@ -142,18 +123,12 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
           <Typography
             variant="body2"
             color="text.secondary"
-            sx={{ marginBottom: "1rem" }}
+            className={classes.noQuizzesText}
           >
             No quizzes available for this lesson.
           </Typography>
         )}
-        <Box
-          sx={{
-            display: "flex",
-            gap: "1rem",
-            justifyContent: "center",
-          }}
-        >
+        <Box className={classes.buttonsContainer}>
           <Button variant="outlined" color="inherit" onClick={onCreateQuiz}>
             Create New Quiz
           </Button>

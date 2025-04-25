@@ -8,6 +8,7 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { QuizData } from "../../services/backend/types";
 import EditableActions from "../../components/EditableActions";
+import useStyles from "./QuizItem.styles";
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -16,22 +17,11 @@ type QuizItemProps = {
 };
 
 const QuizItem = ({ quiz, deleteQuiz, updateQuizTitle }: QuizItemProps) => {
+  const classes = useStyles();
+
   return (
-    <Box
-      sx={{
-        marginBottom: "1rem",
-        border: "1px solid #ccc",
-        borderRadius: "8px",
-        padding: "1rem",
-      }}
-    >
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+    <Box className={classes.container}>
+      <Box className={classes.header}>
         <EditableActions
           title={quiz.title}
           onSave={(newTitle) => updateQuizTitle(newTitle)}
@@ -44,15 +34,7 @@ const QuizItem = ({ quiz, deleteQuiz, updateQuizTitle }: QuizItemProps) => {
         </AccordionSummary>
         <AccordionDetails>
           {["Attempt 1", "Nice attempt"].map((attempt, index) => (
-            <Box
-              key={index}
-              sx={{
-                marginBottom: "0.5rem",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-            >
+            <Box key={index} className={classes.accordionDetails}>
               <Typography variant="body1">
                 {index + 1}. {attempt}
               </Typography>
