@@ -54,6 +54,7 @@ const EditableActions = ({
         alignItems: "center",
         justifyContent: "space-between",
         flexGrow: 1,
+        overflow: "hidden",
       }}
     >
       {isEditing ? (
@@ -68,12 +69,21 @@ const EditableActions = ({
           variant="h6"
           sx={{
             paddingLeft: "0.5vw",
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
           }}
         >
           {title}
         </Typography>
       )}
-      <Box sx={{ display: "flex", alignItems: "center" }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          flexShrink: 0, // Prevents the icons from shrinking
+        }}
+      >
         {isEditing ? (
           <>
             <GenericIconButton

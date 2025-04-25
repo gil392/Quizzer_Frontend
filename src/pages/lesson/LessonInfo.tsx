@@ -70,62 +70,97 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   };
 
   return (
-    <Box>
-      <h2>{lesson.title}</h2>
-      <Card
+    <Box
+      sx={{
+        display: "flex",
+        gap: "2vw",
+        maxWidth: "100%",
+        overflowX: "hidden",
+      }}
+    >
+      <Box
         sx={{
-          marginBottom: "1rem",
-          width: "70rem", // Ensure consistent width
+          flex: 6,
+          minWidth: 0, // allows box to shrink if needed, to let overflow work
         }}
       >
-        <CardActions>
-          <Button
-            size="small"
-            onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
-          >
-            {isSummaryExpanded ? "Hide Summary" : "Show Summary"}
-          </Button>
-        </CardActions>
-        <Collapse
-          in={isSummaryExpanded}
-          timeout="auto"
-          unmountOnExit
+        <Typography
+          sx={{
+            fontSize: "1.2rem",
+            fontWeight: "bold",
+            marginBottom: "0.5vh",
+          }}
+        >
+          {lesson.title}
+        </Typography>
+        <Card
           sx={{
             width: "100%",
           }}
         >
-          <CardContent>
-            <Typography variant="body2">{lesson.summary}</Typography>
-          </CardContent>
-        </Collapse>
-      </Card>
-      {quizzes.length > 0 ? (
-        quizzes.map((quiz) => (
-          <QuizItem
-            key={quiz._id}
-            quiz={quiz}
-            deleteQuiz={() => handleDeleteQuiz(quiz._id)}
-            updateQuizTitle={(newTitle: string) => {
-              handleUpdateQuiz({ ...quiz, title: newTitle });
+          <CardActions>
+            <Button
+              size="small"
+              onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
+            >
+              {isSummaryExpanded ? "Hide Summary" : "Show Summary"}
+            </Button>
+          </CardActions>
+          <Collapse
+            in={isSummaryExpanded}
+            timeout="auto"
+            unmountOnExit
+            sx={{
+              width: "100%",
             }}
-          />
-        ))
-      ) : (
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          style={{ marginBottom: "1rem" }}
+          >
+            <CardContent>
+              <Typography variant="body2">{lesson.summary}</Typography>
+            </CardContent>
+          </Collapse>
+        </Card>
+      </Box>
+
+      <Box
+        sx={{
+          flex: 4,
+          minWidth: 0, // allows box to shrink if needed, to let overflow work
+        }}
+      >
+        {quizzes.length > 0 ? (
+          quizzes.map((quiz) => (
+            <QuizItem
+              key={quiz._id}
+              quiz={quiz}
+              deleteQuiz={() => handleDeleteQuiz(quiz._id)}
+              updateQuizTitle={(newTitle: string) => {
+                handleUpdateQuiz({ ...quiz, title: newTitle });
+              }}
+            />
+          ))
+        ) : (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ marginBottom: "1rem" }}
+          >
+            No quizzes available for this lesson.
+          </Typography>
+        )}
+        <Box
+          sx={{
+            display: "flex",
+            gap: "1rem",
+            justifyContent: "center",
+          }}
         >
-          No quizzes available for this lesson.
-        </Typography>
-      )}
-      <Box style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
-        <Button variant="outlined" color="inherit" onClick={onCreateQuiz}>
-          Create New Quiz
-        </Button>
-        <Button variant="outlined" color="inherit" onClick={onClose}>
-          Close
-        </Button>
+          <Button variant="outlined" color="inherit" onClick={onCreateQuiz}>
+            Create New Quiz
+          </Button>
+          <Button variant="outlined" color="inherit" onClick={onClose}>
+            Close
+          </Button>
+        </Box>
       </Box>
     </Box>
   );

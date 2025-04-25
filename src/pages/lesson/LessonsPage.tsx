@@ -58,57 +58,60 @@ const LessonsPage: React.FC = () => {
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          marginBottom: "1rem",
-        }}
-      >
-        <Typography
-          variant="h4"
-          sx={{
-            flexGrow: 1,
-            textAlign: "center",
-          }}
-        >
-          Lessons
-        </Typography>
-        {selectedLesson === null && (
-          <GenericIconButton
-            icon={<Add />}
-            onClick={() => {
-              navigate("/home");
-            }}
-            title="Create a new lesson"
-          />
-        )}
-      </Box>
-      {selectedLesson === null ? (
-        lessons.length > 0 ? (
-          lessons.map((lesson) => (
-            <LessonItem
-              key={lesson._id}
-              lesson={lesson}
-              onLessonDeleted={handleLessonDeleted}
-              openLesson={() => openLesson(lesson)}
-              updateLessonTitle={(newTitle: string) => {
-                handleUpdateLesson({ ...lesson, title: newTitle });
-              }}
-            />
-          ))
-        ) : (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            style={{ marginBottom: "1rem" }}
-          >
-            No existing lessons.
-          </Typography>
-        )
-      ) : (
+      {selectedLesson !== null ? (
         <LessonInfo lesson={selectedLesson} onClose={closePopup} />
+      ) : (
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              marginBottom: "1rem",
+            }}
+          >
+            <Typography
+              variant="h4"
+              sx={{
+                flexGrow: 1,
+                textAlign: "center",
+              }}
+            >
+              Lessons
+            </Typography>
+            {selectedLesson === null && (
+              <GenericIconButton
+                icon={<Add />}
+                onClick={() => {
+                  navigate("/home");
+                }}
+                title="Create a new lesson"
+              />
+            )}
+          </Box>
+
+          {lessons.length > 0 ? (
+            lessons.map((lesson) => (
+              <LessonItem
+                key={lesson._id}
+                lesson={lesson}
+                onLessonDeleted={handleLessonDeleted}
+                openLesson={() => openLesson(lesson)}
+                updateLessonTitle={(newTitle: string) => {
+                  handleUpdateLesson({ ...lesson, title: newTitle });
+                }}
+              />
+            ))
+          ) : (
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              style={{ marginBottom: "1rem" }}
+            >
+              No existing lessons.
+            </Typography>
+          )}
+        </>
       )}
     </>
   );
