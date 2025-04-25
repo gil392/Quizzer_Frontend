@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
-import { LessonData } from "../../services/backend/types";
-import EditableActions from "../../components/EditableActions";
+import { LessonData } from "../../../services/backend/types";
+import EditableActions from "../../../components/EditableActions";
 import { useState } from "react";
 import { Typography } from "@mui/material";
 import useStyles from "./LessonItem.styles";

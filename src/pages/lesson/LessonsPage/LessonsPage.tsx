@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
-import { LessonData } from "../../services/backend/types";
-import LessonItem from "./LessonItem";
+import { LessonData } from "../../../services/backend/types";
+import LessonItem from "../LessonItem/LessonItem";
 import {
   deleteLesson,
   getLessons,
   updateLesson,
-} from "../../services/backend/service";
-import LessonInfo from "./LessonInfo";
+} from "../../../services/backend/service";
+import LessonInfo from "../LessonInfo/LessonInfo";
 import Typography from "@mui/material/Typography";
-import { usePopupNavigation } from "../../hooks/usePopupNavigation";
+import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
 import { Add } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-import { GenericIconButton } from "../../components/GenericIconButton";
+import { GenericIconButton } from "../../../components/GenericIconButton";
 import useStyles from "./LessonsPage.styles";
 
 const LessonsPage: React.FC = () => {

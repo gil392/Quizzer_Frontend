@@ -3,14 +3,14 @@ import {
   LessonData,
   QuizData,
   QuizSettings,
-} from "../../services/backend/types";
+} from "../../../services/backend/types";
 import { useState, useEffect } from "react";
 import {
   deleteQuiz,
   getQuizzes,
   updateQuiz,
-} from "../../services/backend/service";
-import QuizItem from "./QuizItem";
+} from "../../../services/backend/service";
+import QuizItem from "../QuizItem/QuizItem";
 import {
   Card,
   CardContent,
