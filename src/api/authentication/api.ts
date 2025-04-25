@@ -6,3 +6,6 @@ export const registerUser = (registerForm: RegisterFormData) =>
 
 export const loginUser = (loginForm: LoginFormData) =>
     apiClient.post<LoginResponse>('/auth/login', loginForm);
+
+export const refreshAuthAccessToken = () =>
+    apiClient.get<LoginResponse>('/auth/refresh');
