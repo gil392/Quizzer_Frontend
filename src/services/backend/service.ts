@@ -1,6 +1,6 @@
 import { LessonData, QuizData, QuizSettings, QuizAnswerSubmittion, QuizResult } from "./types";
 
-const backendUrl = import.meta.env.VITE_BACKEND_URL; 
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
 export async function generateLesson(videoUrl: string): Promise<LessonData> {
     try {
@@ -26,7 +26,7 @@ export async function generateLesson(videoUrl: string): Promise<LessonData> {
     } catch (error) {
         console.error('Error generating lesson:', error);
 
-        throw error; 
+        throw error;
     }
 }
 
@@ -51,12 +51,12 @@ export async function generateQuiz(lessonId: string, settings: QuizSettings): Pr
         const data = await response.json();
         console.log('Quiz generated:', data);
 
-        return data; 
+        return data;
 
     } catch (error) {
         console.error('Error generating quiz:', error);
-        
-        throw error; 
+
+        throw error;
     }
 }
 
@@ -77,12 +77,12 @@ export async function submitQuiz(data: QuizAnswerSubmittion): Promise<QuizResult
         const result = await response.json();
         console.log('Quiz submitted:', result);
 
-        return result; 
+        return result;
 
     } catch (error) {
         console.error('Error submitting quiz:', error);
 
-        throw error; 
+        throw error;
     }
 
 }
