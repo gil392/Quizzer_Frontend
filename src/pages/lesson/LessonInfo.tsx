@@ -1,5 +1,9 @@
 import Box from "@mui/material/Box";
-import { LessonData, QuizData } from "../../services/backend/types";
+import {
+  LessonData,
+  QuizData,
+  QuizSettings,
+} from "../../services/backend/types";
 import { useState, useEffect } from "react";
 import {
   deleteQuiz,
@@ -7,6 +11,15 @@ import {
   updateQuiz,
 } from "../../services/backend/service";
 import QuizItem from "./QuizItem";
+import {
+  Card,
+  CardContent,
+  CardActions,
+  Button,
+  Typography,
+  Collapse,
+} from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 interface LessonInfoProps {
   lesson: LessonData;
@@ -15,7 +28,19 @@ interface LessonInfoProps {
 
 const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   const [quizzes, setQuizzes] = useState<QuizData[]>([]);
+  const [isSummaryExpanded, setIsSummaryExpanded] = useState(true); // Default to true (show summary)
 
+  const navigate = useNavigate();
+  const quizSettings: QuizSettings = {
+    checkType: "onSubmit",
+    isRandomOrder: true,
+    maxQuestionCount: 10,
+    solvingTimeMs: 60000,
+  };
+
+  const onCreateQuiz = () => {
+    navigate("/quiz", { state: { lessonData: lesson, quizSettings } });
+  };
   useEffect(() => {
     const fetchQuizzesByLessonId = async () => {
       try {
@@ -46,18 +71,61 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   return (
     <Box>
       <h2>{lesson.title}</h2>
-      <p>{lesson.summary}</p>
-      {quizzes.map((quiz) => (
-        <QuizItem
-          key={quiz._id}
-          quiz={quiz}
-          deleteQuiz={() => handleDeleteQuiz(quiz._id)}
-          updateQuizTitle={(newTitle: string) => {
-            handleUpdateQuiz({ ...quiz, title: newTitle });
+      <Card
+        sx={{
+          marginBottom: "1rem",
+          width: "70rem", // Ensure consistent width
+        }}
+      >
+        <CardActions>
+          <Button
+            size="small"
+            onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
+          >
+            {isSummaryExpanded ? "Hide Summary" : "Show Summary"}
+          </Button>
+        </CardActions>
+        <Collapse
+          in={isSummaryExpanded}
+          timeout="auto"
+          unmountOnExit
+          sx={{
+            width: "100%",
           }}
-        />
-      ))}
-      <button onClick={onClose}>Close</button>
+        >
+          <CardContent>
+            <Typography variant="body2">{lesson.summary}</Typography>
+          </CardContent>
+        </Collapse>
+      </Card>
+      {quizzes.length > 0 ? (
+        quizzes.map((quiz) => (
+          <QuizItem
+            key={quiz._id}
+            quiz={quiz}
+            deleteQuiz={() => handleDeleteQuiz(quiz._id)}
+            updateQuizTitle={(newTitle: string) => {
+              handleUpdateQuiz({ ...quiz, title: newTitle });
+            }}
+          />
+        ))
+      ) : (
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          style={{ marginBottom: "1rem" }}
+        >
+          No quizzes available for this lesson.
+        </Typography>
+      )}
+      <Box style={{ display: "flex", gap: "1rem", justifyContent: "center" }}>
+        <Button variant="outlined" color="inherit" onClick={onCreateQuiz}>
+          Create New Quiz
+        </Button>
+        <Button variant="outlined" color="inherit" onClick={onClose}>
+          Close
+        </Button>
+      </Box>
     </Box>
   );
 };

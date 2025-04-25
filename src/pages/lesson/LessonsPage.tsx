@@ -9,8 +9,12 @@ import {
 import LessonInfo from "./LessonInfo";
 import Typography from "@mui/material/Typography";
 import { usePopupNavigation } from "../../hooks/usePopupNavigation";
+import IconButton from "@mui/material/IconButton";
+import { Add } from "@mui/icons-material";
+import Box from "@mui/material/Box";
 
 const LessonsPage: React.FC = () => {
+  const { openPopup: openCreateLesson } = usePopupNavigation("/home", "");
   const [lessons, setLessons] = useState<LessonData[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
@@ -53,9 +57,34 @@ const LessonsPage: React.FC = () => {
 
   return (
     <>
-      <Typography variant="h4" sx={{ marginBottom: "1rem" }}>
-        Lessons
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          marginBottom: "1rem",
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{
+            flexGrow: 1,
+            textAlign: "center",
+          }}
+        >
+          Lessons
+        </Typography>
+        <IconButton
+          onClick={() => {
+            openCreateLesson();
+          }}
+          sx={{
+            marginLeft: "auto",
+          }}
+        >
+          <Add />
+        </IconButton>
+      </Box>
       {selectedLesson === null ? (
         lessons.map((lesson) => (
           <LessonItem

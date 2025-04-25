@@ -1,4 +1,3 @@
-
 import Box from "@mui/material/Box";
 import {
   Accordion,
@@ -45,7 +44,15 @@ const QuizItem = ({ quiz, deleteQuiz, updateQuizTitle }: QuizItemProps) => {
         </AccordionSummary>
         <AccordionDetails>
           {["Attempt 1", "Nice attempt"].map((attempt, index) => (
-            <Box key={index} sx={{ marginBottom: "0.5rem" }}>
+            <Box
+              key={index}
+              sx={{
+                marginBottom: "0.5rem",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "flex-start",
+              }}
+            >
               <Typography variant="body1">
                 {index + 1}. {attempt}
               </Typography>
