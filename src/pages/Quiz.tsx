@@ -1,3 +1,4 @@
+import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
   Card,
@@ -7,12 +8,13 @@ import {
   Checkbox,
   Skeleton,
 } from "@mui/material";
-import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { QuizData, QuizResult } from "../services/backend/types";
 import { generateQuiz, submitQuiz } from "../services/backend/service";
+import useStyles from "./Quiz.styles";
 
 const QuizPage: React.FC = () => {
+  const classes = useStyles();
   const location = useLocation();
   const [quizData, setQuizData] = useState<QuizData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -110,76 +112,25 @@ const QuizPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ width: "50vw", margin: "auto", padding: 2 }}>
-      <Box
-        sx={{
-          maxWidth: "50vw",
-          height: "85vh",
-          overflowY: "auto",
-          backgroundColor: "#f5f5f5",
-          boxShadow: 5,
-          padding: 2,
-          "&::-webkit-scrollbar": {
-            width: "8px",
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#888",
-            borderRadius: "4px",
-          },
-          "&::-webkit-scrollbar-thumb:hover": {
-            backgroundColor: "#555",
-          },
-          "&::-webkit-scrollbar-track": {
-            backgroundColor: "#f1f1f1",
-          },
-        }}
-      >
+    <Box className={classes.container}>
+      <Box className={classes.quizBox}>
         {loading ? (
           <Box>
             <Skeleton variant="text" width="80%" height={40} />
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={200}
-              sx={{ marginTop: 2 }}
-            />
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={50}
-              sx={{ marginTop: 2 }}
-            />
-            <Skeleton
-              variant="text"
-              width="80%"
-              height={40}
-              sx={{ marginTop: 6 }}
-            />
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={200}
-              sx={{ marginTop: 2 }}
-            />
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={50}
-              sx={{ marginTop: 2 }}
-            />
+            <Skeleton variant="rectangular" width="100%" height={200} />
+            <Skeleton variant="rectangular" width="100%" height={50} />
+            <Skeleton variant="text" width="80%" height={40} />
+            <Skeleton variant="rectangular" width="100%" height={200} />
+            <Skeleton variant="rectangular" width="100%" height={50} />
           </Box>
         ) : quizData ? (
           <Box>
             {quizResult && (
               <Box
-                sx={{
-                  textAlign: "center",
-                  marginBottom: 3,
-                  padding: 2,
+                className={classes.resultBox}
+                style={{
                   backgroundColor:
                     quizResult.score >= 60 ? "#e8f5e9" : "#ffebee",
-                  borderRadius: "8px",
-                  boxShadow: 2,
                 }}
               >
                 <Typography
@@ -194,21 +145,8 @@ const QuizPage: React.FC = () => {
               {lessonData.lessonTitle}
             </Typography>
             {quizData.questions.map((question, index) => (
-              <Box
-                key={index}
-                sx={{
-                  padding: 3,
-                  backgroundColor: "#f5f5f5",
-                }}
-              >
-                <Card
-                  sx={{
-                    boxShadow: 3,
-                    textAlign: "left",
-                    borderRadius: 2,
-                    padding: 2,
-                  }}
-                >
+              <Box key={index} className={classes.questionBox}>
+                <Card className={classes.card}>
                   <Typography variant="h6" gutterBottom>
                     {index + 1}. {question.text}
                   </Typography>
@@ -241,14 +179,7 @@ const QuizPage: React.FC = () => {
                 </Card>
               </Box>
             ))}
-            <Box
-              sx={{
-                display: "flex",
-                justifyContent: "center",
-                padding: 2,
-                gap: 2,
-              }}
-            >
+            <Box className={classes.buttonContainer}>
               <Button
                 variant="contained"
                 color="primary"

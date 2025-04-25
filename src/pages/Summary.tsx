@@ -10,8 +10,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LessonData, QuizSettings } from "../services/backend/types";
 import { generateLesson } from "../services/backend/service";
+import useStyles from "./Summary.styles";
 
 const SummaryPage: React.FC = () => {
+  const classes = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
   const [lessonData, setLessonData] = useState<LessonData | null>(null);
@@ -36,7 +38,6 @@ const SummaryPage: React.FC = () => {
       return;
     }
 
-    // TODO: move to home page
     const quizSettings: QuizSettings = {
       checkType: "onSubmit",
       isRandomOrder: true,
@@ -48,73 +49,27 @@ const SummaryPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ width: "50vw", margin: "auto", padding: 2 }}>
-      <Card
-        sx={{
-          maxWidth: "50vw",
-          boxShadow: 10,
-          paddingTop: 2,
-          height: "85vh",
-          overflowY: "auto",
-          "&::-webkit-scrollbar": {
-            width: "8px",
-          },
-          "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "#888",
-            borderRadius: "4px",
-          },
-          "&::-webkit-scrollbar-thumb:hover": {
-            backgroundColor: "#555",
-          },
-          "&::-webkit-scrollbar-track": {
-            backgroundColor: "#f1f1f1",
-          },
-        }}
-      >
+    <Box className={classes.container}>
+      <Card className={classes.card}>
         {loading ? (
-          <Box sx={{ padding: 2 }}>
+          <Box className={classes.skeletonContainer}>
             <Skeleton variant="text" width="80%" height={40} />
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={200}
-              sx={{ marginTop: 2 }}
-            />
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={50}
-              sx={{ marginTop: 2 }}
-            />
-            <Skeleton
-              variant="text"
-              width="80%"
-              height={40}
-              sx={{ marginTop: 6 }}
-            />
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={200}
-              sx={{ marginTop: 2 }}
-            />
-            <Skeleton
-              variant="rectangular"
-              width="100%"
-              height={50}
-              sx={{ marginTop: 2 }}
-            />
+            <Skeleton variant="rectangular" width="100%" height={200} />
+            <Skeleton variant="rectangular" width="100%" height={50} />
+            <Skeleton variant="text" width="80%" height={40} />
+            <Skeleton variant="rectangular" width="100%" height={200} />
+            <Skeleton variant="rectangular" width="100%" height={50} />
           </Box>
         ) : lessonData ? (
           <Box>
-            <CardContent sx={{ textAlign: "left" }}>
+            <CardContent className={classes.cardContent}>
               <Typography variant="h5" component="div" gutterBottom>
                 {lessonData.title}
               </Typography>
               <Typography variant="body1">{lessonData.summary}</Typography>
             </CardContent>
 
-            <Box sx={{ display: "flex", justifyContent: "center", padding: 2 }}>
+            <Box className={classes.buttonContainer}>
               <Button
                 variant="contained"
                 color="primary"
