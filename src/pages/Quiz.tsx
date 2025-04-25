@@ -7,7 +7,7 @@ import {
   Checkbox,
   Skeleton,
 } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { QuizData, QuizResult } from "../services/backend/types";
 import { generateQuiz, submitQuiz } from "../services/backend/service";
@@ -23,17 +23,29 @@ const QuizPage: React.FC = () => {
 
   const lessonData = location.state?.lessonData;
 
+  const generateNewQuiz = useCallback(async () => {
+    if (!lessonData?._id) return;
+
+    setLoading(true);
+    setQuizResult(null);
+    setSelectedAnswers({});
+
+    try {
+      const data = await generateQuiz(
+        lessonData._id,
+        location.state?.quizSettings
+      );
+      setQuizData(data);
+    } catch (error) {
+      console.error("Error loading quiz:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [lessonData, location.state]);
+
   useEffect(() => {
-    generateQuiz(lessonData._id, location.state?.quizSettings)
-      .then((data: QuizData) => {
-        setQuizData(data);
-        setLoading(false);
-      })
-      .catch((error: any) => {
-        console.error("Error loading quiz:", error);
-        setLoading(false);
-      });
-  }, [location.state]);
+    generateNewQuiz();
+  }, [generateNewQuiz]);
 
   const handleOptionChange = (questionIndex: number, option: string) => {
     setSelectedAnswers((prev) => ({
@@ -59,8 +71,8 @@ const QuizPage: React.FC = () => {
           })),
       };
 
-      const result: QuizResult = await submitQuiz(submissionData); // Call the backend service
-      setQuizResult(result); // Store the quiz result
+      const result: QuizResult = await submitQuiz(submissionData);
+      setQuizResult(result);
       console.log("Quiz submission result:", result);
     } catch (error) {
       console.error("Error submitting quiz:", error);
@@ -229,7 +241,14 @@ const QuizPage: React.FC = () => {
                 </Card>
               </Box>
             ))}
-            <Box sx={{ display: "flex", justifyContent: "center", padding: 2 }}>
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                padding: 2,
+                gap: 2,
+              }}
+            >
               <Button
                 variant="contained"
                 color="primary"
@@ -237,6 +256,13 @@ const QuizPage: React.FC = () => {
                 disabled={!allQuestionsAnswered}
               >
                 Submit
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={generateNewQuiz}
+              >
+                Generate New Quiz
               </Button>
             </Box>
           </Box>
