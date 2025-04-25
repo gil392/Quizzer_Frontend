@@ -1,6 +1,6 @@
 import { DisplayMode } from "./constants";
 
-export const getOppositeDisplayMode = (displayMode: DisplayMode) => {
+export const getOppositeDisplayMode = (displayMode: DisplayMode) : DisplayMode => {
     switch(displayMode) {
         case DisplayMode.Light:
             return DisplayMode.Dark;
@@ -8,3 +8,8 @@ export const getOppositeDisplayMode = (displayMode: DisplayMode) => {
             return DisplayMode.Light;
     } 
 }    
+
+export const getInitialDisplayMode = () : DisplayMode => {
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches;
+    return isLightMode ? DisplayMode.Light : DisplayMode.Dark;
+}

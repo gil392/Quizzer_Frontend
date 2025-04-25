@@ -1,26 +1,39 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { DisplayMode } from "./constants"
-import { getOppositeDisplayMode } from "./utils";
+import { getInitialDisplayMode, getOppositeDisplayMode } from "./utils";
+import { Button } from "@mui/material";
+import { Moon, Sun } from 'lucide-react';
 
 const DisplayModeSwtich: React.FC = () => {
-    useEffect(() => { 
-    const displayModeProvider = document.documentElement.classList; 
-    const prefersLightMode = window.matchMedia('(prefers-color-scheme: light)').matches;
-    const displayMode = prefersLightMode ? DisplayMode.Light : DisplayMode.Dark;
-    displayModeProvider.add(displayMode);
-   }, []);
+  const displayModeProvider = document.documentElement.classList; 
+  const initalDisplayMode: DisplayMode = getInitialDisplayMode();
+  
+  const [displayMode, setDisplayMode] = useState<DisplayMode>(initalDisplayMode)
+  
+  useEffect(() => {
+    if (!displayModeProvider.contains(displayMode)){
+      displayModeProvider.add(displayMode);
+    }
+  }, [displayMode])
 
   const switchDisplayMode = () => {
-    const displayModeProvider = document.documentElement.classList; 
-    const currentDisplayMode = displayModeProvider.contains(DisplayMode.Light) ? DisplayMode.Light : DisplayMode.Dark;
+    const currentDisplayMode = displayMode;
     const nextDisplayMode = getOppositeDisplayMode(currentDisplayMode);
+
     displayModeProvider.remove(currentDisplayMode);
     displayModeProvider.add(nextDisplayMode);
+    
+    setDisplayMode(nextDisplayMode)
   } 
 
     return (
         <>
-        <button onClick={switchDisplayMode}>Toggle Theme</button>
+        <Button onClick={switchDisplayMode}
+          aria-label={`Switch to ${getOppositeDisplayMode(displayMode)} mode`}>
+            {displayMode === DisplayMode.Dark ? 
+            ( <Moon size={25} /> ) : 
+            ( <Sun size={25} />)}
+          </Button>
         </>
     )
 }
