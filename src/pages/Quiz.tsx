@@ -10,7 +10,11 @@ import {
 } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { QuizData, QuizResult } from "../services/backend/types";
-import { generateQuiz, submitQuiz } from "../services/backend/service";
+import {
+  getQuizById,
+  generateQuiz,
+  submitQuiz,
+} from "../services/backend/service";
 import useStyles from "./Quiz.styles";
 
 const QuizPage: React.FC = () => {
@@ -24,30 +28,48 @@ const QuizPage: React.FC = () => {
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
   const lessonData = location.state?.lessonData;
+  const quizId = location.state?.quizId;
+
+  const fetchQuizById = useCallback(async () => {
+    if (!quizId) {
+      console.error("Quiz ID is not available.");
+      return;
+    }
+    setLoading(true);
+
+    try {
+      const data = await getQuizById(quizId);
+      setQuizData(data);
+    } catch (error) {
+      console.error("Error fetching quiz:", error);
+    } finally {
+      setLoading(false);
+    }
+  }, [quizId]);
 
   const generateNewQuiz = useCallback(async () => {
-    if (!lessonData?._id) return;
+    if (!lessonData?._id) {
+      console.error("Lesson data is not available.");
+      return;
+    }
 
     setLoading(true);
     setQuizResult(null);
     setSelectedAnswers({});
 
     try {
-      const data = await generateQuiz(
-        lessonData._id,
-        location.state?.quizSettings
-      );
+      const data = await generateQuiz(lessonData._id, quizData?.settings);
       setQuizData(data);
     } catch (error) {
-      console.error("Error loading quiz:", error);
+      console.error("Error generating quiz:", error);
     } finally {
       setLoading(false);
     }
-  }, [lessonData, location.state]);
+  }, [lessonData, quizData?.settings]);
 
   useEffect(() => {
-    generateNewQuiz();
-  }, [generateNewQuiz]);
+    fetchQuizById();
+  }, [fetchQuizById]);
 
   const handleOptionChange = (questionIndex: number, option: string) => {
     setSelectedAnswers((prev) => ({
@@ -142,7 +164,7 @@ const QuizPage: React.FC = () => {
               </Box>
             )}
             <Typography variant="h5" component="div" gutterBottom>
-              {lessonData.lessonTitle}
+              {lessonData?.lessonTitle}
             </Typography>
             {quizData.questions.map((question, index) => (
               <Box key={index} className={classes.questionBox}>

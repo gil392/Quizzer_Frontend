@@ -2,6 +2,25 @@ import { LessonData, QuizData, QuizSettings, QuizAnswerSubmittion, QuizResult } 
 
 const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
+export async function getQuizById(quizId: string): Promise<QuizData> {
+    try {
+        const response = await fetch(`${backendUrl}/quiz/${quizId}`, {
+            method: "GET",
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to fetch quiz");
+        }
+
+        const data = await response.json();
+
+        return data;
+    } catch (error) {
+        console.error("Error fetching quiz:", error);
+        throw error;
+    }
+}
+
 export async function generateLesson(videoUrl: string): Promise<LessonData> {
     try {
         const response = await fetch(`${backendUrl}/lesson`, {
@@ -31,7 +50,7 @@ export async function generateLesson(videoUrl: string): Promise<LessonData> {
 }
 
 
-export async function generateQuiz(lessonId: string, settings: QuizSettings): Promise<QuizData> {
+export async function generateQuiz(lessonId: string, settings?: QuizSettings): Promise<QuizData> {
     try {
         const response = await fetch(`${backendUrl}/quiz`, {
             method: 'POST',
@@ -43,6 +62,8 @@ export async function generateQuiz(lessonId: string, settings: QuizSettings): Pr
                 settings,
             }),
         });
+
+        console.log('response', response);
 
         if (!response.ok) {
             throw new Error('Failed to generate quiz');

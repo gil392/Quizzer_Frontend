@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { LessonData, QuizSettings } from "../services/backend/types";
 import { generateLesson } from "../services/backend/service";
 import useStyles from "./Summary.styles";
+import { generateQuiz } from "../services/backend/service";
 
 const SummaryPage: React.FC = () => {
   const classes = useStyles();
@@ -32,7 +33,7 @@ const SummaryPage: React.FC = () => {
       });
   }, [location.state]);
 
-  const handleQuizNavigation = () => {
+  const handleQuizNavigation = async () => {
     if (!lessonData) {
       alert("Lesson data is not available.");
       return;
@@ -45,7 +46,16 @@ const SummaryPage: React.FC = () => {
       solvingTimeMs: 60000,
     };
 
-    navigate("/quiz", { state: { lessonData, quizSettings } });
+    try {
+      const quizData = await generateQuiz(lessonData._id, quizSettings);
+
+      navigate("/quiz", {
+        state: { lessonData, quizId: quizData._id },
+      });
+    } catch (error) {
+      console.error("Error generating quiz:", error);
+      alert("Failed to generate quiz. Please try again.");
+    }
   };
 
   return (
