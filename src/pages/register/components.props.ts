@@ -1,6 +1,6 @@
 import { ButtonProps, TextFieldProps, TypographyProps } from '@mui/material';
 import { isNotNil } from 'ramda';
-import { ChangeEventHandler, MouseEventHandler } from 'react';
+import { ChangeEventHandler } from 'react';
 
 export const titleProps: TypographyProps = {
     component: 'h1',
@@ -13,14 +13,10 @@ export const subTitleProps: TypographyProps = {
     align: 'center'
 };
 
-export const createRegisterButtonProps = (
-    className: string,
-    submit: MouseEventHandler
-): ButtonProps => ({
+export const createRegisterButtonProps = (className: string): ButtonProps => ({
     fullWidth: true,
     variant: 'contained',
-    className,
-    onClick: submit
+    className
 });
 
 export const createRegisterTextFieldProps = (
@@ -40,11 +36,7 @@ export const createRegisterTextFieldProps = (
     value
 });
 
-export const createGoToLoginButtonProps = (
-    className: string,
-    navigateToLoginPage: MouseEventHandler
-): ButtonProps => ({
+export const createGoToLoginButtonProps = (className: string): ButtonProps => ({
     variant: 'outlined',
-    className,
-    onClick: navigateToLoginPage
+    className
 });

@@ -68,12 +68,10 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
         type: 'password'
     };
     const registerButtonProps = createRegisterButtonProps(
-        classes.registerButton,
-        submitRegistration
+        classes.registerButton
     );
     const gotToLoginButtonProps = createGoToLoginButtonProps(
-        classes.goToLoginButton,
-        navigateToLoginPage
+        classes.goToLoginButton
     );
 
     return (
@@ -90,10 +88,14 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
                 <TextField {...emailTextFieldProps} />
                 <TextField {...passwordTextFieldProps} />
 
-                <Button {...registerButtonProps}>Register</Button>
+                <Button {...registerButtonProps} onClick={submitRegistration}>
+                    Register
+                </Button>
             </section>
 
-            <Button {...gotToLoginButtonProps}>Login</Button>
+            <Button {...gotToLoginButtonProps} onClick={navigateToLoginPage}>
+                Login
+            </Button>
         </div>
     );
 };

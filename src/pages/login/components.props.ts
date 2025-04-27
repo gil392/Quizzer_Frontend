@@ -1,5 +1,4 @@
 import { ButtonProps, TypographyProps } from '@mui/material';
-import { MouseEventHandler } from 'react';
 import { createRegisterTextFieldProps } from '../register/components.props';
 
 export const titleProps: TypographyProps = {
@@ -13,23 +12,17 @@ export const subTitleProps: TypographyProps = {
     align: 'center'
 };
 
-export const createLoginButtonProps = (
-    className: string,
-    submit: MouseEventHandler
-): ButtonProps => ({
+export const createLoginButtonProps = (className: string): ButtonProps => ({
     fullWidth: true,
     variant: 'contained',
-    className,
-    onClick: submit
+    className
 });
 
 export const createGoToRegisterButtonProps = (
-    className: string,
-    navigateToRegisterPage: MouseEventHandler
+    className: string
 ): ButtonProps => ({
     variant: 'outlined',
-    className,
-    onClick: navigateToRegisterPage
+    className
 });
 
 export const createLoginTextFieldProps = createRegisterTextFieldProps;

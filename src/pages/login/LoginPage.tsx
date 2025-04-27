@@ -7,6 +7,7 @@ import { loginSchema } from '../../api/authentication/schemas';
 import { LoginFormData, LoginResponse } from '../../api/authentication/types';
 import { SetAccessTokenFunction } from '../../hooks/authentication/types';
 import { useFormOf } from '../../hooks/form';
+import { PAGES_ROUTES } from '../../routes/routes.const';
 import {
     createGoToRegisterButtonProps,
     createLoginButtonProps,
@@ -15,7 +16,6 @@ import {
     titleProps
 } from './components.props';
 import { styles } from './styles';
-import { PAGES_ROUTES } from '../../routes/routes.const';
 
 export interface LoginPageProps extends WithStyles<typeof styles> {
     setAccessToken: SetAccessTokenFunction;
@@ -61,13 +61,9 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
         ...createLoginFormFieldProps('password'),
         type: 'password'
     };
-    const loginButtonProps = createLoginButtonProps(
-        classes.loginButton,
-        submitLoginForm
-    );
+    const loginButtonProps = createLoginButtonProps(classes.loginButton);
     const goToRegisterButtonProps = createGoToRegisterButtonProps(
-        classes.goToRegisterButton,
-        navigateToRegisterPage
+        classes.goToRegisterButton
     );
 
     return (
@@ -83,10 +79,17 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
                 <TextField {...usernameInputProps} />
                 <TextField {...passwordTextFieldProps} />
 
-                <Button {...loginButtonProps}>Login</Button>
+                <Button {...loginButtonProps} onClick={submitLoginForm}>
+                    Login
+                </Button>
             </section>
 
-            <Button {...goToRegisterButtonProps}>Register</Button>
+            <Button
+                {...goToRegisterButtonProps}
+                onClick={navigateToRegisterPage}
+            >
+                Register
+            </Button>
         </div>
     );
 };
