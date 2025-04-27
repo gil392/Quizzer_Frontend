@@ -71,7 +71,16 @@ const NavBar: FunctionComponent = () => {
                         <ListItemIcon sx={listItemIconSx}>
                             <School />
                         </ListItemIcon>
-                        <ListItemText primary='Lesson' sx={listItemTextSx} />
+                        <ListItemText primary='Lessons' sx={listItemTextSx} />
+                    </ListItemButton>
+                </ListItem>
+
+                <ListItem disablePadding sx={{ display: 'block' }}>
+                    <ListItemButton sx={listItemButtonSx}>
+                        <ListItemIcon sx={listItemIconSx}>
+                            <Quiz />
+                        </ListItemIcon>
+                        <ListItemText primary='Quiz' sx={listItemTextSx} />
                     </ListItemButton>
                 </ListItem>
 
