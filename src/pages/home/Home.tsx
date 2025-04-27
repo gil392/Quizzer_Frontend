@@ -1,22 +1,39 @@
 import { Box, Button, OutlinedInput, Typography, Slider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { QuizSettings } from "../../services/backend/types";
 import "./Home.css";
 
-function HomePage() {
-  const navigate = useNavigate();
-  const [videoUrl, setVideoUrl] = useState("");
-  const [questionCount, setQuestionCount] = useState("low");
-  const [manualQuestionCount, setManualQuestionCount] = useState(5);
-  const [questionOrder, setQuestionOrder] = useState("chronological");
-  const [feedbackType, setFeedbackType] = useState("onSubmit");
+interface QuestionCountOption {
+  value: number;
+  label: string;
+}
 
-  const handleSummaryNavigation = () => {
-    const quizSettings = {
-      questionCount:
-        questionCount === "manual" ? manualQuestionCount : questionCount,
-      questionOrder,
-      feedbackType,
+const questionCountOptions: QuestionCountOption[] = [
+  { value: 5, label: "Low (5)" },
+  { value: 10, label: "Medium (10)" },
+  { value: 20, label: "High (20)" },
+  { value: -1, label: "Manual" },
+];
+
+const HomePage: React.FC = () => {
+  const navigate = useNavigate();
+  const [videoUrl, setVideoUrl] = useState<string>("");
+  const [questionCount, setQuestionCount] = useState<number>(5);
+  const [manualQuestionCount, setManualQuestionCount] = useState<number>(5);
+  const [questionOrder, setQuestionOrder] = useState<
+    "chronological" | "random"
+  >("chronological");
+  const [feedbackType, setFeedbackType] =
+    useState<QuizSettings["checkType"]>("onSubmit");
+
+  const handleSummaryNavigation = (): void => {
+    const quizSettings: QuizSettings = {
+      checkType: feedbackType,
+      isRandomOrder: questionOrder === "random",
+      maxQuestionCount:
+        questionCount === -1 ? manualQuestionCount : questionCount,
+      solvingTimeMs: 60000,
     };
 
     navigate("/summary", { state: { videoUrl, quizSettings } });
@@ -43,64 +60,25 @@ function HomePage() {
         How Many Questions?
       </Typography>
       <Box className="custom-radio-group">
-        <label
-          className={`custom-radio ${
-            questionCount === "low" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="questionCount"
-            value="low"
-            checked={questionCount === "low"}
-            onChange={(e) => setQuestionCount(e.target.value)}
-          />
-          <span>Low (5)</span>
-        </label>
-        <label
-          className={`custom-radio ${
-            questionCount === "medium" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="questionCount"
-            value="medium"
-            checked={questionCount === "medium"}
-            onChange={(e) => setQuestionCount(e.target.value)}
-          />
-          <span>Medium (10)</span>
-        </label>
-        <label
-          className={`custom-radio ${
-            questionCount === "high" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="questionCount"
-            value="high"
-            checked={questionCount === "high"}
-            onChange={(e) => setQuestionCount(e.target.value)}
-          />
-          <span>High (20)</span>
-        </label>
-        <label
-          className={`custom-radio ${
-            questionCount === "manual" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="questionCount"
-            value="manual"
-            checked={questionCount === "manual"}
-            onChange={(e) => setQuestionCount(e.target.value)}
-          />
-          <span>Manual</span>
-        </label>
+        {questionCountOptions.map((option) => (
+          <label
+            key={option.value}
+            className={`custom-radio ${
+              questionCount === option.value ? "selected" : ""
+            }`}
+          >
+            <input
+              type="radio"
+              name="questionCount"
+              value={option.value}
+              checked={questionCount === option.value}
+              onChange={(e) => setQuestionCount(Number(e.target.value))}
+            />
+            <span>{option.label}</span>
+          </label>
+        ))}
       </Box>
-      {questionCount === "manual" && (
+      {questionCount === -1 && (
         <Box sx={{ marginBottom: 3 }}>
           <Typography variant="body2" gutterBottom>
             Select the number of questions (5-50):
@@ -131,7 +109,9 @@ function HomePage() {
             name="questionOrder"
             value="chronological"
             checked={questionOrder === "chronological"}
-            onChange={(e) => setQuestionOrder(e.target.value)}
+            onChange={(e) =>
+              setQuestionOrder(e.target.value as "chronological" | "random")
+            }
           />
           <span>Chronological</span>
         </label>
@@ -145,7 +125,9 @@ function HomePage() {
             name="questionOrder"
             value="random"
             checked={questionOrder === "random"}
-            onChange={(e) => setQuestionOrder(e.target.value)}
+            onChange={(e) =>
+              setQuestionOrder(e.target.value as "chronological" | "random")
+            }
           />
           <span>Random</span>
         </label>
@@ -157,20 +139,6 @@ function HomePage() {
       <Box className="custom-radio-group">
         <label
           className={`custom-radio ${
-            feedbackType === "everyQuestion" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="feedbackType"
-            value="everyQuestion"
-            checked={feedbackType === "everyQuestion"}
-            onChange={(e) => setFeedbackType(e.target.value)}
-          />
-          <span>Every Question</span>
-        </label>
-        <label
-          className={`custom-radio ${
             feedbackType === "onSubmit" ? "selected" : ""
           }`}
         >
@@ -179,9 +147,27 @@ function HomePage() {
             name="feedbackType"
             value="onSubmit"
             checked={feedbackType === "onSubmit"}
-            onChange={(e) => setFeedbackType(e.target.value)}
+            onChange={(e) =>
+              setFeedbackType(e.target.value as QuizSettings["checkType"])
+            }
           />
           <span>On Submit</span>
+        </label>
+        <label
+          className={`custom-radio ${
+            feedbackType === "onSelectAnswer" ? "selected" : ""
+          }`}
+        >
+          <input
+            type="radio"
+            name="feedbackType"
+            value="onSelectAnswer"
+            checked={feedbackType === "onSelectAnswer"}
+            onChange={(e) =>
+              setFeedbackType(e.target.value as QuizSettings["checkType"])
+            }
+          />
+          <span>Every Question</span>
         </label>
       </Box>
 
@@ -201,6 +187,6 @@ function HomePage() {
       </Button>
     </Box>
   );
-}
+};
 
 export default HomePage;

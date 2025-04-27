@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { LessonData, QuizSettings } from "../services/backend/types";
+import { LessonData } from "../services/backend/types";
 import { generateLesson } from "../services/backend/service";
 import useStyles from "./Summary.styles";
 import { generateQuiz } from "../services/backend/service";
@@ -39,15 +39,11 @@ const SummaryPage: React.FC = () => {
       return;
     }
 
-    const quizSettings: QuizSettings = {
-      checkType: "onSubmit",
-      isRandomOrder: true,
-      maxQuestionCount: 10,
-      solvingTimeMs: 60000,
-    };
-
     try {
-      const quizData = await generateQuiz(lessonData._id, quizSettings);
+      const quizData = await generateQuiz(
+        lessonData._id,
+        location.state?.quizSettings
+      );
 
       navigate("/quiz", {
         state: { lessonData, quizId: quizData._id },
