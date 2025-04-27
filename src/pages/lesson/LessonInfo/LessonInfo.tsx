@@ -28,6 +28,7 @@ interface LessonInfoProps {
 }
 
 const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
+  const classes = useStyles();
   const [quizzes, setQuizzes] = useState<QuizData[]>([]);
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(true); // Default to true (show summary)
 
@@ -70,8 +71,6 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
       prevQuizzes.map((q) => (q._id === quiz._id ? quiz : q))
     );
   };
-
-  const classes = useStyles();
 
   return (
     <Box className={classes.container}>

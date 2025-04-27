@@ -9,7 +9,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { QuizData } from "../../../services/backend/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import styles from "./QuizItem.styles";
-import { WithStyles } from "@mui/styles/withStyles/withStyles";
+import withStyles, { WithStyles } from "@mui/styles/withStyles/withStyles";
 
 interface QuizItemProps extends WithStyles<typeof styles> {
   quiz: QuizData;
@@ -50,4 +50,4 @@ const QuizItem = ({
   );
 };
 
-export default QuizItem;
+export default withStyles(styles)(QuizItem);

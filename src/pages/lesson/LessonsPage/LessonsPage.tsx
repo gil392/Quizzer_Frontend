@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { LessonData } from "../../../services/backend/types";
 import LessonItem from "../LessonItem/LessonItem";
 import {
@@ -14,12 +14,15 @@ import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { GenericIconButton } from "../../../components/GenericIconButton";
 import styles from "./LessonsPage.styles";
-import { WithStyles } from "@mui/styles";
+import { withStyles, WithStyles } from "@mui/styles";
 
 interface LessonsPageProps extends WithStyles<typeof styles> {}
 
-const LessonsPage: React.FC<LessonsPageProps> = ({ classes }) => {
+const LessonsPage: FunctionComponent<LessonsPageProps> = (
+  props: LessonsPageProps
+) => {
   const navigate = useNavigate();
+  const { classes } = props;
   const [lessons, setLessons] = useState<LessonData[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
@@ -108,4 +111,4 @@ const LessonsPage: React.FC<LessonsPageProps> = ({ classes }) => {
   );
 };
 
-export default LessonsPage;
+export default withStyles(styles)(LessonsPage);

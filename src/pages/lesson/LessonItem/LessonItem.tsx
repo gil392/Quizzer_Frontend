@@ -4,14 +4,14 @@ import EditableTitleWithActions from "../../../components/EditabletitleWithActio
 import { FunctionComponent, useState } from "react";
 import { Typography } from "@mui/material";
 import styles from "./LessonItem.styles";
-import { WithStyles } from "@mui/styles/withStyles/withStyles";
+import withStyles, { WithStyles } from "@mui/styles/withStyles/withStyles";
 
 interface LessonItemProps extends WithStyles<typeof styles> {
   lesson: LessonData;
   onLessonDeleted: (lessonId: string) => void;
   updateLessonTitle: (newTitle: string) => void;
   openLesson: () => void;
-};
+}
 
 const LessonItem: FunctionComponent<LessonItemProps> = (
   props: LessonItemProps
@@ -41,4 +41,4 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
   );
 };
 
-export default LessonItem;
+export default withStyles(styles)(LessonItem);

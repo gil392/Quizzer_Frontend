@@ -14,11 +14,13 @@ export type LessonData = {
 export type QuizData = {
   _id: string;
   title: string;
+  lessonId: string;
   questions: {
     _id: string;
     text: string;
     answers: string[];
   }[];
+  settings: QuizSettings;
 };
 
 export type QuizAnswerSubmittion = {

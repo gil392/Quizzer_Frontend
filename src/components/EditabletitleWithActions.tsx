@@ -6,7 +6,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GenericIconButton } from "./GenericIconButton";
 import styles from "./EditableTitleWithActions.styles";
-import { WithStyles } from "@mui/styles";
+import { withStyles, WithStyles } from "@mui/styles";
 
 interface EditableTitleWithActionsProps extends WithStyles<typeof styles> {
   title: string;
@@ -99,4 +99,4 @@ const EditableTitleWithActions: FunctionComponent<
   );
 };
 
-export default EditableTitleWithActions;
+export default withStyles(styles)(EditableTitleWithActions);
