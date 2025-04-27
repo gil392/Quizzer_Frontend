@@ -1,44 +1,47 @@
 export type QuizSettings = {
-    checkType: 'onSubmit' | 'onSelectAnswer';
-    isRandomOrder: boolean;
-    maxQuestionCount: number;
-    solvingTimeMs: number;
+  checkType: "onSubmit" | "onSelectAnswer";
+  isRandomOrder: boolean;
+  maxQuestionCount: number;
+  solvingTimeMs: number;
 };
 
 export type LessonData = {
-    _id: string;
-    title: string;
-    summary: string;
+  _id: string;
+  title: string;
+  summary: string;
 };
 
 export type QuizData = {
+  _id: string;
+  title: string;
+  lessonId: string;
+  questions: {
     _id: string;
-    questions: {
-        _id: string;
-        text: string;
-        answers: string[];
-    }[];
+    text: string;
+    answers: string[];
+  }[];
+  settings: QuizSettings;
 };
 
 export type QuizAnswerSubmittion = {
-    quizId: string;
-    questions: QuestionAnswerSubmittion[];
+  quizId: string;
+  questions: QuestionAnswerSubmittion[];
 };
 
 export type QuestionAnswerSubmittion = {
-    questionId: string;
-    selectedAnswer: string;
+  questionId: string;
+  selectedAnswer: string;
 };
 
 export type QuizResult = {
-    quizId: string;
-    results: QuestionResults[];
-    score: number;
+  quizId: string;
+  results: QuestionResults[];
+  score: number;
 };
 
 export type QuestionResults = {
-    questionId: string;
-    selectedAnswer: string;
-    correctAnswer: string;
-    isCorrect: boolean;
+  questionId: string;
+  selectedAnswer: string;
+  correctAnswer: string;
+  isCorrect: boolean;
 };
