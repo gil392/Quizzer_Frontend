@@ -13,16 +13,18 @@ import { Add } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { GenericIconButton } from "../../../components/GenericIconButton";
-import useStyles from "./LessonsPage.styles";
+import styles from "./LessonsPage.styles";
+import { WithStyles } from "@mui/styles";
 
-const LessonsPage: React.FC = () => {
+interface LessonsPageProps extends WithStyles<typeof styles> {}
+
+const LessonsPage: React.FC<LessonsPageProps> = ({ classes }) => {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState<LessonData[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
     setSelectedLesson(null)
   );
-  const classes = useStyles();
 
   useEffect(() => {
     const fetchLessons = async () => {

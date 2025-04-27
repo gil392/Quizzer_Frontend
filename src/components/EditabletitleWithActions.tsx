@@ -5,22 +5,25 @@ import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GenericIconButton } from "./GenericIconButton";
-import useStyles from "./EditableTitleWithActions.styles";
+import styles from "./EditableTitleWithActions.styles";
+import { WithStyles } from "@mui/styles";
 
-type EditableTitleWithActionsProps = {
+interface EditableTitleWithActionsProps extends WithStyles<typeof styles> {
   title: string;
   onSave: (newTitle: string) => void;
   onDelete: () => void;
   onEditModeChange?: (isEditing: boolean) => void;
-};
+}
 
-const EditableTitleWithActions: FunctionComponent<EditableTitleWithActionsProps> = ({
+const EditableTitleWithActions: FunctionComponent<
+  EditableTitleWithActionsProps
+> = ({
   title,
   onSave,
   onDelete,
   onEditModeChange,
+  classes,
 }: EditableTitleWithActionsProps) => {
-  const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 

@@ -3,9 +3,10 @@ import { LessonData } from "../../../services/backend/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import { FunctionComponent, useState } from "react";
 import { Typography } from "@mui/material";
-import useStyles from "./LessonItem.styles";
+import styles from "./LessonItem.styles";
+import { WithStyles } from "@mui/styles/withStyles/withStyles";
 
-type LessonItemProps = {
+interface LessonItemProps extends WithStyles<typeof styles> {
   lesson: LessonData;
   onLessonDeleted: (lessonId: string) => void;
   updateLessonTitle: (newTitle: string) => void;
@@ -16,7 +17,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
   props: LessonItemProps
 ) => {
   const [isEditing, setIsEditing] = useState(false);
-  const classes = useStyles();
+  const classes = props.classes;
 
   return (
     <Box

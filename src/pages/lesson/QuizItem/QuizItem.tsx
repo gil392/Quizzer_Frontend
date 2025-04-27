@@ -8,17 +8,21 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { QuizData } from "../../../services/backend/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
-import useStyles from "./QuizItem.styles";
+import styles from "./QuizItem.styles";
+import { WithStyles } from "@mui/styles/withStyles/withStyles";
 
-type QuizItemProps = {
+interface QuizItemProps extends WithStyles<typeof styles> {
   quiz: QuizData;
   deleteQuiz: () => void;
   updateQuizTitle: (newTitle: string) => void;
-};
+}
 
-const QuizItem = ({ quiz, deleteQuiz, updateQuizTitle }: QuizItemProps) => {
-  const classes = useStyles();
-
+const QuizItem = ({
+  quiz,
+  deleteQuiz,
+  updateQuizTitle,
+  classes,
+}: QuizItemProps) => {
   return (
     <Box className={classes.container}>
       <Box className={classes.header}>
