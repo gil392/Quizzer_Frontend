@@ -6,6 +6,7 @@ import {
     Typography
 } from '@mui/material';
 import { withStyles, WithStyles } from '@mui/styles';
+import { isNotNil } from 'ramda';
 import { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api/authentication/api';
@@ -14,14 +15,7 @@ import { LoginFormData, LoginResponse } from '../../api/authentication/types';
 import { SetAccessTokenFunction } from '../../hooks/authentication/types';
 import { useFormOf } from '../../hooks/form';
 import { PAGES_ROUTES } from '../../routes/routes.const';
-import {
-    createLoginButtonProps,
-    createLoginTextFieldProps,
-    registerPageLinkProps,
-    subTitleProps,
-    titleProps
-} from './components.props';
-import { styles } from './styles';
+import { styles } from '../register/styles';
 
 export interface LoginPageProps extends WithStyles<typeof styles> {
     setAccessToken: SetAccessTokenFunction;
@@ -54,40 +48,53 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
         navigate(PAGES_ROUTES.REGISTER);
     };
 
-    const createLoginFormFieldProps = (field: keyof LoginFormData) =>
-        createLoginTextFieldProps(
-            field,
-            fieldsChangeHandlers(field),
-            form[field],
-            classes.textField,
-            errors[field]
-        );
+    const createLoginFormFieldProps = (
+        field: keyof LoginFormData
+    ): TextFieldProps => ({
+        fullWidth: true,
+        required: true,
+        className: classes.textField,
+        label: field[0].toUpperCase() + field.slice(1),
+        value: form[field],
+        helperText: errors[field],
+        error: isNotNil(errors[field]),
+        onChange: fieldsChangeHandlers(field)
+    });
     const usernameInputProps = createLoginFormFieldProps('username');
-    const passwordTextFieldProps: TextFieldProps = {
-        ...createLoginFormFieldProps('password'),
-        type: 'password'
-    };
-    const loginButtonProps = createLoginButtonProps(classes.loginButton);
+    const passwordTextFieldProps = createLoginFormFieldProps('password');
 
     return (
         <div className={classes.root}>
             <section>
-                <Typography {...titleProps}>Login</Typography>
-                <Typography {...subTitleProps}>
+                <Typography component='h1' variant='h4'>
+                    Login
+                </Typography>
+                <Typography
+                    variant='subtitle1'
+                    color='textSecondary'
+                    align='center'
+                >
                     Enter your email below to login your account
                 </Typography>
             </section>
 
             <section className={classes.formSection}>
                 <TextField {...usernameInputProps} />
-                <TextField {...passwordTextFieldProps} />
+                <TextField {...passwordTextFieldProps} type='password' />
 
-                <Button {...loginButtonProps} onClick={submitLoginForm}>
+                <Button
+                    fullWidth
+                    variant='contained'
+                    className={classes.submitButton}
+                    onClick={submitLoginForm}
+                >
                     Login
                 </Button>
 
                 <Link
-                    {...registerPageLinkProps}
+                    variant='body2'
+                    underline='none'
+                    className={classes.link}
                     onClick={navigateToRegisterPage}
                 >
                     dont have account? register here

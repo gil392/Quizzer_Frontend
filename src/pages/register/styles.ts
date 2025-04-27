@@ -14,19 +14,12 @@ export const styles = createStyles({
             margin: '0.5em 0'
         }
     },
-    registerButton: {
+    submitButton: {
         '&.MuiButton-root': {
             margin: '1em 0'
         }
     },
-    goToLoginButton: {
-        '&.MuiButton-root': {
-            position: 'absolute',
-            top: 0,
-            right: 0,
-            margin: '1em',
-            color: 'black',
-            borderColor: 'grey'
-        }
+    link: {
+        cursor: 'pointer'
     }
 });

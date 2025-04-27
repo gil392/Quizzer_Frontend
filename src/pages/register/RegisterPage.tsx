@@ -6,6 +6,7 @@ import {
     Typography
 } from '@mui/material';
 import { withStyles, WithStyles } from '@mui/styles';
+import { isNotNil } from 'ramda';
 import { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser, registerUser } from '../../api/authentication/api';
@@ -17,13 +18,6 @@ import {
 import { SetAccessTokenFunction } from '../../hooks/authentication/types';
 import { useFormOf } from '../../hooks/form';
 import { PAGES_ROUTES } from '../../routes/routes.const';
-import {
-    createRegisterButtonProps,
-    createRegisterTextFieldProps,
-    loginPageLinkProps,
-    subTitleProps,
-    titleProps
-} from './components.props';
 import { styles } from './styles';
 
 export interface RegisterPageProps extends WithStyles<typeof styles> {
@@ -55,33 +49,37 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
         }
     };
 
-    const createRegisterFormFieldProps = (field: keyof RegisterFormData) =>
-        createRegisterTextFieldProps(
-            field,
-            fieldsChangeHandlers(field),
-            form[field],
-            classes.textField,
-            errors[field]
-        );
     const navigateToLoginPage = () => {
         navigate(PAGES_ROUTES.LOGIN);
     };
 
+    const createRegisterFormFieldProps = (
+        field: keyof RegisterFormData
+    ): TextFieldProps => ({
+        fullWidth: true,
+        required: true,
+        className: classes.textField,
+        label: field[0].toUpperCase() + field.slice(1),
+        value: form[field],
+        helperText: errors[field],
+        error: isNotNil(errors[field]),
+        onChange: fieldsChangeHandlers(field)
+    });
     const usernameInputProps = createRegisterFormFieldProps('username');
     const emailTextFieldProps = createRegisterFormFieldProps('email');
-    const passwordTextFieldProps: TextFieldProps = {
-        ...createRegisterFormFieldProps('password'),
-        type: 'password'
-    };
-    const registerButtonProps = createRegisterButtonProps(
-        classes.registerButton
-    );
+    const passwordTextFieldProps = createRegisterFormFieldProps('password');
 
     return (
         <div className={classes.root}>
             <section>
-                <Typography {...titleProps}>Create an account</Typography>
-                <Typography {...subTitleProps}>
+                <Typography component='h1' variant='h4'>
+                    Create an account
+                </Typography>
+                <Typography
+                    variant='subtitle1'
+                    color='textSecondary'
+                    align='center'
+                >
                     Enter your email below to create your account
                 </Typography>
             </section>
@@ -89,13 +87,23 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
             <section className={classes.formSection}>
                 <TextField {...usernameInputProps} />
                 <TextField {...emailTextFieldProps} />
-                <TextField {...passwordTextFieldProps} />
+                <TextField {...passwordTextFieldProps} type='password' />
 
-                <Button {...registerButtonProps} onClick={submitRegistration}>
+                <Button
+                    fullWidth
+                    variant='contained'
+                    className={classes.submitButton}
+                    onClick={submitRegistration}
+                >
                     Register
                 </Button>
 
-                <Link {...loginPageLinkProps} onClick={navigateToLoginPage}>
+                <Link
+                    variant='body2'
+                    underline='none'
+                    className={classes.link}
+                    onClick={navigateToLoginPage}
+                >
                     already have account? login here
                 </Link>
             </section>
