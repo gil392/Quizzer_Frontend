@@ -2,9 +2,9 @@ import { Box, Button, OutlinedInput } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PAGES_ROUTES } from '../../routes/routes.const';
-import './Home.css';
+import './GenerateLessonPage.css';
 
-function HomePage() {
+function GenerateLessonPage() {
   const navigate = useNavigate();
   const [videoUrl, setVideoUrl] = useState("");
 
@@ -36,4 +36,4 @@ function HomePage() {
   );
 }
 
-export default HomePage;
+export default GenerateLessonPage;
