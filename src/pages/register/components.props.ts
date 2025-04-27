@@ -1,4 +1,9 @@
-import { ButtonProps, TextFieldProps, TypographyProps } from '@mui/material';
+import {
+    ButtonProps,
+    LinkProps,
+    TextFieldProps,
+    TypographyProps
+} from '@mui/material';
 import { isNotNil } from 'ramda';
 import { ChangeEventHandler } from 'react';
 
@@ -36,7 +41,8 @@ export const createRegisterTextFieldProps = (
     value
 });
 
-export const createGoToLoginButtonProps = (className: string): ButtonProps => ({
-    variant: 'outlined',
-    className
-});
+export const loginPageLinkProps: LinkProps = {
+    variant: 'body2',
+    underline: 'none',
+    style: { cursor: 'pointer' }
+};

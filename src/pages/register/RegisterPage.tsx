@@ -1,4 +1,10 @@
-import { Button, TextField, TextFieldProps, Typography } from '@mui/material';
+import {
+    Button,
+    Link,
+    TextField,
+    TextFieldProps,
+    Typography
+} from '@mui/material';
 import { withStyles, WithStyles } from '@mui/styles';
 import { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -12,9 +18,9 @@ import { SetAccessTokenFunction } from '../../hooks/authentication/types';
 import { useFormOf } from '../../hooks/form';
 import { PAGES_ROUTES } from '../../routes/routes.const';
 import {
-    createGoToLoginButtonProps,
     createRegisterButtonProps,
     createRegisterTextFieldProps,
+    loginPageLinkProps,
     subTitleProps,
     titleProps
 } from './components.props';
@@ -70,9 +76,6 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
     const registerButtonProps = createRegisterButtonProps(
         classes.registerButton
     );
-    const gotToLoginButtonProps = createGoToLoginButtonProps(
-        classes.goToLoginButton
-    );
 
     return (
         <div className={classes.root}>
@@ -91,11 +94,11 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
                 <Button {...registerButtonProps} onClick={submitRegistration}>
                     Register
                 </Button>
-            </section>
 
-            <Button {...gotToLoginButtonProps} onClick={navigateToLoginPage}>
-                Login
-            </Button>
+                <Link {...loginPageLinkProps} onClick={navigateToLoginPage}>
+                    already have account? login here
+                </Link>
+            </section>
         </div>
     );
 };

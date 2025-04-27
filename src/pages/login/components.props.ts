@@ -1,4 +1,4 @@
-import { ButtonProps, TypographyProps } from '@mui/material';
+import { ButtonProps, LinkProps, TypographyProps } from '@mui/material';
 import { createRegisterTextFieldProps } from '../register/components.props';
 
 export const titleProps: TypographyProps = {
@@ -24,5 +24,11 @@ export const createGoToRegisterButtonProps = (
     variant: 'outlined',
     className
 });
+
+export const registerPageLinkProps: LinkProps = {
+    variant: 'body2',
+    underline: 'none',
+    style: { cursor: 'pointer' }
+};
 
 export const createLoginTextFieldProps = createRegisterTextFieldProps;
