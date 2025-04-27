@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import { LessonData } from "../../../services/backend/types";
-import EditableActions from "../../../components/EditableActions";
-import { useState } from "react";
+import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
+import { FunctionComponent, useState } from "react";
 import { Typography } from "@mui/material";
 import useStyles from "./LessonItem.styles";
 
@@ -12,7 +12,9 @@ type LessonItemProps = {
   openLesson: () => void;
 };
 
-const LessonItem = (props: LessonItemProps) => {
+const LessonItem: FunctionComponent<LessonItemProps> = (
+  props: LessonItemProps
+) => {
   const [isEditing, setIsEditing] = useState(false);
   const classes = useStyles();
 
@@ -24,7 +26,7 @@ const LessonItem = (props: LessonItemProps) => {
       onClick={() => !isEditing && props.openLesson()}
     >
       <Box className={classes.flexContainer}>
-        <EditableActions
+        <EditableTitleWithActions
           title={props.lesson.title}
           onSave={(newTitle) => props.updateLessonTitle(newTitle)}
           onDelete={() => props.onLessonDeleted(props.lesson._id)}

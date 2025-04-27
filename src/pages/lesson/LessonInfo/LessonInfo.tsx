@@ -76,15 +76,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   return (
     <Box className={classes.container}>
       <Box className={classes.leftBox}>
-        <Typography
-          sx={{
-            fontSize: "1.2rem", // Your desired font size
-            fontWeight: "bold", // Your desired font weight
-            marginBottom: "0.5vh", // Your desired margin
-          }}
-        >
-          {lesson.title}
-        </Typography>
+        <Typography className={classes.title}>{lesson.title}</Typography>
         <Card className={classes.card}>
           <CardActions>
             <Button

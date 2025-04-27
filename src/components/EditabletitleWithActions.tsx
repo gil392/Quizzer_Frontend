@@ -1,25 +1,25 @@
-import { useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { TextField, Box, Typography } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import CheckIcon from "@mui/icons-material/Check";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { GenericIconButton } from "./GenericIconButton";
-import useStyles from "./EditableActions.styles";
+import useStyles from "./EditableTitleWithActions.styles";
 
-type EditableActionsProps = {
+type EditableTitleWithActionsProps = {
   title: string;
   onSave: (newTitle: string) => void;
   onDelete: () => void;
   onEditModeChange?: (isEditing: boolean) => void;
 };
 
-const EditableActions = ({
+const EditableTitleWithActions: FunctionComponent<EditableTitleWithActionsProps> = ({
   title,
   onSave,
   onDelete,
   onEditModeChange,
-}: EditableActionsProps) => {
+}: EditableTitleWithActionsProps) => {
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
@@ -96,4 +96,4 @@ const EditableActions = ({
   );
 };
 
-export default EditableActions;
+export default EditableTitleWithActions;

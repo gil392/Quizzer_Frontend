@@ -7,7 +7,7 @@ import {
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { QuizData } from "../../../services/backend/types";
-import EditableActions from "../../../components/EditableActions";
+import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import useStyles from "./QuizItem.styles";
 
 type QuizItemProps = {
@@ -22,7 +22,7 @@ const QuizItem = ({ quiz, deleteQuiz, updateQuizTitle }: QuizItemProps) => {
   return (
     <Box className={classes.container}>
       <Box className={classes.header}>
-        <EditableActions
+        <EditableTitleWithActions
           title={quiz.title}
           onSave={(newTitle) => updateQuizTitle(newTitle)}
           onDelete={deleteQuiz}

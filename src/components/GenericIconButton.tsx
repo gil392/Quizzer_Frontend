@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 import { IconButton, Tooltip } from "@mui/material";
 
 interface GenericIconButtonProps {
@@ -7,7 +7,7 @@ interface GenericIconButtonProps {
   onClick?: (event: React.MouseEvent) => void;
 }
 
-export const GenericIconButton: React.FC<GenericIconButtonProps> = ({
+export const GenericIconButton: FunctionComponent<GenericIconButtonProps> = ({
   title,
   icon,
   onClick,
