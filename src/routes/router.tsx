@@ -6,13 +6,14 @@ import QuizPage from '../pages/Quiz';
 import RegisterPage from '../pages/register/RegisterPage';
 import SummaryPage from '../pages/Summary';
 import { PAGES_ROUTES } from './routes.const';
+import LessonsPage from '../pages/lesson/LessonsPage/LessonsPage';
 
 export const createPagesRoutes = (
     setAccessToken: SetAccessTokenFunction
 ): RouteProps[] => [
     {
         path: '/',
-        element: <Navigate to={PAGES_ROUTES.HOME} replace />
+        element: <Navigate to={PAGES_ROUTES.LESSONS_LIST} replace />
     },
     {
         path: PAGES_ROUTES.LOGIN,
@@ -24,5 +25,6 @@ export const createPagesRoutes = (
     },
     { path: PAGES_ROUTES.HOME, element: <HomePage /> },
     { path: PAGES_ROUTES.QUIZ, element: <QuizPage /> },
-    { path: PAGES_ROUTES.SUMMARY, element: <SummaryPage /> }
+    { path: PAGES_ROUTES.SUMMARY, element: <SummaryPage /> },
+    { path: PAGES_ROUTES.LESSON, element: <LessonsPage /> }
 ];

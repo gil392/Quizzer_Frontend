@@ -3,5 +3,7 @@ export const PAGES_ROUTES = {
     REGISTER: '/signup',
     SUMMARY: '/summary',
     QUIZ: '/quiz',
-    HOME: '/home'
+    HOME: '/home',
+    LESSONS_LIST: '/lesson',
+    LESSON: '/lesson/*'
 };
