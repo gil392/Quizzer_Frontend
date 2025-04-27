@@ -1,26 +1,25 @@
-import { HomeFilled, LogoDev, School } from '@mui/icons-material';
+import { HomeFilled, LogoDev, School, Settings } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { FunctionComponent, ReactNode, useState } from 'react';
+import { FunctionComponent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PAGES_ROUTES } from '../../routes/routes.const';
 import {
     Drawer,
     listItemButtonSx,
     listItemIconSx,
+    listItemSx,
     listItemTextSx,
+    listSx,
     logoBoxSx
 } from './styles';
+import { NavBarItem } from './types';
 
-const navBarNavigations: {
-    text: string;
-    icon: ReactNode;
-    route: keyof typeof PAGES_ROUTES;
-}[] = [
+const navBarNavigations: readonly NavBarItem[] = [
     {
         text: 'Home',
         icon: <HomeFilled />,
@@ -49,7 +48,7 @@ const NavBar: FunctionComponent = () => {
         navigate(PAGES_ROUTES[to]);
 
     const navBarItems = navBarNavigations.map(({ text, icon, route }) => (
-        <ListItem disablePadding sx={{ display: 'block' }}>
+        <ListItem disablePadding sx={listItemSx}>
             <ListItemButton
                 sx={listItemButtonSx(open)}
                 onClick={createNavigationHandle(route)}
@@ -68,50 +67,22 @@ const NavBar: FunctionComponent = () => {
             onMouseLeave={handleDrawerClose}
         >
             <Box sx={logoBoxSx(open)}>
-                <LogoDev />
+                <LogoDev sx={listItemIconSx(open)} />
                 {open ? (
                     <Typography textAlign='center'>Quizzer</Typography>
                 ) : null}
             </Box>
             <Divider />
-            <List>
-                {navBarItems}
-                {/* <ListItem disablePadding sx={{ display: 'block' }}>
-                    <ListItemButton sx={listItemButtonSx(open)}>
-                        <ListItemIcon sx={listItemIconSx(open)}>
-                            <HomeFilled />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary='Home'
-                            sx={listItemTextSx(open)}
-                        />
-                    </ListItemButton>
-                </ListItem>
-
-                <ListItem disablePadding sx={{ display: 'block' }}>
-                    <ListItemButton sx={listItemButtonSx(open)}>
-                        <ListItemIcon sx={listItemIconSx(open)}>
-                            <School />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary='Lessons'
-                            sx={listItemTextSx(open)}
-                        />
-                    </ListItemButton>
-                </ListItem>
-
-                <ListItem disablePadding sx={{ display: 'block' }}>
-                    <ListItemButton sx={listItemButtonSx(open)}>
-                        <ListItemIcon sx={listItemIconSx(open)}>
-                            <Quiz />
-                        </ListItemIcon>
-                        <ListItemText
-                            primary='Quiz'
-                            sx={listItemTextSx(open)}
-                        />
-                    </ListItemButton>
-                </ListItem> */}
-            </List>
+            <List sx={listSx}>{navBarItems}</List>
+            <Divider />
+            <Box>
+                <ListItemButton sx={listItemButtonSx(open)} disabled>
+                    <ListItemIcon sx={listItemIconSx(open)}>
+                        <Settings />
+                    </ListItemIcon>
+                    <ListItemText primary='Setting' sx={listItemTextSx(open)} />
+                </ListItemButton>
+            </Box>
         </Drawer>
     );
 };

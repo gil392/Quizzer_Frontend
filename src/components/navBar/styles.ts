@@ -30,7 +30,10 @@ export const Drawer = styled(MuiDrawer, {
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
-    maxWidth: '7%',
+    maxWidth: `calc(${theme.spacing(7)} + 1px)`,
+    [theme.breakpoints.up('sm')]: {
+        maxWidth: `calc(${theme.spacing(8)} + 1px)`
+    },
     variants: [
         {
             props: ({ open }) => open,
@@ -49,6 +52,10 @@ export const Drawer = styled(MuiDrawer, {
     ]
 }));
 
+export const listSx = {
+    flexGrow: 1
+};
+
 export const logoBoxSx = (open: boolean) => ({
     py: 1,
     px: 2.5,
@@ -56,6 +63,8 @@ export const logoBoxSx = (open: boolean) => ({
     justifyContent: open ? 'initial' : 'center',
     mr: 'auto'
 });
+
+export const listItemSx = { display: 'block' };
 
 export const listItemIconSx = (open: boolean) => ({
     minWidth: 0,
