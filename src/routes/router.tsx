@@ -1,4 +1,4 @@
-import { Navigate, NavigateProps, RouteProps } from 'react-router-dom';
+import { Navigate, RouteProps } from 'react-router-dom';
 import { SetAccessTokenFunction } from '../hooks/authentication/types';
 import HomePage from '../pages/home/Home';
 import LoginPage from '../pages/login/LoginPage';
@@ -7,25 +7,20 @@ import RegisterPage from '../pages/register/RegisterPage';
 import SummaryPage from '../pages/Summary';
 import { PAGES_ROUTES } from './routes.const';
 
-const navigateToHomeProps: NavigateProps = {
-    to: PAGES_ROUTES.HOME,
-    replace: true
-};
-
 export const createPagesRoutes = (
     setAccessToken: SetAccessTokenFunction
 ): RouteProps[] => [
     {
         path: '/',
-        element: <Navigate {...navigateToHomeProps} />
+        element: <Navigate to={PAGES_ROUTES.HOME} replace />
     },
     {
         path: PAGES_ROUTES.LOGIN,
-        element: <LoginPage {...{ setAccessToken }} />
+        element: <LoginPage setAccessToken={setAccessToken} />
     },
     {
         path: PAGES_ROUTES.REGISTER,
-        element: <RegisterPage {...{ setAccessToken }} />
+        element: <RegisterPage setAccessToken={setAccessToken} />
     },
     { path: PAGES_ROUTES.HOME, element: <HomePage /> },
     { path: PAGES_ROUTES.QUIZ, element: <QuizPage /> },
