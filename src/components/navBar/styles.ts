@@ -30,7 +30,7 @@ export const Drawer = styled(MuiDrawer, {
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
-    position: 'absolute',
+    maxWidth: '7%',
     variants: [
         {
             props: ({ open }) => open,
