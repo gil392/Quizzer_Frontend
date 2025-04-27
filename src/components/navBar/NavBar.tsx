@@ -6,7 +6,24 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { FunctionComponent, useState } from 'react';
-import { Drawer } from './styles';
+import { Drawer, listItemButtonSx, listItemIconSx, listItemTextSx, logoBoxSx } from './styles';
+
+const navBarNavigations: ({
+    text: string;
+    icon: ReactNode;
+    route: keyof PAGES_ROUTES
+})[] = [
+    {
+        text: 'Home',
+        icon: <HomeFilled />
+        route: 'HOME'
+    },
+    {
+        text: 'Lessons',
+        icon: <School />
+        route: 'LESSONS_LIST'
+    }
+]
 
 const NavBar: FunctionComponent = () => {
     const [open, setOpen] = useState(false);
@@ -19,29 +36,6 @@ const NavBar: FunctionComponent = () => {
         setOpen(false);
     };
 
-    const logoBoxSx = {
-        py: 1,
-        px: 2.5,
-        display: 'flex',
-        justifyContent: open ? 'initial' : 'center',
-        mr: 'auto'
-    };
-
-    const listItemIconSx = {
-        minWidth: 0,
-        justifyContent: 'center',
-        mr: open ? 3 : 'auto'
-    };
-
-    const listItemButtonSx = {
-        minHeight: 48,
-        px: 2.5,
-        justifyContent: open ? 'initial' : 'center'
-    };
-
-    const listItemTextSx = {
-        opacity: open ? 1 : 0
-    };
     return (
         <Drawer
             variant='permanent'
@@ -49,7 +43,7 @@ const NavBar: FunctionComponent = () => {
             onMouseEnter={handleDrawerOpen}
             onMouseLeave={handleDrawerClose}
         >
-            <Box sx={logoBoxSx}>
+            <Box sx={logoBoxSx(open)}>
                 <LogoDev />
                 {open ? (
                     <Typography textAlign='center'>Quizzer</Typography>
@@ -58,38 +52,29 @@ const NavBar: FunctionComponent = () => {
             <Divider />
             <List>
                 <ListItem disablePadding sx={{ display: 'block' }}>
-                    <ListItemButton sx={listItemButtonSx}>
-                        <ListItemIcon sx={listItemIconSx}>
+                    <ListItemButton sx={listItemButtonSx(open)}>
+                        <ListItemIcon sx={listItemIconSx(open)}>
                             <HomeFilled />
                         </ListItemIcon>
-                        <ListItemText primary='Home' sx={listItemTextSx} />
+                        <ListItemText primary='Home' sx={listItemTextSx(open)} />
                     </ListItemButton>
                 </ListItem>
 
                 <ListItem disablePadding sx={{ display: 'block' }}>
-                    <ListItemButton sx={listItemButtonSx}>
-                        <ListItemIcon sx={listItemIconSx}>
+                    <ListItemButton sx={listItemButtonSx(open)}>
+                        <ListItemIcon sx={listItemIconSx(open)}>
                             <School />
                         </ListItemIcon>
-                        <ListItemText primary='Lessons' sx={listItemTextSx} />
+                        <ListItemText primary='Lessons' sx={listItemTextSx(open)} />
                     </ListItemButton>
                 </ListItem>
 
                 <ListItem disablePadding sx={{ display: 'block' }}>
-                    <ListItemButton sx={listItemButtonSx}>
-                        <ListItemIcon sx={listItemIconSx}>
+                    <ListItemButton sx={listItemButtonSx(open)}>
+                        <ListItemIcon sx={listItemIconSx(open)}>
                             <Quiz />
                         </ListItemIcon>
-                        <ListItemText primary='Quiz' sx={listItemTextSx} />
-                    </ListItemButton>
-                </ListItem>
-
-                <ListItem disablePadding sx={{ display: 'block' }}>
-                    <ListItemButton sx={listItemButtonSx}>
-                        <ListItemIcon sx={listItemIconSx}>
-                            <Quiz />
-                        </ListItemIcon>
-                        <ListItemText primary='Quiz' sx={listItemTextSx} />
+                        <ListItemText primary='Quiz' sx={listItemTextSx(open)} />
                     </ListItemButton>
                 </ListItem>
             </List>

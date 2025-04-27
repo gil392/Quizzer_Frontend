@@ -48,3 +48,27 @@ export const Drawer = styled(MuiDrawer, {
         }
     ]
 }));
+
+export const logoBoxSx = (open: boolean) => ({
+    py: 1,
+    px: 2.5,
+    display: 'flex',
+    justifyContent: open ? 'initial' : 'center',
+    mr: 'auto'
+});
+
+export const listItemIconSx = (open: boolean) => ({
+    minWidth: 0,
+    justifyContent: 'center',
+    mr: open ? 3 : 'auto'
+});
+
+export const listItemButtonSx = (open: boolean) => ({
+    minHeight: 48,
+    px: 2.5,
+    justifyContent: open ? 'initial' : 'center'
+});
+
+export const listItemTextSx = (open: boolean) => ({
+    opacity: open ? 1 : 0
+});
