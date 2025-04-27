@@ -63,8 +63,6 @@ export async function generateQuiz(lessonId: string, settings?: QuizSettings): P
             }),
         });
 
-        console.log('response', response);
-
         if (!response.ok) {
             throw new Error('Failed to generate quiz');
         }
