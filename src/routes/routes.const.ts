@@ -1,9 +1,10 @@
 export const PAGES_ROUTES = {
+    HOME: '/',    
     LOGIN: '/login',
     REGISTER: '/signup',
     SUMMARY: '/summary',
     QUIZ: '/quiz',
-    HOME: '/home',
+    GENERATE_LESSON: '/generate-lesson',
     LESSONS_LIST: '/lesson',
     LESSON: '/lesson/*'
 };

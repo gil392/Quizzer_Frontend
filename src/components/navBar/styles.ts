@@ -61,7 +61,8 @@ export const logoBoxSx = (open: boolean) => ({
     px: 2.5,
     display: 'flex',
     justifyContent: open ? 'initial' : 'center',
-    mr: 'auto'
+    mr: 'auto',
+    cursor: 'pointer'
 });
 
 export const listItemSx = { display: 'block' };

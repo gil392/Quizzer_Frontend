@@ -1,12 +1,12 @@
-import { HomeFilled, LogoDev, School, Settings } from '@mui/icons-material';
+import { AutoStories, LogoDev, Settings, YouTube } from '@mui/icons-material';
 import { Box, Divider, Typography } from '@mui/material';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import { FunctionComponent, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { FunctionComponent, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { PAGES_ROUTES } from '../../routes/routes.const';
 import {
     Drawer,
@@ -18,16 +18,17 @@ import {
     logoBoxSx
 } from './styles';
 import { NavBarItem } from './types';
+import { isNavBarAvailableInPath } from './utils';
 
 const navBarNavigations: readonly NavBarItem[] = [
     {
-        text: 'Home',
-        icon: <HomeFilled />,
-        route: 'HOME'
+        text: 'Generate Lesson',
+        icon: <YouTube />,
+        route: 'GENERATE_LESSON'
     },
     {
         text: 'Lessons',
-        icon: <School />,
+        icon: <AutoStories />,
         route: 'LESSONS_LIST'
     }
 ];
@@ -35,6 +36,15 @@ const navBarNavigations: readonly NavBarItem[] = [
 const NavBar: FunctionComponent = () => {
     const [open, setOpen] = useState(false);
     const navigate = useNavigate();
+    const location = useLocation();
+
+    const isNavBarAvaiable = useMemo(
+        () => isNavBarAvailableInPath(location.pathname),
+        [location]
+    );
+    if (!isNavBarAvaiable) {
+        return null;
+    }
 
     const handleDrawerOpen = () => {
         setOpen(true);
@@ -66,7 +76,7 @@ const NavBar: FunctionComponent = () => {
             onMouseEnter={handleDrawerOpen}
             onMouseLeave={handleDrawerClose}
         >
-            <Box sx={logoBoxSx(open)}>
+            <Box sx={logoBoxSx(open)} onClick={createNavigationHandle('HOME')}>
                 <LogoDev sx={listItemIconSx(open)} />
                 {open ? (
                     <Typography textAlign='center'>Quizzer</Typography>
