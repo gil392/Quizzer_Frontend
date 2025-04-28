@@ -15,6 +15,7 @@ import { useNavigate } from "react-router-dom";
 import { GenericIconButton } from "../../../components/GenericIconButton";
 import styles from "./LessonsPage.styles";
 import { withStyles, WithStyles } from "@mui/styles";
+import { PAGES_ROUTES } from "../../../routes/routes.const";
 
 interface LessonsPageProps extends WithStyles<typeof styles> {}
 
@@ -77,7 +78,7 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
               <GenericIconButton
                 icon={<Add />}
                 onClick={() => {
-                  navigate("/home");
+                  navigate(PAGES_ROUTES.GENERATE_LESSON);
                 }}
                 title="Create a new lesson"
               />

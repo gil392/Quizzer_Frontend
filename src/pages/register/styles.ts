@@ -6,7 +6,8 @@ export const styles = createStyles({
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        alignItems: 'center'
+        alignItems: 'center',
+        textAlign: 'center'
     },
     formSection: { marginTop: '0.5em', width: '33%' },
     textField: {

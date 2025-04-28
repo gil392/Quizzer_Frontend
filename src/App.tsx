@@ -11,6 +11,8 @@ function App() {
             <div
                 style={
                     {
+                        width: '100%',
+                        height: '100%',
                         '--primary-main': quizzerTheme.palette.primary.main,
                         '--primary-light': quizzerTheme.palette.primary.light,
                         '--primary-contrastText':
@@ -26,3 +28,5 @@ function App() {
         </ThemeProvider>
     );
 }
+
+export default App;
