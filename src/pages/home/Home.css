@@ -48,8 +48,8 @@
   }
   
   .custom-radio.selected {
-    background-color: #e3f2fd;
-    color: #1976d2;
+    background-color: var(--primary-light);
+    color: var(--primary-main);
     font-weight: bold;
   }
   
@@ -64,5 +64,5 @@
   }
 
   .custom-radio.selected span {
-    color: #1976d2;
+    color: var(--primary-main);
 }
