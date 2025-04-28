@@ -5,7 +5,6 @@ export const styles = createStyles({
         height: '100%',
         margin: '0 auto',
         padding: '2rem',
-        textAlign: 'center',
         boxSizing: 'border-box',
         display: 'flex',
         flexDirection: 'column',
