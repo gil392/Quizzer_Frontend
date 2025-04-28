@@ -4,23 +4,34 @@ import { useState } from "react";
 import { QuizSettings } from "../../services/backend/types";
 import "./Home.css";
 
+const LOW_QUESTIONS_COUNT = 5;
+const MEDIUM_QUESTIONS_COUNT = 10;
+const HIGH_QUESTIONS_COUNT = 20;
+const MANUAL_QUESTIONS_COUNT_OPTION = -1;
+const MANUAL_MIN_QUESTIONS_COUNT = 5;
+const MANUAL_MAX_QUESTIONS_COUNT = 30;
+const MANUAL_QUESTIONS_COUNT_STEP = 5;
+
 interface QuestionCountOption {
   value: number;
   label: string;
 }
 
 const questionCountOptions: QuestionCountOption[] = [
-  { value: 5, label: "Low (5)" },
-  { value: 10, label: "Medium (10)" },
-  { value: 20, label: "High (20)" },
-  { value: -1, label: "Manual" },
+  { value: LOW_QUESTIONS_COUNT, label: "Low (5)" },
+  { value: MEDIUM_QUESTIONS_COUNT, label: "Medium (10)" },
+  { value: HIGH_QUESTIONS_COUNT, label: "High (20)" },
+  { value: MANUAL_QUESTIONS_COUNT_OPTION, label: "Manual" },
 ];
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
   const [videoUrl, setVideoUrl] = useState<string>("");
-  const [questionCount, setQuestionCount] = useState<number>(5);
-  const [manualQuestionCount, setManualQuestionCount] = useState<number>(5);
+  const [questionCount, setQuestionCount] =
+    useState<number>(LOW_QUESTIONS_COUNT);
+  const [manualQuestionCount, setManualQuestionCount] = useState<number>(
+    MANUAL_MIN_QUESTIONS_COUNT
+  );
   const [questionOrder, setQuestionOrder] = useState<
     "chronological" | "random"
   >("chronological");
@@ -32,7 +43,9 @@ const HomePage: React.FC = () => {
       checkType: feedbackType,
       isRandomOrder: questionOrder === "random",
       maxQuestionCount:
-        questionCount === -1 ? manualQuestionCount : questionCount,
+        questionCount === MANUAL_QUESTIONS_COUNT_OPTION
+          ? manualQuestionCount
+          : questionCount,
       solvingTimeMs: 60000,
     };
 
@@ -78,19 +91,47 @@ const HomePage: React.FC = () => {
           </label>
         ))}
       </Box>
-      {questionCount === -1 && (
+      {questionCount === MANUAL_QUESTIONS_COUNT_OPTION && (
         <Box sx={{ marginBottom: 3 }}>
           <Typography variant="body2" gutterBottom>
-            Select the number of questions (5-50):
+            Select the number of questions (5-30):
           </Typography>
           <Slider
             value={manualQuestionCount}
             onChange={(e, value) => setManualQuestionCount(value as number)}
-            step={5}
+            step={MANUAL_QUESTIONS_COUNT_STEP}
             marks
-            min={5}
-            max={50}
+            min={MANUAL_MIN_QUESTIONS_COUNT}
+            max={MANUAL_MAX_QUESTIONS_COUNT}
             valueLabelDisplay="auto"
+            sx={{
+              color: "primary.main",
+              height: 8,
+              "& .MuiSlider-thumb": {
+                height: 16,
+                width: 16,
+                backgroundColor: "#fff",
+                border: "2px solid currentColor",
+                "&:hover": {
+                  boxShadow: "0px 0px 0px 8px rgba(25, 118, 210, 0.16)",
+                },
+                "&.Mui-active": {
+                  boxShadow: "0px 0px 0px 14px rgba(25, 118, 210, 0.16)",
+                },
+              },
+              "& .MuiSlider-rail": {
+                backgroundColor: "#bdbdbd",
+              },
+              "& .MuiSlider-mark": {
+                backgroundColor: "#bdbdbd",
+                height: 8,
+                width: 8,
+                borderRadius: "50%",
+              },
+              "& .MuiSlider-markActive": {
+                backgroundColor: "primary.main",
+              },
+            }}
           />
         </Box>
       )}
