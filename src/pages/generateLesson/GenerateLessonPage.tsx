@@ -1,9 +1,9 @@
-import { Box, Button, OutlinedInput, Typography, Slider } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, Button, OutlinedInput, Slider, Typography } from "@mui/material";
 import { useState } from "react";
-import { QuizSettings } from "../../services/backend/types";
+import { useNavigate } from "react-router-dom";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import "./Home.css";
+import { QuizSettings } from "../../services/backend/types";
+import "./GenerateLessonPage.css";
 
 const LOW_QUESTIONS_COUNT = 5;
 const MEDIUM_QUESTIONS_COUNT = 10;
@@ -25,7 +25,7 @@ const questionCountOptions: QuestionCountOption[] = [
   { value: MANUAL_QUESTIONS_COUNT_OPTION, label: "Manual" },
 ];
 
-const HomePage: React.FC = () => {
+const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
   const [videoUrl, setVideoUrl] = useState<string>("");
   const [questionCount, setQuestionCount] =
@@ -231,4 +231,4 @@ const HomePage: React.FC = () => {
   );
 };
 
-export default HomePage;
+export default GenerateLessonPage;
