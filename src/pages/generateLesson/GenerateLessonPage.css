@@ -22,3 +22,47 @@
     height: 3rem;
     background-color:black;
 }
+
+.custom-radio-group {
+    display: flex;
+    margin-bottom: 1.5rem;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .custom-radio {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    border-right: 1px solid #e0e0e0;
+    background-color: #f9f9f9;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .custom-radio:last-child {
+    border-right: none;
+  }
+  
+  .custom-radio.selected {
+    background-color: var(--primary-light);
+    color: var(--primary-main);
+    font-weight: bold;
+  }
+  
+  .custom-radio input {
+    display: none;
+  }
+  
+  .custom-radio span {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #424242;
+  }
+
+  .custom-radio.selected span {
+    color: var(--primary-main);
+}

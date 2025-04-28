@@ -8,12 +8,21 @@ import NavBar from './components/navBar/NavBar';
 function App() {
     return (
         <ThemeProvider theme={quizzerTheme}>
-            <Router>
-                <NavBar />
-                <Layout />
-            </Router>
+            <div
+                style={
+                    {
+                        '--primary-main': quizzerTheme.palette.primary.main,
+                        '--primary-light': quizzerTheme.palette.primary.light,
+                        '--primary-contrastText':
+                            quizzerTheme.palette.primary.contrastText
+                    } as React.CSSProperties
+                }
+            >
+                <Router>
+                    <NavBar />
+                    <Layout />
+                </Router>
+            </div>
         </ThemeProvider>
     );
 }
-
-export default App;

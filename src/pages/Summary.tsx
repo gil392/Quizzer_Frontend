@@ -1,9 +1,16 @@
-import { Box, Button, Card, CardContent, Skeleton, Typography } from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { PAGES_ROUTES } from '../routes/routes.const';
-import { generateLesson, generateQuiz } from '../services/backend/service';
-import { LessonData, QuizSettings } from '../services/backend/types';
+import {
+  Box,
+  Card,
+  CardContent,
+  Typography,
+  Button,
+  Skeleton,
+} from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { LessonData } from "../services/backend/types";
+import { PAGES_ROUTES } from "../routes/routes.const";
+import { generateLesson, generateQuiz } from "../services/backend/service";
 import useStyles from "./Summary.styles";
 
 const SummaryPage: React.FC = () => {
@@ -32,15 +39,11 @@ const SummaryPage: React.FC = () => {
       return;
     }
 
-    const quizSettings: QuizSettings = {
-      checkType: "onSubmit",
-      isRandomOrder: true,
-      maxQuestionCount: 10,
-      solvingTimeMs: 60000,
-    };
-
     try {
-      const quizData = await generateQuiz(lessonData._id, quizSettings);
+      const quizData = await generateQuiz(
+        lessonData._id,
+        location.state?.quizSettings
+      );
 
       navigate(PAGES_ROUTES.QUIZ, {
         state: { lessonData, quizId: quizData._id },
