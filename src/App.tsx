@@ -1,24 +1,17 @@
-import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom'
-import './App.css'
-import SummaryPage from './pages/Summary'
-import QuizPage from './pages/Quiz';
-import HomePage from './pages/home/Home'
-
+import { ThemeProvider } from '@mui/material';
+import { BrowserRouter as Router } from 'react-router-dom';
+import './App.css';
+import Layout from './components/layout/Layout';
+import quizzerTheme from './theme';
 
 function App() {
-
-  return (
-    <Router>
-            <Routes>
-                <Route path="/" element={<Navigate to="/home" replace />} />
-                <Route path="/home" element={<HomePage />} />
-                <Route path="/summary" element={<SummaryPage />} />
-                <Route path="/quiz" element={<QuizPage />}
-                />
-            </Routes>
-    </Router>
-    
-  )
+    return (
+        <ThemeProvider theme={quizzerTheme}>
+            <Router>
+                <Layout />
+            </Router>
+        </ThemeProvider>
+    );
 }
 
-export default App
+export default App;

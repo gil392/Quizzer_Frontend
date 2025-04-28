@@ -2,6 +2,7 @@ import { Box, Button, OutlinedInput, Typography, Slider } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { QuizSettings } from "../../services/backend/types";
+import { PAGES_ROUTES } from "../../routes/routes.const";
 import "./Home.css";
 
 const LOW_QUESTIONS_COUNT = 5;
@@ -49,7 +50,7 @@ const HomePage: React.FC = () => {
       solvingTimeMs: 60000,
     };
 
-    navigate("/summary", { state: { videoUrl, quizSettings } });
+    navigate(PAGES_ROUTES.SUMMARY, { state: { videoUrl, quizSettings } });
   };
 
   return (
@@ -98,7 +99,7 @@ const HomePage: React.FC = () => {
           </Typography>
           <Slider
             value={manualQuestionCount}
-            onChange={(e, value) => setManualQuestionCount(value as number)}
+            onChange={(_, value) => setManualQuestionCount(value as number)}
             step={MANUAL_QUESTIONS_COUNT_STEP}
             marks
             min={MANUAL_MIN_QUESTIONS_COUNT}

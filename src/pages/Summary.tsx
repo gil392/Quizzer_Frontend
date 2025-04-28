@@ -9,9 +9,9 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { LessonData } from "../services/backend/types";
-import { generateLesson } from "../services/backend/service";
+import { PAGES_ROUTES } from "../routes/routes.const";
+import { generateLesson, generateQuiz } from "../services/backend/service";
 import useStyles from "./Summary.styles";
-import { generateQuiz } from "../services/backend/service";
 
 const SummaryPage: React.FC = () => {
   const classes = useStyles();
@@ -45,7 +45,7 @@ const SummaryPage: React.FC = () => {
         location.state?.quizSettings
       );
 
-      navigate("/quiz", {
+      navigate(PAGES_ROUTES.QUIZ, {
         state: { lessonData, quizId: quizData._id },
       });
     } catch (error) {
