@@ -1,0 +1,5 @@
+export type LessonData = {
+    _id: string;
+    title: string;
+    summary: string;
+  };
