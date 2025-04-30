@@ -1,20 +1,16 @@
-import React, { useState, useEffect, useCallback } from "react";
 import {
   Box,
-  Card,
-  Typography,
   Button,
-  FormControlLabel,
+  Card,
   Checkbox,
+  FormControlLabel,
   Skeleton,
+  Typography,
 } from "@mui/material";
+import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { QuizData, QuizResult } from "../services/backend/types";
-import {
-  getQuizById,
-  generateQuiz,
-  submitQuiz,
-} from "../services/backend/service";
+import { generateQuiz, getQuizById, submitQuiz } from "../api/quiz/api";
+import { QuizData, QuizResult } from "../api/quiz/types";
 import useStyles from "./Quiz.styles";
 
 const QuizPage: React.FC = () => {
@@ -38,7 +34,7 @@ const QuizPage: React.FC = () => {
     setLoading(true);
 
     try {
-      const data = await getQuizById(quizId);
+      const { data } = await getQuizById(quizId);
       setQuizData(data);
     } catch (error) {
       console.error("Error fetching quiz:", error);
@@ -58,7 +54,7 @@ const QuizPage: React.FC = () => {
     setSelectedAnswers({});
 
     try {
-      const data = await generateQuiz(lessonData._id, quizData?.settings);
+      const { data } = await generateQuiz(lessonData._id, quizData?.settings);
       setQuizData(data);
     } catch (error) {
       console.error("Error generating quiz:", error);
@@ -95,7 +91,7 @@ const QuizPage: React.FC = () => {
           })),
       };
 
-      const result: QuizResult = await submitQuiz(submissionData);
+      const { data: result } = await submitQuiz(submissionData);
       setQuizResult(result);
       console.log("Quiz submission result:", result);
     } catch (error) {

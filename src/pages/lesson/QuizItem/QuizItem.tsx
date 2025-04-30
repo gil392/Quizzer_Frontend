@@ -1,15 +1,15 @@
-import Box from "@mui/material/Box";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
-  AccordionSummary,
   AccordionDetails,
+  AccordionSummary,
   Typography,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { QuizData } from "../../../services/backend/types";
+import Box from "@mui/material/Box";
+import withStyles, { WithStyles } from "@mui/styles/withStyles/withStyles";
+import { QuizData } from "../../../api/quiz/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import styles from "./QuizItem.styles";
-import withStyles, { WithStyles } from "@mui/styles/withStyles/withStyles";
 
 interface QuizItemProps extends WithStyles<typeof styles> {
   quiz: QuizData;

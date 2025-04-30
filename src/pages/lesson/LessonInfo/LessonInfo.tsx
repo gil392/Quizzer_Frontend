@@ -1,25 +1,18 @@
-import Box from "@mui/material/Box";
 import {
-  LessonData,
-  QuizData,
-  QuizSettings,
-} from "../../../services/backend/types";
-import { useState, useEffect } from "react";
-import {
-  deleteQuiz,
-  getQuizzes,
-  updateQuiz,
-} from "../../../services/backend/service";
-import QuizItem from "../QuizItem/QuizItem";
-import {
-  Card,
-  CardContent,
-  CardActions,
   Button,
-  Typography,
+  Card,
+  CardActions,
+  CardContent,
   Collapse,
+  Typography,
 } from "@mui/material";
+import Box from "@mui/material/Box";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LessonData } from "../../../api/lesson/types";
+import { deleteQuiz, getQuizzes, updateQuiz } from "../../../api/quiz/api";
+import { QuizData, QuizSettings } from "../../../api/quiz/types";
+import QuizItem from "../QuizItem/QuizItem";
 import useStyles from "./LessonInfo.styles";
 
 interface LessonInfoProps {
@@ -48,8 +41,8 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   useEffect(() => {
     const fetchQuizzesByLessonId = async () => {
       try {
-        const response = await getQuizzes(lesson._id);
-        setQuizzes(response);
+        const { data } = await getQuizzes(lesson._id);
+        setQuizzes(data);
       } catch (error) {
         console.error("Error fetching lessons:", error);
       }

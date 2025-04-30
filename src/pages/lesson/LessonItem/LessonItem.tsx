@@ -1,10 +1,10 @@
 import Box from "@mui/material/Box";
-import { LessonData } from "../../../services/backend/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import { FunctionComponent, useState } from "react";
 import { Typography } from "@mui/material";
 import styles from "./LessonItem.styles";
 import withStyles, { WithStyles } from "@mui/styles/withStyles/withStyles";
+import { LessonData } from "../../../api/lesson/types";
 
 interface LessonItemProps extends WithStyles<typeof styles> {
   lesson: LessonData;
