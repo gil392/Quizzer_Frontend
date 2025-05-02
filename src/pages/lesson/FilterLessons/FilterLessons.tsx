@@ -16,7 +16,7 @@ const FilterLessons : FunctionComponent<FilterLessonsProps> = ({setFilterOptions
     const onFilterChange = (filterName: string, filterValue: any) => {
         setFilterOptions((prev) => ({
             ...prev,
-            filterName: filterValue
+            [filterName]: filterValue
         }))
     } 
 

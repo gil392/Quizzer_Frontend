@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect, useMemo, useState } from "react";
 import { LessonData } from "../../../services/backend/types";
 import LessonItem from "../LessonItem/LessonItem";
 import {
@@ -19,6 +19,7 @@ import { PAGES_ROUTES } from "../../../routes/routes.const";
 import FilterLessons from "../FilterLessons/FilterLessons";
 import { FilterOptions } from "../FilterLessons/types";
 import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
+import { getFilteredLessons } from "../FilterLessons/utils";
 
 interface LessonsPageProps extends WithStyles<typeof styles> {}
 
@@ -46,6 +47,8 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
 
     fetchLessons();
   }, []);
+
+  const filteredLessons = useMemo(() => getFilteredLessons(lessons, filterOptions), [lessons, filterOptions])
 
   const handleLessonDeleted = async (lessonId: string) => {
     await deleteLesson(lessonId);
@@ -93,8 +96,8 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
             setFilterOptions={setFilterOptions}
             filterOptions={filterOptions} />
 
-          {lessons.length > 0 ? (
-            lessons.map((lesson) => (
+          {filteredLessons.length > 0 ? (
+            filteredLessons.map((lesson) => (
               <LessonItem
                 key={lesson._id}
                 lesson={lesson}
