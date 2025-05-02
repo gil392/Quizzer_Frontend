@@ -8,18 +8,7 @@ import NavBar from "./components/navBar/NavBar";
 function App() {
   return (
     <ThemeProvider theme={quizzerTheme}>
-      <div
-        style={
-          {
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            "--primary-main": quizzerTheme.palette.primary.main,
-            "--primary-light": quizzerTheme.palette.primary.light,
-            "--primary-contrastText": quizzerTheme.palette.primary.contrastText,
-          } as React.CSSProperties
-        }
-      >
+      <div className="app-container">
         <Router>
           <NavBar />
           <Layout />
