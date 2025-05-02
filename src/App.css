@@ -3,3 +3,12 @@
   height: 100vh;
   display: flex
 }
+
+.app-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  --primary-main: var(--primary-main);
+  --primary-light: var(--primary-light);
+  --primary-contrastText: var(--primary-contrastText);
+}

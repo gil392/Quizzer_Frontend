@@ -1,3 +1,4 @@
+import React from "react";
 import Box from "@mui/material/Box";
 import {
   Accordion,
@@ -8,21 +9,21 @@ import {
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { QuizData } from "../../../services/backend/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
-import styles from "./QuizItem.styles";
-import withStyles, { WithStyles } from "@mui/styles/withStyles/withStyles";
+import useStyles from "./QuizItem.styles";
 
-interface QuizItemProps extends WithStyles<typeof styles> {
+type QuizItemProps = {
   quiz: QuizData;
   deleteQuiz: () => void;
   updateQuizTitle: (newTitle: string) => void;
-}
+};
 
-const QuizItem = ({
+const QuizItem: React.FC<QuizItemProps> = ({
   quiz,
   deleteQuiz,
   updateQuizTitle,
-  classes,
-}: QuizItemProps) => {
+}) => {
+  const classes = useStyles();
+
   return (
     <Box className={classes.container}>
       <Box className={classes.header}>
@@ -50,4 +51,4 @@ const QuizItem = ({
   );
 };
 
-export default withStyles(styles)(QuizItem);
+export default QuizItem;

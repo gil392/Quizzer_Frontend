@@ -1,23 +1,25 @@
-import { createStyles } from "@mui/styles";
+import { makeStyles, createStyles } from "@mui/styles";
 
-const styles = createStyles({
-  container: {
-    marginBottom: "1rem",
-    border: "1px solid #ccc",
-    borderRadius: "8px",
-    padding: "1rem",
-  },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  accordionDetails: {
-    marginBottom: "0.5rem",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "flex-start",
-  },
-});
+const useStyles = makeStyles(() =>
+  createStyles({
+    container: {
+      marginBottom: "1rem",
+      border: "1px solid #ccc",
+      borderRadius: "8px",
+      padding: "1rem",
+    },
+    header: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+    },
+    accordionDetails: {
+      marginBottom: "0.5rem",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "flex-start",
+    },
+  })
+);
 
-export default styles;
+export default useStyles;
