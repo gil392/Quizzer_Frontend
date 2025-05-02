@@ -58,7 +58,7 @@ return (
               label="Search"
               value={filterOptions.searchText}
               onChange={({target}) => onFilterChange(FilterOptionsName.searchText, target.value)}
-              placeholder="Search titles & descriptions"
+              placeholder="Search titles"
               variant="outlined"
               size="small"
             />
