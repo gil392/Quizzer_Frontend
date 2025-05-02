@@ -16,6 +16,9 @@ import { GenericIconButton } from "../../../components/GenericIconButton";
 import styles from "./LessonsPage.styles";
 import { withStyles, WithStyles } from "@mui/styles";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
+import FilterLessons from "../FilterLessons/FilterLessons";
+import { FilterOptions } from "../FilterLessons/types";
+import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
 
 interface LessonsPageProps extends WithStyles<typeof styles> {}
 
@@ -29,6 +32,7 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
     setSelectedLesson(null)
   );
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>(INITIAL_FILTER_OPTIONS);
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -84,6 +88,10 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
               />
             )}
           </Box>
+
+          <FilterLessons 
+            setFilterOptions={setFilterOptions}
+            filterOptions={filterOptions} />
 
           {lessons.length > 0 ? (
             lessons.map((lesson) => (
