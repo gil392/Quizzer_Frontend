@@ -5,6 +5,7 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
+  Rating,
 } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { QuizData } from "../../../services/backend/types";
@@ -25,16 +26,11 @@ const QuizItem: React.FC<QuizItemProps> = ({
 }) => {
   const classes = useStyles();
   const [rating, setRating] = useState<number | null>(null);
-  const [message, setMessage] = useState<string | null>(null);
 
-  const handleRateQuiz = async (ratingValue: number) => {
-    try {
-      const response = await rateQuiz(quiz._id, "Gil", ratingValue);
-      setMessage(response.message);
-      setRating(ratingValue);
-    } catch (error) {
-      setMessage("Failed to rate quiz. Please try again.");
-    }
+  const handleRateQuiz = async (newRating: number | null) => {
+    if (newRating === null) return;
+    await rateQuiz(quiz._id, "Gil", newRating);
+    setRating(newRating);
   };
 
   return (
@@ -60,12 +56,19 @@ const QuizItem: React.FC<QuizItemProps> = ({
           ))}
         </AccordionDetails>
       </Accordion>
-      <div>
-        <button onClick={() => handleRateQuiz(1)}>Rate 1</button>
-        <button onClick={() => handleRateQuiz(5)}>Rate 5</button>
-      </div>
-      {rating && <p>Your rating: {rating}</p>}
-      {message && <p>{message}</p>}
+      <Box mt={2}>
+        <Typography variant="body1">Rate this quiz:</Typography>
+        <Rating
+          name={`quiz-rating-${quiz._id}`}
+          value={rating}
+          onChange={(event, newValue) => handleRateQuiz(newValue)}
+        />
+      </Box>
+      {rating && (
+        <Typography variant="body2" mt={1}>
+          Your rating: {rating}
+        </Typography>
+      )}
     </Box>
   );
 };
