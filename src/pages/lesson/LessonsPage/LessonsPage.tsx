@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { LessonData } from "../../../services/backend/types";
 import LessonItem from "../LessonItem/LessonItem";
 import {
@@ -13,21 +13,16 @@ import { Add } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { GenericIconButton } from "../../../components/GenericIconButton";
-import styles from "./LessonsPage.styles";
-import { withStyles, WithStyles } from "@mui/styles";
+import useStyles from "./LessonsPage.styles";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
-import FilterLessons from "../FilterLessons/FilterLessons";
 import { FilterOptions } from "../FilterLessons/types";
 import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
 import { getFilteredLessons } from "../FilterLessons/utils";
+import FilterLessons from "../FilterLessons/FilterLessons";
 
-interface LessonsPageProps extends WithStyles<typeof styles> {}
-
-const LessonsPage: FunctionComponent<LessonsPageProps> = (
-  props: LessonsPageProps
-) => {
+const LessonsPage: React.FC = () => {
+  const classes = useStyles();
   const navigate = useNavigate();
-  const { classes } = props;
   const [lessons, setLessons] = useState<LessonData[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
@@ -123,4 +118,4 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
   );
 };
 
-export default withStyles(styles)(LessonsPage);
+export default LessonsPage;
