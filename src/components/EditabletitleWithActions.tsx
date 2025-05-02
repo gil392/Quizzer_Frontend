@@ -7,6 +7,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { GenericIconButton } from "./GenericIconButton";
 import styles from "./EditableTitleWithActions.styles";
 import { withStyles, WithStyles } from "@mui/styles";
+import TwitterShareButton from "./SocialMedia/TwitterShareButton";
 
 interface EditableTitleWithActionsProps extends WithStyles<typeof styles> {
   title: string;
@@ -19,7 +20,7 @@ const EditableTitleWithActions: FunctionComponent<
   EditableTitleWithActionsProps
 > = ({
   title,
-  onSave,
+  // onSave,
   onDelete,
   onEditModeChange,
   classes,
@@ -33,9 +34,18 @@ const EditableTitleWithActions: FunctionComponent<
     onEditModeChange?.(true);
   };
 
+  const shareToTwitter = () => {
+    const text = "Check out this data: 42 apples!";
+    const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(
+      text
+    )}`;
+    window.open(twitterUrl, "_blank");
+  };
+
   const handleSaveClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    onSave(newTitle);
+    shareToTwitter();
+    //onSave(newTitle);
     setIsEditing(false);
     onEditModeChange?.(false);
   };
@@ -74,6 +84,7 @@ const EditableTitleWithActions: FunctionComponent<
               title={"Save"}
               onClick={handleSaveClick}
             />
+            <TwitterShareButton />
             <GenericIconButton
               icon={<CloseIcon />}
               title={"Cancel"}
