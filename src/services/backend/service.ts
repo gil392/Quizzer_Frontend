@@ -233,3 +233,34 @@ export async function updateQuiz(
 ): Promise<QuizData> {
   return updateItem<QuizData>(quizId, updatedData, "quiz", "quiz");
 }
+
+export async function rateQuiz(
+  quizId: string,
+  rater: string,
+  rating: number
+): Promise<{ message: string; rating: number }> {
+  try {
+    const response = await fetch(
+      `${backendUrl}/quiz/rate?quizId=${quizId}&rater=${rater}`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rating }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to rate quiz");
+    }
+
+    const data = await response.json();
+    console.log("Quiz rated successfully:", data);
+
+    return data;
+  } catch (error) {
+    console.error("Error rating quiz:", error);
+    throw error;
+  }
+}
