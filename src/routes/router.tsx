@@ -23,6 +23,7 @@ export const createPagesRoutes = (
         path: PAGES_ROUTES.REGISTER,
         element: <RegisterPage setAccessToken={setAccessToken} />
     },
+    { path: PAGES_ROUTES.SETTINGS, element: <></>},
     { path: PAGES_ROUTES.GENERATE_LESSON, element: <GenerateLessonPage /> },
     { path: PAGES_ROUTES.QUIZ, element: <QuizPage /> },
     { path: PAGES_ROUTES.SUMMARY, element: <SummaryPage /> },
