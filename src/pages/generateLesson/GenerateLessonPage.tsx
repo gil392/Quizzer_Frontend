@@ -37,11 +37,11 @@ const GenerateLessonPage: React.FC = () => {
     "chronological" | "random"
   >("chronological");
   const [feedbackType, setFeedbackType] =
-    useState<QuizSettings["checkType"]>("onSubmit");
+    useState<QuizSettings["feedbackType"]>("onSubmit");
 
   const handleSummaryNavigation = (): void => {
     const quizSettings: QuizSettings = {
-      checkType: feedbackType,
+      feedbackType: feedbackType,
       isRandomOrder: questionOrder === "random",
       maxQuestionCount:
         questionCount === MANUAL_QUESTIONS_COUNT_OPTION
@@ -190,7 +190,7 @@ const GenerateLessonPage: React.FC = () => {
             value="onSubmit"
             checked={feedbackType === "onSubmit"}
             onChange={(e) =>
-              setFeedbackType(e.target.value as QuizSettings["checkType"])
+              setFeedbackType(e.target.value as QuizSettings["feedbackType"])
             }
           />
           <span>On Submit</span>
@@ -206,7 +206,7 @@ const GenerateLessonPage: React.FC = () => {
             value="onSelectAnswer"
             checked={feedbackType === "onSelectAnswer"}
             onChange={(e) =>
-              setFeedbackType(e.target.value as QuizSettings["checkType"])
+              setFeedbackType(e.target.value as QuizSettings["feedbackType"])
             }
           />
           <span>Every Question</span>

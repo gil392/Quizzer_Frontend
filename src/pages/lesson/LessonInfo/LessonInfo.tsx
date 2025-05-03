@@ -35,7 +35,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   const navigate = useNavigate();
   /** TODO: Issue 14 (Itay)- get these settings not hard-coded */
   const quizSettings: QuizSettings = {
-    checkType: "onSubmit",
+    feedbackType: "onSubmit",
     isRandomOrder: true,
     maxQuestionCount: 10,
     solvingTimeMs: 60000,

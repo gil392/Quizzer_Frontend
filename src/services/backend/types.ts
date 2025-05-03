@@ -1,7 +1,9 @@
 export type QuizSettings = {
-  checkType: "onSubmit" | "onSelectAnswer";
+  feedbackType: "onSubmit" | "onSelectAnswer";
+  questionsOrder: "chronological" | "random";
   isRandomOrder: boolean;
   maxQuestionCount: number;
+  isManualCount: boolean;
   solvingTimeMs: number;
 };
 
