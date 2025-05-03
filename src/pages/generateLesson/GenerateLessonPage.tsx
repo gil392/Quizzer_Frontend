@@ -1,9 +1,11 @@
 import { Box, Button, OutlinedInput, Slider, Typography } from "@mui/material";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { QuizSettings } from "../../services/backend/types";
 import "./GenerateLessonPage.css";
+import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
+import LessonConfig from "../../components/lessonConfig/LessonConfig";
 
 const LOW_QUESTIONS_COUNT = 5;
 const MEDIUM_QUESTIONS_COUNT = 10;
@@ -28,28 +30,11 @@ const questionCountOptions: QuestionCountOption[] = [
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
   const [videoUrl, setVideoUrl] = useState<string>("");
-  const [questionCount, setQuestionCount] =
-    useState<number>(LOW_QUESTIONS_COUNT);
-  const [manualQuestionCount, setManualQuestionCount] = useState<number>(
-    MANUAL_MIN_QUESTIONS_COUNT
+  const [quizSettings, setQuizSettings] = useState<QuizSettings>(
+    INITIAL_LESSON_CONFIG
   );
-  const [questionOrder, setQuestionOrder] = useState<
-    "chronological" | "random"
-  >("chronological");
-  const [feedbackType, setFeedbackType] =
-    useState<QuizSettings["feedbackType"]>("onSubmit");
 
   const handleSummaryNavigation = (): void => {
-    const quizSettings: QuizSettings = {
-      feedbackType: feedbackType,
-      isRandomOrder: questionOrder === "random",
-      maxQuestionCount:
-        questionCount === MANUAL_QUESTIONS_COUNT_OPTION
-          ? manualQuestionCount
-          : questionCount,
-      solvingTimeMs: 60000,
-    };
-
     navigate(PAGES_ROUTES.SUMMARY, { state: { videoUrl, quizSettings } });
   };
 
@@ -70,148 +55,10 @@ const GenerateLessonPage: React.FC = () => {
         onChange={(e) => setVideoUrl(e.target.value)}
       />
 
-      <Typography variant="h6" gutterBottom>
-        How Many Questions?
-      </Typography>
-      <Box className="custom-radio-group">
-        {questionCountOptions.map((option) => (
-          <label
-            key={option.value}
-            className={`custom-radio ${
-              questionCount === option.value ? "selected" : ""
-            }`}
-          >
-            <input
-              type="radio"
-              name="questionCount"
-              value={option.value}
-              checked={questionCount === option.value}
-              onChange={(e) => setQuestionCount(Number(e.target.value))}
-            />
-            <span>{option.label}</span>
-          </label>
-        ))}
-      </Box>
-      {questionCount === MANUAL_QUESTIONS_COUNT_OPTION && (
-        <Box sx={{ marginBottom: 3 }}>
-          <Typography variant="body2" gutterBottom>
-            Select the number of questions (5-30):
-          </Typography>
-          <Slider
-            value={manualQuestionCount}
-            onChange={(_, value) => setManualQuestionCount(value as number)}
-            step={MANUAL_QUESTIONS_COUNT_STEP}
-            marks
-            min={MANUAL_MIN_QUESTIONS_COUNT}
-            max={MANUAL_MAX_QUESTIONS_COUNT}
-            valueLabelDisplay="auto"
-            sx={{
-              color: "primary.main",
-              height: 8,
-              "& .MuiSlider-thumb": {
-                height: 16,
-                width: 16,
-                backgroundColor: "#fff",
-                border: "2px solid currentColor",
-                "&:hover": {
-                  boxShadow: "0px 0px 0px 8px rgba(25, 118, 210, 0.16)",
-                },
-                "&.Mui-active": {
-                  boxShadow: "0px 0px 0px 14px rgba(25, 118, 210, 0.16)",
-                },
-              },
-              "& .MuiSlider-rail": {
-                backgroundColor: "#bdbdbd",
-              },
-              "& .MuiSlider-mark": {
-                backgroundColor: "#bdbdbd",
-                height: 8,
-                width: 8,
-                borderRadius: "50%",
-              },
-              "& .MuiSlider-markActive": {
-                backgroundColor: "primary.main",
-              },
-            }}
-          />
-        </Box>
-      )}
-
-      <Typography variant="h6" gutterBottom>
-        Questions Order
-      </Typography>
-      <Box className="custom-radio-group">
-        <label
-          className={`custom-radio ${
-            questionOrder === "chronological" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="questionOrder"
-            value="chronological"
-            checked={questionOrder === "chronological"}
-            onChange={(e) =>
-              setQuestionOrder(e.target.value as "chronological" | "random")
-            }
-          />
-          <span>Chronological</span>
-        </label>
-        <label
-          className={`custom-radio ${
-            questionOrder === "random" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="questionOrder"
-            value="random"
-            checked={questionOrder === "random"}
-            onChange={(e) =>
-              setQuestionOrder(e.target.value as "chronological" | "random")
-            }
-          />
-          <span>Random</span>
-        </label>
-      </Box>
-
-      <Typography variant="h6" gutterBottom>
-        Feedback
-      </Typography>
-      <Box className="custom-radio-group">
-        <label
-          className={`custom-radio ${
-            feedbackType === "onSubmit" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="feedbackType"
-            value="onSubmit"
-            checked={feedbackType === "onSubmit"}
-            onChange={(e) =>
-              setFeedbackType(e.target.value as QuizSettings["feedbackType"])
-            }
-          />
-          <span>On Submit</span>
-        </label>
-        <label
-          className={`custom-radio ${
-            feedbackType === "onSelectAnswer" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="feedbackType"
-            value="onSelectAnswer"
-            checked={feedbackType === "onSelectAnswer"}
-            onChange={(e) =>
-              setFeedbackType(e.target.value as QuizSettings["feedbackType"])
-            }
-          />
-          <span>Every Question</span>
-        </label>
-      </Box>
+      <LessonConfig
+        quizSettings={quizSettings}
+        setQuizSettings={setQuizSettings}
+      />
 
       <Button
         variant="contained"

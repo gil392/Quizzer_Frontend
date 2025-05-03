@@ -32,9 +32,9 @@ export const FEEDBACK_OPTIONS: FeedbackOption[] = [
 
 export const INITIAL_LESSON_CONFIG: QuizSettings = {
   feedbackType: "onSubmit",
-  isRandomOrder: false,
-  maxQuestionCount: 0,
-  isManualCount: false,
-  solvingTimeMs: 0,
   questionsOrder: "chronological",
+  maxQuestionCount: LOW_QUESTIONS_COUNT,
+  isManualCount: false,
+  solvingTimeMs: 60000,
+  isRandomOrder: false,
 };
