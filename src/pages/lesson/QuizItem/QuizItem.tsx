@@ -6,23 +6,24 @@ import {
   Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import withStyles, { WithStyles } from "@mui/styles/withStyles/withStyles";
+import React from "react";
 import { QuizData } from "../../../api/quiz/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
-import styles from "./QuizItem.styles";
+import useStyles from "./QuizItem.styles";
 
-interface QuizItemProps extends WithStyles<typeof styles> {
+type QuizItemProps = {
   quiz: QuizData;
   deleteQuiz: () => void;
   updateQuizTitle: (newTitle: string) => void;
-}
+};
 
-const QuizItem = ({
+const QuizItem: React.FC<QuizItemProps> = ({
   quiz,
   deleteQuiz,
   updateQuizTitle,
-  classes,
-}: QuizItemProps) => {
+}) => {
+  const classes = useStyles();
+
   return (
     <Box className={classes.container}>
       <Box className={classes.header}>
@@ -50,4 +51,4 @@ const QuizItem = ({
   );
 };
 
-export default withStyles(styles)(QuizItem);
+export default QuizItem;

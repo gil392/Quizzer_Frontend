@@ -1,8 +1,7 @@
 import { Add } from "@mui/icons-material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { withStyles, WithStyles } from "@mui/styles";
-import { FunctionComponent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   deleteLesson,
@@ -15,15 +14,11 @@ import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
 import LessonInfo from "../LessonInfo/LessonInfo";
 import LessonItem from "../LessonItem/LessonItem";
-import styles from "./LessonsPage.styles";
+import useStyles from "./LessonsPage.styles";
 
-interface LessonsPageProps extends WithStyles<typeof styles> {}
-
-const LessonsPage: FunctionComponent<LessonsPageProps> = (
-  props: LessonsPageProps
-) => {
+const LessonsPage: React.FC = () => {
+  const classes = useStyles();
   const navigate = useNavigate();
-  const { classes } = props;
   const [lessons, setLessons] = useState<LessonData[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
@@ -112,4 +107,4 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
   );
 };
 
-export default withStyles(styles)(LessonsPage);
+export default LessonsPage;
