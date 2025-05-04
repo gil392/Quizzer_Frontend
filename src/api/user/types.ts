@@ -1,1 +1,1 @@
-export type Message = {};
+export type Message = { reeded: boolean };
