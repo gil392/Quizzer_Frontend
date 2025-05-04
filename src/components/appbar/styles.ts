@@ -16,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) =>
       backgroundColor: theme.palette.primary.main,
       color: theme.palette.primary.contrastText,
     },
+    menu: {
+      marginTop: theme.spacing(1),
+    },
   })
 );
 
