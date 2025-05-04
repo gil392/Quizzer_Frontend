@@ -14,7 +14,7 @@ import {
   LoginResponse,
   RegisterFormData,
 } from "../../api/authentication/types";
-import { SetAccessTokenFunction } from "../../hooks/authentication/types";
+import { SetAccessTokenFunction, setUserIdInStorage } from "../../hooks/authentication/types";
 import { useFormOf } from "../../hooks/form";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import useStyles from "./styles";
@@ -36,8 +36,9 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
     }
   );
 
-  const onSuccessfulLogin = ({ token }: LoginResponse) => {
+  const onSuccessfulLogin = ({ token, userId }: LoginResponse) => {
     setAccessToken(token);
+    setUserIdInStorage(userId);
     navigate(PAGES_ROUTES.HOME);
   };
 
