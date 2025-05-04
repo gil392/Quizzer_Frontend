@@ -29,6 +29,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
 
   const handleRateQuiz = async (newRating: number | null) => {
     if (newRating === null) return;
+    // TODO: When Tomer adds this, change this to be the connected user's id. should probably be saved in local storage alongside access token.
     await rateQuiz(quiz._id, "Gil", newRating);
     setRating(newRating);
   };
