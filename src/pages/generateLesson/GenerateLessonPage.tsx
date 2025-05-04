@@ -2,8 +2,8 @@ import { Box, Button, OutlinedInput, Slider, Typography } from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import { QuizSettings } from "../../services/backend/types";
 import "./GenerateLessonPage.css";
+import { QuizSettings } from "../../api/quiz/types";
 
 const LOW_QUESTIONS_COUNT = 5;
 const MEDIUM_QUESTIONS_COUNT = 10;
