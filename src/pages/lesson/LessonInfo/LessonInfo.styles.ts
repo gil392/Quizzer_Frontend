@@ -17,9 +17,11 @@ const useStyles = makeStyles(() =>
       minWidth: 0, // allows box to shrink if needed, to let overflow work
     },
     title: {
-      fontSize: "1.2rem",
-      fontWeight: "bold",
-      marginBottom: "0.5vh",
+      "&.MuiTypography-root": {
+        fontSize: "1.2rem",
+        fontWeight: "bold",
+        marginBottom: "0.5vh",
+      },
     },
     card: {
       width: "100%",
@@ -29,6 +31,9 @@ const useStyles = makeStyles(() =>
     },
     noQuizzesText: {
       marginBottom: "1rem",
+      "&.MuiTypography-root": {
+        marginBottom: "1rem",
+      },
     },
     buttonsContainer: {
       display: "flex",

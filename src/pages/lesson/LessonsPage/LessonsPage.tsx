@@ -1,29 +1,24 @@
-import { FunctionComponent, useEffect, useState } from "react";
-import { LessonData } from "../../../services/backend/types";
-import LessonItem from "../LessonItem/LessonItem";
+import { Add } from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   deleteLesson,
   getLessons,
   updateLesson,
-} from "../../../services/backend/service";
-import LessonInfo from "../LessonInfo/LessonInfo";
-import Typography from "@mui/material/Typography";
-import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
-import { Add } from "@mui/icons-material";
-import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
+} from "../../../api/lesson/api";
+import { LessonData } from "../../../api/lesson/types";
 import { GenericIconButton } from "../../../components/GenericIconButton";
-import styles from "./LessonsPage.styles";
-import { withStyles, WithStyles } from "@mui/styles";
+import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
+import LessonInfo from "../LessonInfo/LessonInfo";
+import LessonItem from "../LessonItem/LessonItem";
+import useStyles from "./LessonsPage.styles";
 
-interface LessonsPageProps extends WithStyles<typeof styles> {}
-
-const LessonsPage: FunctionComponent<LessonsPageProps> = (
-  props: LessonsPageProps
-) => {
+const LessonsPage: React.FC = () => {
+  const classes = useStyles();
   const navigate = useNavigate();
-  const { classes } = props;
   const [lessons, setLessons] = useState<LessonData[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
@@ -33,8 +28,8 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
   useEffect(() => {
     const fetchLessons = async () => {
       try {
-        const response = await getLessons();
-        setLessons(response);
+        const { data } = await getLessons();
+        setLessons(data);
       } catch (error) {
         console.error("Error fetching lessons:", error);
       }
@@ -112,4 +107,4 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
   );
 };
 
-export default withStyles(styles)(LessonsPage);
+export default LessonsPage;

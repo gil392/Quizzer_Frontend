@@ -1,12 +1,11 @@
-import Box from "@mui/material/Box";
-import { LessonData } from "../../../services/backend/types";
-import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
-import { FunctionComponent, useState } from "react";
 import { Typography } from "@mui/material";
-import styles from "./LessonItem.styles";
-import withStyles, { WithStyles } from "@mui/styles/withStyles/withStyles";
+import Box from "@mui/material/Box";
+import { FunctionComponent, useState } from "react";
+import { LessonData } from "../../../api/lesson/types";
+import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
+import useStyles from "./LessonItem.styles";
 
-interface LessonItemProps extends WithStyles<typeof styles> {
+interface LessonItemProps {
   lesson: LessonData;
   onLessonDeleted: (lessonId: string) => void;
   updateLessonTitle: (newTitle: string) => void;
@@ -17,7 +16,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
   props: LessonItemProps
 ) => {
   const [isEditing, setIsEditing] = useState(false);
-  const classes = props.classes;
+  const classes = useStyles();
 
   return (
     <Box
@@ -41,4 +40,4 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
   );
 };
 
-export default withStyles(styles)(LessonItem);
+export default LessonItem;
