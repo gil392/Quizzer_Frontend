@@ -12,6 +12,7 @@ import { FilterOptions } from "./types";
 import { INITIAL_FILTER_OPTIONS } from "./constants";
 import styles from "./FilterLessons.styles";
 import withStyles, { WithStyles } from "@mui/styles/withStyles/withStyles";
+import { isEqual } from "lodash";
 
 export interface FilterLessonsProps extends WithStyles<typeof styles> {
   setFilterOptions: React.Dispatch<React.SetStateAction<FilterOptions>>;
@@ -25,7 +26,7 @@ const FilterLessons: FunctionComponent<FilterLessonsProps> = ({
 }) => {
   const onFilterChange = (
     filterName: keyof FilterOptions,
-    filterValue: any
+    filterValue: string
   ) => {
     setFilterOptions((prev) => ({
       ...prev,
@@ -38,7 +39,7 @@ const FilterLessons: FunctionComponent<FilterLessonsProps> = ({
   };
 
   const isFilterActive = useMemo(
-    () => filterOptions !== INITIAL_FILTER_OPTIONS,
+    () => !isEqual(filterOptions, INITIAL_FILTER_OPTIONS),
     [filterOptions]
   );
 
