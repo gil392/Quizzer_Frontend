@@ -2,9 +2,8 @@ import { createStyles } from '@mui/styles';
 
 export const styles = createStyles({
     root: {
-        height: '100%',
-        margin: '0 auto',
-        padding: '2rem',
+        width: '100%',
+        padding: '0 2rem',
         boxSizing: 'border-box',
         display: 'flex',
         flexDirection: 'column',

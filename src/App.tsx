@@ -1,9 +1,10 @@
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/styles";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
+import AppBar from "./components/appbar/Appbar";
 import Layout from "./components/layout/Layout";
-import quizzerTheme from "./theme";
 import NavBar from "./components/navBar/NavBar";
+import quizzerTheme from "./theme";
 
 function App() {
   return (
@@ -11,7 +12,10 @@ function App() {
       <div className="app-container">
         <Router>
           <NavBar />
-          <Layout />
+          <div className="app-layout-appbar">
+            <AppBar />
+            <Layout />
+          </div>
         </Router>
       </div>
     </ThemeProvider>
