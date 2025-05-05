@@ -5,19 +5,16 @@ export type QuizSettings = {
     solvingTimeMs: number;
 };
 
-export type LessonData = {
-    _id: string;
-    title: string;
-    summary: string;
-};
-
 export type QuizData = {
     _id: string;
+    title: string;
+    lessonId: string;
     questions: {
         _id: string;
         text: string;
         answers: string[];
     }[];
+    settings: QuizSettings;
 };
 
 export type QuizAnswerSubmittion = {
