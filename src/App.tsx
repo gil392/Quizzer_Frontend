@@ -1,4 +1,4 @@
-import { ThemeProvider } from "@mui/material";
+import { ThemeProvider } from "@mui/styles";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import Layout from "./components/layout/Layout";
