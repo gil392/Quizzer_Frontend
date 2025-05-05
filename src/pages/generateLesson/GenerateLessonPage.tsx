@@ -1,10 +1,12 @@
 import { Box, Button, OutlinedInput, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { QuizSettings } from "../../api/quiz/types";
+import { useUserId } from "../../components/user/globalProvider";
+import { getLoggedUser } from "../../api/user/api";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
@@ -12,6 +14,21 @@ const GenerateLessonPage: React.FC = () => {
   const [quizSettings, setQuizSettings] = useState<QuizSettings>(
     INITIAL_LESSON_CONFIG
   );
+
+  const { userId } = useUserId();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await getLoggedUser();
+        data?.defaultSettings && setQuizSettings(data?.defaultSettings);
+      } catch (error) {
+        console.error("Error fetching user: ", error);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
 
   const handleSummaryNavigation = (): void => {
     const quizSettingsToSend: QuizSettings = {

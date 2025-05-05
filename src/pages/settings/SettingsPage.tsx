@@ -1,21 +1,51 @@
 import { Box, Button } from "@mui/material";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { QuizSettings } from "../../api/quiz/types";
+import { getLoggedUser, updateUser } from "../../api/user/api";
+import { useUserId } from "../../components/user/globalProvider";
+import { User } from "../../api/user/types";
 
 const SettingsPage: FunctionComponent = () => {
-  const [quizSettings, setQuizSettings] = useState<QuizSettings>(
+  const [defaultSettings, setDefaultSettings] = useState<QuizSettings>(
     INITIAL_LESSON_CONFIG
   );
+  const [user, setUser] = useState<User | null>(null);
 
-  const setDefaultSettings = () => {};
+  const { userId } = useUserId();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await getLoggedUser();
+        setUser(data);
+        data?.defaultSettings && setDefaultSettings(data?.defaultSettings);
+      } catch (error) {
+        console.error("Error fetching user: ", error);
+      }
+    };
+
+    fetchUser();
+  }, [userId]);
+
+  const updateSettings = async () => {
+    if (user) {
+      try {
+        await updateUser(user, { defaultSettings });
+      } catch (error) {
+        console.error("Error updating user: ", error);
+      }
+    } else {
+      console.error("Error updating user: User does not exists");
+    }
+  };
 
   return (
     <Box sx={{ width: "50%", margin: "auto" }}>
       <LessonConfig
-        quizSettings={quizSettings}
-        setQuizSettings={setQuizSettings}
+        quizSettings={defaultSettings}
+        setQuizSettings={setDefaultSettings}
       />
       <Button
         variant="contained"
@@ -26,7 +56,7 @@ const SettingsPage: FunctionComponent = () => {
           borderRadius: "8px",
           marginTop: 3,
         }}
-        onClick={setDefaultSettings}
+        onClick={updateSettings}
       >
         Submit Changes
       </Button>
