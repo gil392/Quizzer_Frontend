@@ -1,31 +1,11 @@
-import { Box, Button, OutlinedInput, Slider, Typography } from "@mui/material";
-import { SetStateAction, useState } from "react";
+import { Box, Button, OutlinedInput, Typography } from "@mui/material";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
+import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { QuizSettings } from "../../services/backend/types";
 import "./GenerateLessonPage.css";
-import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
-import LessonConfig from "../../components/lessonConfig/LessonConfig";
-
-const LOW_QUESTIONS_COUNT = 5;
-const MEDIUM_QUESTIONS_COUNT = 10;
-const HIGH_QUESTIONS_COUNT = 20;
-const MANUAL_QUESTIONS_COUNT_OPTION = -1;
-const MANUAL_MIN_QUESTIONS_COUNT = 5;
-const MANUAL_MAX_QUESTIONS_COUNT = 30;
-const MANUAL_QUESTIONS_COUNT_STEP = 5;
-
-interface QuestionCountOption {
-  value: number;
-  label: string;
-}
-
-const questionCountOptions: QuestionCountOption[] = [
-  { value: LOW_QUESTIONS_COUNT, label: "Low (5)" },
-  { value: MEDIUM_QUESTIONS_COUNT, label: "Medium (10)" },
-  { value: HIGH_QUESTIONS_COUNT, label: "High (20)" },
-  { value: MANUAL_QUESTIONS_COUNT_OPTION, label: "Manual" },
-];
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
