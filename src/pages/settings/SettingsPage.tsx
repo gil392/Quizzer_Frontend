@@ -6,6 +6,7 @@ import { QuizSettings } from "../../api/quiz/types";
 import { getLoggedUser, updateUser } from "../../api/user/api";
 import { useUserId } from "../../components/user/globalProvider";
 import { User } from "../../api/user/types";
+import DisplayModeSwtich from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 
 const SettingsPage: FunctionComponent = () => {
   const [defaultSettings, setDefaultSettings] = useState<QuizSettings>(
@@ -43,6 +44,7 @@ const SettingsPage: FunctionComponent = () => {
 
   return (
     <Box sx={{ width: "50%", margin: "auto" }}>
+      <DisplayModeSwtich />
       <LessonConfig
         quizSettings={defaultSettings}
         setQuizSettings={setDefaultSettings}
