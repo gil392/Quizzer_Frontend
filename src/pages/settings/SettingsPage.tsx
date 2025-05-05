@@ -1,4 +1,4 @@
-import { Button } from "@mui/material";
+import { Box, Button } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
@@ -12,7 +12,7 @@ const SettingsPage: FunctionComponent = () => {
   const setDefaultSettings = () => {};
 
   return (
-    <>
+    <Box sx={{ width: "50%", margin: "auto" }}>
       <LessonConfig
         quizSettings={quizSettings}
         setQuizSettings={setQuizSettings}
@@ -28,9 +28,9 @@ const SettingsPage: FunctionComponent = () => {
         }}
         onClick={setDefaultSettings}
       >
-        Generate Lesson
+        Submit Changes
       </Button>
-    </>
+    </Box>
   );
 };
 

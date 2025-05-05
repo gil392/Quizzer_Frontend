@@ -1,10 +1,4 @@
-import {
-  AutoStories,
-  DisplaySettings,
-  LogoDev,
-  Settings,
-  YouTube,
-} from "@mui/icons-material";
+import { AutoStories, LogoDev, Settings, YouTube } from "@mui/icons-material";
 import { Box, Divider, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -39,7 +33,7 @@ const navBarNavigations: readonly NavBarItem[] = [
   },
   {
     text: "Settings",
-    icon: <DisplaySettings />,
+    icon: <Settings />,
     route: "SETTINGS",
   },
 ];
