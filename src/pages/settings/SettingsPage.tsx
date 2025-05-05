@@ -1,18 +1,35 @@
-import { FunctionComponent, SetStateAction, useState } from "react";
-import { QuizSettings } from "../../services/backend/types";
+import { Button } from "@mui/material";
+import { FunctionComponent, useState } from "react";
 import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
+import { QuizSettings } from "../../services/backend/types";
 
 const SettingsPage: FunctionComponent = () => {
   const [quizSettings, setQuizSettings] = useState<QuizSettings>(
     INITIAL_LESSON_CONFIG
   );
+
+  const setDefaultSettings = () => {};
+
   return (
     <>
       <LessonConfig
         quizSettings={quizSettings}
         setQuizSettings={setQuizSettings}
       />
+      <Button
+        variant="contained"
+        color="primary"
+        sx={{
+          width: "100%",
+          height: "3rem",
+          borderRadius: "8px",
+          marginTop: 3,
+        }}
+        onClick={setDefaultSettings}
+      >
+        Generate Lesson
+      </Button>
     </>
   );
 };

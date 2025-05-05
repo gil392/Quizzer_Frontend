@@ -33,6 +33,7 @@ export const FEEDBACK_OPTIONS: FeedbackOption[] = [
 export const INITIAL_LESSON_CONFIG: QuizSettings = {
   feedbackType: "onSubmit",
   questionsOrder: "chronological",
+  displayMode: "Dark",
   maxQuestionCount: LOW_QUESTIONS_COUNT,
   isManualCount: false,
   solvingTimeMs: 60000,
