@@ -1,24 +1,23 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { LessonData } from "../../../services/backend/types";
 import LessonItem from "../LessonItem/LessonItem";
 import {
   deleteLesson,
   getLessons,
   updateLesson,
-} from "../../../services/backend/service";
-import LessonInfo from "../LessonInfo/LessonInfo";
-import Typography from "@mui/material/Typography";
-import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
-import { Add } from "@mui/icons-material";
-import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
+} from "../../../api/lesson/api";
+import { LessonData } from "../../../api/lesson/types";
 import { GenericIconButton } from "../../../components/GenericIconButton";
-import useStyles from "./LessonsPage.styles";
+import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
+import LessonInfo from "../LessonInfo/LessonInfo";
+import useStyles from "./LessonsPage.styles";
 import { FilterOptions } from "../FilterLessons/types";
 import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
 import { getFilteredLessons } from "../FilterLessons/utils";
 import FilterLessons from "../FilterLessons/FilterLessons";
+import { useNavigate } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
 const LessonsPage: React.FC = () => {
   const classes = useStyles();
@@ -28,13 +27,15 @@ const LessonsPage: React.FC = () => {
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
     setSelectedLesson(null)
   );
-  const [filterOptions, setFilterOptions] = useState<FilterOptions>(INITIAL_FILTER_OPTIONS);
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>(
+    INITIAL_FILTER_OPTIONS
+  );
 
   useEffect(() => {
     const fetchLessons = async () => {
       try {
-        const response = await getLessons();
-        setLessons(response);
+        const { data } = await getLessons();
+        setLessons(data);
       } catch (error) {
         console.error("Error fetching lessons:", error);
       }
@@ -43,7 +44,10 @@ const LessonsPage: React.FC = () => {
     fetchLessons();
   }, []);
 
-  const filteredLessons = useMemo(() => getFilteredLessons(lessons, filterOptions), [lessons, filterOptions])
+  const filteredLessons = useMemo(
+    () => getFilteredLessons(lessons, filterOptions),
+    [lessons, filterOptions]
+  );
 
   const handleLessonDeleted = async (lessonId: string) => {
     await deleteLesson(lessonId);
@@ -87,9 +91,10 @@ const LessonsPage: React.FC = () => {
             )}
           </Box>
 
-          <FilterLessons 
+          <FilterLessons
             setFilterOptions={setFilterOptions}
-            filterOptions={filterOptions} />
+            filterOptions={filterOptions}
+          />
 
           {filteredLessons.length > 0 ? (
             filteredLessons.map((lesson) => (

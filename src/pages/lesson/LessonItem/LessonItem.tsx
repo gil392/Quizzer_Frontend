@@ -1,8 +1,8 @@
-import Box from "@mui/material/Box";
-import { LessonData } from "../../../services/backend/types";
-import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
-import { FunctionComponent, useState } from "react";
 import { Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import { FunctionComponent, useState } from "react";
+import { LessonData } from "../../../api/lesson/types";
+import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import useStyles from "./LessonItem.styles";
 
 interface LessonItemProps {
