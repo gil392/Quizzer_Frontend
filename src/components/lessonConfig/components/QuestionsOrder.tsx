@@ -1,9 +1,9 @@
 import { Typography } from "@mui/material";
 import { FunctionComponent } from "react";
-import { QuizSettings } from "../../../services/backend/types";
 import { QUESTIONS_ORDER_OPTIONS } from "./constants";
 import GeneralSelectOption from "./GeneralSelectOption";
 import { Option } from "./types";
+import { QuizSettings } from "../../../api/quiz/types";
 
 interface QuestionsOrderProps {
   questionsOrder: QuizSettings["questionsOrder"];

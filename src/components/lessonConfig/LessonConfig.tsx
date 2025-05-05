@@ -1,8 +1,8 @@
 import { FunctionComponent } from "react";
-import { QuizSettings } from "../../services/backend/types";
 import MaxQuestionCount from "./components/MaxQuestionCount";
 import QuestionsOrder from "./components/QuestionsOrder";
 import Feedback from "./components/Feedback";
+import { QuizSettings } from "../../api/quiz/types";
 
 interface LessonConfigProps {
   quizSettings: QuizSettings;
@@ -40,81 +40,6 @@ const LessonConfig: FunctionComponent<LessonConfigProps> = ({
         feedbackType={quizSettings.feedbackType}
         onQuizSettingsChange={onQuizSettingsChange}
       />
-      {/* <Typography variant="h6" gutterBottom>
-        Questions Order
-      </Typography>
-      <Box className="custom-radio-group">
-        <label
-          className={`custom-radio ${
-            questionOrder === "chronological" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="questionOrder"
-            value="chronological"
-            checked={questionOrder === "chronological"}
-            onChange={(e) =>
-              setQuestionOrder(e.target.value as "chronological" | "random")
-            }
-          />
-          <span>Chronological</span>
-        </label>
-        <label
-          className={`custom-radio ${
-            questionOrder === "random" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="questionOrder"
-            value="random"
-            checked={questionOrder === "random"}
-            onChange={(e) =>
-              setQuestionOrder(e.target.value as "chronological" | "random")
-            }
-          />
-          <span>Random</span>
-        </label>
-      </Box>
-
-      <Typography variant="h6" gutterBottom>
-        Feedback
-      </Typography>
-      <Box className="custom-radio-group">
-        <label
-          className={`custom-radio ${
-            feedbackType === "onSubmit" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="feedbackType"
-            value="onSubmit"
-            checked={feedbackType === "onSubmit"}
-            onChange={(e) =>
-              setFeedbackType(e.target.value as QuizSettings["checkType"])
-            }
-          />
-          <span>On Submit</span>
-        </label>
-        <label
-          className={`custom-radio ${
-            feedbackType === "onSelectAnswer" ? "selected" : ""
-          }`}
-        >
-          <input
-            type="radio"
-            name="feedbackType"
-            value="onSelectAnswer"
-            checked={feedbackType === "onSelectAnswer"}
-            onChange={(e) =>
-              setFeedbackType(e.target.value as QuizSettings["checkType"])
-            }
-          />
-          <span>Every Question</span>
-        </label>
-      </Box> */}
     </>
   );
 };

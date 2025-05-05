@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import { QuizSettings } from "../../services/backend/types";
+import { QuizSettings } from "../../api/quiz/types";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();

@@ -2,7 +2,7 @@ import { Box, Button } from "@mui/material";
 import { FunctionComponent, useState } from "react";
 import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
-import { QuizSettings } from "../../services/backend/types";
+import { QuizSettings } from "../../api/quiz/types";
 
 const SettingsPage: FunctionComponent = () => {
   const [quizSettings, setQuizSettings] = useState<QuizSettings>(

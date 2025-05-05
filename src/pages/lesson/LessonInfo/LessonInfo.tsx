@@ -14,6 +14,7 @@ import { deleteQuiz, getQuizzes, updateQuiz } from "../../../api/quiz/api";
 import { QuizData, QuizSettings } from "../../../api/quiz/types";
 import QuizItem from "../QuizItem/QuizItem";
 import useStyles from "./LessonInfo.styles";
+import { INITIAL_LESSON_CONFIG } from "../../../components/lessonConfig/components/constants";
 
 interface LessonInfoProps {
   lesson: LessonData;
@@ -27,12 +28,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
 
   const navigate = useNavigate();
   /** TODO: Issue 14 (Itay)- get these settings not hard-coded */
-  const quizSettings: QuizSettings = {
-    feedbackType: "onSubmit",
-    isRandomOrder: true,
-    maxQuestionCount: 10,
-    solvingTimeMs: 60000,
-  };
+  const quizSettings: QuizSettings = INITIAL_LESSON_CONFIG;
 
   const onCreateQuiz = () => {
     navigate("/quiz", { state: { lessonData: lesson, quizSettings } });

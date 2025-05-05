@@ -1,4 +1,4 @@
-import { QuizSettings } from "../../../services/backend/types";
+import { QuizSettings } from "../../../api/quiz/types";
 import {
   FeedbackOption,
   QuestionCountOption,
@@ -33,7 +33,7 @@ export const FEEDBACK_OPTIONS: FeedbackOption[] = [
 export const INITIAL_LESSON_CONFIG: QuizSettings = {
   feedbackType: "onSubmit",
   questionsOrder: "chronological",
-  displayMode: "Dark",
+  displayMode: "Light",
   maxQuestionCount: LOW_QUESTIONS_COUNT,
   isManualCount: false,
   solvingTimeMs: 60000,
