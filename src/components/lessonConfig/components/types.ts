@@ -1,4 +1,4 @@
-import { QuizSettings } from "../../../services/backend/types";
+import { QuizSettings } from "../../../api/quiz/types";
 
 export interface Option {
   value: number | string;

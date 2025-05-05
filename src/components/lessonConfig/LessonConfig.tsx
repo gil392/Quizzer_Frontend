@@ -1,8 +1,8 @@
 import { FunctionComponent } from "react";
-import { QuizSettings } from "../../services/backend/types";
 import MaxQuestionCount from "./components/MaxQuestionCount";
 import QuestionsOrder from "./components/QuestionsOrder";
 import Feedback from "./components/Feedback";
+import { QuizSettings } from "../../api/quiz/types";
 
 interface LessonConfigProps {
   quizSettings: QuizSettings;

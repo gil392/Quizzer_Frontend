@@ -1,5 +1,4 @@
 import { FunctionComponent } from "react";
-import { QuizSettings } from "../../../services/backend/types";
 import { Box, Slider, Typography } from "@mui/material";
 import {
   MANUAL_MAX_QUESTIONS_COUNT,
@@ -10,6 +9,7 @@ import {
 } from "./constants";
 import GeneralSelectOption from "./GeneralSelectOption";
 import { Option } from "./types";
+import { QuizSettings } from "../../../api/quiz/types";
 
 interface MaxQuestionCountProps {
   maxQuestionCount: QuizSettings["maxQuestionCount"];
