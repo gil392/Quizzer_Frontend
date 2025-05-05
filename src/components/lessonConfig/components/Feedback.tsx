@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { FunctionComponent } from "react";
 import { QuizSettings } from "../../../services/backend/types";
-import { QUESTIONS_ORDER_OPTIONS } from "./constants";
+import { FEEDBACK_OPTIONS } from "./constants";
 import GeneralSelectOption from "./GeneralSelectOption";
 import { Option } from "./types";
 
@@ -29,7 +29,7 @@ const Feedback: FunctionComponent<FeedbackProps> = ({
         Feedback
       </Typography>
       <GeneralSelectOption
-        options={QUESTIONS_ORDER_OPTIONS}
+        options={FEEDBACK_OPTIONS}
         isOptionSelected={isOptionSelected}
         onOptionSelectChange={onSelectedCountChange}
       />

@@ -26,8 +26,8 @@ export const QUESTIONS_ORDER_OPTIONS: QuestionsOrderOption[] = [
 ];
 
 export const FEEDBACK_OPTIONS: FeedbackOption[] = [
-  { value: "onSelectAnswer", label: "" },
-  { value: "onSubmit", label: "" },
+  { value: "onSubmit", label: "On Submit" },
+  { value: "onSelectAnswer", label: "Every Question" },
 ];
 
 export const INITIAL_LESSON_CONFIG: QuizSettings = {
