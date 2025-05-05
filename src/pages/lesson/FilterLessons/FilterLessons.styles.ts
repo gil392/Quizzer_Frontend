@@ -1,32 +1,34 @@
-import { createStyles } from "@mui/styles";
+import { createStyles, makeStyles } from "@mui/styles";
 
-const styles = createStyles({
+const useStyles = makeStyles(() =>
+  createStyles({
     filterContainer: {
-        marginTop: '1rem',
-        marginBottom: '1rem'
+      marginTop: "1rem",
+      marginBottom: "1rem",
     },
     filterPaper: {
-        '&.MuiPaper-root': {
-            backgroundColor: 'rgba(245, 245, 245, 1)',
-        },
-        padding: '1rem',
-        marginBottom: '1rem'
+      "&.MuiPaper-root": {
+        backgroundColor: "rgba(245, 245, 245, 1)",
+      },
+      padding: "1rem",
+      marginBottom: "1rem",
     },
     filterHeader: {
-        display: 'flex', 
-        justifyContent: 'space-between', 
-        alignItems: 'center', 
-        marginBottom: '1rem'
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      marginBottom: "1rem",
     },
     filterBody: {
-        display: 'flex', 
-        flexWrap: 'wrap',
-        gap: '1rem'
+      display: "flex",
+      flexWrap: "wrap",
+      gap: "1rem",
     },
     searchTextContainer: {
-        flex: '1 1 200px', 
-        minWidth: '200px'
-    }
-})
+      flex: "1 1 200px",
+      minWidth: "200px",
+    },
+  })
+);
 
-export default styles;
+export default useStyles;

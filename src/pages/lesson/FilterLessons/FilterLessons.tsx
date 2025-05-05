@@ -10,11 +10,10 @@ import React, { FunctionComponent, useMemo } from "react";
 import { Clear as ClearIcon } from "@mui/icons-material";
 import { FilterOptions } from "./types";
 import { INITIAL_FILTER_OPTIONS } from "./constants";
-import styles from "./FilterLessons.styles";
-import withStyles, { WithStyles } from "@mui/styles/withStyles/withStyles";
+import useStyles from "./FilterLessons.styles";
 import { isEqual } from "lodash";
 
-export interface FilterLessonsProps extends WithStyles<typeof styles> {
+export interface FilterLessonsProps {
   setFilterOptions: React.Dispatch<React.SetStateAction<FilterOptions>>;
   filterOptions: FilterOptions;
 }
@@ -22,8 +21,8 @@ export interface FilterLessonsProps extends WithStyles<typeof styles> {
 const FilterLessons: FunctionComponent<FilterLessonsProps> = ({
   setFilterOptions,
   filterOptions,
-  classes,
 }) => {
+  const classes = useStyles();
   const onFilterChange = (
     filterName: keyof FilterOptions,
     filterValue: string
@@ -83,4 +82,4 @@ const FilterLessons: FunctionComponent<FilterLessonsProps> = ({
   );
 };
 
-export default withStyles(styles)(FilterLessons);
+export default FilterLessons;
