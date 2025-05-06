@@ -1,4 +1,4 @@
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
 import { QuizSettings } from "../../api/quiz/types";
 import { getLoggedUser, updateUser } from "../../api/user/api";
