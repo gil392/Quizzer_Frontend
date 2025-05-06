@@ -6,7 +6,7 @@ import {
   Typography,
 } from "@mui/material";
 import { isNotNil } from "ramda";
-import { FunctionComponent, useContext } from "react";
+import { FunctionComponent } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser, registerUser } from "../../api/authentication/api";
 import { registerSchema } from "../../api/authentication/schemas";
@@ -18,8 +18,6 @@ import { SetAccessTokenFunction } from "../../hooks/authentication/types";
 import { useFormOf } from "../../hooks/form";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import useStyles from "./styles";
-import { useUserId } from "../../components/user/globalProvider";
-import { UserContext } from "../../components/user/config";
 
 export interface RegisterPageProps {
   setAccessToken: SetAccessTokenFunction;
@@ -27,7 +25,6 @@ export interface RegisterPageProps {
 
 const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
   const { setAccessToken } = props;
-  const { setUserId } = useUserId();
   const classes = useStyles();
   const navigate = useNavigate();
   const { form, errors, validateForm, fieldsChangeHandlers } = useFormOf(
@@ -39,9 +36,8 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
     }
   );
 
-  const onSuccessfulLogin = ({ token, userId }: LoginResponse) => {
+  const onSuccessfulLogin = ({ token }: LoginResponse) => {
     setAccessToken(token);
-    setUserId(userId);
     navigate(PAGES_ROUTES.HOME);
   };
 

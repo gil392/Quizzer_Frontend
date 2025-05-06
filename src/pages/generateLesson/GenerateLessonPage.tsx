@@ -1,12 +1,11 @@
 import { Box, Button, OutlinedInput, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { QuizSettings } from "../../api/quiz/types";
+import { getLoggedUser } from "../../api/user/api";
 import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import { QuizSettings } from "../../api/quiz/types";
-import { useUserId } from "../../components/user/globalProvider";
-import { getLoggedUser } from "../../api/user/api";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
@@ -14,8 +13,6 @@ const GenerateLessonPage: React.FC = () => {
   const [quizSettings, setQuizSettings] = useState<QuizSettings>(
     INITIAL_LESSON_CONFIG
   );
-
-  const { userId } = useUserId();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -28,7 +25,7 @@ const GenerateLessonPage: React.FC = () => {
     };
 
     fetchUser();
-  }, [userId]);
+  }, []);
 
   const handleSummaryNavigation = (): void => {
     const quizSettingsToSend: QuizSettings = {
