@@ -1,15 +1,12 @@
-import { DisplayMode } from "./constants";
+import { QuizSettings } from "../../../api/quiz/types";
 
-export const getOppositeDisplayMode = (displayMode: DisplayMode) : DisplayMode => {
-    switch(displayMode) {
-        case DisplayMode.Light:
-            return DisplayMode.Dark;
-        case DisplayMode.Dark:
-            return DisplayMode.Light;
-    } 
-}    
-
-export const getInitialDisplayMode = () : DisplayMode => {
-    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches;
-    return isLightMode ? DisplayMode.Light : DisplayMode.Dark;
-}
+export const getOppositeDisplayMode = (
+  displayMode: QuizSettings["displayMode"]
+): QuizSettings["displayMode"] => {
+  switch (displayMode) {
+    case "Light":
+      return "Dark";
+    case "Dark":
+      return "Light";
+  }
+};

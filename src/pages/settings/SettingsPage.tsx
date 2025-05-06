@@ -11,6 +11,7 @@ const SettingsPage: FunctionComponent = () => {
   const [defaultSettings, setDefaultSettings] = useState<QuizSettings>(
     INITIAL_LESSON_CONFIG
   );
+
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
@@ -41,7 +42,15 @@ const SettingsPage: FunctionComponent = () => {
 
   return (
     <Box sx={{ width: "50%", margin: "auto" }}>
-      <DisplayModeSwtich />
+      <DisplayModeSwtich
+        displayMode={defaultSettings.displayMode}
+        setDisplayMode={(displayMode) =>
+          setDefaultSettings({
+            ...defaultSettings,
+            displayMode,
+          })
+        }
+      />
       <LessonConfig
         quizSettings={defaultSettings}
         setQuizSettings={setDefaultSettings}

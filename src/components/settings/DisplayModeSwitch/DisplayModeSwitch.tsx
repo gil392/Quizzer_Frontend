@@ -1,29 +1,20 @@
-import { useEffect, useState } from "react";
-import { DisplayMode } from "./constants";
-import { getInitialDisplayMode, getOppositeDisplayMode } from "./utils";
-import { Button, Typography } from "@mui/material";
 import { ShieldMoon, Sunny } from "@mui/icons-material";
+import { Button, Typography } from "@mui/material";
+import { FunctionComponent } from "react";
+import { QuizSettings } from "../../../api/quiz/types";
+import { getOppositeDisplayMode } from "./utils";
 
-const DisplayModeSwtich: React.FC = () => {
-  const displayModeProvider = document.documentElement.classList;
-  const initalDisplayMode: DisplayMode = getInitialDisplayMode();
+interface DisplayModeSwitchProps {
+  displayMode: QuizSettings["displayMode"];
+  setDisplayMode: (displayMode: QuizSettings["displayMode"]) => void;
+}
 
-  const [displayMode, setDisplayMode] =
-    useState<DisplayMode>(initalDisplayMode);
-
-  useEffect(() => {
-    if (!displayModeProvider.contains(displayMode)) {
-      displayModeProvider.add(displayMode);
-    }
-  }, [displayMode]);
-
+const DisplayModeSwtich: FunctionComponent<DisplayModeSwitchProps> = ({
+  displayMode,
+  setDisplayMode,
+}) => {
   const switchDisplayMode = () => {
-    const currentDisplayMode = displayMode;
-    const nextDisplayMode = getOppositeDisplayMode(currentDisplayMode);
-
-    displayModeProvider.remove(currentDisplayMode);
-    displayModeProvider.add(nextDisplayMode);
-
+    const nextDisplayMode = getOppositeDisplayMode(displayMode);
     setDisplayMode(nextDisplayMode);
   };
 
@@ -36,7 +27,7 @@ const DisplayModeSwtich: React.FC = () => {
         onClick={switchDisplayMode}
         aria-label={`Switch to ${getOppositeDisplayMode(displayMode)} mode`}
       >
-        {displayMode === DisplayMode.Dark ? <ShieldMoon /> : <Sunny />}
+        {displayMode === "Dark" ? <ShieldMoon /> : <Sunny />}
       </Button>
     </>
   );
