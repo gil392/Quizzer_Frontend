@@ -31,11 +31,6 @@ const navBarNavigations: readonly NavBarItem[] = [
     icon: <AutoStories />,
     route: "LESSONS_LIST",
   },
-  {
-    text: "Settings",
-    icon: <Settings />,
-    route: "SETTINGS",
-  },
 ];
 
 const NavBar: FunctionComponent = () => {
@@ -89,7 +84,10 @@ const NavBar: FunctionComponent = () => {
       <List sx={listSx}>{navBarItems}</List>
       <Divider />
       <Box>
-        <ListItemButton sx={listItemButtonSx(open)} disabled>
+        <ListItemButton
+          sx={listItemButtonSx(open)}
+          onClick={createNavigationHandle("SETTINGS")}
+        >
           <ListItemIcon sx={listItemIconSx(open)}>
             <Settings />
           </ListItemIcon>
