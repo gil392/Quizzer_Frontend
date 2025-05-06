@@ -1,19 +1,16 @@
 import { Box, Button } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
-import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
-import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { QuizSettings } from "../../api/quiz/types";
 import { getLoggedUser, updateUser } from "../../api/user/api";
-import { useUserId } from "../../components/user/globalProvider";
 import { User } from "../../api/user/types";
+import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
+import LessonConfig from "../../components/lessonConfig/LessonConfig";
 
 const SettingsPage: FunctionComponent = () => {
   const [defaultSettings, setDefaultSettings] = useState<QuizSettings>(
     INITIAL_LESSON_CONFIG
   );
   const [user, setUser] = useState<User | null>(null);
-
-  const { userId } = useUserId();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -27,7 +24,7 @@ const SettingsPage: FunctionComponent = () => {
     };
 
     fetchUser();
-  }, [userId]);
+  }, []);
 
   const updateSettings = async () => {
     if (user) {
