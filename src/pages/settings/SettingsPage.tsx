@@ -6,6 +6,7 @@ import { User } from "../../api/user/types";
 import DisplayModeSwtich from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
+import { useDisplayMode } from "../../components/settings/DisplayModeSwitch/globalProvider";
 
 const SettingsPage: FunctionComponent = () => {
   const [defaultSettings, setDefaultSettings] = useState<QuizSettings>(
@@ -14,12 +15,16 @@ const SettingsPage: FunctionComponent = () => {
 
   const [user, setUser] = useState<User | null>(null);
 
+  const { setDisplayMode } = useDisplayMode();
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const { data } = await getLoggedUser();
         setUser(data);
-        data?.defaultSettings && setDefaultSettings(data?.defaultSettings);
+        data?.defaultSettings && setDefaultSettings(data.defaultSettings);
+        data?.defaultSettings &&
+          setDisplayMode(data.defaultSettings.displayMode);
       } catch (error) {
         console.error("Error fetching user: ", error);
       }
@@ -44,12 +49,13 @@ const SettingsPage: FunctionComponent = () => {
     <Box sx={{ width: "50%", margin: "auto" }}>
       <DisplayModeSwtich
         displayMode={defaultSettings.displayMode}
-        setDisplayMode={(displayMode) =>
+        setDisplayMode={(displayMode) => {
+          setDisplayMode(displayMode);
           setDefaultSettings({
             ...defaultSettings,
             displayMode,
-          })
-        }
+          });
+        }}
       />
       <LessonConfig
         quizSettings={defaultSettings}

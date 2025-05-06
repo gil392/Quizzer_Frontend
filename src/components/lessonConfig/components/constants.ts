@@ -1,4 +1,5 @@
 import { QuizSettings } from "../../../api/quiz/types";
+import { INITIAL_DISPLAY_MODE } from "../../settings/DisplayModeSwitch/constants";
 import {
   FeedbackOption,
   QuestionCountOption,
@@ -33,7 +34,7 @@ export const FEEDBACK_OPTIONS: FeedbackOption[] = [
 export const INITIAL_LESSON_CONFIG: QuizSettings = {
   feedbackType: "onSubmit",
   questionsOrder: "chronological",
-  displayMode: "Light",
+  displayMode: INITIAL_DISPLAY_MODE,
   maxQuestionCount: LOW_QUESTIONS_COUNT,
   isManualCount: false,
   solvingTimeMs: 60000,
