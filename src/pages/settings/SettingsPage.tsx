@@ -33,17 +33,21 @@ const SettingsPage: FunctionComponent = () => {
     fetchUser();
   }, []);
 
-  const updateSettings = async () => {
-    if (user) {
-      try {
-        await updateUser(user, { defaultSettings });
-      } catch (error) {
-        console.error("Error updating user: ", error);
+  useEffect(() => {
+    const updateSettings = async () => {
+      if (user) {
+        try {
+          await updateUser(user, { defaultSettings });
+        } catch (error) {
+          console.error("Error updating user: ", error);
+        }
+      } else {
+        console.error("Error updating user: User does not exists");
       }
-    } else {
-      console.error("Error updating user: User does not exists");
-    }
-  };
+    };
+
+    updateSettings();
+  }, [defaultSettings]);
 
   return (
     <Box sx={{ width: "50%", margin: "auto" }}>
@@ -61,19 +65,6 @@ const SettingsPage: FunctionComponent = () => {
         quizSettings={defaultSettings}
         setQuizSettings={setDefaultSettings}
       />
-      <Button
-        variant="contained"
-        color="primary"
-        sx={{
-          width: "100%",
-          height: "3rem",
-          borderRadius: "8px",
-          marginTop: 3,
-        }}
-        onClick={updateSettings}
-      >
-        Submit Changes
-      </Button>
     </Box>
   );
 };
