@@ -25,7 +25,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
   updateQuizTitle,
 }) => {
   const classes = useStyles();
-  const [rating, setRating] = useState<number | null>(quiz.ratings[0]);
+  const [rating, setRating] = useState<number | null>(quiz.rating);
 
   const handleRateQuiz = async (newRating: number | null) => {
     const userId = localStorage.getItem("userId");
