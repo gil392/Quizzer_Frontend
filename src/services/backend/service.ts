@@ -143,14 +143,20 @@ export async function updateLesson(
   return updateItem<LessonData>(lessonId, updatedData, "lesson", "lesson");
 }
 
-export async function getQuizzes(lessonId: string): Promise<QuizData[]> {
+export async function getQuizzes(
+  lessonId: string,
+  userId: string
+): Promise<QuizData[]> {
   try {
-    const response = await fetch(`${backendUrl}/quiz?lessonId=${lessonId}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await fetch(
+      `${backendUrl}/quiz?lessonId=${lessonId}&userId=${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       throw new Error("Failed to fetch quizzes");
@@ -237,8 +243,8 @@ export async function updateQuiz(
 export async function rateQuiz(
   quizId: string,
   rater: string,
-  rating: number
-): Promise<{ message: string; rating: number }> {
+  rating: number | null
+): Promise<{ message: string; rating: number | null }> {
   try {
     const response = await fetch(
       `${backendUrl}/quiz/rate?quizId=${quizId}&rater=${rater}`,
@@ -247,7 +253,7 @@ export async function rateQuiz(
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ rating }),
+        body: JSON.stringify({ rating: rating }),
       }
     );
 

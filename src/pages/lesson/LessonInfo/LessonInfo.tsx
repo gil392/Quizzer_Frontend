@@ -32,6 +32,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   const [quizzes, setQuizzes] = useState<QuizData[]>([]);
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(true); // Default to true (show summary)
 
+  const userId = localStorage.getItem("userId");
   const navigate = useNavigate();
   /** TODO: Issue 14 (Itay)- get these settings not hard-coded */
   const quizSettings: QuizSettings = {
@@ -48,15 +49,17 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   useEffect(() => {
     const fetchQuizzesByLessonId = async () => {
       try {
-        const response = await getQuizzes(lesson._id);
-        setQuizzes(response);
+        if (userId !== null) {
+          const response = await getQuizzes(lesson._id, userId);
+          setQuizzes(response);
+        }
       } catch (error) {
         console.error("Error fetching lessons:", error);
       }
     };
 
     fetchQuizzesByLessonId();
-  }, []);
+  }, [userId]);
 
   const handleDeleteQuiz = async (quizId: string) => {
     await deleteQuiz(quizId);

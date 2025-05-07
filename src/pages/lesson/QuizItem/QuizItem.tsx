@@ -25,10 +25,9 @@ const QuizItem: React.FC<QuizItemProps> = ({
   updateQuizTitle,
 }) => {
   const classes = useStyles();
-  const [rating, setRating] = useState<number | null>(null);
+  const [rating, setRating] = useState<number | null>(quiz.ratings[0]);
 
   const handleRateQuiz = async (newRating: number | null) => {
-    if (newRating === null) return;
     const userId = localStorage.getItem("userId");
     if (userId === null) {
       console.error("User ID not found in local storage.");

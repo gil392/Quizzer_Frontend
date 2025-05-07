@@ -21,6 +21,7 @@ export type QuizData = {
     answers: string[];
   }[];
   settings: QuizSettings;
+  ratings: number[];
 };
 
 export type QuizAnswerSubmittion = {
