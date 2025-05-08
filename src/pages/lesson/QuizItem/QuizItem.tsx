@@ -1,14 +1,15 @@
-import React, { useState } from "react";
-import Box from "@mui/material/Box";
+import { useState } from "react";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import {
   Accordion,
-  AccordionSummary,
   AccordionDetails,
+  AccordionSummary,
   Typography,
   Rating,
 } from "@mui/material";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import { QuizData } from "../../../services/backend/types";
+import Box from "@mui/material/Box";
+import React from "react";
+import { QuizData } from "../../../api/quiz/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../services/backend/service";
