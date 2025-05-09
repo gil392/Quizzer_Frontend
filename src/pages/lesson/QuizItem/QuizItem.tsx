@@ -12,7 +12,7 @@ import React from "react";
 import { QuizData } from "../../../api/quiz/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import useStyles from "./QuizItem.styles";
-import { rateQuiz } from "../../../services/backend/service";
+import { rateQuiz } from "../../../api/quiz/api";
 
 type QuizItemProps = {
   quiz: QuizData;
