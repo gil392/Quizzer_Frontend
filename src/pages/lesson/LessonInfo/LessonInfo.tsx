@@ -72,7 +72,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
       <Box className={classes.leftBox}>
         <Typography className={classes.title}>{lesson.title}</Typography>
         <Stack direction="row" alignItems="center" spacing={1}>
-          <Typography>Video Link:</Typography>
+          <Typography>Video link:</Typography>
           <Link
             href={lesson.videoUrl}
             target="_blank"
