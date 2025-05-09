@@ -2,31 +2,21 @@ import { createStyles, makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() =>
   createStyles({
-    filterContainer: {
+    filterContainer: {},
+    filterHeader: {},
+    filterBody: {
       marginTop: "1rem",
       marginBottom: "1rem",
-    },
-    filterPaper: {
-      "&.MuiPaper-root": {
-        backgroundColor: "rgba(245, 245, 245, 1)",
-      },
-      padding: "1rem",
-      marginBottom: "1rem",
-    },
-    filterHeader: {
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      marginBottom: "1rem",
-    },
-    filterBody: {
-      display: "flex",
-      flexWrap: "wrap",
-      gap: "1rem",
     },
     searchTextContainer: {
       flex: "1 1 200px",
       minWidth: "200px",
+    },
+    searchText: {
+      "& .MuiOutlinedInput-root": {
+        borderRadius: "20px",
+      },
+      width: "40vw",
     },
   })
 );
