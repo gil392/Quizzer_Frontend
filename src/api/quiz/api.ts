@@ -35,13 +35,12 @@ export const deleteQuiz = (quizId: string) => deleteItem(quizId, "quiz");
 
 export const rateQuiz = (
   quizId: string,
-  rater: string,
   rating: number | null
 ): AxiosPromise<{ message: string; rating: number | null }> =>
   apiClient.post(
     "/quiz/rate",
     { rating },
     {
-      params: { quizId, rater },
+      params: { quizId },
     }
   );

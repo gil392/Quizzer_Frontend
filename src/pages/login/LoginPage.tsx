@@ -13,7 +13,6 @@ import { loginSchema } from "../../api/authentication/schemas";
 import { LoginFormData, LoginResponse } from "../../api/authentication/types";
 import {
   SetAccessTokenFunction,
-  setUserIdInStorage,
 } from "../../hooks/authentication/types";
 import { useFormOf } from "../../hooks/form";
 import { PAGES_ROUTES } from "../../routes/routes.const";
@@ -37,7 +36,6 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
 
   const onSuccessfulLogin = ({ token, userId }: LoginResponse) => {
     setAccessToken(token);
-    setUserIdInStorage(userId);
     navigate(PAGES_ROUTES.HOME);
   };
 

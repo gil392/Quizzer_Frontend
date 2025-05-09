@@ -29,12 +29,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
   const [rating, setRating] = useState<number | null>(quiz.rating);
 
   const handleRateQuiz = async (newRating: number | null) => {
-    const userId = localStorage.getItem("userId");
-    if (userId === null) {
-      console.error("User ID not found in local storage.");
-      return;
-    }
-    await rateQuiz(quiz._id, userId, newRating);
+    await rateQuiz(quiz._id, newRating);
     setRating(newRating);
   };
 
