@@ -4,6 +4,8 @@ import {
   CardActions,
   CardContent,
   Collapse,
+  Link,
+  Stack,
   Typography,
 } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -69,6 +71,18 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
     <Box className={classes.container}>
       <Box className={classes.leftBox}>
         <Typography className={classes.title}>{lesson.title}</Typography>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Typography>Video Link:</Typography>
+          <Link
+            href={lesson.videoUrl}
+            target="_blank"
+            rel="noopener"
+            underline="hover"
+          >
+            {lesson.videoUrl}
+          </Link>
+        </Stack>
+
         <Card className={classes.card}>
           <CardActions>
             <Button
@@ -78,6 +92,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
               {isSummaryExpanded ? "Hide Summary" : "Show Summary"}
             </Button>
           </CardActions>
+
           <Collapse
             in={isSummaryExpanded}
             timeout="auto"
