@@ -56,7 +56,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
           ))}
         </AccordionDetails>
       </Accordion>
-      <Box mt={2}>
+      <Box className={classes.ratingContainer}>
         <Typography variant="body1">Rate this quiz:</Typography>
         <Rating
           name={`quiz-rating-${quiz._id}`}

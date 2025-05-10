@@ -11,9 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../api/authentication/api";
 import { loginSchema } from "../../api/authentication/schemas";
 import { LoginFormData, LoginResponse } from "../../api/authentication/types";
-import {
-  SetAccessTokenFunction,
-} from "../../hooks/authentication/types";
+import { SetAccessTokenFunction } from "../../hooks/authentication/types";
 import { useFormOf } from "../../hooks/form";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import useStyles from "../register/styles";
@@ -34,7 +32,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
     }
   );
 
-  const onSuccessfulLogin = ({ token, userId }: LoginResponse) => {
+  const onSuccessfulLogin = ({ token }: LoginResponse) => {
     setAccessToken(token);
     navigate(PAGES_ROUTES.HOME);
   };

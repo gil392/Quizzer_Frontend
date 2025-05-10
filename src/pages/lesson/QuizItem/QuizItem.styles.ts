@@ -19,6 +19,9 @@ const useStyles = makeStyles(() =>
       flexDirection: "column",
       alignItems: "flex-start",
     },
+    ratingContainer: {
+      marginTop: "1rem",
+    },
   })
 );
 
