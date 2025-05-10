@@ -61,7 +61,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
         <Rating
           name={`quiz-rating-${quiz._id}`}
           value={rating}
-          onChange={(event, newValue) => handleRateQuiz(newValue)}
+          onChange={(_, newValue) => handleRateQuiz(newValue)}
         />
       </Box>
       {rating && (
