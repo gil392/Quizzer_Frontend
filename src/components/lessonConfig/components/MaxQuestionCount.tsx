@@ -10,6 +10,7 @@ import {
 import GeneralSelectOption from "./GeneralSelectOption";
 import { Option } from "./types";
 import { QuizSettings, QuizSettingsField } from "../../../api/quiz/types";
+import useStyles from "./styles";
 
 interface MaxQuestionCountProps {
   maxQuestionCount: number;
@@ -25,6 +26,7 @@ const MaxQuestionCount: FunctionComponent<MaxQuestionCountProps> = ({
   isManualCount,
   onQuizSettingsChange,
 }) => {
+  const classes = useStyles();
   const setMaxQuestionCount = (
     maxQuestionCount: number,
     isManualCount: boolean
@@ -67,6 +69,7 @@ const MaxQuestionCount: FunctionComponent<MaxQuestionCountProps> = ({
             Select the number of questions (5-30):
           </Typography>
           <Slider
+            className={classes.manualSelection}
             value={maxQuestionCount}
             onChange={(_, value) => onManualCountChange(value)}
             step={MANUAL_QUESTIONS_COUNT_STEP}

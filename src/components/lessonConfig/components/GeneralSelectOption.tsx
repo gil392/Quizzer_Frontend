@@ -1,11 +1,10 @@
 import { Box } from "@mui/material";
-import { withStyles, WithStyles } from "@mui/styles";
 import { FunctionComponent } from "react";
-import styles from "./styles";
 import { Option } from "./types";
 import clsx from "clsx";
+import useStyles from "./styles";
 
-interface GeneralOptionSelectProps extends WithStyles<typeof styles> {
+interface GeneralOptionSelectProps {
   options: Option[];
   isOptionSelected: (option: Option) => boolean;
   onOptionSelectChange: (value: Option["value"]) => void;
@@ -15,8 +14,9 @@ const GeneralSelectOption: FunctionComponent<GeneralOptionSelectProps> = ({
   options,
   isOptionSelected,
   onOptionSelectChange,
-  classes,
 }) => {
+  const classes = useStyles();
+
   return (
     <Box className={classes.customRadioGroup}>
       {options.map((option) => (
@@ -40,4 +40,4 @@ const GeneralSelectOption: FunctionComponent<GeneralOptionSelectProps> = ({
   );
 };
 
-export default withStyles(styles)(GeneralSelectOption);
+export default GeneralSelectOption;
