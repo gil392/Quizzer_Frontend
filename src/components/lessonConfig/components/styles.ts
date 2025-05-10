@@ -40,6 +40,35 @@ const styles = createStyles({
       color: "var(--primary-main)",
     },
   },
+
+  manualSelection: {
+    color: "primary.main",
+    height: 8,
+    "& .MuiSlider-thumb": {
+      height: 16,
+      width: 16,
+      backgroundColor: "#fff",
+      border: "2px solid currentColor",
+      "&:hover": {
+        boxShadow: "0px 0px 0px 8px rgba(25, 118, 210, 0.16)",
+      },
+      "&.Mui-active": {
+        boxShadow: "0px 0px 0px 14px rgba(25, 118, 210, 0.16)",
+      },
+    },
+    "& .MuiSlider-rail": {
+      backgroundColor: "#bdbdbd",
+    },
+    "& .MuiSlider-mark": {
+      backgroundColor: "#bdbdbd",
+      height: 8,
+      width: 8,
+      borderRadius: "50%",
+    },
+    "& .MuiSlider-markActive": {
+      backgroundColor: "primary.main",
+    },
+  },
 });
 
 export default styles;

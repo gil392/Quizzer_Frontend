@@ -8,6 +8,7 @@ export type QuizSettings = {
   solvingTimeMs: number;
 };
 
+export type QuizSettingsField = boolean | number | string;
 export type QuizData = {
   _id: string;
   title: string;

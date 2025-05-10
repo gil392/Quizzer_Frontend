@@ -2,7 +2,7 @@ import { FunctionComponent } from "react";
 import MaxQuestionCount from "./components/MaxQuestionCount";
 import QuestionsOrder from "./components/QuestionsOrder";
 import Feedback from "./components/Feedback";
-import { QuizSettings } from "../../api/quiz/types";
+import { QuizSettings, QuizSettingsField } from "../../api/quiz/types";
 
 interface LessonConfigProps {
   quizSettings: QuizSettings;
@@ -15,7 +15,7 @@ const LessonConfig: FunctionComponent<LessonConfigProps> = ({
 }) => {
   const onQuizSettingsChange = (
     settingName: keyof QuizSettings,
-    settingValue: any
+    settingValue: QuizSettingsField
   ) => {
     setQuizSettings((prev) => ({
       ...prev,

@@ -3,13 +3,13 @@ import { FunctionComponent } from "react";
 import { QUESTIONS_ORDER_OPTIONS } from "./constants";
 import GeneralSelectOption from "./GeneralSelectOption";
 import { Option } from "./types";
-import { QuizSettings } from "../../../api/quiz/types";
+import { QuizSettings, QuizSettingsField } from "../../../api/quiz/types";
 
 interface QuestionsOrderProps {
   questionsOrder: QuizSettings["questionsOrder"];
   onQuizSettingsChange: (
     settingName: keyof QuizSettings,
-    settingValue: any
+    settingValue: QuizSettingsField
   ) => void;
 }
 
