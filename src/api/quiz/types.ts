@@ -1,7 +1,11 @@
+export type FeedbackType = "onSubmit" | "onSelectAnswer";
+export type QuestionsOrder = "chronological" | "random";
+export type DisplayMode = "Light" | "Dark";
+
 export type QuizSettings = {
-  feedbackType: "onSubmit" | "onSelectAnswer";
-  questionsOrder: "chronological" | "random";
-  displayMode: "Light" | "Dark";
+  feedbackType: FeedbackType;
+  questionsOrder: QuestionsOrder;
+  displayMode: DisplayMode;
   isRandomOrder: boolean;
   maxQuestionCount: number;
   isManualCount: boolean;

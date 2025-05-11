@@ -1,16 +1,40 @@
 import { Box } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
-import { QuizSettings } from "../../api/quiz/types";
+import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
+import {
+  FeedbackType,
+  QuestionsOrder,
+  QuizSettings,
+} from "../../api/quiz/types";
 import { getLoggedUser, updateUser } from "../../api/user/api";
 import { User } from "../../api/user/types";
-import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 
 const SettingsPage: FunctionComponent = () => {
-  const [defaultSettings, setDefaultSettings] = useState<QuizSettings>(
-    INITIAL_LESSON_CONFIG
-  );
   const [user, setUser] = useState<User | null>(null);
+
+  const [feedbackType, setFeedbackType] = useState<FeedbackType>(
+    INITIAL_QUIZ_SETTINGS.feedbackType
+  );
+
+  const [questionsOrder, setQuestionsOrder] = useState<QuestionsOrder>(
+    INITIAL_QUIZ_SETTINGS.questionsOrder
+  );
+
+  const [maxQuestionCount, setMaxQuestionCount] = useState<number>(
+    INITIAL_QUIZ_SETTINGS.maxQuestionCount
+  );
+
+  const [isManualCount, setIsManualCount] = useState<boolean>(
+    INITIAL_QUIZ_SETTINGS.isManualCount
+  );
+
+  const setDefaultSettings = (quizSettings: QuizSettings) => {
+    setFeedbackType(quizSettings.feedbackType);
+    setQuestionsOrder(quizSettings.questionsOrder);
+    setMaxQuestionCount(quizSettings.maxQuestionCount);
+    setIsManualCount(quizSettings.isManualCount);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -30,6 +54,13 @@ const SettingsPage: FunctionComponent = () => {
     const updateSettings = async () => {
       if (user) {
         try {
+          const defaultSettings: QuizSettings = {
+            ...INITIAL_QUIZ_SETTINGS,
+            feedbackType,
+            questionsOrder,
+            maxQuestionCount,
+            isManualCount,
+          };
           await updateUser(user, { defaultSettings });
         } catch (error) {
           console.error("Error updating user: ", error);
@@ -40,13 +71,19 @@ const SettingsPage: FunctionComponent = () => {
     };
 
     updateSettings();
-  }, [defaultSettings]);
+  }, [feedbackType, questionsOrder, maxQuestionCount, isManualCount]);
 
   return (
     <Box sx={{ width: "50%", margin: "auto" }}>
       <LessonConfig
-        quizSettings={defaultSettings}
-        setQuizSettings={setDefaultSettings}
+        feedbackType={feedbackType}
+        setFeedbackType={setFeedbackType}
+        questionsOrder={questionsOrder}
+        setQuestionsOrder={setQuestionsOrder}
+        maxQuestionCount={maxQuestionCount}
+        setMaxQuestionCount={setMaxQuestionCount}
+        isManualCount={isManualCount}
+        setIsManualCount={setIsManualCount}
       />
     </Box>
   );

@@ -1,44 +1,54 @@
 import { FunctionComponent } from "react";
+import { FeedbackType, QuestionsOrder } from "../../api/quiz/types";
+import {
+  FEEDBACK_OPTIONS,
+  QUESTIONS_ORDER_OPTIONS,
+} from "./components/constants";
+import GeneralSelectOption from "./components/GeneralSelectOption";
+import { Option } from "./components/types";
 import MaxQuestionCount from "./components/MaxQuestionCount";
-import QuestionsOrder from "./components/QuestionsOrder";
-import Feedback from "./components/Feedback";
-import { QuizSettings, QuizSettingsField } from "../../api/quiz/types";
 
 interface LessonConfigProps {
-  quizSettings: QuizSettings;
-  setQuizSettings: React.Dispatch<React.SetStateAction<QuizSettings>>;
+  feedbackType: FeedbackType;
+  setFeedbackType: (feedbackType: FeedbackType) => void;
+  questionsOrder: QuestionsOrder;
+  setQuestionsOrder: (questionsOrder: QuestionsOrder) => void;
+  maxQuestionCount: number;
+  setMaxQuestionCount: (maxQuestionCount: number) => void;
+  isManualCount: boolean;
+  setIsManualCount: (isManualCount: boolean) => void;
 }
 
-const LessonConfig: FunctionComponent<LessonConfigProps> = ({
-  quizSettings,
-  setQuizSettings,
-}) => {
-  const onQuizSettingsChange = (
-    settingName: keyof QuizSettings,
-    settingValue: QuizSettingsField
-  ) => {
-    setQuizSettings((prev) => ({
-      ...prev,
-      [settingName]: settingValue,
-    }));
-  };
-
+const LessonConfig: FunctionComponent<LessonConfigProps> = (props) => {
   return (
     <>
       <MaxQuestionCount
-        maxQuestionCount={quizSettings.maxQuestionCount}
-        isManualCount={quizSettings.isManualCount}
-        onQuizSettingsChange={onQuizSettingsChange}
+        maxQuestionCount={props.maxQuestionCount}
+        setMaxQuestionCount={props.setMaxQuestionCount}
+        isManualCount={props.isManualCount}
+        setIsManualCount={props.setIsManualCount}
       />
 
-      <QuestionsOrder
-        questionsOrder={quizSettings.questionsOrder}
-        onQuizSettingsChange={onQuizSettingsChange}
+      <GeneralSelectOption
+        title={"Questions Order"}
+        options={QUESTIONS_ORDER_OPTIONS}
+        isOptionSelected={(option: Option) =>
+          option.value === props.questionsOrder
+        }
+        setSelectedOption={(selectedOption: string) => {
+          props.setQuestionsOrder(selectedOption as QuestionsOrder);
+        }}
       />
 
-      <Feedback
-        feedbackType={quizSettings.feedbackType}
-        onQuizSettingsChange={onQuizSettingsChange}
+      <GeneralSelectOption
+        title={"Feedback"}
+        options={FEEDBACK_OPTIONS}
+        isOptionSelected={(option: Option) =>
+          option.value === props.feedbackType
+        }
+        setSelectedOption={(selectedOption: string) => {
+          props.setFeedbackType(selectedOption.toString() as FeedbackType);
+        }}
       />
     </>
   );

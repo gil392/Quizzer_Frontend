@@ -1,5 +1,5 @@
-import { FunctionComponent } from "react";
 import { Box, Slider, Typography } from "@mui/material";
+import { FunctionComponent } from "react";
 import {
   MANUAL_MAX_QUESTIONS_COUNT,
   MANUAL_MIN_QUESTIONS_COUNT,
@@ -8,70 +8,60 @@ import {
   QUESTION_COUNT_OPTIONS,
 } from "./constants";
 import GeneralSelectOption from "./GeneralSelectOption";
-import { Option } from "./types";
-import { QuizSettings, QuizSettingsField } from "../../../api/quiz/types";
 import useStyles from "./styles";
+import { Option } from "./types";
 
 interface MaxQuestionCountProps {
   maxQuestionCount: number;
+  setMaxQuestionCount: (maxQuestionCount: number) => void;
   isManualCount: boolean;
-  onQuizSettingsChange: (
-    settingName: keyof QuizSettings,
-    settingValue: QuizSettingsField
-  ) => void;
+  setIsManualCount: (isManualCount: boolean) => void;
 }
 
-const MaxQuestionCount: FunctionComponent<MaxQuestionCountProps> = ({
-  maxQuestionCount,
-  isManualCount,
-  onQuizSettingsChange,
-}) => {
+const MaxQuestionCount: FunctionComponent<MaxQuestionCountProps> = (props) => {
   const classes = useStyles();
-  const setMaxQuestionCount = (
-    maxQuestionCount: number,
-    isManualCount: boolean
-  ) => {
-    onQuizSettingsChange("maxQuestionCount", maxQuestionCount);
-    onQuizSettingsChange("isManualCount", isManualCount);
+  const updateChanges = (maxQuestionCount: number, isManualCount: boolean) => {
+    props.setMaxQuestionCount(maxQuestionCount);
+    props.setIsManualCount(isManualCount);
   };
 
-  const onSelectedCountChange = (maxCount: Option["value"]) => {
+  const setSelectedCount = (maxCount: string) => {
     const numMaxCount = Number(maxCount);
     switch (numMaxCount) {
       case MANUAL_QUESTIONS_COUNT_OPTION:
-        setMaxQuestionCount(MANUAL_MIN_QUESTIONS_COUNT, true);
+        updateChanges(MANUAL_MIN_QUESTIONS_COUNT, true);
         break;
       default:
-        setMaxQuestionCount(numMaxCount, false);
+        updateChanges(numMaxCount, false);
     }
   };
 
-  const onManualCountChange = (maxCount: number) => {
-    setMaxQuestionCount(maxCount, true);
+  const setManualCount = (maxCount: number) => {
+    updateChanges(maxCount, true);
   };
 
-  const isCountOptionSelected = (option: Option) =>
-    !isManualCount && maxQuestionCount === option.value;
+  const isOptionSelected = (option: Option) =>
+    props.isManualCount
+      ? option.value === MANUAL_QUESTIONS_COUNT_OPTION
+      : option.value === props.maxQuestionCount;
 
   return (
     <>
-      <Typography variant="h6" gutterBottom>
-        How Many Questions?
-      </Typography>
       <GeneralSelectOption
+        title={"How Many Questions?"}
         options={QUESTION_COUNT_OPTIONS}
-        isOptionSelected={isCountOptionSelected}
-        onOptionSelectChange={onSelectedCountChange}
+        isOptionSelected={isOptionSelected}
+        setSelectedOption={setSelectedCount}
       />
-      {isManualCount && (
+      {props.isManualCount && (
         <Box sx={{ marginBottom: 3 }}>
           <Typography variant="body2" gutterBottom>
             Select the number of questions (5-30):
           </Typography>
           <Slider
             className={classes.manualSelection}
-            value={maxQuestionCount}
-            onChange={(_, value) => onManualCountChange(value)}
+            value={props.maxQuestionCount}
+            onChange={(_, value) => setManualCount(value)}
             step={MANUAL_QUESTIONS_COUNT_STEP}
             marks
             min={MANUAL_MIN_QUESTIONS_COUNT}

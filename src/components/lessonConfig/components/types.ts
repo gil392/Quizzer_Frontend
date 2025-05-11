@@ -1,4 +1,4 @@
-import { QuizSettings } from "../../../api/quiz/types";
+import { FeedbackType, QuestionsOrder } from "../../../api/quiz/types";
 
 export interface Option {
   value: number | string;
@@ -11,11 +11,11 @@ export interface QuestionCountOption {
 }
 
 export interface QuestionsOrderOption {
-  value: QuizSettings["questionsOrder"];
+  value: QuestionsOrder;
   label: string;
 }
 
 export interface FeedbackOption {
-  value: QuizSettings["feedbackType"];
+  value: FeedbackType;
   label: string;
 }

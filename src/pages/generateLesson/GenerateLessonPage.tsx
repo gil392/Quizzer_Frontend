@@ -1,18 +1,43 @@
 import { Box, Button, OutlinedInput, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { QuizSettings } from "../../api/quiz/types";
+import {
+  FeedbackType,
+  QuestionsOrder,
+  QuizSettings,
+} from "../../api/quiz/types";
 import { getLoggedUser } from "../../api/user/api";
-import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
+
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
+import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
   const [videoUrl, setVideoUrl] = useState<string>("");
-  const [quizSettings, setQuizSettings] = useState<QuizSettings>(
-    INITIAL_LESSON_CONFIG
+
+  const [feedbackType, setFeedbackType] = useState<FeedbackType>(
+    INITIAL_QUIZ_SETTINGS.feedbackType
   );
+
+  const [questionsOrder, setQuestionsOrder] = useState<QuestionsOrder>(
+    INITIAL_QUIZ_SETTINGS.questionsOrder
+  );
+
+  const [maxQuestionCount, setMaxQuestionCount] = useState<number>(
+    INITIAL_QUIZ_SETTINGS.maxQuestionCount
+  );
+
+  const [isManualCount, setIsManualCount] = useState<boolean>(
+    INITIAL_QUIZ_SETTINGS.isManualCount
+  );
+
+  const setQuizSettings = (quizSettings: QuizSettings) => {
+    setFeedbackType(quizSettings.feedbackType);
+    setQuestionsOrder(quizSettings.questionsOrder);
+    setMaxQuestionCount(quizSettings.maxQuestionCount);
+    setIsManualCount(quizSettings.isManualCount);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,8 +54,12 @@ const GenerateLessonPage: React.FC = () => {
 
   const handleSummaryNavigation = (): void => {
     const quizSettingsToSend: QuizSettings = {
-      ...quizSettings,
-      isRandomOrder: quizSettings.questionsOrder !== "random",
+      ...INITIAL_QUIZ_SETTINGS,
+      feedbackType,
+      questionsOrder,
+      maxQuestionCount,
+      isManualCount,
+      isRandomOrder: questionsOrder !== "random",
     };
     navigate(PAGES_ROUTES.SUMMARY, {
       state: { videoUrl, quizSettingsToSend },
@@ -55,8 +84,14 @@ const GenerateLessonPage: React.FC = () => {
       />
 
       <LessonConfig
-        quizSettings={quizSettings}
-        setQuizSettings={setQuizSettings}
+        feedbackType={feedbackType}
+        setFeedbackType={setFeedbackType}
+        questionsOrder={questionsOrder}
+        setQuestionsOrder={setQuestionsOrder}
+        maxQuestionCount={maxQuestionCount}
+        setMaxQuestionCount={setMaxQuestionCount}
+        isManualCount={isManualCount}
+        setIsManualCount={setIsManualCount}
       />
 
       <Button
