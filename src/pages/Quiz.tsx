@@ -23,12 +23,14 @@ const QuizPage: React.FC = () => {
   }>({});
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
+  const quizSettings = location.state?.quizSettings;
   const lessonData = location.state?.lessonData;
   const quizId = location.state?.quizId;
 
   const fetchQuizById = useCallback(async () => {
     if (!quizId) {
-      console.error("Quiz ID is not available.");
+      console.error("Quiz ID is not available, generating a new quiz.");
+      generateNewQuiz();
       return;
     }
     setLoading(true);
@@ -54,7 +56,7 @@ const QuizPage: React.FC = () => {
     setSelectedAnswers({});
 
     try {
-      const { data } = await generateQuiz(lessonData._id, quizData?.settings);
+      const { data } = await generateQuiz(lessonData._id, quizSettings || quizData?.settings );
       setQuizData(data);
     } catch (error) {
       console.error("Error generating quiz:", error);

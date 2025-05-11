@@ -9,7 +9,7 @@ import {
 } from './types';
 
 export const getQuizzes = (lessonId: string): AxiosPromise<QuizData[]> =>
-    apiClient.get('/quiz', { params: lessonId });
+    apiClient.get('/quiz', { params: {lessonId} });
 
 export const getQuizById = (id: string): AxiosPromise<QuizData> =>
     apiClient.get(`/quiz/${id}`);
