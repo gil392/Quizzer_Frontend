@@ -42,10 +42,8 @@ const QuizItem: React.FC<QuizItemProps> = ({
         />
         <IconButton
           onClick={handleRetakeQuiz}
-          color="primary"
           aria-label="Retake Quiz"
-          size="small"
-          sx={{ marginLeft: 1 }} // Add spacing between buttons
+          className={classes.retakeButton}
         >
           <ReplayIcon />
         </IconButton>

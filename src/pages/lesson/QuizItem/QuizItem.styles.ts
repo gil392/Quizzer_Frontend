@@ -19,6 +19,13 @@ const useStyles = makeStyles(() =>
       flexDirection: "column",
       alignItems: "flex-start",
     },
+    retakeButton: {
+      marginLeft: "8px !important", 
+      color: "#311b92 !important", 
+      "&:hover": {
+        color: "#1a0d66 !important", 
+      },
+    },
   })
 );
 
