@@ -1,6 +1,7 @@
+import { Theme } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
 
-export const useStyles = makeStyles(() =>
+export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "100%",
@@ -19,6 +20,25 @@ export const useStyles = makeStyles(() =>
       overflowY: "auto",
       width: "60%",
       padding: "0 8px",
+    },
+    firstItem: {
+      marginTop: "4px",
+    },
+    lastItem: {
+      marginBottom: "4px",
+    },
+    pendingFriendsPannel: {
+      width: "40%",
+      display: "flex",
+      flexDirection: "column",
+      margin: theme.spacing(6, 0),
+    },
+    pendingFriendsList: {
+      flexGrow: 1,
+      overflowY: "auto",
+      marginTop: theme.spacing(3),
+    },
+    scroller: {
       "&::-webkit-scrollbar": {
         width: "8px",
       },
@@ -32,15 +52,5 @@ export const useStyles = makeStyles(() =>
         backgroundColor: "rgba(0, 0, 0, 0.4)",
       },
     },
-    firstItem: {
-      marginTop: "4px",
-    },
-    lastItem: {
-      marginBottom: "4px",
-    },
-    pendingFriendsPannel: {
-      width: '40%'
-    },
-    
   })
 );
