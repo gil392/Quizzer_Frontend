@@ -13,20 +13,23 @@ import { useStyles } from "./styles";
 interface FriendRequestItemProps {
   user: UserWithId;
   className?: string;
+  onAction: () => void;
 }
 
 const FriendRequestItem: FunctionComponent<FriendRequestItemProps> = (
   props
 ) => {
-  const { user, className } = props;
+  const { user, className, onAction } = props;
   const classes = useStyles();
 
   const onAcceptClick = () => {
     acceptFriendRequest(user._id);
+    onAction();
   };
 
   const onDeclineClick = () => {
     declineFriendRequest(user._id);
+    onAction();
   };
 
   return (

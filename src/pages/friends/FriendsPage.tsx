@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { concat, remove } from "ramda";
 import { FunctionComponent, useEffect, useState } from "react";
 import { getFriends, getFriendsRequest } from "../../api/user/api";
 import { UserWithId } from "../../api/user/types";
@@ -43,6 +44,12 @@ const FriendsPage: FunctionComponent = () => {
     />
   ));
 
+  const removeFrientRequest =
+    (user: UserWithId, requestIndex: number) => () => {
+      setPendingFriendsRequest(remove(requestIndex, 1));
+      setFriends(concat([user]));
+    };
+
   const pendingFriendsList = pendingFriendsRequest.map((user, index) => (
     <FriendRequestItem
       key={index}
@@ -51,6 +58,7 @@ const FriendsPage: FunctionComponent = () => {
         [classes.lastItem]: index === friends.length - 1,
       })}
       user={user}
+      onAction={removeFrientRequest(user, index)}
     />
   ));
 
