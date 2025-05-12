@@ -45,7 +45,7 @@ const FriendsPage: FunctionComponent = () => {
     />
   ));
 
-  const removeFrientRequest =
+  const removeFriendRequest =
     (user: UserWithId, requestIndex: number) =>
     (action: FriendRequestItemAction) => {
       setPendingFriendsRequest(remove(requestIndex, 1));
@@ -62,7 +62,7 @@ const FriendsPage: FunctionComponent = () => {
         [classes.lastItem]: index === friends.length - 1,
       })}
       user={user}
-      onAction={removeFrientRequest(user, index)}
+      onAction={removeFriendRequest(user, index)}
     />
   ));
 
