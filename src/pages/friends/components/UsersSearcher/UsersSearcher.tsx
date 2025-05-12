@@ -32,8 +32,6 @@ const UsersSearcher: FunctionComponent = () => {
     try {
       const res = await apiSearchUsers(searchTerm);
       setOptions(res.data);
-    } catch (err) {
-      console.error("Failed to fetch users:", err);
     } finally {
       setLoading(false);
     }
@@ -61,13 +59,11 @@ const UsersSearcher: FunctionComponent = () => {
         className={classes.oprionAvatar}
       />
       {username}
-      <Typography
-        variant="caption"
-        color="textSecondary"
-        className={classes.optionEmail}
-      >
-        {email}
-      </Typography>
+      <span className={classes.optionEmail}>
+        <Typography variant="caption" color="textSecondary">
+          {email}
+        </Typography>
+      </span>
     </Box>
   );
 

@@ -8,6 +8,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       height: "1.5em",
       marginRight: theme.spacing(1),
     },
-    optionEmail: { marginLeft: theme.spacing(1) },
+    optionEmail: {
+      marginLeft: theme.spacing(1),
+    },
   })
 );
