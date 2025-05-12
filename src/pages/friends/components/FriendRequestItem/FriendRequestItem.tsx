@@ -9,11 +9,12 @@ import {
 import { UserWithId } from "../../../../api/user/types";
 import FriendItem from "../FriendItem/FriendItem";
 import { useStyles } from "./styles";
+import { FriendRequestItemAction } from "./types";
 
 interface FriendRequestItemProps {
   user: UserWithId;
   className?: string;
-  onAction: () => void;
+  onAction: (action: FriendRequestItemAction) => void;
 }
 
 const FriendRequestItem: FunctionComponent<FriendRequestItemProps> = (
@@ -24,12 +25,12 @@ const FriendRequestItem: FunctionComponent<FriendRequestItemProps> = (
 
   const onAcceptClick = () => {
     acceptFriendRequest(user._id);
-    onAction();
+    onAction("accept");
   };
 
   const onDeclineClick = () => {
     declineFriendRequest(user._id);
-    onAction();
+    onAction("decline");
   };
 
   return (

@@ -5,6 +5,7 @@ import { getFriends, getFriendsRequest } from "../../api/user/api";
 import { UserWithId } from "../../api/user/types";
 import FriendItem from "./components/FriendItem/FriendItem";
 import FriendRequestItem from "./components/FriendRequestItem/FriendRequestItem";
+import { FriendRequestItemAction } from "./components/FriendRequestItem/types";
 import UsersSearcher from "./components/UsersSearcher/UsersSearcher";
 import { useStyles } from "./styles";
 
@@ -45,9 +46,12 @@ const FriendsPage: FunctionComponent = () => {
   ));
 
   const removeFrientRequest =
-    (user: UserWithId, requestIndex: number) => () => {
+    (user: UserWithId, requestIndex: number) =>
+    (action: FriendRequestItemAction) => {
       setPendingFriendsRequest(remove(requestIndex, 1));
-      setFriends(concat([user]));
+      if (action === "accept") {
+        setFriends(concat([user]));
+      }
     };
 
   const pendingFriendsList = pendingFriendsRequest.map((user, index) => (
