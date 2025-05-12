@@ -33,6 +33,7 @@ interface UsersSearcherProps {
 const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
   const { exludeIds = [] } = props;
   const classes = useStyles();
+  const [value, setValue] = useState<SearchedUser | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<SearchedUser[]>([]);
   const [loading, setLoading] = useState(false);
@@ -61,6 +62,8 @@ const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
     if (isNotNil(value)) {
       submitFriendRequest(value._id);
     }
+    setInputValue("");
+    setValue(null);
   };
 
   const renderOption = (
@@ -69,7 +72,7 @@ const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
     },
     { picture, username, email }: SearchedUser
   ) => (
-    <Box component="li" {...props}>
+    <Box component="li" {...props} key={username}>
       <Avatar
         src={picture ?? "error"}
         alt={username.toUpperCase()}
@@ -108,13 +111,15 @@ const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
 
   return (
     <Autocomplete
-      disablePortal
       options={options}
+      getOptionLabel={(option) => `${option.username} (${option.email})`}
       renderOption={renderOption}
       onInputChange={(_, value) => setInputValue(value)}
       loading={loading}
       renderInput={renderInput}
       onChange={handleSelect}
+      value={value}
+      inputValue={inputValue}
     />
   );
 };
