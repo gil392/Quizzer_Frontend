@@ -43,7 +43,7 @@ const GenerateLessonPage: React.FC = () => {
     const fetchUser = async () => {
       try {
         const { data } = await getLoggedUser();
-        data?.defaultSettings && setQuizSettings(data?.defaultSettings);
+        data?.settings && setQuizSettings(data?.settings);
       } catch (error) {
         console.error("Error fetching user: ", error);
       }

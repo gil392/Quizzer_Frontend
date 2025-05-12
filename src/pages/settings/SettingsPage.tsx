@@ -29,7 +29,7 @@ const SettingsPage: FunctionComponent = () => {
     INITIAL_QUIZ_SETTINGS.isManualCount
   );
 
-  const setDefaultSettings = (quizSettings: QuizSettings) => {
+  const setSettings = (quizSettings: QuizSettings) => {
     setFeedbackType(quizSettings.feedbackType);
     setQuestionsOrder(quizSettings.questionsOrder);
     setMaxQuestionCount(quizSettings.maxQuestionCount);
@@ -41,7 +41,7 @@ const SettingsPage: FunctionComponent = () => {
       try {
         const { data } = await getLoggedUser();
         setUser(data);
-        data?.defaultSettings && setDefaultSettings(data?.defaultSettings);
+        data?.settings && setSettings(data?.settings);
       } catch (error) {
         console.error("Error fetching user: ", error);
       }
@@ -54,7 +54,7 @@ const SettingsPage: FunctionComponent = () => {
     const updateSettings = async () => {
       if (user) {
         try {
-          const defaultSettings: QuizSettings = {
+          const settings: QuizSettings = {
             feedbackType,
             questionsOrder,
             maxQuestionCount,
@@ -63,7 +63,7 @@ const SettingsPage: FunctionComponent = () => {
             isRandomOrder: INITIAL_QUIZ_SETTINGS.isRandomOrder,
             displayMode: INITIAL_QUIZ_SETTINGS.displayMode,
           };
-          await updateUser(user, { defaultSettings });
+          await updateUser(user, { settings });
         } catch (error) {
           console.error("Error updating user: ", error);
         }

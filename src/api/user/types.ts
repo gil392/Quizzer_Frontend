@@ -7,5 +7,5 @@ export type User = {
   friendRequests?: string[];
   friends?: string[];
   favoriteLessons?: string[];
-  defaultSettings?: QuizSettings;
+  settings?: QuizSettings;
 };
