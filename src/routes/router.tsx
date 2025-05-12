@@ -8,6 +8,7 @@ import RegisterPage from "../pages/register/RegisterPage";
 import SummaryPage from "../pages/Summary";
 import { PAGES_ROUTES } from "./routes.const";
 import FriendsPage from "../pages/friends/FriendsPage";
+import SettingsPage from "../pages/settings/SettingsPage";
 
 export const createPagesRoutes = (
   setAccessToken: SetAccessTokenFunction
@@ -24,6 +25,7 @@ export const createPagesRoutes = (
     path: PAGES_ROUTES.REGISTER,
     element: <RegisterPage setAccessToken={setAccessToken} />,
   },
+  { path: PAGES_ROUTES.SETTINGS, element: <SettingsPage /> },
   { path: PAGES_ROUTES.GENERATE_LESSON, element: <GenerateLessonPage /> },
   { path: PAGES_ROUTES.QUIZ, element: <QuizPage /> },
   { path: PAGES_ROUTES.SUMMARY, element: <SummaryPage /> },

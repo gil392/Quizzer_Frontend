@@ -8,4 +8,5 @@ export const PAGES_ROUTES = {
   LESSONS_LIST: "/lesson",
   LESSON: "/lesson/*",
   FRIENDS: "/friends",
+  SETTINGS: "/settings",
 };

@@ -1,13 +1,15 @@
-type UserStatistics = {
-  streak: number;
-  xp?: number;
-};
+import { QuizSettings } from "../quiz/types";
 
 export type User = {
-  username: string;
   email: string;
+  username: string;
+  streak: number;
+  friendRequests?: string[];
+  friends?: string[];
+  favoriteLessons?: string[];
+  settings?: QuizSettings;
   picture?: string;
-} & UserStatistics;
+};
 
 export type UserWithId = User & { _id: string };
 export type SearchedUser = Omit<UserWithId, "streak" | "xp">;

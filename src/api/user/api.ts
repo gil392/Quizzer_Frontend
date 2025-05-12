@@ -1,7 +1,8 @@
 import { AxiosPromise } from "axios";
 import apiClient from "../client";
 import { abortableRequest } from "../utils";
-import { SearchedUser, UserWithId } from "./types";
+import { SearchedUser, User, UserWithId } from "./types";
+import { QuizSettings } from "../quiz/types";
 
 export const searchUsers = (query: string): AxiosPromise<SearchedUser[]> =>
   apiClient.get("/user/search", { params: { q: query } });
@@ -34,3 +35,23 @@ export const declineFriendRequest = (userId: string) =>
 
 export const submitFriendRequest = (userId: string) =>
   apiClient.post("/user/friend", { user: userId });
+
+export const getLoggedUser = (): AxiosPromise<User> =>
+  apiClient.get("/user/me");
+
+export const updateUser = async (
+  baseUser: User,
+  updateFields: {
+    username?: string;
+    settings?: QuizSettings;
+  }
+) => {
+  const { username, settings } = updateFields;
+  const updatedUser = {
+    ...baseUser,
+    username: username ?? baseUser.username,
+    settings: settings ?? baseUser.settings,
+  };
+
+  return apiClient.put<User>("/user", updatedUser);
+};
