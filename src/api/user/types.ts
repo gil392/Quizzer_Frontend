@@ -1,11 +1,13 @@
 type UserStatistics = {
   streak: number;
-  xp: number;
+  xp?: number;
 };
 
 export type User = {
   username: string;
   email: string;
   picture?: string;
-  statistics: UserStatistics;
-};
+} & UserStatistics;
+
+export type UserWithId = User & { _id: string };
+export type SearchedUser = Omit<User, "streak" | "xp">;
