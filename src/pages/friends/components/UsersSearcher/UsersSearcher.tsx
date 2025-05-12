@@ -9,19 +9,29 @@ import {
   TextFieldProps,
   Typography,
 } from "@mui/material";
+import { isNotNil } from "ramda";
 import {
   FunctionComponent,
   HTMLAttributes,
+  SyntheticEvent,
   useCallback,
   useEffect,
   useMemo,
   useState,
 } from "react";
-import { searchUsers as apiSearchUsers } from "../../../../api/user/api";
+import {
+  searchUsers as apiSearchUsers,
+  submitFriendRequest,
+} from "../../../../api/user/api";
 import { SearchedUser } from "../../../../api/user/types";
 import { useStyles } from "./styles";
 
-const UsersSearcher: FunctionComponent = () => {
+interface UsersSearcherProps {
+  exludeIds?: string[];
+}
+
+const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
+  const { exludeIds = [] } = props;
   const classes = useStyles();
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<SearchedUser[]>([]);
@@ -30,8 +40,9 @@ const UsersSearcher: FunctionComponent = () => {
   const fetchUsers = useCallback(async (searchTerm: string) => {
     setLoading(true);
     try {
-      const res = await apiSearchUsers(searchTerm);
-      setOptions(res.data);
+      const { data } = await apiSearchUsers(searchTerm);
+      const options = data.filter(({ _id }) => !exludeIds.includes(_id));
+      setOptions(options);
     } finally {
       setLoading(false);
     }
@@ -45,6 +56,12 @@ const UsersSearcher: FunctionComponent = () => {
       setOptions([]);
     }
   }, [inputValue, searchUsers]);
+
+  const handleSelect = (_event: SyntheticEvent, value: SearchedUser | null) => {
+    if (isNotNil(value)) {
+      submitFriendRequest(value._id);
+    }
+  };
 
   const renderOption = (
     props: HTMLAttributes<HTMLLIElement> & {
@@ -93,11 +110,11 @@ const UsersSearcher: FunctionComponent = () => {
     <Autocomplete
       disablePortal
       options={options}
-      getOptionLabel={(option) => `${option.username} (${option.email})`}
       renderOption={renderOption}
       onInputChange={(_, value) => setInputValue(value)}
       loading={loading}
       renderInput={renderInput}
+      onChange={handleSelect}
     />
   );
 };

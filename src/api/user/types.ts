@@ -10,4 +10,4 @@ export type User = {
 } & UserStatistics;
 
 export type UserWithId = User & { _id: string };
-export type SearchedUser = Omit<User, "streak" | "xp">;
+export type SearchedUser = Omit<UserWithId, "streak" | "xp">;

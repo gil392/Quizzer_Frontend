@@ -25,7 +25,9 @@ export const searchUsers = (query: string): AxiosPromise<SearchedUser[]> =>
 
 export const getFriends = () =>
   abortableRequest((abortController) =>
-    apiClient.get<UserWithId[]>("/user/friend", { signal: abortController.signal })
+    apiClient.get<UserWithId[]>("/user/friend", {
+      signal: abortController.signal,
+    })
   );
 
 export const getFriendsRequest = () =>
@@ -47,6 +49,8 @@ export const acceptFriendRequest = (userId: string) =>
 export const declineFriendRequest = (userId: string) =>
   respondFriendRequest(userId, false);
 
+export const submitFriendRequest = (userId: string) =>
+  apiClient.post("/user/friend", { user: userId });
 
 // const fetchFriends = (): Promise<{ data: User[] }> =>
 //   Promise.resolve({
@@ -142,7 +146,7 @@ export const declineFriendRequest = (userId: string) =>
 //       },
 //     ],
 //   });
-  
+
 // const fetchPendingFriendsRequest = (): Promise<{ data: User[] }> =>
 //   Promise.resolve({
 //     data: [

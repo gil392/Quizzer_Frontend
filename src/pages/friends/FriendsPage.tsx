@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { concat, remove } from "ramda";
+import { concat, prop, remove } from "ramda";
 import { FunctionComponent, useEffect, useState } from "react";
 import { getFriends, getFriendsRequest } from "../../api/user/api";
 import { UserWithId } from "../../api/user/types";
@@ -11,6 +11,7 @@ import { useStyles } from "./styles";
 
 const FriendsPage: FunctionComponent = () => {
   const classes = useStyles();
+  const [exludeIdsFromSearch, setExludeIdsFromSearch] = useState<string[]>([]);
   const [friends, setFriends] = useState<UserWithId[]>([]);
   const [pendingFriendsRequest, setPendingFriendsRequest] = useState<
     UserWithId[]
@@ -33,6 +34,12 @@ const FriendsPage: FunctionComponent = () => {
       abortFetchPendingFriendsRequest();
     };
   }, []);
+
+  useEffect(() => {
+    setExludeIdsFromSearch(
+      concat(friends.map(prop("_id")), pendingFriendsRequest.map(prop("_id")))
+    );
+  }, [friends, pendingFriendsRequest]);
 
   const friendsList = friends.map((user, index) => (
     <FriendItem
@@ -74,7 +81,7 @@ const FriendsPage: FunctionComponent = () => {
         </span>
       </div>
       <div className={classes.pendingFriendsPannel}>
-        <UsersSearcher />
+        <UsersSearcher exludeIds={exludeIdsFromSearch} />
         <div className={clsx(classes.pendingFriendsList, classes.scroller)}>
           {pendingFriendsList}
         </div>
