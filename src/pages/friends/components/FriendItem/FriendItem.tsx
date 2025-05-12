@@ -24,10 +24,10 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
       <div>
         <Typography>{user.username}</Typography>
         <Typography className={classes.statisticText} color="textSecondary">
-          Streak: {user.statistics.streak}d
+          Streak: {user.streak}d
         </Typography>
         <Typography className={classes.statisticText} color="textSecondary">
-          XP: {user.statistics.xp}
+          XP: {user.xp ?? 0}
         </Typography>
       </div>
     </div>
