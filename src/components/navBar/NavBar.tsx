@@ -1,4 +1,4 @@
-import { AutoStories, LogoDev, Settings, YouTube } from "@mui/icons-material";
+import { AutoStories, LogoDev, People, Settings, YouTube } from "@mui/icons-material";
 import { Box, Divider, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -30,6 +30,11 @@ const navBarNavigations: readonly NavBarItem[] = [
     text: "Lessons",
     icon: <AutoStories />,
     route: "LESSONS_LIST",
+  },
+  {
+    text: "My Friends",
+    icon: <People />,
+    route: "FRIENDS",
   },
 ];
 
