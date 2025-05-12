@@ -7,15 +7,23 @@ import {
   useState,
 } from "react";
 import { DisplayModeContext } from "./config";
-import { QuizSettings } from "../../../api/quiz/types";
+import { DisplayMode } from "../../../api/quiz/types";
 import { INITIAL_DISPLAY_MODE } from "./constants";
 import { darkTheme, lightTheme } from "../../../theme";
 
 export const DisplayModeProvider: FunctionComponent<PropsWithChildren> = ({
   children,
 }) => {
-  const [displayMode, setDisplayMode] =
-    useState<QuizSettings["displayMode"]>(INITIAL_DISPLAY_MODE);
+  const initialDisplayMode: string =
+    localStorage.getItem("displayMode") ?? INITIAL_DISPLAY_MODE;
+  const [displayMode, setDisplayMode] = useState<DisplayMode>(
+    initialDisplayMode as DisplayMode
+  );
+
+  const saveDisplayMode = (displayMode: DisplayMode) => {
+    localStorage.setItem("displayMode", displayMode);
+    setDisplayMode(displayMode);
+  };
 
   const theme = useMemo(
     () => (displayMode === "Light" ? lightTheme : darkTheme),
@@ -23,7 +31,7 @@ export const DisplayModeProvider: FunctionComponent<PropsWithChildren> = ({
   );
 
   return (
-    <DisplayModeContext.Provider value={{ displayMode, setDisplayMode }}>
+    <DisplayModeContext.Provider value={{ displayMode, saveDisplayMode }}>
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </DisplayModeContext.Provider>
   );
@@ -34,7 +42,7 @@ export const useDisplayMode = () => {
   return (
     context ?? {
       displayMode: INITIAL_DISPLAY_MODE,
-      setDisplayMode: (displayMode: QuizSettings["displayMode"]) => {
+      saveDisplayMode: (displayMode: DisplayMode) => {
         console.error("try to alert when display mode context is null:", {
           displayMode,
         });

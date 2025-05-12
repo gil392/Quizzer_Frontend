@@ -26,13 +26,3 @@ export const FEEDBACK_OPTIONS: FeedbackOption[] = [
   { value: "onSubmit", label: "On Submit" },
   { value: "onSelectAnswer", label: "Every Question" },
 ];
-
-export const INITIAL_LESSON_CONFIG: QuizSettings = {
-  feedbackType: "onSubmit",
-  questionsOrder: "chronological",
-  displayMode: "Light",
-  maxQuestionCount: LOW_QUESTIONS_COUNT,
-  isManualCount: false,
-  solvingTimeMs: 60000,
-  isRandomOrder: false,
-};

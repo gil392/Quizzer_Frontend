@@ -32,16 +32,14 @@ const SettingsPage: FunctionComponent = () => {
     INITIAL_QUIZ_SETTINGS.isManualCount
   );
 
-  const [displayMode, setDisplayMode] = useState<DisplayMode>(
-    INITIAL_QUIZ_SETTINGS.displayMode
-  );
+  const { displayMode, saveDisplayMode } = useDisplayMode();
 
   const setSettings = (quizSettings: QuizSettings) => {
     setFeedbackType(quizSettings.feedbackType);
     setQuestionsOrder(quizSettings.questionsOrder);
     setMaxQuestionCount(quizSettings.maxQuestionCount);
     setIsManualCount(quizSettings.isManualCount);
-    setDisplayMode(quizSettings.displayMode);
+    saveDisplayMode(quizSettings.displayMode);
   };
 
   useEffect(() => {
@@ -67,7 +65,7 @@ const SettingsPage: FunctionComponent = () => {
             questionsOrder,
             maxQuestionCount,
             isManualCount,
-            displayMode: displayMode,
+            displayMode,
             solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
             isRandomOrder: INITIAL_QUIZ_SETTINGS.isRandomOrder,
           };
@@ -81,13 +79,19 @@ const SettingsPage: FunctionComponent = () => {
     };
 
     updateSettings();
-  }, [feedbackType, questionsOrder, maxQuestionCount, isManualCount]);
+  }, [
+    feedbackType,
+    questionsOrder,
+    maxQuestionCount,
+    isManualCount,
+    displayMode,
+  ]);
 
   return (
     <Box sx={{ width: "50%", margin: "auto" }}>
       <DisplayModeSwtich
         displayMode={displayMode}
-        setDisplayMode={setDisplayMode}
+        setDisplayMode={saveDisplayMode}
       />
       <LessonConfig
         feedbackType={feedbackType}
