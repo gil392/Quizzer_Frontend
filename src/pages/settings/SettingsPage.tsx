@@ -9,8 +9,10 @@ import {
 import { getLoggedUser, updateUser } from "../../api/user/api";
 import { User } from "../../api/user/types";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
+import { useStyles } from "./styles";
 
 const SettingsPage: FunctionComponent = () => {
+  const classes = useStyles();
   const [user, setUser] = useState<User | null>(null);
 
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
@@ -76,7 +78,7 @@ const SettingsPage: FunctionComponent = () => {
   }, [feedbackType, questionsOrder, maxQuestionCount, isManualCount]);
 
   return (
-    <Box sx={{ width: "50%", margin: "auto" }}>
+    <Box className={classes.root}>
       <LessonConfig
         feedbackType={feedbackType}
         setFeedbackType={setFeedbackType}
