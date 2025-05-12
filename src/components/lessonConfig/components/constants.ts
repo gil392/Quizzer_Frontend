@@ -1,10 +1,6 @@
 import { QuizSettings } from "../../../api/quiz/types";
 import { INITIAL_DISPLAY_MODE } from "../../settings/DisplayModeSwitch/constants";
-import {
-  FeedbackOption,
-  QuestionCountOption,
-  QuestionsOrderOption,
-} from "./types";
+import { FeedbackOption, Option, QuestionsOrderOption } from "./types";
 
 export const LOW_QUESTIONS_COUNT = 5;
 export const MEDIUM_QUESTIONS_COUNT = 10;
@@ -14,7 +10,7 @@ export const MANUAL_MIN_QUESTIONS_COUNT = 5;
 export const MANUAL_MAX_QUESTIONS_COUNT = 30;
 export const MANUAL_QUESTIONS_COUNT_STEP = 5;
 
-export const QUESTION_COUNT_OPTIONS: QuestionCountOption[] = [
+export const QUESTION_COUNT_OPTIONS: Option[] = [
   { value: LOW_QUESTIONS_COUNT, label: "Low (5)" },
   { value: MEDIUM_QUESTIONS_COUNT, label: "Medium (10)" },
   { value: HIGH_QUESTIONS_COUNT, label: "High (20)" },
@@ -34,7 +30,7 @@ export const FEEDBACK_OPTIONS: FeedbackOption[] = [
 export const INITIAL_LESSON_CONFIG: QuizSettings = {
   feedbackType: "onSubmit",
   questionsOrder: "chronological",
-  displayMode: INITIAL_DISPLAY_MODE,
+  displayMode: "Light",
   maxQuestionCount: LOW_QUESTIONS_COUNT,
   isManualCount: false,
   solvingTimeMs: 60000,

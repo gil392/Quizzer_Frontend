@@ -1,5 +1,5 @@
-import { FunctionComponent } from "react";
 import { Box, Slider, Typography } from "@mui/material";
+import { FunctionComponent } from "react";
 import {
   MANUAL_MAX_QUESTIONS_COUNT,
   MANUAL_MIN_QUESTIONS_COUNT,
@@ -8,121 +8,65 @@ import {
   QUESTION_COUNT_OPTIONS,
 } from "./constants";
 import GeneralSelectOption from "./GeneralSelectOption";
+import useStyles from "./styles";
 import { Option } from "./types";
-import { QuizSettings } from "../../../api/quiz/types";
 
 interface MaxQuestionCountProps {
-  maxQuestionCount: QuizSettings["maxQuestionCount"];
-  isManualCount: QuizSettings["isManualCount"];
-  onQuizSettingsChange: (
-    settingName: keyof QuizSettings,
-    settingValue: any
-  ) => void;
+  maxQuestionCount: number;
+  setMaxQuestionCount: (maxQuestionCount: number) => void;
+  isManualCount: boolean;
+  setIsManualCount: (isManualCount: boolean) => void;
 }
 
-const MaxQuestionCount: FunctionComponent<MaxQuestionCountProps> = ({
-  maxQuestionCount,
-  isManualCount,
-  onQuizSettingsChange,
-}) => {
-  const setMaxQuestionCount = (
-    maxQuestionCount: Number,
-    isManualCount: boolean
-  ) => {
-    onQuizSettingsChange("maxQuestionCount", maxQuestionCount);
-    onQuizSettingsChange("isManualCount", isManualCount);
+const MaxQuestionCount: FunctionComponent<MaxQuestionCountProps> = (props) => {
+  const classes = useStyles();
+  const updateChanges = (maxQuestionCount: number, isManualCount: boolean) => {
+    props.setMaxQuestionCount(maxQuestionCount);
+    props.setIsManualCount(isManualCount);
   };
 
-  const onSelectedCountChange = (maxCount: Option["value"]) => {
+  const setSelectedCount = (maxCount: string) => {
     const numMaxCount = Number(maxCount);
     switch (numMaxCount) {
       case MANUAL_QUESTIONS_COUNT_OPTION:
-        setMaxQuestionCount(MANUAL_MIN_QUESTIONS_COUNT, true);
+        updateChanges(MANUAL_MIN_QUESTIONS_COUNT, true);
         break;
       default:
-        setMaxQuestionCount(numMaxCount, false);
+        updateChanges(numMaxCount, false);
     }
   };
 
-  const onManualCountChange = (maxCount: Number) => {
-    setMaxQuestionCount(maxCount, true);
+  const setManualCount = (maxCount: number) => {
+    updateChanges(maxCount, true);
   };
 
-  const isCountOptionSelected = (option: Option) =>
-    !isManualCount && maxQuestionCount === option.value;
+  const isOptionSelected = (option: Option) =>
+    props.isManualCount
+      ? option.value === MANUAL_QUESTIONS_COUNT_OPTION
+      : option.value === props.maxQuestionCount;
 
   return (
     <>
-      <Typography variant="h6" gutterBottom>
-        How Many Questions?
-      </Typography>
-      {/* <Box className="custom-radio-group">
-        {QUESTION_COUNT_OPTIONS.map((option) => (
-          <label
-            key={option.value}
-            className={`custom-radio ${
-              isCountOptionSelected(option.value) ? "selected" : ""
-            }`}
-          >
-            <input
-              type="radio"
-              name="questionCount"
-              value={option.value}
-              checked={maxQuestionCount === option.value}
-              onChange={({ target }) =>
-                onSelectedCountChange(Number(target.value))
-              }
-            />
-            <span>{option.label}</span>
-          </label>
-        ))}
-      </Box> */}
       <GeneralSelectOption
+        title={"How Many Questions?"}
         options={QUESTION_COUNT_OPTIONS}
-        isOptionSelected={isCountOptionSelected}
-        onOptionSelectChange={onSelectedCountChange}
+        isOptionSelected={isOptionSelected}
+        setSelectedOption={setSelectedCount}
       />
-      {isManualCount && (
+      {props.isManualCount && (
         <Box sx={{ marginBottom: 3 }}>
           <Typography variant="body2" gutterBottom>
             Select the number of questions (5-30):
           </Typography>
           <Slider
-            value={maxQuestionCount as number}
-            onChange={(_, value) => onManualCountChange(value as number)}
+            className={classes.manualSelection}
+            value={props.maxQuestionCount}
+            onChange={(_, value) => setManualCount(value)}
             step={MANUAL_QUESTIONS_COUNT_STEP}
             marks
             min={MANUAL_MIN_QUESTIONS_COUNT}
             max={MANUAL_MAX_QUESTIONS_COUNT}
             valueLabelDisplay="auto"
-            sx={{
-              color: "primary.main",
-              height: 8,
-              "& .MuiSlider-thumb": {
-                height: 16,
-                width: 16,
-                backgroundColor: "#fff",
-                border: "2px solid currentColor",
-                "&:hover": {
-                  boxShadow: "0px 0px 0px 8px rgba(25, 118, 210, 0.16)",
-                },
-                "&.Mui-active": {
-                  boxShadow: "0px 0px 0px 14px rgba(25, 118, 210, 0.16)",
-                },
-              },
-              "& .MuiSlider-rail": {
-                backgroundColor: "#bdbdbd",
-              },
-              "& .MuiSlider-mark": {
-                backgroundColor: "#bdbdbd",
-                height: 8,
-                width: 8,
-                borderRadius: "50%",
-              },
-              "& .MuiSlider-markActive": {
-                backgroundColor: "primary.main",
-              },
-            }}
           />
         </Box>
       )}

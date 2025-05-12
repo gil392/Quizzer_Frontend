@@ -1,12 +1,12 @@
 import { ShieldMoon, Sunny } from "@mui/icons-material";
 import { Button, Typography } from "@mui/material";
 import { FunctionComponent } from "react";
-import { QuizSettings } from "../../../api/quiz/types";
+import { DisplayMode } from "../../../api/quiz/types";
 import { getOppositeDisplayMode } from "./utils";
 
 interface DisplayModeSwitchProps {
-  displayMode: QuizSettings["displayMode"];
-  setDisplayMode: (displayMode: QuizSettings["displayMode"]) => void;
+  displayMode: DisplayMode;
+  setDisplayMode: (displayMode: DisplayMode) => void;
 }
 
 const DisplayModeSwtich: FunctionComponent<DisplayModeSwitchProps> = ({

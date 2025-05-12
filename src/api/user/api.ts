@@ -9,14 +9,14 @@ export const updateUser = async (
   baseUser: User,
   updateFields: {
     username?: User["username"];
-    defaultSettings?: User["defaultSettings"];
+    settings?: User["settings"];
   }
 ) => {
-  const { username, defaultSettings } = updateFields;
+  const { username, settings } = updateFields;
   const updatedUser: Omit<User, "email"> = {
     ...baseUser,
     username: username ?? baseUser.username,
-    defaultSettings: defaultSettings ?? baseUser.defaultSettings,
+    settings: settings ?? baseUser.settings,
   };
 
   return apiClient.put<User>("/user", updatedUser);

@@ -1,30 +1,55 @@
 import { Box } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
-import { QuizSettings } from "../../api/quiz/types";
+import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
+import {
+  DisplayMode,
+  FeedbackType,
+  QuestionsOrder,
+  QuizSettings,
+} from "../../api/quiz/types";
 import { getLoggedUser, updateUser } from "../../api/user/api";
 import { User } from "../../api/user/types";
 import DisplayModeSwtich from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
-import { INITIAL_LESSON_CONFIG } from "../../components/lessonConfig/components/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { useDisplayMode } from "../../components/settings/DisplayModeSwitch/globalProvider";
 
 const SettingsPage: FunctionComponent = () => {
-  const [defaultSettings, setDefaultSettings] = useState<QuizSettings>(
-    INITIAL_LESSON_CONFIG
-  );
-
   const [user, setUser] = useState<User | null>(null);
 
-  const { setDisplayMode } = useDisplayMode();
+  const [feedbackType, setFeedbackType] = useState<FeedbackType>(
+    INITIAL_QUIZ_SETTINGS.feedbackType
+  );
+
+  const [questionsOrder, setQuestionsOrder] = useState<QuestionsOrder>(
+    INITIAL_QUIZ_SETTINGS.questionsOrder
+  );
+
+  const [maxQuestionCount, setMaxQuestionCount] = useState<number>(
+    INITIAL_QUIZ_SETTINGS.maxQuestionCount
+  );
+
+  const [isManualCount, setIsManualCount] = useState<boolean>(
+    INITIAL_QUIZ_SETTINGS.isManualCount
+  );
+
+  const [displayMode, setDisplayMode] = useState<DisplayMode>(
+    INITIAL_QUIZ_SETTINGS.displayMode
+  );
+
+  const setSettings = (quizSettings: QuizSettings) => {
+    setFeedbackType(quizSettings.feedbackType);
+    setQuestionsOrder(quizSettings.questionsOrder);
+    setMaxQuestionCount(quizSettings.maxQuestionCount);
+    setIsManualCount(quizSettings.isManualCount);
+    setDisplayMode(quizSettings.displayMode);
+  };
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const { data } = await getLoggedUser();
         setUser(data);
-        data?.defaultSettings && setDefaultSettings(data.defaultSettings);
-        data?.defaultSettings &&
-          setDisplayMode(data.defaultSettings.displayMode);
+        data?.settings && setSettings(data?.settings);
       } catch (error) {
         console.error("Error fetching user: ", error);
       }
@@ -37,7 +62,16 @@ const SettingsPage: FunctionComponent = () => {
     const updateSettings = async () => {
       if (user) {
         try {
-          await updateUser(user, { defaultSettings });
+          const settings: QuizSettings = {
+            feedbackType,
+            questionsOrder,
+            maxQuestionCount,
+            isManualCount,
+            displayMode: displayMode,
+            solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
+            isRandomOrder: INITIAL_QUIZ_SETTINGS.isRandomOrder,
+          };
+          await updateUser(user, { settings });
         } catch (error) {
           console.error("Error updating user: ", error);
         }
@@ -47,23 +81,23 @@ const SettingsPage: FunctionComponent = () => {
     };
 
     updateSettings();
-  }, [defaultSettings]);
+  }, [feedbackType, questionsOrder, maxQuestionCount, isManualCount]);
 
   return (
     <Box sx={{ width: "50%", margin: "auto" }}>
       <DisplayModeSwtich
-        displayMode={defaultSettings.displayMode}
-        setDisplayMode={(displayMode) => {
-          setDisplayMode(displayMode);
-          setDefaultSettings({
-            ...defaultSettings,
-            displayMode,
-          });
-        }}
+        displayMode={displayMode}
+        setDisplayMode={setDisplayMode}
       />
       <LessonConfig
-        quizSettings={defaultSettings}
-        setQuizSettings={setDefaultSettings}
+        feedbackType={feedbackType}
+        setFeedbackType={setFeedbackType}
+        questionsOrder={questionsOrder}
+        setQuestionsOrder={setQuestionsOrder}
+        maxQuestionCount={maxQuestionCount}
+        setMaxQuestionCount={setMaxQuestionCount}
+        isManualCount={isManualCount}
+        setIsManualCount={setIsManualCount}
       />
     </Box>
   );
