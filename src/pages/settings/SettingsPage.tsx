@@ -55,11 +55,13 @@ const SettingsPage: FunctionComponent = () => {
       if (user) {
         try {
           const defaultSettings: QuizSettings = {
-            ...INITIAL_QUIZ_SETTINGS,
             feedbackType,
             questionsOrder,
             maxQuestionCount,
             isManualCount,
+            solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
+            isRandomOrder: INITIAL_QUIZ_SETTINGS.isRandomOrder,
+            displayMode: INITIAL_QUIZ_SETTINGS.displayMode,
           };
           await updateUser(user, { defaultSettings });
         } catch (error) {
