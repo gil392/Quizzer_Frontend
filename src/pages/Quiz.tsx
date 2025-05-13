@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { generateQuiz, getQuizById, submitQuiz } from "../api/quiz/api";
+import { generateQuiz, getQuizById, createQuizAttempt } from "../api/quiz/api";
 import { QuizData, QuizResult } from "../api/quiz/types";
 import useStyles from "./Quiz.styles";
 
@@ -93,7 +93,7 @@ const QuizPage: React.FC = () => {
           })),
       };
 
-      const { data: result } = await submitQuiz(submissionData);
+      const { data: result } = await createQuizAttempt(submissionData);
       setQuizResult(result);
       console.log("Quiz submission result:", result);
     } catch (error) {

@@ -1,16 +1,17 @@
+import React, { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import ReplayIcon from "@mui/icons-material/Replay"; // Import ReplayIcon for the retake button
+import ReplayIcon from "@mui/icons-material/Replay";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Typography,
-  IconButton, // Import IconButton for a smaller, less intrusive button
+  IconButton,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import React from "react";
 import { useNavigate } from "react-router-dom";
-import { QuizData } from "../../../api/quiz/types";
+import { QuizAttempt, QuizData } from "../../../api/quiz/types";
+import { getQuizAttempts } from "../../../api/quiz/api"; // Import the function
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import useStyles from "./QuizItem.styles";
 
@@ -27,10 +28,28 @@ const QuizItem: React.FC<QuizItemProps> = ({
 }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [attempts, setAttempts] = useState<QuizAttempt[]>([]);
+  const [loadingAttempts, setLoadingAttempts] = useState<boolean>(true);
 
   const handleRetakeQuiz = () => {
     navigate("/quiz", { state: { quizId: quiz._id, quizSettings: quiz.settings } });
   };
+
+  useEffect(() => {
+    const fetchAttempts = async () => {
+      try {
+        setLoadingAttempts(true);
+        const { data } = await getQuizAttempts(quiz._id); 
+        setAttempts(data);
+      } catch (error) {
+        console.error("Error fetching quiz attempts:", error);
+      } finally {
+        setLoadingAttempts(false);
+      }
+    };
+
+    fetchAttempts();
+  }, [quiz._id]);
 
   return (
     <Box className={classes.container}>
@@ -53,13 +72,19 @@ const QuizItem: React.FC<QuizItemProps> = ({
           <Typography>Attempts</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {["Attempt 1", "Nice attempt"].map((attempt, index) => (
-            <Box key={index} className={classes.accordionDetails}>
-              <Typography variant="body1">
-                {index + 1}. {attempt}
-              </Typography>
-            </Box>
-          ))}
+          {loadingAttempts ? (
+            <Typography variant="body2">Loading attempts...</Typography>
+          ) : attempts.length > 0 ? (
+            attempts.map((attempt, index) => (
+              <Box key={attempt._id} className={classes.accordionDetails}>
+                <Typography variant="body1">
+                  {index + 1}. Score: {attempt.score} / 100
+                </Typography>
+              </Box>
+            ))
+          ) : (
+            <Typography variant="body2">No attempts found.</Typography>
+          )}
         </AccordionDetails>
       </Accordion>
     </Box>

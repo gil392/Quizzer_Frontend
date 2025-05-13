@@ -3,6 +3,7 @@ import apiClient from '../client';
 import { deleteItem, updateItem } from '../utils';
 import {
     QuizAnswerSubmittion,
+    QuizAttempt,
     QuizData,
     QuizResult,
     QuizSettings
@@ -19,9 +20,6 @@ export const generateQuiz = (
     settings?: QuizSettings
 ): AxiosPromise<QuizData> => apiClient.post('/quiz', { lessonId, settings });
 
-export const submitQuiz = (
-    data: QuizAnswerSubmittion
-): AxiosPromise<QuizResult> => apiClient.post('/quiz/submit', data);
 
 export const updateQuiz = (
     quizId: string,
@@ -29,3 +27,10 @@ export const updateQuiz = (
 ): AxiosPromise<QuizData> => updateItem(quizId, updatedData, 'quiz');
 
 export const deleteQuiz = (quizId: string) => deleteItem(quizId, 'quiz');
+
+export const getQuizAttempts = (quizId: string): AxiosPromise<QuizAttempt[]> =>
+    apiClient.get(`/attempt/${quizId}`);
+
+export const createQuizAttempt = (
+    data: QuizAnswerSubmittion
+): AxiosPromise<QuizResult> => apiClient.post('/attempt', data);
