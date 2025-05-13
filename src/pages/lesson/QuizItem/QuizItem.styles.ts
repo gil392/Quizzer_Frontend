@@ -26,6 +26,12 @@ const useStyles = makeStyles(() =>
         color: "#1a0d66 !important", 
       },
     },
+    AttemptContainer: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "8px 0", 
+    },
   })
 );
 

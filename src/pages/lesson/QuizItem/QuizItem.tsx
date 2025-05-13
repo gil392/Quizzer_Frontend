@@ -11,8 +11,9 @@ import {
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { QuizAttempt, QuizData } from "../../../api/quiz/types";
-import { getQuizAttempts } from "../../../api/quiz/api"; // Import the function
+import { getQuizAttempts } from "../../../api/quiz/api"; 
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
 
 type QuizItemProps = {
@@ -33,6 +34,10 @@ const QuizItem: React.FC<QuizItemProps> = ({
 
   const handleRetakeQuiz = () => {
     navigate("/quiz", { state: { quizId: quiz._id, quizSettings: quiz.settings } });
+  };
+
+  const handleViewAttempt = (attempt: QuizAttempt) => {
+    navigate("/quiz", { state: { attempt } });
   };
 
   useEffect(() => {
@@ -76,10 +81,20 @@ const QuizItem: React.FC<QuizItemProps> = ({
             <Typography variant="body2">Loading attempts...</Typography>
           ) : attempts.length > 0 ? (
             attempts.map((attempt, index) => (
-              <Box key={attempt._id} className={classes.accordionDetails}>
+              <Box
+                key={attempt._id}
+                className={classes.AttemptContainer}
+              >
                 <Typography variant="body1">
                   {index + 1}. Score: {attempt.score} / 100
                 </Typography>
+                <IconButton
+                  onClick={() => handleViewAttempt(attempt)} 
+                  aria-label="View Attempt"
+                  size="small"
+                >
+                  <ArrowForwardIcon color="primary"/>
+                </IconButton>
               </Box>
             ))
           ) : (
