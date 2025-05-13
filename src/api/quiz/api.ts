@@ -8,6 +8,10 @@ import {
     QuizResult,
     QuizSettings
 } from './types';
+import { LessonData } from '../lesson/types';
+
+export const getLessonById = (lessonId: string): AxiosPromise<LessonData> =>
+    apiClient.get(`/lesson/${lessonId}`);
 
 export const getQuizzes = (lessonId: string): AxiosPromise<QuizData[]> =>
     apiClient.get('/quiz', { params: {lessonId} });

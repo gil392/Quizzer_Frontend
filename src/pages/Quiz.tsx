@@ -9,24 +9,26 @@ import {
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { generateQuiz, getQuizById, createQuizAttempt } from "../api/quiz/api";
+import { generateQuiz, getQuizById, createQuizAttempt, getLessonById } from "../api/quiz/api";
 import { QuizAttempt, QuizData, QuizResult } from "../api/quiz/types";
 import useStyles from "./Quiz.styles";
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
-  const [quizData, setQuizData] = useState<QuizData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [selectedAnswers, setSelectedAnswers] = useState<{
-    [key: number]: string | null;
-  }>({});
-  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
   const quizSettings = location.state?.quizSettings;
   const lessonData = location.state?.lessonData;
   const quizId = location.state?.quizId;
   const attempt : QuizAttempt = location.state?.attempt;
+
+  const [quizData, setQuizData] = useState<QuizData | null>(null);
+  const [lessonDataState, setLessonDataState] = useState(lessonData || null);
+  const [loading, setLoading] = useState(true);
+  const [selectedAnswers, setSelectedAnswers] = useState<{
+    [key: number]: string | null;
+  }>({});
+  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
 
   const fetchQuizById = useCallback(async (id: string) => {
@@ -43,30 +45,57 @@ const QuizPage: React.FC = () => {
   }, []);
 
   const generateNewQuiz = useCallback(async () => {
-    if (!lessonData?._id) {
-      console.error("Lesson data is not available.");
-      return;
-    }
+    if (!lessonDataState?._id) {
+      if (quizData?.lessonId) {
+        try {
+          const { data } = await getLessonById(quizData.lessonId);
+          setLessonDataState(data); 
 
+        } catch (error) {
+          console.error("Error fetching lesson data:", error);
+          alert("Failed to fetch lesson data. Cannot generate a new quiz.");
+          return;
+        }
+
+      } else {
+        console.error("Lesson data is not available.");
+        alert("Lesson data is missing. Cannot generate a new quiz.");
+        return;
+      }
+    }
+  
     setLoading(true);
     setQuizResult(null);
     setSelectedAnswers({});
-
+  
     try {
-      const { data } = await generateQuiz(lessonData._id, quizSettings || quizData?.settings );
+      const { data } = await generateQuiz(
+        lessonDataState?._id || quizData?.lessonId,
+        quizSettings || quizData?.settings
+      );
       setQuizData(data);
     } catch (error) {
       console.error("Error generating quiz:", error);
+      alert("Failed to generate a new quiz. Please try again.");
     } finally {
       setLoading(false);
     }
-  }, [lessonData, quizData?.settings]);
+  }, [lessonDataState?._id, quizData?.lessonId, quizSettings]);
 
   useEffect(() => {
     if (attempt) {
       setQuizResult(attempt);
+
       if (attempt.quizId) {
         fetchQuizById(attempt.quizId);
+      }
+  
+      if (!lessonDataState && quizData?.lessonId) {
+         getLessonById(quizData.lessonId)
+          .then(({ data }) => setLessonDataState(data))
+          .catch((error) =>
+            console.error("Error fetching lesson data from attempt:", error)
+          );
       }
   
       const preselectedAnswers: { [key: number]: string | null } = {};
@@ -74,10 +103,20 @@ const QuizPage: React.FC = () => {
         preselectedAnswers[index] = result.selectedAnswer || null;
       });
       setSelectedAnswers(preselectedAnswers);
-    } else if (quizId) {
+    }
+  }, [attempt]);
+  
+  useEffect(() => {
+    if (quizId) {
       fetchQuizById(quizId);
     }
-  }, [attempt, quizId, fetchQuizById]);
+  }, [quizId]);
+  
+  useEffect(() => {
+    if (!quizData && lessonDataState && quizSettings) {
+      generateNewQuiz();
+    }
+  }, [lessonDataState, quizSettings, generateNewQuiz]);
 
   const handleOptionChange = (questionIndex: number, option: string) => {
     setSelectedAnswers((prev) => ({
@@ -105,7 +144,6 @@ const QuizPage: React.FC = () => {
 
       const { data: result } = await createQuizAttempt(submissionData);
       setQuizResult(result);
-      console.log("Quiz submission result:", result);
     } catch (error) {
       console.error("Error submitting quiz:", error);
       alert("Failed to submit quiz. Please try again.");
@@ -177,7 +215,7 @@ const QuizPage: React.FC = () => {
               </Box>
             )}
             <Typography variant="h5" component="div" gutterBottom>
-              {lessonData?.lessonTitle}
+              {lessonDataState?.lessonTitle}
             </Typography>
             {quizData.questions.map((question, index) => (
               <Box key={index} className={classes.questionBox}>
