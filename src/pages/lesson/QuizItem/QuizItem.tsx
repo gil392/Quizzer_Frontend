@@ -6,6 +6,7 @@ import {
   AccordionSummary,
   Typography,
   Rating,
+  Button,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import React from "react";
@@ -41,7 +42,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
   };
 
   return (
-    <Box className={classes.container} onClick={handleNavigateToQuiz}>
+    <Box className={classes.container}>
       <Box className={classes.header}>
         <EditableTitleWithActions
           title={quiz.title}
@@ -70,6 +71,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
           value={rating}
           onChange={(_, newValue) => handleRateQuiz(newValue)}
         />
+        <Button onClick={handleNavigateToQuiz}>Show Quiz</Button>
       </Box>
       {rating && (
         <Typography variant="body2" mt={1}>

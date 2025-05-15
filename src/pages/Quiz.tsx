@@ -70,10 +70,6 @@ const QuizPage: React.FC = () => {
     fetchQuizById();
   }, [fetchQuizById]);
 
-  const handleExportToPDF = () => {
-    exportToPDF(QUIZ_CONTENT_PDF_ID, "quiz.pdf");
-  };
-
   const handleOptionChange = (questionIndex: number, option: string) => {
     setSelectedAnswers((prev) => ({
       ...prev,
@@ -237,7 +233,7 @@ const QuizPage: React.FC = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleExportToPDF}
+                onClick={() => exportToPDF(QUIZ_CONTENT_PDF_ID, "quiz.pdf")}
               >
                 Export to PDF
               </Button>
