@@ -13,6 +13,8 @@ import { QuizData } from "../../../api/quiz/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { PAGES_ROUTES } from "../../../routes/routes.const"; // Import route constants
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -26,6 +28,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
   updateQuizTitle,
 }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [rating, setRating] = useState<number | null>(quiz.rating);
 
   const handleRateQuiz = async (newRating: number | null) => {
@@ -33,8 +36,12 @@ const QuizItem: React.FC<QuizItemProps> = ({
     setRating(newRating);
   };
 
+  const handleNavigateToQuiz = () => {
+    navigate(`${PAGES_ROUTES.QUIZ}`, { state: { quizId: quiz._id } });
+  };
+
   return (
-    <Box className={classes.container}>
+    <Box className={classes.container} onClick={handleNavigateToQuiz}>
       <Box className={classes.header}>
         <EditableTitleWithActions
           title={quiz.title}

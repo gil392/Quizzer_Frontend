@@ -1,3 +1,9 @@
+import React, { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { generateQuiz, getQuizById, submitQuiz } from "../api/quiz/api";
+import { QuizData, QuizResult } from "../api/quiz/types";
+import useStyles from "./Quiz.styles";
+import html2pdf from "html2pdf.js";
 import {
   Box,
   Button,
@@ -7,11 +13,6 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import { generateQuiz, getQuizById, submitQuiz } from "../api/quiz/api";
-import { QuizData, QuizResult } from "../api/quiz/types";
-import useStyles from "./Quiz.styles";
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
@@ -66,6 +67,29 @@ const QuizPage: React.FC = () => {
   useEffect(() => {
     fetchQuizById();
   }, [fetchQuizById]);
+
+  const handleExportToPDF = () => {
+    if (!quizData) {
+      alert("Quiz data is not available.");
+      return;
+    }
+
+    const element = document.getElementById("quiz-content");
+    if (!element) {
+      alert("Quiz content is not available.");
+      return;
+    }
+
+    const options = {
+      margin: 1,
+      filename: "quiz.pdf",
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2 },
+      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
+    };
+
+    html2pdf().set(options).from(element).save();
+  };
 
   const handleOptionChange = (questionIndex: number, option: string) => {
     setSelectedAnswers((prev) => ({
@@ -159,44 +183,50 @@ const QuizPage: React.FC = () => {
                 </Typography>
               </Box>
             )}
-            <Typography variant="h5" component="div" gutterBottom>
-              {lessonData?.lessonTitle}
-            </Typography>
-            {quizData.questions.map((question, index) => (
-              <Box key={index} className={classes.questionBox}>
-                <Card className={classes.card}>
-                  <Typography variant="h6" gutterBottom>
-                    {index + 1}. {question.text}
-                  </Typography>
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-                  >
-                    {question.answers.map((option) => (
-                      <FormControlLabel
-                        key={option}
-                        control={
-                          <Checkbox
-                            checked={selectedAnswers[index] === option}
-                            onChange={() => handleOptionChange(index, option)}
-                            disabled={!!quizResult}
-                            sx={{
-                              "& .MuiSvgIcon-root": {
-                                border: `2px solid ${getAnswerOutlineColor(
-                                  question._id,
-                                  option
-                                )}`,
-                                borderRadius: "4px",
-                              },
-                            }}
-                          />
-                        }
-                        label={option}
-                      />
-                    ))}
-                  </Box>
-                </Card>
-              </Box>
-            ))}
+            <Box id="quiz-content">
+              <Typography variant="h5" component="div" gutterBottom>
+                {lessonData?.lessonTitle}
+              </Typography>
+              {quizData.questions.map((question, index) => (
+                <Box
+                  key={index}
+                  style={{ pageBreakInside: "avoid" }}
+                  className={classes.questionBox}
+                >
+                  <Card className={classes.card}>
+                    <Typography variant="h6" gutterBottom>
+                      {index + 1}. {question.text}
+                    </Typography>
+                    <Box
+                      sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+                    >
+                      {question.answers.map((option) => (
+                        <FormControlLabel
+                          key={option}
+                          control={
+                            <Checkbox
+                              checked={selectedAnswers[index] === option}
+                              onChange={() => handleOptionChange(index, option)}
+                              disabled={!!quizResult}
+                              sx={{
+                                "& .MuiSvgIcon-root": {
+                                  border: `2px solid ${getAnswerOutlineColor(
+                                    question._id,
+                                    option
+                                  )}`,
+                                  borderRadius: "4px",
+                                },
+                              }}
+                            />
+                          }
+                          label={option}
+                        />
+                      ))}
+                    </Box>
+                  </Card>
+                </Box>
+              ))}
+            </Box>
             <Box className={classes.buttonContainer}>
               <Button
                 variant="contained"
@@ -212,6 +242,13 @@ const QuizPage: React.FC = () => {
                 onClick={generateNewQuiz}
               >
                 Generate New Quiz
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleExportToPDF}
+              >
+                Export to PDF
               </Button>
             </Box>
           </Box>
