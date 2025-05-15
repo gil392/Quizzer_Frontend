@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 import { generateQuiz, getQuizById, submitQuiz } from "../api/quiz/api";
 import { QuizData, QuizResult } from "../api/quiz/types";
 import useStyles from "./Quiz.styles";
-import html2pdf from "html2pdf.js";
+import { exportToPDF } from "../utils/pdfUtils";
 import {
   Box,
   Button,
@@ -13,6 +13,8 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
+
+const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
@@ -69,26 +71,7 @@ const QuizPage: React.FC = () => {
   }, [fetchQuizById]);
 
   const handleExportToPDF = () => {
-    if (!quizData) {
-      alert("Quiz data is not available.");
-      return;
-    }
-
-    const element = document.getElementById("quiz-content");
-    if (!element) {
-      alert("Quiz content is not available.");
-      return;
-    }
-
-    const options = {
-      margin: 1,
-      filename: "quiz.pdf",
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2 },
-      jsPDF: { unit: "in", format: "letter", orientation: "portrait" },
-    };
-
-    html2pdf().set(options).from(element).save();
+    exportToPDF(QUIZ_CONTENT_PDF_ID, "quiz.pdf");
   };
 
   const handleOptionChange = (questionIndex: number, option: string) => {
@@ -167,65 +150,73 @@ const QuizPage: React.FC = () => {
           </Box>
         ) : quizData ? (
           <Box>
-            {quizResult && (
-              <Box
-                className={classes.resultBox}
-                style={{
-                  backgroundColor:
-                    quizResult.score >= 60 ? "#e8f5e9" : "#ffebee",
-                }}
-              >
-                <Typography
-                  variant="h5"
-                  color={quizResult.score >= 60 ? "green" : "red"}
-                >
-                  Your Score: {quizResult.score} / 100
-                </Typography>
-              </Box>
-            )}
-            <Box id="quiz-content">
-              <Typography variant="h5" component="div" gutterBottom>
-                {lessonData?.lessonTitle}
-              </Typography>
-              {quizData.questions.map((question, index) => (
+            <Box id={QUIZ_CONTENT_PDF_ID}>
+              {quizResult && (
                 <Box
-                  key={index}
-                  style={{ pageBreakInside: "avoid" }}
-                  className={classes.questionBox}
+                  className={classes.resultBox}
+                  style={{
+                    backgroundColor:
+                      quizResult.score >= 60 ? "#e8f5e9" : "#ffebee",
+                  }}
                 >
-                  <Card className={classes.card}>
-                    <Typography variant="h6" gutterBottom>
-                      {index + 1}. {question.text}
-                    </Typography>
-                    <Box
-                      sx={{ display: "flex", flexDirection: "column", gap: 1 }}
-                    >
-                      {question.answers.map((option) => (
-                        <FormControlLabel
-                          key={option}
-                          control={
-                            <Checkbox
-                              checked={selectedAnswers[index] === option}
-                              onChange={() => handleOptionChange(index, option)}
-                              disabled={!!quizResult}
-                              sx={{
-                                "& .MuiSvgIcon-root": {
-                                  border: `2px solid ${getAnswerOutlineColor(
-                                    question._id,
-                                    option
-                                  )}`,
-                                  borderRadius: "4px",
-                                },
-                              }}
-                            />
-                          }
-                          label={option}
-                        />
-                      ))}
-                    </Box>
-                  </Card>
+                  <Typography
+                    variant="h5"
+                    color={quizResult.score >= 60 ? "green" : "red"}
+                  >
+                    Your Score: {quizResult.score} / 100
+                  </Typography>
                 </Box>
-              ))}
+              )}
+              <Box>
+                <Typography variant="h5" component="div" gutterBottom>
+                  {lessonData?.lessonTitle}
+                </Typography>
+                {quizData.questions.map((question, index) => (
+                  <Box
+                    key={index}
+                    style={{ pageBreakInside: "avoid" }}
+                    className={classes.questionBox}
+                  >
+                    <Card className={classes.card}>
+                      <Typography variant="h6" gutterBottom>
+                        {index + 1}. {question.text}
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                        }}
+                      >
+                        {question.answers.map((option) => (
+                          <FormControlLabel
+                            key={option}
+                            control={
+                              <Checkbox
+                                checked={selectedAnswers[index] === option}
+                                onChange={() =>
+                                  handleOptionChange(index, option)
+                                }
+                                disabled={!!quizResult}
+                                sx={{
+                                  "& .MuiSvgIcon-root": {
+                                    border: `2px solid ${getAnswerOutlineColor(
+                                      question._id,
+                                      option
+                                    )}`,
+                                    borderRadius: "4px",
+                                  },
+                                }}
+                              />
+                            }
+                            label={option}
+                          />
+                        ))}
+                      </Box>
+                    </Card>
+                  </Box>
+                ))}
+              </Box>
             </Box>
             <Box className={classes.buttonContainer}>
               <Button
