@@ -1,4 +1,4 @@
-import { AutoStories, LogoDev, Settings, YouTube } from "@mui/icons-material";
+import { AutoStories, LogoDev, People, Settings, YouTube } from "@mui/icons-material";
 import { Box, Divider, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -31,6 +31,11 @@ const navBarNavigations: readonly NavBarItem[] = [
     icon: <AutoStories />,
     route: "LESSONS_LIST",
   },
+  {
+    text: "My Friends",
+    icon: <People />,
+    route: "FRIENDS",
+  },
 ];
 
 const NavBar: FunctionComponent = () => {
@@ -57,8 +62,8 @@ const NavBar: FunctionComponent = () => {
   const createNavigationHandle = (to: keyof typeof PAGES_ROUTES) => () =>
     navigate(PAGES_ROUTES[to]);
 
-  const navBarItems = navBarNavigations.map(({ text, icon, route }) => (
-    <ListItem disablePadding sx={listItemSx}>
+  const navBarItems = navBarNavigations.map(({ text, icon, route }, index) => (
+    <ListItem disablePadding sx={listItemSx} key={index}>
       <ListItemButton
         sx={listItemButtonSx(open)}
         onClick={createNavigationHandle(route)}
