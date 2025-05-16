@@ -18,7 +18,7 @@ interface PendingFriendsPannelProps {
     requestIndex: number,
     action: FriendRequestItemAction
   ) => void;
-  exludeIdsFromSearch: string[];
+  excludedIdsFromSearch: string[];
   className?: string;
 }
 
@@ -29,7 +29,7 @@ const PendingFriendsPannel: FunctionComponent<PendingFriendsPannelProps> = (
     pendingFriends,
     removePendingFriend,
     loading,
-    exludeIdsFromSearch,
+    excludedIdsFromSearch,
     className,
   } = props;
   const classes = useStyles();
@@ -63,7 +63,7 @@ const PendingFriendsPannel: FunctionComponent<PendingFriendsPannelProps> = (
   return (
     <div className={clsx(classes.root, className)}>
       <UsersSearcher
-        exludeIds={exludeIdsFromSearch}
+        exludeIds={excludedIdsFromSearch}
         textFieldLabel="Search For New Friends"
       />
       <Divider className={classes.divider} />

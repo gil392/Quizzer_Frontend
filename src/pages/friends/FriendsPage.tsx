@@ -9,7 +9,7 @@ import { useStyles } from "./styles";
 
 const FriendsPage: FunctionComponent = () => {
   const classes = useStyles();
-  const [exludeIdsFromSearch, setExludeIdsFromSearch] = useState<string[]>([]);
+  const [excludedIdsFromSearch, setExcludedIdsFromSearch] = useState<string[]>([]);
   const [friends, setFriends] = useState<UserWithId[]>([]);
   const [pendingFriends, setPendingFriends] = useState<UserWithId[]>([]);
   const [isFriendsLoading, setIsFriendsLoading] = useState(false);
@@ -19,7 +19,6 @@ const FriendsPage: FunctionComponent = () => {
     setIsFriendsLoading(true);
     const { data: friends } = await getFriends(abortController);
     setFriends(friends);
-    await new Promise((resolve) => setTimeout(resolve, 5000));
     setIsFriendsLoading(false);
   }, []);
 
@@ -28,7 +27,6 @@ const FriendsPage: FunctionComponent = () => {
       setIsPendingFriendsLoading(true);
       const { data: pendingFriends } = await getPendingFriends(abortController);
       setPendingFriends(pendingFriends);
-      await new Promise((resolve) => setTimeout(resolve, 5000));
       setIsPendingFriendsLoading(false);
     },
 
@@ -44,7 +42,7 @@ const FriendsPage: FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    setExludeIdsFromSearch(
+    setExcludedIdsFromSearch(
       concat(friends.map(prop("_id")), pendingFriends.map(prop("_id")))
     );
   }, [friends, pendingFriends]);
@@ -69,7 +67,7 @@ const FriendsPage: FunctionComponent = () => {
       />
       <PendingFriendsPannel
         pendingFriends={pendingFriends}
-        exludeIdsFromSearch={exludeIdsFromSearch}
+        excludedIdsFromSearch={excludedIdsFromSearch}
         removePendingFriend={removeFriendRequest}
         loading={isPendingFriendsLoading}
         className={classes.pendingFriendsPannel}
