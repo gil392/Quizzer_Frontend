@@ -42,9 +42,6 @@ const NavBar: FunctionComponent = () => {
     () => isNavBarAvailableInPath(location.pathname),
     [location]
   );
-  if (!isNavBarAvaiable) {
-    return null;
-  }
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -69,7 +66,7 @@ const NavBar: FunctionComponent = () => {
     </ListItem>
   ));
 
-  return (
+  return isNavBarAvaiable ? (
     <Drawer
       variant="permanent"
       open={open}
@@ -95,7 +92,7 @@ const NavBar: FunctionComponent = () => {
         </ListItemButton>
       </Box>
     </Drawer>
-  );
+  ) : null;
 };
 
 export default NavBar;
