@@ -36,7 +36,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     pendingFriendsList: {
       flexGrow: 1,
       overflowY: "auto",
-      marginTop: theme.spacing(3),
+      marginTop: theme.spacing(1),
     },
     scroller: {
       "&::-webkit-scrollbar": {
@@ -50,6 +50,19 @@ export const useStyles = makeStyles((theme: Theme) =>
       },
       "&::-webkit-scrollbar-thumb:hover": {
         backgroundColor: "rgba(0, 0, 0, 0.4)",
+      },
+    },
+    skeletonItem: {
+      padding: "1.5em 0",
+    },
+    emptyFriendsListSpan: {
+      display: "flex",
+      height: "80%",
+      alignItems: "center",
+    },
+    divider: {
+      "&.MuiDivider-root": {
+        marginTop: theme.spacing(2),
       },
     },
   })

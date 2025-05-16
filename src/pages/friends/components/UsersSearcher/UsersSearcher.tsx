@@ -28,10 +28,11 @@ import { useStyles } from "./styles";
 
 interface UsersSearcherProps {
   exludeIds?: string[];
+  textFieldLabel?: string;
 }
 
 const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
-  const { exludeIds = [] } = props;
+  const { exludeIds = [], textFieldLabel } = props;
   const classes = useStyles();
   const [value, setValue] = useState<SearchedUser | null>(null);
   const [inputValue, setInputValue] = useState("");
@@ -104,7 +105,7 @@ const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
   const renderInput = (params: AutocompleteRenderInputParams) => (
     <TextField
       {...params}
-      label="Search users"
+      label={textFieldLabel ?? "Search users"}
       slotProps={textFieldSlotProps(params)}
     />
   );
