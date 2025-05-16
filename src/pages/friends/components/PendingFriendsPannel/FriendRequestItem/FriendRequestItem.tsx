@@ -2,14 +2,11 @@ import { CheckCircleOutline, HighlightOff } from "@mui/icons-material";
 import { IconButton } from "@mui/material";
 import clsx from "clsx";
 import { FunctionComponent } from "react";
-import {
-  acceptFriendRequest,
-  declineFriendRequest,
-} from "../../../../api/user/api";
-import { UserWithId } from "../../../../api/user/types";
-import FriendItem from "../FriendItem/FriendItem";
 import { useStyles } from "./styles";
 import { FriendRequestItemAction } from "./types";
+import { UserWithId } from "../../../../../api/user/types";
+import { acceptFriendRequest, declineFriendRequest } from "../../../../../api/user/api";
+import FriendItem from "../../FriendsPannel/FriendItem/FriendItem";
 
 interface FriendRequestItemProps {
   user: UserWithId;

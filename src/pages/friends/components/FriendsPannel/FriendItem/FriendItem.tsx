@@ -1,11 +1,11 @@
 import { Avatar, Typography } from "@mui/material";
 import clsx from "clsx";
 import { FunctionComponent } from "react";
-import { User } from "../../../../../api/user/types";
+import { UserWithId } from "../../../../../api/user/types";
 import { useStyles } from "./styles";
 
 interface FriendItemProps {
-  user: User;
+  user: UserWithId;
   className?: string;
 }
 
