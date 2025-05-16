@@ -1,4 +1,3 @@
-import { QuizSettings } from "../../../api/quiz/types";
 import { FeedbackOption, Option, QuestionsOrderOption } from "./types";
 
 export const LOW_QUESTIONS_COUNT = 5;

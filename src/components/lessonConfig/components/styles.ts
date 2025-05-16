@@ -1,7 +1,11 @@
 import { createStyles, makeStyles } from "@mui/styles";
+import { Theme } from "@mui/material";
 
-const useStyles = makeStyles(() =>
-  createStyles({
+const useStyles = makeStyles((theme: Theme) => {
+  const isDarkMode = theme.palette.mode === "dark";
+  const customRadioBgColor = isDarkMode ? "#2C2C2E" : "#f9f9f9";
+  const customRadioTextColor = isDarkMode ? "var(--primary-main)" : "#424242";
+  return createStyles({
     customRadioGroup: {
       display: "flex",
       marginBottom: "1.5rem",
@@ -17,7 +21,7 @@ const useStyles = makeStyles(() =>
       justifyContent: "center",
       padding: "0.5rem 1rem",
       borderRight: "1px solid #e0e0e0",
-      backgroundColor: "#f9f9f9",
+      backgroundColor: customRadioBgColor,
       cursor: "pointer",
       transition: "all 0.3s ease",
       "&:last-child": {
@@ -29,7 +33,7 @@ const useStyles = makeStyles(() =>
       "& span": {
         fontSize: "0.9rem",
         fontWeight: 500,
-        color: "#424242",
+        color: customRadioTextColor,
       },
     },
 
@@ -70,7 +74,7 @@ const useStyles = makeStyles(() =>
         backgroundColor: "primary.main",
       },
     },
-  })
-);
+  });
+});
 
 export default useStyles;

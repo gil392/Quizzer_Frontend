@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
 import {
@@ -9,7 +9,9 @@ import {
 import { getLoggedUser, updateUser } from "../../api/user/api";
 import { User } from "../../api/user/types";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
-import { useStyles } from "./styles";
+import DisplayModeSwitch from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
+import { useDisplayMode } from "../../components/settings/DisplayModeSwitch/globalProvider";
+import useStyles from "./styles";
 
 const SettingsPage: FunctionComponent = () => {
   const classes = useStyles();
@@ -31,11 +33,14 @@ const SettingsPage: FunctionComponent = () => {
     INITIAL_QUIZ_SETTINGS.isManualCount
   );
 
+  const { displayMode, setDisplayMode } = useDisplayMode();
+
   const setSettings = (quizSettings: QuizSettings) => {
     setFeedbackType(quizSettings.feedbackType);
     setQuestionsOrder(quizSettings.questionsOrder);
     setMaxQuestionCount(quizSettings.maxQuestionCount);
     setIsManualCount(quizSettings.isManualCount);
+    setDisplayMode(quizSettings.displayMode);
   };
 
   useEffect(() => {
@@ -61,9 +66,9 @@ const SettingsPage: FunctionComponent = () => {
             questionsOrder,
             maxQuestionCount,
             isManualCount,
+            displayMode,
             solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
             isRandomOrder: INITIAL_QUIZ_SETTINGS.isRandomOrder,
-            displayMode: INITIAL_QUIZ_SETTINGS.displayMode,
           };
           await updateUser(user, { settings });
         } catch (error) {
@@ -75,10 +80,23 @@ const SettingsPage: FunctionComponent = () => {
     };
 
     updateSettings();
-  }, [feedbackType, questionsOrder, maxQuestionCount, isManualCount]);
+  }, [
+    feedbackType,
+    questionsOrder,
+    maxQuestionCount,
+    isManualCount,
+    displayMode,
+  ]);
 
   return (
     <Box className={classes.root}>
+      <Typography variant="h6" gutterBottom>
+        Display Mode
+      </Typography>
+      <DisplayModeSwitch
+        displayMode={displayMode}
+        setDisplayMode={setDisplayMode}
+      />
       <LessonConfig
         feedbackType={feedbackType}
         setFeedbackType={setFeedbackType}
