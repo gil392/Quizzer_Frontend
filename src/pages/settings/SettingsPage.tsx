@@ -2,15 +2,14 @@ import { Box } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
 import {
-  DisplayMode,
   FeedbackType,
   QuestionsOrder,
   QuizSettings,
 } from "../../api/quiz/types";
 import { getLoggedUser, updateUser } from "../../api/user/api";
 import { User } from "../../api/user/types";
-import DisplayModeSwtich from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
+import DisplayModeSwtich from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 import { useDisplayMode } from "../../components/settings/DisplayModeSwitch/globalProvider";
 
 const SettingsPage: FunctionComponent = () => {
