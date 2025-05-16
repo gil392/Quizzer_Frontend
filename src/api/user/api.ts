@@ -3,8 +3,8 @@ import apiClient from "../client";
 import { QuizSettings } from "../quiz/types";
 import { SearchedUser, User, UserWithId } from "./types";
 
-export const searchUsers = (query: string): AxiosPromise<SearchedUser[]> =>
-  apiClient.get("/user/search", { params: { q: query } });
+export const searchUsers = (searchTerm: string): AxiosPromise<SearchedUser[]> =>
+  apiClient.get("/user/search", { params: { searchTerm } });
 
 export const getFriends = (abortController?: AbortController) =>
   apiClient.get<UserWithId[]>("/user/friend", {
