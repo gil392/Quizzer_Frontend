@@ -9,3 +9,5 @@ export type User = {
   favoriteLessons?: string[];
   settings?: QuizSettings;
 };
+
+export type Message = { reeded: boolean };
