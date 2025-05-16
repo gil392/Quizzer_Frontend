@@ -6,6 +6,7 @@ import {
   AccordionSummary,
   Typography,
   Rating,
+  Button,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import React from "react";
@@ -13,6 +14,8 @@ import { QuizData } from "../../../api/quiz/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { PAGES_ROUTES } from "../../../routes/routes.const"; // Import route constants
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -26,11 +29,16 @@ const QuizItem: React.FC<QuizItemProps> = ({
   updateQuizTitle,
 }) => {
   const classes = useStyles();
+  const navigate = useNavigate();
   const [rating, setRating] = useState<number | null>(quiz.rating);
 
   const handleRateQuiz = async (newRating: number | null) => {
     await rateQuiz(quiz._id, newRating);
     setRating(newRating);
+  };
+
+  const handleNavigateToQuiz = () => {
+    navigate(`${PAGES_ROUTES.QUIZ}`, { state: { quizId: quiz._id } });
   };
 
   return (
@@ -63,6 +71,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
           value={rating}
           onChange={(_, newValue) => handleRateQuiz(newValue)}
         />
+        <Button onClick={handleNavigateToQuiz}>Show Quiz</Button>
       </Box>
       {rating && (
         <Typography variant="body2" mt={1}>
