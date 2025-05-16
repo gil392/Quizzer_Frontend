@@ -9,6 +9,7 @@ export const useStyles = makeStyles(() =>
       flexDirection: "column",
       alignItems: "center",
       textAlign: "center",
+      margin: '2rem 0'
     },
     formSection: { marginTop: "0.5em", width: "33%" },
     textField: {

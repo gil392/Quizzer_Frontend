@@ -22,7 +22,9 @@ const FriendsPannel: FunctionComponent<FriendsPannelProps> = (props) => {
   const friendsList = isEmpty(friends) ? (
     <span className={classes.emptyFriendsListSpan}>
       <Typography textAlign="center" variant="h4">
-        Seems you new Here<br />Try searching new friends
+        Seems you new Here
+        <br />
+        Try searching new friends
       </Typography>
     </span>
   ) : (
