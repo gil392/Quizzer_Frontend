@@ -9,7 +9,9 @@ import { useStyles } from "./styles";
 
 const FriendsPage: FunctionComponent = () => {
   const classes = useStyles();
-  const [excludedIdsFromSearch, setExcludedIdsFromSearch] = useState<string[]>([]);
+  const [excludedIdsFromSearch, setExcludedIdsFromSearch] = useState<string[]>(
+    []
+  );
   const [friends, setFriends] = useState<UserWithId[]>([]);
   const [pendingFriends, setPendingFriends] = useState<UserWithId[]>([]);
   const [isFriendsLoading, setIsFriendsLoading] = useState(false);
@@ -29,7 +31,6 @@ const FriendsPage: FunctionComponent = () => {
       setPendingFriends(pendingFriends);
       setIsPendingFriendsLoading(false);
     },
-
     []
   );
 

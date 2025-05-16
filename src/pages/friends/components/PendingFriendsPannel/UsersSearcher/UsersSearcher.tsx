@@ -39,17 +39,20 @@ const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
   const [options, setOptions] = useState<SearchedUser[]>([]);
   const [loading, setLoading] = useState(false);
 
-  const fetchUsers = useCallback(async (searchTerm: string) => {
-    setLoading(true);
-    try {
-      const { data } = await apiSearchUsers(searchTerm);
-      const options = data.filter(({ _id }) => !excludedIds.includes(_id));
-      setOptions(options);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-  const searchUsers = useMemo(() => debounce(fetchUsers, 400), []);
+  const fetchUsers = useCallback(
+    async (searchTerm: string) => {
+      setLoading(true);
+      try {
+        const { data } = await apiSearchUsers(searchTerm);
+        const options = data.filter(({ _id }) => !excludedIds.includes(_id));
+        setOptions(options);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [excludedIds]
+  );
+  const searchUsers = useMemo(() => debounce(fetchUsers, 400), [excludedIds]);
 
   useEffect(() => {
     if (inputValue.trim()) {
