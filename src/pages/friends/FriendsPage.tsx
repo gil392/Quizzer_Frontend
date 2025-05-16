@@ -1,14 +1,10 @@
-import { Divider, Typography } from "@mui/material";
-import clsx from "clsx";
-import { concat, isEmpty, prop, remove } from "ramda";
+import { concat, prop, remove } from "ramda";
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { getFriends, getPendingFriends } from "../../api/user/api";
 import { UserWithId } from "../../api/user/types";
-import SkeletonList from "../../components/SkeletonList/SkeletonList";
-import FriendItem from "./components/FriendItem/FriendItem";
-import FriendRequestItem from "./components/FriendRequestItem/FriendRequestItem";
 import { FriendRequestItemAction } from "./components/FriendRequestItem/types";
-import UsersSearcher from "./components/UsersSearcher/UsersSearcher";
+import FriendsPannel from "./components/FriendsPannel/FriendsPannel";
+import PendingFriendsPannel from "./components/PendingFriendsPannel/PendingFriendsPannel";
 import { useStyles } from "./styles";
 
 const FriendsPage: FunctionComponent = () => {
@@ -53,83 +49,31 @@ const FriendsPage: FunctionComponent = () => {
     );
   }, [friends, pendingFriends]);
 
-  const friendsList = true ? (
-    <span className={classes.emptyFriendsListSpan}>
-      <Typography textAlign="center" variant="h4">
-        Seems you new Here, try searching new friends
-      </Typography>
-    </span>
-  ) : (
-    friends.map((user, index) => (
-      <FriendItem
-        key={index}
-        className={clsx({
-          [classes.firstItem]: index === 0,
-          [classes.lastItem]: index === friends.length - 1,
-        })}
-        user={user}
-      />
-    ))
-  );
-
-  const removeFriendRequest =
-    (user: UserWithId, requestIndex: number) =>
-    (action: FriendRequestItemAction) => {
-      setPendingFriends(remove(requestIndex, 1));
-      if (action === "accept") {
-        setFriends(concat([user]));
-      }
-    };
-
-  const pendingFriendsList = isEmpty(pendingFriends) ? (
-    <Typography textAlign="center" variant="h6">
-      No Pending Friend Requests
-    </Typography>
-  ) : (
-    pendingFriends.map((user, index) => (
-      <FriendRequestItem
-        key={index}
-        className={clsx({
-          [classes.firstItem]: index === 0,
-          [classes.lastItem]: index === friends.length - 1,
-        })}
-        user={user}
-        onAction={removeFriendRequest(user, index)}
-      />
-    ))
-  );
+  const removeFriendRequest = (
+    user: UserWithId,
+    requestIndex: number,
+    action: FriendRequestItemAction
+  ) => {
+    setPendingFriends(remove(requestIndex, 1));
+    if (action === "accept") {
+      setFriends(concat([user]));
+    }
+  };
 
   return (
     <div className={classes.root}>
-      <div className={classes.friendsPannel}>
-        <span className={clsx(classes.friendsList, classes.scroller)}>
-          {isFriendsLoading ? (
-            <SkeletonList
-              numberOfItems={6}
-              itemClassName={classes.skeletonItem}
-            />
-          ) : (
-            friendsList
-          )}
-        </span>
-      </div>
-      <div className={classes.pendingFriendsPannel}>
-        <UsersSearcher
-          exludeIds={exludeIdsFromSearch}
-          textFieldLabel="Search For New Friends"
-        />
-        <Divider className={classes.divider} />
-        <div className={clsx(classes.pendingFriendsList, classes.scroller)}>
-          {isPendingFriendsLoading ? (
-            <SkeletonList
-              numberOfItems={3}
-              itemClassName={classes.skeletonItem}
-            />
-          ) : (
-            pendingFriendsList
-          )}
-        </div>
-      </div>
+      <FriendsPannel
+        friends={friends}
+        loading={isFriendsLoading}
+        className={classes.friendsPannel}
+      />
+      <PendingFriendsPannel
+        pendingFriends={pendingFriends}
+        exludeIdsFromSearch={exludeIdsFromSearch}
+        removePendingFriend={removeFriendRequest}
+        loading={isPendingFriendsLoading}
+        className={classes.pendingFriendsPannel}
+      />
     </div>
   );
 };

@@ -11,32 +11,10 @@ export const useStyles = makeStyles((theme: Theme) =>
     friendsPannel: {
       height: "100%",
       width: "60%",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-    },
-    friendsList: {
-      height: "100%",
-      overflowY: "auto",
-      width: "60%",
-      padding: "0 8px",
-    },
-    firstItem: {
-      marginTop: "4px",
-    },
-    lastItem: {
-      marginBottom: "4px",
     },
     pendingFriendsPannel: {
       width: "40%",
-      display: "flex",
-      flexDirection: "column",
       margin: theme.spacing(6, 0),
-    },
-    pendingFriendsList: {
-      flexGrow: 1,
-      overflowY: "auto",
-      marginTop: theme.spacing(1),
     },
     scroller: {
       "&::-webkit-scrollbar": {
@@ -55,15 +33,11 @@ export const useStyles = makeStyles((theme: Theme) =>
     skeletonItem: {
       padding: "1.5em 0",
     },
-    emptyFriendsListSpan: {
-      display: "flex",
-      height: "80%",
-      alignItems: "center",
+    firstItem: {
+      marginTop: "4px",
     },
-    divider: {
-      "&.MuiDivider-root": {
-        marginTop: theme.spacing(2),
-      },
+    lastItem: {
+      marginBottom: "4px",
     },
   })
 );
