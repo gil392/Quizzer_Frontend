@@ -22,8 +22,8 @@ import {
 import {
   searchUsers as apiSearchUsers,
   submitFriendRequest,
-} from "../../../../api/user/api";
-import { SearchedUser } from "../../../../api/user/types";
+} from "../../../../../api/user/api";
+import { SearchedUser } from "../../../../../api/user/types";
 import { useStyles } from "./styles";
 
 interface UsersSearcherProps {

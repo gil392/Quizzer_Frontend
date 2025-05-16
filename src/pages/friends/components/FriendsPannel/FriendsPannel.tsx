@@ -5,7 +5,7 @@ import { FunctionComponent } from "react";
 import { UserWithId } from "../../../../api/user/types";
 import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import { useStyles as useFriendsPageStyles } from "../../styles";
-import FriendItem from "../FriendItem/FriendItem";
+import FriendItem from "./FriendItem/FriendItem";
 import { useStyles } from "./styles";
 
 interface FriendsPannelProps {

@@ -2,8 +2,8 @@ import { concat, prop, remove } from "ramda";
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { getFriends, getPendingFriends } from "../../api/user/api";
 import { UserWithId } from "../../api/user/types";
-import { FriendRequestItemAction } from "./components/FriendRequestItem/types";
 import FriendsPannel from "./components/FriendsPannel/FriendsPannel";
+import { FriendRequestItemAction } from "./components/PendingFriendsPannel/FriendRequestItem/types";
 import PendingFriendsPannel from "./components/PendingFriendsPannel/PendingFriendsPannel";
 import { useStyles } from "./styles";
 

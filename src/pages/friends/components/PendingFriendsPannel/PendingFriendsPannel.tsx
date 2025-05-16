@@ -5,9 +5,9 @@ import { FunctionComponent, useCallback } from "react";
 import { UserWithId } from "../../../../api/user/types";
 import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import { useStyles as useFriendsPageStyles } from "../../styles";
-import FriendRequestItem from "../FriendRequestItem/FriendRequestItem";
-import { FriendRequestItemAction } from "../FriendRequestItem/types";
-import UsersSearcher from "../UsersSearcher/UsersSearcher";
+import FriendRequestItem from "./FriendRequestItem/FriendRequestItem";
+import { FriendRequestItemAction } from "./FriendRequestItem/types";
+import UsersSearcher from "./UsersSearcher/UsersSearcher";
 import { useStyles } from "./styles";
 
 interface PendingFriendsPannelProps {
