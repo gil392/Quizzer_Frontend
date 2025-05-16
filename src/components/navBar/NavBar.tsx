@@ -58,7 +58,7 @@ const NavBar: FunctionComponent = () => {
     navigate(PAGES_ROUTES[to]);
 
   const navBarItems = navBarNavigations.map(({ text, icon, route }) => (
-    <ListItem disablePadding sx={listItemSx}>
+    <ListItem disablePadding sx={listItemSx} key={route}>
       <ListItemButton
         sx={listItemButtonSx(open)}
         onClick={createNavigationHandle(route)}
