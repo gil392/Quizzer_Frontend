@@ -1,5 +1,5 @@
 import { ShieldMoon, Sunny } from "@mui/icons-material";
-import { Button, Typography } from "@mui/material";
+import { Button } from "@mui/material";
 import { FunctionComponent } from "react";
 import { DisplayMode } from "../../../api/quiz/types";
 import { getOppositeDisplayMode } from "./utils";
@@ -13,18 +13,10 @@ const DisplayModeSwitch: FunctionComponent<DisplayModeSwitchProps> = ({
   displayMode,
   setDisplayMode,
 }) => {
-  const switchDisplayMode = () => {
-    const newDisplayMode = getOppositeDisplayMode(displayMode);
-    setDisplayMode(newDisplayMode);
-  };
-
   return (
     <>
-      <Typography variant="h6" gutterBottom>
-        Display Mode
-      </Typography>
       <Button
-        onClick={switchDisplayMode}
+        onClick={() => setDisplayMode(getOppositeDisplayMode(displayMode))}
         aria-label={`Switch to ${getOppositeDisplayMode(displayMode)} mode`}
       >
         {displayMode === "Dark" ? <ShieldMoon /> : <Sunny />}

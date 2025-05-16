@@ -16,12 +16,16 @@ import {
   useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getMessages } from "../../api/user/api";
-import { Message } from "../../api/user/types";
+import { getLoggedUser, getMessages, updateUser } from "../../api/user/api";
+import { Message, User } from "../../api/user/types";
 import { isNavBarAvailableInPath } from "../navBar/utils";
 import { MAX_MESSAGES_BADGE_CONTENT, MESSAGES_INTERVAL_MS } from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
+import { useDisplayMode } from "../settings/DisplayModeSwitch/globalProvider";
+import { QuizSettings } from "../../api/quiz/types";
+import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
+import DisplayModeSwitch from "../settings/DisplayModeSwitch/DisplayModeSwitch";
 
 const AppBar: FunctionComponent = () => {
   const classes = useStyles();
@@ -31,6 +35,8 @@ const AppBar: FunctionComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const { displayMode, saveDisplayMode: setDisplayMode } = useDisplayMode();
 
   const isAppBarAvaiable = useMemo(
     () => isNavBarAvailableInPath(location.pathname),
@@ -61,6 +67,41 @@ const AppBar: FunctionComponent = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const { data } = await getLoggedUser();
+        setUser(data);
+        data?.settings && setDisplayMode(data.settings.displayMode);
+      } catch (error) {
+        console.error("Error fetching user: ", error);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+  useEffect(() => {
+    const updateSettings = async () => {
+      if (user) {
+        try {
+          const previousSettings = user.settings ?? INITIAL_QUIZ_SETTINGS;
+          const settings: QuizSettings = {
+            ...previousSettings,
+            displayMode,
+          };
+          await updateUser(user, { settings });
+        } catch (error) {
+          console.error("Error updating user: ", error);
+        }
+      } else {
+        console.error("Error updating user: User does not exists");
+      }
+    };
+
+    updateSettings();
+  }, [displayMode]);
+
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -79,6 +120,10 @@ const AppBar: FunctionComponent = () => {
 
   return isAppBarAvaiable ? (
     <Toolbar className={classes.toolbar}>
+      <DisplayModeSwitch
+        displayMode={displayMode}
+        setDisplayMode={setDisplayMode}
+      />
       <IconButton>
         <Badge
           badgeContent={unReededMessagesCount}
