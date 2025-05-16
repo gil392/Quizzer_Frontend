@@ -1,8 +1,5 @@
-import { Add } from "@mui/icons-material";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import LessonItem from "../LessonItem/LessonItem";
 import {
   deleteLesson,
   getLessons,
@@ -13,8 +10,14 @@ import { GenericIconButton } from "../../../components/GenericIconButton";
 import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
 import LessonInfo from "../LessonInfo/LessonInfo";
-import LessonItem from "../LessonItem/LessonItem";
 import useStyles from "./LessonsPage.styles";
+import { FilterOptions } from "../FilterLessons/types";
+import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
+import { getFilteredLessons } from "../FilterLessons/utils";
+import FilterLessons from "../FilterLessons/FilterLessons";
+import { useNavigate } from "react-router-dom";
+import { Box, Typography } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
 const LessonsPage: React.FC = () => {
   const classes = useStyles();
@@ -23,6 +26,9 @@ const LessonsPage: React.FC = () => {
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
     setSelectedLesson(null)
+  );
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>(
+    INITIAL_FILTER_OPTIONS
   );
 
   useEffect(() => {
@@ -37,6 +43,11 @@ const LessonsPage: React.FC = () => {
 
     fetchLessons();
   }, []);
+
+  const filteredLessons = useMemo(
+    () => getFilteredLessons(lessons, filterOptions),
+    [lessons, filterOptions]
+  );
 
   const handleLessonDeleted = async (lessonId: string) => {
     await deleteLesson(lessonId);
@@ -80,8 +91,13 @@ const LessonsPage: React.FC = () => {
             )}
           </Box>
 
-          {lessons.length > 0 ? (
-            lessons.map((lesson) => (
+          <FilterLessons
+            setFilterOptions={setFilterOptions}
+            filterOptions={filterOptions}
+          />
+
+          {filteredLessons.length > 0 ? (
+            filteredLessons.map((lesson) => (
               <LessonItem
                 key={lesson._id}
                 lesson={lesson}
