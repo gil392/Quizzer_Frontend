@@ -33,7 +33,7 @@ const SettingsPage: FunctionComponent = () => {
     INITIAL_QUIZ_SETTINGS.isManualCount
   );
 
-  const { displayMode, saveDisplayMode: setDisplayMode } = useDisplayMode();
+  const { displayMode, setDisplayMode } = useDisplayMode();
 
   const setSettings = (quizSettings: QuizSettings) => {
     setFeedbackType(quizSettings.feedbackType);

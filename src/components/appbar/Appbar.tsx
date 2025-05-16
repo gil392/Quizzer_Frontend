@@ -36,7 +36,7 @@ const AppBar: FunctionComponent = () => {
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [user, setUser] = useState<User | null>(null);
-  const { displayMode, saveDisplayMode: setDisplayMode } = useDisplayMode();
+  const { displayMode, setDisplayMode } = useDisplayMode();
 
   const isAppBarAvaiable = useMemo(
     () => isNavBarAvailableInPath(location.pathname),

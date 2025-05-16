@@ -1,4 +1,8 @@
-import { CssBaseline, ThemeProvider as MuiThemeProvider } from "@mui/material";
+import {
+  CssBaseline,
+  ThemeProvider as MuiThemeProvider,
+  useMediaQuery,
+} from "@mui/material";
 import { ThemeProvider as StylesThemeProvider } from "@mui/styles";
 import {
   FunctionComponent,
@@ -10,20 +14,15 @@ import {
 import { DisplayMode } from "../../../api/quiz/types";
 import { darkTheme, lightTheme } from "../../../theme";
 import { DisplayModeContext } from "./config";
-import { DISPLAY_MODE_STORAGE } from "./constants";
-import { getInitialDisplayMode } from "./utils";
 
 export const DisplayModeProvider: FunctionComponent<PropsWithChildren> = ({
   children,
 }) => {
-  const [displayMode, setDisplayMode] = useState<DisplayMode>(
-    getInitialDisplayMode()
-  );
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const defaultDisplayMode: DisplayMode = prefersDarkMode ? "Dark" : "Light";
 
-  const saveDisplayMode = (displayMode: DisplayMode) => {
-    localStorage.setItem(DISPLAY_MODE_STORAGE, displayMode);
-    setDisplayMode(displayMode);
-  };
+  const [displayMode, setDisplayMode] =
+    useState<DisplayMode>(defaultDisplayMode);
 
   const theme = useMemo(
     () => (displayMode === "Light" ? lightTheme : darkTheme),
@@ -31,7 +30,7 @@ export const DisplayModeProvider: FunctionComponent<PropsWithChildren> = ({
   );
 
   return (
-    <DisplayModeContext.Provider value={{ displayMode, saveDisplayMode }}>
+    <DisplayModeContext.Provider value={{ displayMode, setDisplayMode }}>
       <MuiThemeProvider theme={theme}>
         <StylesThemeProvider theme={theme}>
           <CssBaseline />
@@ -43,11 +42,14 @@ export const DisplayModeProvider: FunctionComponent<PropsWithChildren> = ({
 };
 
 export const useDisplayMode = () => {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+  const defaultDisplayMode: DisplayMode = prefersDarkMode ? "Dark" : "Light";
+
   const context = useContext(DisplayModeContext);
   return (
     context ?? {
-      displayMode: getInitialDisplayMode(),
-      saveDisplayMode: (displayMode: DisplayMode) => {
+      displayMode: defaultDisplayMode,
+      setDisplayMode: (displayMode: DisplayMode) => {
         console.error("try to alert when display mode context is null:", {
           displayMode,
         });
