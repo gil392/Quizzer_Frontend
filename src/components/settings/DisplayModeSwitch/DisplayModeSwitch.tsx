@@ -9,7 +9,7 @@ interface DisplayModeSwitchProps {
   setDisplayMode: (displayMode: DisplayMode) => void;
 }
 
-const DisplayModeSwtich: FunctionComponent<DisplayModeSwitchProps> = ({
+const DisplayModeSwitch: FunctionComponent<DisplayModeSwitchProps> = ({
   displayMode,
   setDisplayMode,
 }) => {
@@ -33,4 +33,4 @@ const DisplayModeSwtich: FunctionComponent<DisplayModeSwitchProps> = ({
   );
 };
 
-export default DisplayModeSwtich;
+export default DisplayModeSwitch;

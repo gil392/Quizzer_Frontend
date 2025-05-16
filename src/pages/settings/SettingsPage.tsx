@@ -9,7 +9,7 @@ import {
 import { getLoggedUser, updateUser } from "../../api/user/api";
 import { User } from "../../api/user/types";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
-import DisplayModeSwtich from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
+import DisplayModeSwitch from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 import { useDisplayMode } from "../../components/settings/DisplayModeSwitch/globalProvider";
 import useStyles from "./styles";
 
@@ -90,7 +90,7 @@ const SettingsPage: FunctionComponent = () => {
 
   return (
     <Box className={classes.root}>
-      <DisplayModeSwtich
+      <DisplayModeSwitch
         displayMode={displayMode}
         setDisplayMode={saveDisplayMode}
       />
