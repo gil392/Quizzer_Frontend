@@ -14,8 +14,8 @@ const DisplayModeSwtich: FunctionComponent<DisplayModeSwitchProps> = ({
   setDisplayMode,
 }) => {
   const switchDisplayMode = () => {
-    const nextDisplayMode = getOppositeDisplayMode(displayMode);
-    setDisplayMode(nextDisplayMode);
+    const newDisplayMode = getOppositeDisplayMode(displayMode);
+    setDisplayMode(newDisplayMode);
   };
 
   return (

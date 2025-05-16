@@ -11,8 +11,10 @@ import { User } from "../../api/user/types";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import DisplayModeSwtich from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 import { useDisplayMode } from "../../components/settings/DisplayModeSwitch/globalProvider";
+import useStyles from "./styles";
 
 const SettingsPage: FunctionComponent = () => {
+  const classes = useStyles();
   const [user, setUser] = useState<User | null>(null);
 
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
@@ -87,7 +89,7 @@ const SettingsPage: FunctionComponent = () => {
   ]);
 
   return (
-    <Box sx={{ width: "50%", margin: "auto" }}>
+    <Box className={classes.root}>
       <DisplayModeSwtich
         displayMode={displayMode}
         setDisplayMode={saveDisplayMode}

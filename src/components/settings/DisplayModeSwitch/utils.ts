@@ -4,8 +4,8 @@ import { DisplayMode } from "../../../api/quiz/types";
 import { DISPLAY_MODE_STORAGE } from "./constants";
 
 export const getOppositeDisplayMode = (
-  displayMode: QuizSettings["displayMode"]
-): QuizSettings["displayMode"] => {
+  displayMode: DisplayMode
+): DisplayMode => {
   switch (displayMode) {
     case "Light":
       return "Dark";
