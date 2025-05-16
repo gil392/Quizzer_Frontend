@@ -1,5 +1,3 @@
-import { QuizSettings } from "../../../api/quiz/types";
-import { INITIAL_DISPLAY_MODE } from "../../settings/DisplayModeSwitch/constants";
 import { FeedbackOption, Option, QuestionsOrderOption } from "./types";
 
 export const LOW_QUESTIONS_COUNT = 5;

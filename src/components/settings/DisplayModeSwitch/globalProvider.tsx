@@ -7,22 +7,21 @@ import {
   useMemo,
   useState,
 } from "react";
-import { DisplayModeContext } from "./config";
 import { DisplayMode } from "../../../api/quiz/types";
-import { INITIAL_DISPLAY_MODE } from "./constants";
 import { darkTheme, lightTheme } from "../../../theme";
+import { DisplayModeContext } from "./config";
+import { DISPLAY_MODE_STORAGE } from "./constants";
+import { getInitialDisplayMode } from "./utils";
 
 export const DisplayModeProvider: FunctionComponent<PropsWithChildren> = ({
   children,
 }) => {
-  const initialDisplayMode: string =
-    localStorage.getItem("displayMode") ?? INITIAL_DISPLAY_MODE;
   const [displayMode, setDisplayMode] = useState<DisplayMode>(
-    initialDisplayMode as DisplayMode
+    getInitialDisplayMode()
   );
 
   const saveDisplayMode = (displayMode: DisplayMode) => {
-    localStorage.setItem("displayMode", displayMode);
+    localStorage.setItem(DISPLAY_MODE_STORAGE, displayMode);
     setDisplayMode(displayMode);
   };
 
@@ -47,7 +46,7 @@ export const useDisplayMode = () => {
   const context = useContext(DisplayModeContext);
   return (
     context ?? {
-      displayMode: INITIAL_DISPLAY_MODE,
+      displayMode: getInitialDisplayMode(),
       saveDisplayMode: (displayMode: DisplayMode) => {
         console.error("try to alert when display mode context is null:", {
           displayMode,
