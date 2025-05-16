@@ -1,4 +1,5 @@
-import { ThemeProvider } from "@mui/material";
+import { CssBaseline, ThemeProvider as MuiThemeProvider } from "@mui/material";
+import { ThemeProvider as StylesThemeProvider } from "@mui/styles";
 import {
   FunctionComponent,
   PropsWithChildren,
@@ -32,7 +33,12 @@ export const DisplayModeProvider: FunctionComponent<PropsWithChildren> = ({
 
   return (
     <DisplayModeContext.Provider value={{ displayMode, saveDisplayMode }}>
-      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <MuiThemeProvider theme={theme}>
+        <StylesThemeProvider theme={theme}>
+          <CssBaseline />
+          {children}
+        </StylesThemeProvider>
+      </MuiThemeProvider>
     </DisplayModeContext.Provider>
   );
 };
