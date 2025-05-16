@@ -27,12 +27,12 @@ import { SearchedUser } from "../../../../../api/user/types";
 import { useStyles } from "./styles";
 
 interface UsersSearcherProps {
-  exludeIds?: string[];
+  excludedIds?: string[];
   textFieldLabel?: string;
 }
 
 const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
-  const { exludeIds = [], textFieldLabel } = props;
+  const { excludedIds = [], textFieldLabel } = props;
   const classes = useStyles();
   const [value, setValue] = useState<SearchedUser | null>(null);
   const [inputValue, setInputValue] = useState("");
@@ -43,7 +43,7 @@ const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
     setLoading(true);
     try {
       const { data } = await apiSearchUsers(searchTerm);
-      const options = data.filter(({ _id }) => !exludeIds.includes(_id));
+      const options = data.filter(({ _id }) => !excludedIds.includes(_id));
       setOptions(options);
     } finally {
       setLoading(false);

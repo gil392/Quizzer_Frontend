@@ -63,7 +63,7 @@ const PendingFriendsPannel: FunctionComponent<PendingFriendsPannelProps> = (
   return (
     <div className={clsx(classes.root, className)}>
       <UsersSearcher
-        exludeIds={excludedIdsFromSearch}
+        excludedIds={excludedIdsFromSearch}
         textFieldLabel="Search For New Friends"
       />
       <Divider className={classes.divider} />
