@@ -1,7 +1,7 @@
 #root {
   width: 100vw;
   height: 100vh;
-  display: flex
+  display: flex;
 }
 
 .app-container {
@@ -11,4 +11,10 @@
   --primary-main: var(--primary-main);
   --primary-light: var(--primary-light);
   --primary-contrastText: var(--primary-contrastText);
+}
+
+.app-layout-appbar {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 }
