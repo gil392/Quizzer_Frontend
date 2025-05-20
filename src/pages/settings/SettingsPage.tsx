@@ -49,7 +49,6 @@ const SettingsPage: FunctionComponent = () => {
     const fetchUser = async () => {
       try {
         const { data } = await getLoggedUser();
-        debugger;
         setUser(data);
         data?.settings && setSettings(data.settings);
       } catch (error) {
