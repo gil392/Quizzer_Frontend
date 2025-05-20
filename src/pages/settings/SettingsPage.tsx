@@ -35,20 +35,23 @@ const SettingsPage: FunctionComponent = () => {
 
   const { displayMode, setDisplayMode } = useDisplayMode();
 
-  const setSettings = (quizSettings: QuizSettings) => {
-    setFeedbackType(quizSettings.feedbackType);
-    setQuestionsOrder(quizSettings.questionsOrder);
-    setMaxQuestionCount(quizSettings.maxQuestionCount);
-    setIsManualCount(quizSettings.isManualCount);
-    setDisplayMode(quizSettings.displayMode);
+  const setSettings = (quizSettings: Partial<QuizSettings>) => {
+    quizSettings?.feedbackType && setFeedbackType(quizSettings.feedbackType);
+    quizSettings?.questionsOrder &&
+      setQuestionsOrder(quizSettings.questionsOrder);
+    quizSettings?.maxQuestionCount &&
+      setMaxQuestionCount(quizSettings.maxQuestionCount);
+    quizSettings?.isManualCount && setIsManualCount(quizSettings.isManualCount);
+    quizSettings?.displayMode && setDisplayMode(quizSettings.displayMode);
   };
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const { data } = await getLoggedUser();
+        debugger;
         setUser(data);
-        data?.settings && setSettings(data?.settings);
+        data?.settings && setSettings(data.settings);
       } catch (error) {
         console.error("Error fetching user: ", error);
       }
@@ -61,16 +64,14 @@ const SettingsPage: FunctionComponent = () => {
     const updateSettings = async () => {
       if (user) {
         try {
-          const settings: QuizSettings = {
+          const settings: Partial<QuizSettings> = {
             feedbackType,
             questionsOrder,
             maxQuestionCount,
             isManualCount,
             displayMode,
-            solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
-            isRandomOrder: INITIAL_QUIZ_SETTINGS.isRandomOrder,
           };
-          await updateUser(user, { settings });
+          await updateUser({ settings });
         } catch (error) {
           console.error("Error updating user: ", error);
         }

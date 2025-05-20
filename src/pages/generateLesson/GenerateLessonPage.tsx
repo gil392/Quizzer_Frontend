@@ -32,18 +32,20 @@ const GenerateLessonPage: React.FC = () => {
     INITIAL_QUIZ_SETTINGS.isManualCount
   );
 
-  const setQuizSettings = (quizSettings: QuizSettings) => {
-    setFeedbackType(quizSettings.feedbackType);
-    setQuestionsOrder(quizSettings.questionsOrder);
-    setMaxQuestionCount(quizSettings.maxQuestionCount);
-    setIsManualCount(quizSettings.isManualCount);
+  const setQuizSettings = (quizSettings: Partial<QuizSettings> | undefined) => {
+    quizSettings?.feedbackType && setFeedbackType(quizSettings.feedbackType);
+    quizSettings?.questionsOrder &&
+      setQuestionsOrder(quizSettings.questionsOrder);
+    quizSettings?.maxQuestionCount &&
+      setMaxQuestionCount(quizSettings.maxQuestionCount);
+    quizSettings?.isManualCount && setIsManualCount(quizSettings.isManualCount);
   };
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const { data } = await getLoggedUser();
-        data?.settings && setQuizSettings(data?.settings);
+        setQuizSettings(data.settings);
       } catch (error) {
         console.error("Error fetching user: ", error);
       }
