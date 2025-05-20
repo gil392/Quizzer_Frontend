@@ -10,7 +10,6 @@ import { getLoggedUser, updateUser } from "../../api/user/api";
 import { User } from "../../api/user/types";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import DisplayModeSwitch from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
-import { useDisplayMode } from "../../components/settings/DisplayModeSwitch/globalProvider";
 import useStyles from "./styles";
 
 const SettingsPage: FunctionComponent = () => {
@@ -33,8 +32,6 @@ const SettingsPage: FunctionComponent = () => {
     INITIAL_QUIZ_SETTINGS.isManualCount
   );
 
-  const { displayMode, setDisplayMode } = useDisplayMode();
-
   const setSettings = (quizSettings: Partial<QuizSettings>) => {
     quizSettings?.feedbackType && setFeedbackType(quizSettings.feedbackType);
     quizSettings?.questionsOrder &&
@@ -42,7 +39,6 @@ const SettingsPage: FunctionComponent = () => {
     quizSettings?.maxQuestionCount &&
       setMaxQuestionCount(quizSettings.maxQuestionCount);
     quizSettings?.isManualCount && setIsManualCount(quizSettings.isManualCount);
-    quizSettings?.displayMode && setDisplayMode(quizSettings.displayMode);
   };
 
   useEffect(() => {
@@ -68,7 +64,6 @@ const SettingsPage: FunctionComponent = () => {
             questionsOrder,
             maxQuestionCount,
             isManualCount,
-            displayMode,
           };
           await updateUser({ settings });
         } catch (error) {
@@ -80,23 +75,14 @@ const SettingsPage: FunctionComponent = () => {
     };
 
     updateSettings();
-  }, [
-    feedbackType,
-    questionsOrder,
-    maxQuestionCount,
-    isManualCount,
-    displayMode,
-  ]);
+  }, [feedbackType, questionsOrder, maxQuestionCount, isManualCount]);
 
   return (
     <Box className={classes.root}>
       <Typography variant="h6" gutterBottom>
         Display Mode
       </Typography>
-      <DisplayModeSwitch
-        displayMode={displayMode}
-        setDisplayMode={setDisplayMode}
-      />
+      <DisplayModeSwitch />
       <LessonConfig
         feedbackType={feedbackType}
         setFeedbackType={setFeedbackType}

@@ -16,12 +16,10 @@ import {
   useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { QuizSettings } from "../../api/quiz/types";
-import { getLoggedUser, getMessages, updateUser } from "../../api/user/api";
-import { Message, User } from "../../api/user/types";
+import { getMessages } from "../../api/user/api";
+import { Message } from "../../api/user/types";
 import { isNavBarAvailableInPath } from "../navBar/utils";
 import DisplayModeSwitch from "../settings/DisplayModeSwitch/DisplayModeSwitch";
-import { useDisplayMode } from "../settings/DisplayModeSwitch/globalProvider";
 import { MAX_MESSAGES_BADGE_CONTENT, MESSAGES_INTERVAL_MS } from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
@@ -34,7 +32,6 @@ const AppBar: FunctionComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const { displayMode, setDisplayMode } = useDisplayMode();
 
   const isAppBarAvaiable = useMemo(
     () => isNavBarAvailableInPath(location.pathname),
@@ -65,21 +62,6 @@ const AppBar: FunctionComponent = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const updateSettings = async () => {
-      const settings: Partial<QuizSettings> = {
-        displayMode,
-      };
-      try {
-        await updateUser({ settings });
-      } catch (error) {
-        console.error("Error updating user: ", error);
-      }
-    };
-
-    updateSettings();
-  }, [displayMode]);
-
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -98,10 +80,7 @@ const AppBar: FunctionComponent = () => {
 
   return isAppBarAvaiable ? (
     <Toolbar className={classes.toolbar}>
-      <DisplayModeSwitch
-        displayMode={displayMode}
-        setDisplayMode={setDisplayMode}
-      />
+      <DisplayModeSwitch />
       <IconButton>
         <Badge
           badgeContent={unReededMessagesCount}

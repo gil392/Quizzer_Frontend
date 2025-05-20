@@ -14,8 +14,6 @@ import {
 import { DisplayMode } from "../../../api/quiz/types";
 import { darkTheme, lightTheme } from "../../../theme";
 import { DisplayModeContext } from "./config";
-import { getLoggedUser } from "../../../api/user/api";
-import { getSavedDisplayMode, saveDisplayMode } from "./utils";
 
 export const DisplayModeProvider: FunctionComponent<PropsWithChildren> = ({
   children,
@@ -24,26 +22,17 @@ export const DisplayModeProvider: FunctionComponent<PropsWithChildren> = ({
     noSsr: true,
   });
   const defaultDisplayMode: DisplayMode = prefersDarkMode ? "Dark" : "Light";
-  const savedDisplayMode = getSavedDisplayMode();
 
-  const [displayMode, setDisplayMode] = useState<DisplayMode>(
-    savedDisplayMode ?? defaultDisplayMode
-  );
+  const [displayMode, setDisplayMode] =
+    useState<DisplayMode>(defaultDisplayMode);
 
   const theme = useMemo(
     () => (displayMode === "Light" ? lightTheme : darkTheme),
     [displayMode]
   );
 
-  const setAndSaveDisplayMode = (displayMode: DisplayMode | null) => {
-    setDisplayMode(displayMode ?? defaultDisplayMode);
-    saveDisplayMode(displayMode);
-  };
-
   return (
-    <DisplayModeContext.Provider
-      value={{ displayMode, setDisplayMode: setAndSaveDisplayMode }}
-    >
+    <DisplayModeContext.Provider value={{ displayMode, setDisplayMode }}>
       <MuiThemeProvider theme={theme}>
         <StylesThemeProvider theme={theme}>
           <CssBaseline />

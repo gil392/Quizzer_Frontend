@@ -11,11 +11,15 @@ export const getOppositeDisplayMode = (
   }
 };
 
-export const getSavedDisplayMode = (): DisplayMode | null => {
-  const displayMode = localStorage.getItem("displayMode");
+export const getUserDisplayMode = (): DisplayMode | null => {
+  const displayMode = localStorage.getItem("userDisplayMode");
   return displayMode === "Light" || displayMode === "Dark" ? displayMode : null;
 };
 
-export const saveDisplayMode = (displayMode: DisplayMode | null) => {
-  localStorage.setItem("displayMode", displayMode ?? "");
+export const storeUserDisplayMode = (displayMode: DisplayMode) => {
+  localStorage.setItem("userDisplayMode", displayMode);
+};
+
+export const removeUserDisplayMode = () => {
+  localStorage.removeItem("userDisplayMode");
 };
