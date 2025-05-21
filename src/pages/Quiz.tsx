@@ -9,63 +9,114 @@ import {
 } from "@mui/material";
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { generateQuiz, getQuizById, submitQuiz } from "../api/quiz/api";
-import { QuizData, QuizResult } from "../api/quiz/types";
+import { generateQuiz, getQuizById, createQuizAttempt, getLessonById } from "../api/quiz/api";
+import { QuizAttempt, QuizData, QuizResult } from "../api/quiz/types";
 import useStyles from "./Quiz.styles";
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
+
+  const quizSettings = location.state?.quizSettings;
+  const lessonData = location.state?.lessonData;
+  const quizId = location.state?.quizId;
+  const attempt : QuizAttempt = location.state?.attempt;
+
   const [quizData, setQuizData] = useState<QuizData | null>(null);
+  const [lessonDataState, setLessonDataState] = useState(lessonData || null);
   const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | null;
   }>({});
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
-  const lessonData = location.state?.lessonData;
-  const quizId = location.state?.quizId;
 
-  const fetchQuizById = useCallback(async () => {
-    if (!quizId) {
-      console.error("Quiz ID is not available.");
-      return;
-    }
+  const fetchQuizById = useCallback(async (id: string) => {
     setLoading(true);
 
     try {
-      const { data } = await getQuizById(quizId);
+      const { data } = await getQuizById(id);
       setQuizData(data);
     } catch (error) {
       console.error("Error fetching quiz:", error);
     } finally {
       setLoading(false);
     }
-  }, [quizId]);
+  }, []);
 
   const generateNewQuiz = useCallback(async () => {
-    if (!lessonData?._id) {
-      console.error("Lesson data is not available.");
-      return;
-    }
+    if (!lessonDataState?._id) {
+      if (quizData?.lessonId) {
+        try {
+          const { data } = await getLessonById(quizData.lessonId);
+          setLessonDataState(data); 
 
+        } catch (error) {
+          console.error("Error fetching lesson data:", error);
+          alert("Failed to fetch lesson data. Cannot generate a new quiz.");
+          return;
+        }
+
+      } else {
+        console.error("Lesson data is not available.");
+        alert("Lesson data is missing. Cannot generate a new quiz.");
+        return;
+      }
+    }
+  
     setLoading(true);
     setQuizResult(null);
     setSelectedAnswers({});
-
+  
     try {
-      const { data } = await generateQuiz(lessonData._id, quizData?.settings);
+      const { data } = await generateQuiz(
+        lessonDataState?._id || quizData?.lessonId,
+        quizSettings || quizData?.settings
+      );
       setQuizData(data);
     } catch (error) {
       console.error("Error generating quiz:", error);
+      alert("Failed to generate a new quiz. Please try again.");
     } finally {
       setLoading(false);
     }
-  }, [lessonData, quizData?.settings]);
+  }, [lessonDataState?._id, quizData?.lessonId, quizSettings]);
 
   useEffect(() => {
-    fetchQuizById();
-  }, [fetchQuizById]);
+    if (attempt) {
+      setQuizResult(attempt);
+
+      if (attempt.quizId) {
+        fetchQuizById(attempt.quizId);
+      }
+  
+      if (!lessonDataState && quizData?.lessonId) {
+         getLessonById(quizData.lessonId)
+          .then(({ data }) => setLessonDataState(data))
+          .catch((error) =>
+            console.error("Error fetching lesson data from attempt:", error)
+          );
+      }
+  
+      const preselectedAnswers: { [key: number]: string | null } = {};
+      attempt.results.forEach((result, index) => {
+        preselectedAnswers[index] = result.selectedAnswer || null;
+      });
+      setSelectedAnswers(preselectedAnswers);
+    }
+  }, [attempt]);
+  
+  useEffect(() => {
+    if (quizId) {
+      fetchQuizById(quizId);
+    }
+  }, [quizId]);
+  
+  useEffect(() => {
+    if (!quizData && lessonDataState && quizSettings) {
+      generateNewQuiz();
+    }
+  }, [lessonDataState, quizSettings, generateNewQuiz]);
 
   const handleOptionChange = (questionIndex: number, option: string) => {
     setSelectedAnswers((prev) => ({
@@ -91,13 +142,17 @@ const QuizPage: React.FC = () => {
           })),
       };
 
-      const { data: result } = await submitQuiz(submissionData);
+      const { data: result } = await createQuizAttempt(submissionData);
       setQuizResult(result);
-      console.log("Quiz submission result:", result);
     } catch (error) {
       console.error("Error submitting quiz:", error);
       alert("Failed to submit quiz. Please try again.");
     }
+  };
+
+  const retry = () => {
+    setQuizResult(null); 
+    setSelectedAnswers({});
   };
 
   const allQuestionsAnswered = quizData
@@ -160,7 +215,7 @@ const QuizPage: React.FC = () => {
               </Box>
             )}
             <Typography variant="h5" component="div" gutterBottom>
-              {lessonData?.lessonTitle}
+              {lessonDataState?.lessonTitle}
             </Typography>
             {quizData.questions.map((question, index) => (
               <Box key={index} className={classes.questionBox}>
@@ -198,14 +253,24 @@ const QuizPage: React.FC = () => {
               </Box>
             ))}
             <Box className={classes.buttonContainer}>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleQuizSubmission}
-                disabled={!allQuestionsAnswered}
-              >
-                Submit
-              </Button>
+              {quizResult ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={retry} 
+                >
+                  Retry
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleQuizSubmission}
+                  disabled={!allQuestionsAnswered}
+                >
+                  Submit
+                </Button>
+              )}
               <Button
                 variant="contained"
                 color="primary"
