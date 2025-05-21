@@ -33,7 +33,7 @@ export const updateQuiz = (
 export const deleteQuiz = (quizId: string) => deleteItem(quizId, 'quiz');
 
 export const getQuizAttempts = (quizId: string): AxiosPromise<QuizAttempt[]> =>
-    apiClient.get(`/attempt/${quizId}`);
+    apiClient.get('/attempt', { params: { quizId } });
 
 export const createQuizAttempt = (
     data: QuizAnswerSubmittion
