@@ -1,5 +1,5 @@
 import html2pdf from "html2pdf.js";
-import { toast } from "sonner";
+import { toastWarning } from "./utils";
 
 export interface PDFExportOptions {
   margin: number;
@@ -26,7 +26,7 @@ export const exportToPDF = (
   const element = document.getElementById(elementId);
 
   if (!element) {
-    toast.warning("Element not found for PDF export.");
+    toastWarning("Element not found for PDF export.");
     return;
   }
 

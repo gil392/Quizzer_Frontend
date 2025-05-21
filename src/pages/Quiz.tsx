@@ -13,7 +13,7 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import { toast } from "sonner";
+import { toastWarning } from "../utils/utils";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
@@ -80,7 +80,7 @@ const QuizPage: React.FC = () => {
 
   const handleQuizSubmission = async () => {
     if (!quizData) {
-      toast.warning("Quiz data is not available.");
+      toastWarning("Quiz data is not available.");
       return;
     }
 
@@ -100,7 +100,7 @@ const QuizPage: React.FC = () => {
       console.log("Quiz submission result:", result);
     } catch (error) {
       console.error("Error submitting quiz:", error);
-      toast.warning("Failed to submit quiz. Please try again.");
+      toastWarning("Failed to submit quiz. Please try again.");
     }
   };
 
