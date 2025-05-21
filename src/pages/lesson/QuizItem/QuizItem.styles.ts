@@ -30,7 +30,10 @@ const useStyles = makeStyles(() =>
       display: "flex",
       justifyContent: "space-between",
       alignItems: "center",
-      padding: "8px 0", 
+      padding: "8px 0",
+    }, 
+    ratingContainer: {
+      marginTop: "1rem",
     },
   })
 );

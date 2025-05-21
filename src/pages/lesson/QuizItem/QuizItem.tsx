@@ -7,6 +7,7 @@ import {
   AccordionSummary,
   Typography,
   IconButton,
+  Rating,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +16,7 @@ import { getQuizAttempts } from "../../../api/quiz/api";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
+import { rateQuiz } from "../../../api/quiz/api";
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -55,6 +57,13 @@ const QuizItem: React.FC<QuizItemProps> = ({
 
     fetchAttempts();
   }, [quiz._id]);
+  
+  const [rating, setRating] = useState<number | null>(quiz.rating);
+
+  const handleRateQuiz = async (newRating: number | null) => {
+    await rateQuiz(quiz._id, newRating);
+    setRating(newRating);
+  };
 
   return (
     <Box className={classes.container}>
@@ -102,6 +111,19 @@ const QuizItem: React.FC<QuizItemProps> = ({
           )}
         </AccordionDetails>
       </Accordion>
+      <Box className={classes.ratingContainer}>
+        <Typography variant="body1">Rate this quiz:</Typography>
+        <Rating
+          name={`quiz-rating-${quiz._id}`}
+          value={rating}
+          onChange={(_, newValue) => handleRateQuiz(newValue)}
+        />
+      </Box>
+      {rating && (
+        <Typography variant="body2" mt={1}>
+          Your rating: {rating}
+        </Typography>
+      )}
     </Box>
   );
 };
