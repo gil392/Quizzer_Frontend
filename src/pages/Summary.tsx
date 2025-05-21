@@ -4,15 +4,16 @@ import {
   Card,
   CardContent,
   Skeleton,
-  Typography
-} from '@mui/material';
-import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { generateLesson } from '../api/lesson/api';
-import { LessonData } from '../api/lesson/types';
-import { PAGES_ROUTES } from '../routes/routes.const';
-import useStyles from './Summary.styles';
-import { generateQuiz } from '../api/quiz/api';
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { generateLesson } from "../api/lesson/api";
+import { LessonData } from "../api/lesson/types";
+import { PAGES_ROUTES } from "../routes/routes.const";
+import useStyles from "./Summary.styles";
+import { generateQuiz } from "../api/quiz/api";
+import { toast } from "sonner";
 
 const SummaryPage: React.FC = () => {
   const classes = useStyles();
@@ -28,7 +29,7 @@ const SummaryPage: React.FC = () => {
         setLoading(false);
       })
       .catch((error: any) => {
-        console.error('Error loading lesson:', error);
+        console.error("Error loading lesson:", error);
         setLessonData(null);
         setLoading(false);
       });
@@ -36,7 +37,7 @@ const SummaryPage: React.FC = () => {
 
   const handleQuizNavigation = async () => {
     if (!lessonData) {
-      alert('Lesson data is not available.');
+      toast.warning("Lesson data is not available.");
       return;
     }
 
@@ -47,11 +48,11 @@ const SummaryPage: React.FC = () => {
       );
 
       navigate(PAGES_ROUTES.QUIZ, {
-        state: { lessonData, quizId: quizData._id }
+        state: { lessonData, quizId: quizData._id },
       });
     } catch (error) {
-      console.error('Error generating quiz:', error);
-      alert('Failed to generate quiz. Please try again.');
+      console.error("Error generating quiz:", error);
+      toast.warning("Failed to generate quiz. Please try again.");
     }
   };
 
@@ -60,26 +61,26 @@ const SummaryPage: React.FC = () => {
       <Card className={classes.card}>
         {loading ? (
           <Box className={classes.skeletonContainer}>
-            <Skeleton variant='text' width='80%' height={40} />
-            <Skeleton variant='rectangular' width='100%' height={200} />
-            <Skeleton variant='rectangular' width='100%' height={50} />
-            <Skeleton variant='text' width='80%' height={40} />
-            <Skeleton variant='rectangular' width='100%' height={200} />
-            <Skeleton variant='rectangular' width='100%' height={50} />
+            <Skeleton variant="text" width="80%" height={40} />
+            <Skeleton variant="rectangular" width="100%" height={200} />
+            <Skeleton variant="rectangular" width="100%" height={50} />
+            <Skeleton variant="text" width="80%" height={40} />
+            <Skeleton variant="rectangular" width="100%" height={200} />
+            <Skeleton variant="rectangular" width="100%" height={50} />
           </Box>
         ) : lessonData ? (
           <Box>
             <CardContent className={classes.cardContent}>
-              <Typography variant='h5' component='div' gutterBottom>
+              <Typography variant="h5" component="div" gutterBottom>
                 {lessonData.title}
               </Typography>
-              <Typography variant='body1'>{lessonData.summary}</Typography>
+              <Typography variant="body1">{lessonData.summary}</Typography>
             </CardContent>
 
             <Box className={classes.buttonContainer}>
               <Button
-                variant='contained'
-                color='primary'
+                variant="contained"
+                color="primary"
                 onClick={handleQuizNavigation}
               >
                 Go to Quiz
@@ -88,7 +89,7 @@ const SummaryPage: React.FC = () => {
           </Box>
         ) : (
           <CardContent>
-            <Typography variant='h6' color='error'>
+            <Typography variant="h6" color="error">
               Failed to load lesson data.
             </Typography>
           </CardContent>

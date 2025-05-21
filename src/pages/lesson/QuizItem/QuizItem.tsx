@@ -14,8 +14,8 @@ import { QuizData } from "../../../api/quiz/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { PAGES_ROUTES } from "../../../routes/routes.const"; // Import route constants
+import { useNavigate } from "react-router-dom";
+import { PAGES_ROUTES } from "../../../routes/routes.const";
 
 type QuizItemProps = {
   quiz: QuizData;

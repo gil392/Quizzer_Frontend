@@ -13,6 +13,7 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
+import { toast } from "sonner";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
@@ -79,7 +80,7 @@ const QuizPage: React.FC = () => {
 
   const handleQuizSubmission = async () => {
     if (!quizData) {
-      alert("Quiz data is not available.");
+      toast.warning("Quiz data is not available.");
       return;
     }
 
@@ -99,7 +100,7 @@ const QuizPage: React.FC = () => {
       console.log("Quiz submission result:", result);
     } catch (error) {
       console.error("Error submitting quiz:", error);
-      alert("Failed to submit quiz. Please try again.");
+      toast.warning("Failed to submit quiz. Please try again.");
     }
   };
 
@@ -233,7 +234,12 @@ const QuizPage: React.FC = () => {
               <Button
                 variant="contained"
                 color="primary"
-                onClick={() => exportToPDF(QUIZ_CONTENT_PDF_ID, "quiz.pdf")}
+                onClick={() =>
+                  exportToPDF(
+                    QUIZ_CONTENT_PDF_ID,
+                    "Quiz_" + quizData.title + ".pdf"
+                  )
+                }
               >
                 Export to PDF
               </Button>
