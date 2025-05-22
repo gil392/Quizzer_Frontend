@@ -19,6 +19,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { getMessages } from "../../api/user/api";
 import { Message } from "../../api/user/types";
 import { isNavBarAvailableInPath } from "../navBar/utils";
+import DisplayModeSwitch from "../settings/DisplayModeSwitch/DisplayModeSwitch";
 import { MAX_MESSAGES_BADGE_CONTENT, MESSAGES_INTERVAL_MS } from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
@@ -79,6 +80,7 @@ const AppBar: FunctionComponent = () => {
 
   return isAppBarAvaiable ? (
     <Toolbar className={classes.toolbar}>
+      <DisplayModeSwitch />
       <IconButton>
         <Badge
           badgeContent={unReededMessagesCount}
