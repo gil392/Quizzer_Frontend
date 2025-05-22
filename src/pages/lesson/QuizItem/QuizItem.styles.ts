@@ -19,6 +19,19 @@ const useStyles = makeStyles(() =>
       flexDirection: "column",
       alignItems: "flex-start",
     },
+    retakeButton: {
+      marginLeft: "8px !important", 
+      color: "#311b92 !important", 
+      "&:hover": {
+        color: "#1a0d66 !important", 
+      },
+    },
+    AttemptContainer: {
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      padding: "8px 0",
+    }, 
     ratingContainer: {
       marginTop: "1rem",
     },

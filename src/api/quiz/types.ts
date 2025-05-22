@@ -48,3 +48,7 @@ export type QuestionResults = {
   correctAnswer: string;
   isCorrect: boolean;
 };
+
+export type QuizAttempt = {
+    _id: string;
+} & QuizResult;
