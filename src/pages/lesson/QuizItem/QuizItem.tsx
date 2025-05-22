@@ -1,17 +1,21 @@
-import { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ReplayIcon from "@mui/icons-material/Replay";
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Typography,
+  IconButton,
   Rating,
   Button,
 } from "@mui/material";
 import Box from "@mui/material/Box";
-import React from "react";
-import { QuizData } from "../../../api/quiz/types";
+import { useNavigate } from "react-router-dom";
+import { QuizAttempt, QuizData } from "../../../api/quiz/types";
+import { getQuizAttempts } from "../../../api/quiz/api"; 
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +34,33 @@ const QuizItem: React.FC<QuizItemProps> = ({
 }) => {
   const classes = useStyles();
   const navigate = useNavigate();
+  const [attempts, setAttempts] = useState<QuizAttempt[]>([]);
+  const [loadingAttempts, setLoadingAttempts] = useState<boolean>(true);
+
+  const handleRetakeQuiz = () => {
+    navigate("/quiz", { state: { quizId: quiz._id, quizSettings: quiz.settings } });
+  };
+
+  const handleViewAttempt = (attempt: QuizAttempt) => {
+    navigate("/quiz", { state: { attempt } });
+  };
+
+  useEffect(() => {
+    const fetchAttempts = async () => {
+      try {
+        setLoadingAttempts(true);
+        const { data } = await getQuizAttempts(quiz._id); 
+        setAttempts(data);
+      } catch (error) {
+        console.error("Error fetching quiz attempts:", error);
+      } finally {
+        setLoadingAttempts(false);
+      }
+    };
+
+    fetchAttempts();
+  }, [quiz._id]);
+  
   const [rating, setRating] = useState<number | null>(quiz.rating);
 
   const handleRateQuiz = async (newRating: number | null) => {
@@ -49,19 +80,42 @@ const QuizItem: React.FC<QuizItemProps> = ({
           onSave={(newTitle) => updateQuizTitle(newTitle)}
           onDelete={deleteQuiz}
         />
+        <IconButton
+          onClick={handleRetakeQuiz}
+          aria-label="Retake Quiz"
+          className={classes.retakeButton}
+        >
+          <ReplayIcon />
+        </IconButton>
       </Box>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>Attempts</Typography>
         </AccordionSummary>
         <AccordionDetails>
-          {["Attempt 1", "Nice attempt"].map((attempt, index) => (
-            <Box key={index} className={classes.accordionDetails}>
-              <Typography variant="body1">
-                {index + 1}. {attempt}
-              </Typography>
-            </Box>
-          ))}
+          {loadingAttempts ? (
+            <Typography variant="body2">Loading attempts...</Typography>
+          ) : attempts.length > 0 ? (
+            attempts.map((attempt, index) => (
+              <Box
+                key={attempt._id}
+                className={classes.AttemptContainer}
+              >
+                <Typography variant="body1">
+                  {index + 1}. Score: {attempt.score} / 100
+                </Typography>
+                <IconButton
+                  onClick={() => handleViewAttempt(attempt)} 
+                  aria-label="View Attempt"
+                  size="small"
+                >
+                  <ArrowForwardIcon color="primary"/>
+                </IconButton>
+              </Box>
+            ))
+          ) : (
+            <Typography variant="body2">No attempts found.</Typography>
+          )}
         </AccordionDetails>
       </Accordion>
       <Box className={classes.ratingContainer}>

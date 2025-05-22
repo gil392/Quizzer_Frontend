@@ -1,15 +1,14 @@
-import { ThemeProvider } from "@mui/styles";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import AppBar from "./components/appbar/Appbar";
 import Layout from "./components/layout/Layout";
 import NavBar from "./components/navBar/NavBar";
-import quizzerTheme from "./theme";
+import { DisplayModeProvider } from "./components/settings/DisplayModeSwitch/globalProvider";
 import { Toaster } from "sonner";
 
 function App() {
   return (
-    <ThemeProvider theme={quizzerTheme}>
+    <DisplayModeProvider>
       <div className="app-container">
         <Toaster richColors />
         <Router>
@@ -20,7 +19,7 @@ function App() {
           </div>
         </Router>
       </div>
-    </ThemeProvider>
+    </DisplayModeProvider>
   );
 }
 

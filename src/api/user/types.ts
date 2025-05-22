@@ -7,7 +7,7 @@ export type User = {
   friendRequests?: string[];
   friends?: string[];
   favoriteLessons?: string[];
-  settings?: QuizSettings;
+  settings?: Partial<QuizSettings>;
 };
 
 export type Message = { reeded: boolean };
