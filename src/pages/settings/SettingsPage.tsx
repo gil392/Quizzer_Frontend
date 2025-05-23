@@ -1,13 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
-import {
-  FeedbackType,
-  QuestionsOrder,
-  QuizSettings,
-} from "../../api/quiz/types";
+import { FeedbackType, QuestionsOrder } from "../../api/quiz/types";
 import { getLoggedUser, updateUser } from "../../api/user/api";
-import { User } from "../../api/user/types";
+import { User, UserSettings } from "../../api/user/types";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import DisplayModeSwitch from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 import useStyles from "./styles";
@@ -32,13 +28,13 @@ const SettingsPage: FunctionComponent = () => {
     INITIAL_QUIZ_SETTINGS.isManualCount
   );
 
-  const setSettings = (quizSettings: Partial<QuizSettings>) => {
-    quizSettings?.feedbackType && setFeedbackType(quizSettings.feedbackType);
-    quizSettings?.questionsOrder &&
-      setQuestionsOrder(quizSettings.questionsOrder);
-    quizSettings?.maxQuestionCount &&
-      setMaxQuestionCount(quizSettings.maxQuestionCount);
-    quizSettings?.isManualCount && setIsManualCount(quizSettings.isManualCount);
+  const setSettings = (userSettings: Partial<UserSettings>) => {
+    userSettings?.feedbackType && setFeedbackType(userSettings.feedbackType);
+    userSettings?.questionsOrder &&
+      setQuestionsOrder(userSettings.questionsOrder);
+    userSettings?.maxQuestionCount &&
+      setMaxQuestionCount(userSettings.maxQuestionCount);
+    userSettings?.isManualCount && setIsManualCount(userSettings.isManualCount);
   };
 
   useEffect(() => {
@@ -59,7 +55,7 @@ const SettingsPage: FunctionComponent = () => {
     const updateSettings = async () => {
       if (user) {
         try {
-          const settings: Partial<QuizSettings> = {
+          const settings: Partial<UserSettings> = {
             feedbackType,
             questionsOrder,
             maxQuestionCount,
