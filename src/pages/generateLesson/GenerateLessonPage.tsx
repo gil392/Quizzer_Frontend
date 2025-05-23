@@ -2,6 +2,7 @@ import { Box, Button, OutlinedInput, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  ApiQuizSettings,
   FeedbackType,
   QuestionsOrder,
   QuizSettings,
@@ -55,16 +56,14 @@ const GenerateLessonPage: React.FC = () => {
   }, []);
 
   const handleSummaryNavigation = (): void => {
-    const quizSettingsToSend: QuizSettings = {
-      ...INITIAL_QUIZ_SETTINGS,
+    const quizSettings: ApiQuizSettings = {
       feedbackType,
-      questionsOrder,
       maxQuestionCount,
-      isManualCount,
       isRandomOrder: questionsOrder !== "random",
+      solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
     };
     navigate(PAGES_ROUTES.SUMMARY, {
-      state: { videoUrl, quizSettingsToSend },
+      state: { videoUrl, quizSettings },
     });
   };
 

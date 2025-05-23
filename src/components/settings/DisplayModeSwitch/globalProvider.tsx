@@ -11,9 +11,9 @@ import {
   useMemo,
   useState,
 } from "react";
-import { DisplayMode } from "../../../api/quiz/types";
 import { darkTheme, lightTheme } from "../../../theme";
 import { DisplayModeContext } from "./config";
+import { DisplayMode } from "../../../api/user/types";
 
 export const DisplayModeProvider: FunctionComponent<PropsWithChildren> = ({
   children,

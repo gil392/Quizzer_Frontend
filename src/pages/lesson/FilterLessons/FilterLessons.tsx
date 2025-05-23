@@ -1,18 +1,8 @@
-import {
-  Box,
-  Button,
-  Container,
-  InputAdornment,
-  Paper,
-  TextField,
-  Typography,
-} from "@mui/material";
-import React, { FunctionComponent, useMemo } from "react";
 import { Search as SearchIcon } from "@mui/icons-material";
-import { FilterOptions } from "./types";
-import { INITIAL_FILTER_OPTIONS } from "./constants";
+import { Box, InputAdornment, TextField } from "@mui/material";
+import React, { FunctionComponent } from "react";
 import useStyles from "./FilterLessons.styles";
-import { isEqual } from "lodash";
+import { FilterOptions } from "./types";
 
 export interface FilterLessonsProps {
   setFilterOptions: React.Dispatch<React.SetStateAction<FilterOptions>>;
