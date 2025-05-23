@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { DisplayMode } from "../../../api/quiz/types";
+import { DisplayMode } from "../../../api/user/types";
 
 interface DisplayModeContextType {
   displayMode: DisplayMode;
