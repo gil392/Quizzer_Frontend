@@ -3,6 +3,7 @@ import LessonItem from "../LessonItem/LessonItem";
 import {
   deleteLesson,
   getLessons,
+  mergeLessons,
   updateLesson,
 } from "../../../api/lesson/api";
 import { LessonData } from "../../../api/lesson/types";
@@ -16,8 +17,11 @@ import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
 import { getFilteredLessons } from "../FilterLessons/utils";
 import FilterLessons from "../FilterLessons/FilterLessons";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import MergeIcon from "@mui/icons-material/Merge";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 
 const LessonsPage: React.FC = () => {
   const classes = useStyles();
@@ -30,6 +34,19 @@ const LessonsPage: React.FC = () => {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>(
     INITIAL_FILTER_OPTIONS
   );
+  const [mergingLessons, setMergingLessons] = useState<LessonData[]>([]);
+  const [isMergeLessonsMode, setIsMergeLessonsMode] = useState(false);
+
+  const isLessonMerging = (lesson: LessonData) =>
+    mergingLessons.some((l) => l._id === lesson._id);
+
+  const handleToggleMergeLesson = (lesson: LessonData) => {
+    setMergingLessons((prev) =>
+      isLessonMerging(lesson)
+        ? prev.filter((l) => l._id !== lesson._id)
+        : [...prev, lesson]
+    );
+  };
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -70,6 +87,25 @@ const LessonsPage: React.FC = () => {
     openPopup();
   };
 
+  const cancelMergingMode = () => {
+    return () => {
+      setIsMergeLessonsMode(false);
+      setMergingLessons([]);
+    };
+  };
+
+  const createMergedLesson = () => {
+    return () => {
+      mergeLessons(mergingLessons.map((lesson) => lesson._id)).then(
+        (result) => {
+          setLessons((prevLessons) => [...prevLessons, result.data]);
+          setMergingLessons([]);
+          setIsMergeLessonsMode(false);
+        }
+      );
+    };
+  };
+
   return (
     <>
       {selectedLesson !== null ? (
@@ -106,6 +142,32 @@ const LessonsPage: React.FC = () => {
                 updateLessonTitle={(newTitle: string) => {
                   handleUpdateLesson({ ...lesson, title: newTitle });
                 }}
+                mergeIcon={
+                  isMergeLessonsMode ? (
+                    <GenericIconButton
+                      icon={
+                        isLessonMerging(lesson) ? (
+                          <CheckBoxIcon />
+                        ) : (
+                          <CheckBoxOutlineBlankIcon />
+                        )
+                      }
+                      onClick={() => {
+                        handleToggleMergeLesson(lesson);
+                      }}
+                      title={"Merge this lesson"}
+                    />
+                  ) : (
+                    <GenericIconButton
+                      icon={<MergeIcon />}
+                      title={"Merge Lessons"}
+                      onClick={() => {
+                        setIsMergeLessonsMode(true);
+                        setMergingLessons([lesson]);
+                      }}
+                    />
+                  )
+                }
               />
             ))
           ) : (
@@ -116,6 +178,25 @@ const LessonsPage: React.FC = () => {
             >
               No existing lessons.
             </Typography>
+          )}
+          {isMergeLessonsMode && (
+            <Box mt={2} display="flex" gap={2}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={cancelMergingMode()}
+              >
+                Cancel Merging
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={mergingLessons.length < 2}
+                onClick={createMergedLesson()}
+              >
+                Create Merged Lesson
+              </Button>
+            </Box>
           )}
         </>
       )}
