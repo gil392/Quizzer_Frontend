@@ -1,4 +1,4 @@
-import { DisplayMode } from "../../../api/quiz/types";
+import { DisplayMode } from "../../../api/user/types";
 
 export const getOppositeDisplayMode = (
   displayMode: DisplayMode

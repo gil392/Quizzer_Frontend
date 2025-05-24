@@ -1,7 +1,6 @@
 import { ShieldMoon, Sunny } from "@mui/icons-material";
 import { Button } from "@mui/material";
 import { FunctionComponent, useEffect } from "react";
-import { DisplayMode, QuizSettings } from "../../../api/quiz/types";
 import { getLoggedUser, updateUser } from "../../../api/user/api";
 import { useDisplayMode } from "./globalProvider";
 import {
@@ -9,6 +8,7 @@ import {
   getUserDisplayMode,
   storeUserDisplayMode,
 } from "./utils";
+import { DisplayMode, UserSettings } from "../../../api/user/types";
 
 const DisplayModeSwitch: FunctionComponent = () => {
   const { displayMode, setDisplayMode } = useDisplayMode();
@@ -30,7 +30,7 @@ const DisplayModeSwitch: FunctionComponent = () => {
   }, []);
 
   const changeDisplayMode = async (displayMode: DisplayMode) => {
-    const settings: Partial<QuizSettings> = {
+    const settings: Partial<UserSettings> = {
       displayMode,
     };
     try {
