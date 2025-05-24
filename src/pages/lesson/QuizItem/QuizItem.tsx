@@ -6,17 +6,17 @@ import {
   AccordionDetails,
   AccordionSummary,
   Typography,
-  IconButton,
   Rating,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { QuizAttempt, QuizData } from "../../../api/quiz/types";
-import { getQuizAttempts } from "../../../api/quiz/api"; 
-import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
+import { getQuizAttempts } from "../../../api/quiz/api";
+import EditableTitleWithActions from "../../../components/EditableTitleWithActions";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
+import { GenericIconButton } from "../../../components/GenericIconButton";
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -35,7 +35,9 @@ const QuizItem: React.FC<QuizItemProps> = ({
   const [loadingAttempts, setLoadingAttempts] = useState<boolean>(true);
 
   const handleRetakeQuiz = () => {
-    navigate("/quiz", { state: { quizId: quiz._id, quizSettings: quiz.settings } });
+    navigate("/quiz", {
+      state: { quizId: quiz._id, quizSettings: quiz.settings },
+    });
   };
 
   const handleViewAttempt = (attempt: QuizAttempt) => {
@@ -46,7 +48,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
     const fetchAttempts = async () => {
       try {
         setLoadingAttempts(true);
-        const { data } = await getQuizAttempts(quiz._id); 
+        const { data } = await getQuizAttempts(quiz._id);
         setAttempts(data);
       } catch (error) {
         console.error("Error fetching quiz attempts:", error);
@@ -57,7 +59,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
 
     fetchAttempts();
   }, [quiz._id]);
-  
+
   const [rating, setRating] = useState<number | null>(quiz.rating);
 
   const handleRateQuiz = async (newRating: number | null) => {
@@ -73,13 +75,11 @@ const QuizItem: React.FC<QuizItemProps> = ({
           onSave={(newTitle) => updateQuizTitle(newTitle)}
           onDelete={deleteQuiz}
         />
-        <IconButton
+        <GenericIconButton
+          icon={<ReplayIcon />}
+          title="Retake Quiz"
           onClick={handleRetakeQuiz}
-          aria-label="Retake Quiz"
-          className={classes.retakeButton}
-        >
-          <ReplayIcon />
-        </IconButton>
+        />
       </Box>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -90,20 +90,15 @@ const QuizItem: React.FC<QuizItemProps> = ({
             <Typography variant="body2">Loading attempts...</Typography>
           ) : attempts.length > 0 ? (
             attempts.map((attempt, index) => (
-              <Box
-                key={attempt._id}
-                className={classes.AttemptContainer}
-              >
+              <Box key={attempt._id} className={classes.AttemptContainer}>
                 <Typography variant="body1">
                   {index + 1}. Score: {attempt.score} / 100
                 </Typography>
-                <IconButton
-                  onClick={() => handleViewAttempt(attempt)} 
-                  aria-label="View Attempt"
-                  size="small"
-                >
-                  <ArrowForwardIcon color="primary"/>
-                </IconButton>
+                <GenericIconButton
+                  icon={<ArrowForwardIcon color="primary" />}
+                  title="View Attempt"
+                  onClick={() => handleViewAttempt(attempt)}
+                />
               </Box>
             ))
           ) : (
