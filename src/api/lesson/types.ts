@@ -3,4 +3,5 @@ export type LessonData = {
   title: string;
   summary: string;
   videoUrl: string;
+  relatedLessonId?: string;
 };

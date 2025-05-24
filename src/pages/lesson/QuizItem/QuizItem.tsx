@@ -6,7 +6,6 @@ import {
   AccordionDetails,
   AccordionSummary,
   Typography,
-  IconButton,
   Rating,
 } from "@mui/material";
 import Box from "@mui/material/Box";
@@ -17,6 +16,7 @@ import EditableTitleWithActions from "../../../components/EditabletitleWithActio
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
+import { GenericIconButton } from "../../../components/GenericIconButton";
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -75,13 +75,11 @@ const QuizItem: React.FC<QuizItemProps> = ({
           onSave={(newTitle) => updateQuizTitle(newTitle)}
           onDelete={deleteQuiz}
         />
-        <IconButton
+        <GenericIconButton
+          icon={<ReplayIcon />}
+          title="Retake Quiz"
           onClick={handleRetakeQuiz}
-          aria-label="Retake Quiz"
-          className={classes.retakeButton}
-        >
-          <ReplayIcon />
-        </IconButton>
+        />
       </Box>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -96,13 +94,11 @@ const QuizItem: React.FC<QuizItemProps> = ({
                 <Typography variant="body1">
                   {index + 1}. Score: {attempt.score} / 100
                 </Typography>
-                <IconButton
+                <GenericIconButton
+                  icon={<ArrowForwardIcon color="primary" />}
+                  title="View Attempt"
                   onClick={() => handleViewAttempt(attempt)}
-                  aria-label="View Attempt"
-                  size="small"
-                >
-                  <ArrowForwardIcon color="primary" />
-                </IconButton>
+                />
               </Box>
             ))
           ) : (

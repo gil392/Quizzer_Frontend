@@ -10,6 +10,8 @@ interface LessonItemProps {
   onLessonDeleted: (lessonId: string) => void;
   updateLessonTitle: (newTitle: string) => void;
   openLesson: () => void;
+  mergeIcon?: React.ReactNode;
+  className?: string;
 }
 
 const LessonItem: FunctionComponent<LessonItemProps> = (
@@ -22,7 +24,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
     <Box
       className={`${classes.lessonItem} ${
         !isEditing ? classes.lessonItemHover : ""
-      }`}
+      } (props.className ? ${props.className} : "")`}
       onClick={() => !isEditing && props.openLesson()}
     >
       <Box className={classes.flexContainer}>
@@ -32,6 +34,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
           onDelete={() => props.onLessonDeleted(props.lesson._id)}
           onEditModeChange={(isEditing) => setIsEditing(isEditing)}
         />
+        {props.mergeIcon}
       </Box>
       <Typography className={classes.successRateText}>
         Success rate: 100%
