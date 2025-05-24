@@ -13,6 +13,7 @@ import { LessonData } from "../api/lesson/types";
 import { PAGES_ROUTES } from "../routes/routes.const";
 import useStyles from "./Summary.styles";
 import { generateQuiz } from "../api/quiz/api";
+import { toastWarning } from "../utils/utils";
 
 const SummaryPage: React.FC = () => {
   const classes = useStyles();
@@ -36,7 +37,7 @@ const SummaryPage: React.FC = () => {
 
   const handleQuizNavigation = async () => {
     if (!lessonData) {
-      alert("Lesson data is not available.");
+      toastWarning("Lesson data is not available.");
       return;
     }
 
@@ -51,7 +52,7 @@ const SummaryPage: React.FC = () => {
       });
     } catch (error) {
       console.error("Error generating quiz:", error);
-      alert("Failed to generate quiz. Please try again.");
+      toastWarning("Failed to generate quiz. Please try again.");
     }
   };
 

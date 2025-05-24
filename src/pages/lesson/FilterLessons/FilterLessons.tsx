@@ -1,8 +1,8 @@
-import { Search as SearchIcon } from "@mui/icons-material";
 import { Box, InputAdornment, TextField } from "@mui/material";
 import React, { FunctionComponent } from "react";
-import useStyles from "./FilterLessons.styles";
+import { Search as SearchIcon } from "@mui/icons-material";
 import { FilterOptions } from "./types";
+import useStyles from "./FilterLessons.styles";
 
 export interface FilterLessonsProps {
   setFilterOptions: React.Dispatch<React.SetStateAction<FilterOptions>>;
