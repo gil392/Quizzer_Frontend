@@ -16,6 +16,12 @@ const useStyles = makeStyles(() =>
     noLessonsText: {
       marginBottom: "1rem",
     },
+    unrelatedLesson: {
+      backgroundColor: "#b1aaaa",
+      "&:hover": {
+        backgroundColor: "#a1a1a0",
+      },
+    },
   })
 );
 

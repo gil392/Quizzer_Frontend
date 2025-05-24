@@ -11,6 +11,7 @@ interface LessonItemProps {
   updateLessonTitle: (newTitle: string) => void;
   openLesson: () => void;
   mergeIcon?: React.ReactNode;
+  className?: string;
 }
 
 const LessonItem: FunctionComponent<LessonItemProps> = (
@@ -23,7 +24,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
     <Box
       className={`${classes.lessonItem} ${
         !isEditing ? classes.lessonItemHover : ""
-      }`}
+      } (props.className ? ${props.className} : "")`}
       onClick={() => !isEditing && props.openLesson()}
     >
       <Box className={classes.flexContainer}>

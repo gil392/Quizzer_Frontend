@@ -17,11 +17,11 @@ import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
 import { getFilteredLessons } from "../FilterLessons/utils";
 import FilterLessons from "../FilterLessons/FilterLessons";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Checkbox, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 import MergeIcon from "@mui/icons-material/Merge";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import UncheckedBoxIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 
 const LessonsPage: React.FC = () => {
   const classes = useStyles();
@@ -40,12 +40,21 @@ const LessonsPage: React.FC = () => {
   const isLessonMerging = (lesson: LessonData) =>
     mergingLessons.some((l) => l._id === lesson._id);
 
+  const isRelatedLesson = (lesson: LessonData) =>
+    mergingLessons.some((l) => l.relatedLessonId === lesson.relatedLessonId);
+
   const handleToggleMergeLesson = (lesson: LessonData) => {
-    setMergingLessons((prev) =>
-      isLessonMerging(lesson)
-        ? prev.filter((l) => l._id !== lesson._id)
-        : [...prev, lesson]
-    );
+    setMergingLessons((prev) => {
+      if (isLessonMerging(lesson)) {
+        const updated = prev.filter((l) => l._id !== lesson._id);
+        if (updated.length === 0) {
+          cancelMergingMode()();
+        }
+        return updated;
+      } else {
+        return [...prev, lesson];
+      }
+    });
   };
 
   useEffect(() => {
@@ -135,6 +144,11 @@ const LessonsPage: React.FC = () => {
           {filteredLessons.length > 0 ? (
             filteredLessons.map((lesson) => (
               <LessonItem
+                className={
+                  isMergeLessonsMode && !isRelatedLesson(lesson)
+                    ? classes.unrelatedLesson
+                    : ""
+                }
                 key={lesson._id}
                 lesson={lesson}
                 onLessonDeleted={handleLessonDeleted}
@@ -149,13 +163,18 @@ const LessonsPage: React.FC = () => {
                         isLessonMerging(lesson) ? (
                           <CheckBoxIcon />
                         ) : (
-                          <CheckBoxOutlineBlankIcon />
+                          <UncheckedBoxIcon />
                         )
                       }
                       onClick={() => {
-                        handleToggleMergeLesson(lesson);
+                        isRelatedLesson(lesson) &&
+                          handleToggleMergeLesson(lesson);
                       }}
-                      title={"Merge this lesson"}
+                      title={
+                        isRelatedLesson(lesson)
+                          ? "Merge this lesson"
+                          : "Cannot be merged"
+                      }
                     />
                   ) : (
                     <GenericIconButton
