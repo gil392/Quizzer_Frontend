@@ -1,3 +1,9 @@
+import React, { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { generateQuiz, getQuizById } from "../api/quiz/api";
+import { QuizData, QuizResult } from "../api/quiz/types";
+import useStyles from "./Quiz.styles";
+import { exportToPDF } from "../utils/pdfUtils";
 import {
   Box,
   Button,
@@ -17,6 +23,11 @@ import {
 } from "../api/quiz/api";
 import { QuizAttempt, QuizData, QuizResult } from "../api/quiz/types";
 import useStyles from "./Quiz.styles";
+import { toastWarning } from "../utils/utils";
+
+const QUIZ_CONTENT_PDF_ID = "quiz-content";
+import { createQuizAttempt, getLessonById } from "../api/quiz/api";
+import { QuizAttempt } from "../api/quiz/types";
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
@@ -129,7 +140,7 @@ const QuizPage: React.FC = () => {
 
   const handleQuizSubmission = async () => {
     if (!quizData) {
-      alert("Quiz data is not available.");
+      toastWarning("Quiz data is not available.");
       return;
     }
 
@@ -148,7 +159,7 @@ const QuizPage: React.FC = () => {
       setQuizResult(result);
     } catch (error) {
       console.error("Error submitting quiz:", error);
-      alert("Failed to submit quiz. Please try again.");
+      toastWarning("Failed to submit quiz. Please try again.");
     }
   };
 
@@ -200,60 +211,74 @@ const QuizPage: React.FC = () => {
           </Box>
         ) : quizData ? (
           <Box>
-            {quizResult && (
-              <Box
-                className={classes.resultBox}
-                style={{
-                  backgroundColor:
-                    quizResult.score >= 60 ? "#e8f5e9" : "#ffebee",
-                }}
-              >
-                <Typography
-                  variant="h5"
-                  color={quizResult.score >= 60 ? "green" : "red"}
+            <Box id={QUIZ_CONTENT_PDF_ID}>
+              {quizResult && (
+                <Box
+                  className={classes.resultBox}
+                  style={{
+                    backgroundColor:
+                      quizResult.score >= 60 ? "#e8f5e9" : "#ffebee",
+                  }}
                 >
-                  Your Score: {quizResult.score} / 100
-                </Typography>
-              </Box>
-            )}
-            <Typography variant="h5" component="div" gutterBottom>
-              {lessonDataState?.lessonTitle}
-            </Typography>
-            {quizData.questions.map((question, index) => (
-              <Box key={index} className={classes.questionBox}>
-                <Card className={classes.card}>
-                  <Typography variant="h6" gutterBottom>
-                    {index + 1}. {question.text}
-                  </Typography>
-                  <Box
-                    sx={{ display: "flex", flexDirection: "column", gap: 1 }}
+                  <Typography
+                    variant="h5"
+                    color={quizResult.score >= 60 ? "green" : "red"}
                   >
-                    {question.answers.map((option) => (
-                      <FormControlLabel
-                        key={option}
-                        control={
-                          <Checkbox
-                            checked={selectedAnswers[index] === option}
-                            onChange={() => handleOptionChange(index, option)}
-                            disabled={!!quizResult}
-                            sx={{
-                              "& .MuiSvgIcon-root": {
-                                border: `2px solid ${getAnswerOutlineColor(
-                                  question._id,
-                                  option
-                                )}`,
-                                borderRadius: "4px",
-                              },
-                            }}
+                    Your Score: {quizResult.score} / 100
+                  </Typography>
+                </Box>
+              )}
+              <Box>
+                <Typography variant="h5" component="div" gutterBottom>
+                  {lessonData?.lessonTitle}
+                </Typography>
+                {quizData.questions.map((question, index) => (
+                  <Box
+                    key={index}
+                    style={{ pageBreakInside: "avoid" }}
+                    className={classes.questionBox}
+                  >
+                    <Card className={classes.card}>
+                      <Typography variant="h6" gutterBottom>
+                        {index + 1}. {question.text}
+                      </Typography>
+                      <Box
+                        sx={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: 1,
+                        }}
+                      >
+                        {question.answers.map((option) => (
+                          <FormControlLabel
+                            key={option}
+                            control={
+                              <Checkbox
+                                checked={selectedAnswers[index] === option}
+                                onChange={() =>
+                                  handleOptionChange(index, option)
+                                }
+                                disabled={!!quizResult}
+                                sx={{
+                                  "& .MuiSvgIcon-root": {
+                                    border: `2px solid ${getAnswerOutlineColor(
+                                      question._id,
+                                      option
+                                    )}`,
+                                    borderRadius: "4px",
+                                  },
+                                }}
+                              />
+                            }
+                            label={option}
                           />
-                        }
-                        label={option}
-                      />
-                    ))}
+                        ))}
+                      </Box>
+                    </Card>
                   </Box>
-                </Card>
+                ))}
               </Box>
-            ))}
+            </Box>
             <Box className={classes.buttonContainer}>
               {quizResult ? (
                 <Button variant="contained" color="primary" onClick={retry}>
@@ -275,6 +300,18 @@ const QuizPage: React.FC = () => {
                 onClick={generateNewQuiz}
               >
                 Generate New Quiz
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() =>
+                  exportToPDF(
+                    QUIZ_CONTENT_PDF_ID,
+                    "Quiz_" + quizData.title + ".pdf"
+                  )
+                }
+              >
+                Export to PDF
               </Button>
             </Box>
           </Box>

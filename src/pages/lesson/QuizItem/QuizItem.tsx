@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { QuizAttempt, QuizData } from "../../../api/quiz/types";
 import { getQuizAttempts } from "../../../api/quiz/api";
-import EditableTitleWithActions from "../../../components/EditableTitleWithActions";
+import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";

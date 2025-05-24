@@ -1,18 +1,15 @@
 export type FeedbackType = "onSubmit" | "onSelectAnswer";
 export type QuestionsOrder = "chronological" | "random";
-export type DisplayMode = "Light" | "Dark";
 
 export type QuizSettings = {
   feedbackType: FeedbackType;
-  questionsOrder: QuestionsOrder;
-  displayMode: DisplayMode;
   isRandomOrder: boolean;
   maxQuestionCount: number;
-  isManualCount: boolean;
   solvingTimeMs: number;
+  questionsOrder: QuestionsOrder;
+  isManualCount: boolean;
 };
 
-export type QuizSettingsField = boolean | number | string;
 export type QuizData = {
   _id: string;
   title: string;
@@ -50,5 +47,5 @@ export type QuestionResults = {
 };
 
 export type QuizAttempt = {
-    _id: string;
+  _id: string;
 } & QuizResult;

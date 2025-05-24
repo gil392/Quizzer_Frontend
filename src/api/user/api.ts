@@ -1,8 +1,7 @@
 import { AxiosPromise } from "axios";
 import { isNil } from "ramda";
 import apiClient from "../client";
-import { QuizSettings } from "../quiz/types";
-import { Message, User } from "./types";
+import { Message, User, UserSettings } from "./types";
 
 export const getMessages = (
   since?: number,
@@ -18,7 +17,7 @@ export const getLoggedUser = (): AxiosPromise<User> =>
 
 export const updateUser = async (updateFields: {
   username?: string;
-  settings?: Partial<QuizSettings>;
+  settings?: Partial<UserSettings>;
 }) => {
   return apiClient.put<User>("/user", updateFields);
 };
