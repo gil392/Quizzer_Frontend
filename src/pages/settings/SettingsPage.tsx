@@ -1,15 +1,12 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
-import {
-  FeedbackType,
-  QuestionsOrder,
-  QuizSettings,
-} from "../../api/quiz/types";
+import { FeedbackType, QuestionsOrder } from "../../api/quiz/types";
 import { getLoggedUser, updateUser } from "../../api/user/api";
-import { User } from "../../api/user/types";
+import { User, UserSettings } from "../../api/user/types";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
-import { useStyles } from "./styles";
+import DisplayModeSwitch from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
+import useStyles from "./styles";
 
 const SettingsPage: FunctionComponent = () => {
   const classes = useStyles();
@@ -31,11 +28,13 @@ const SettingsPage: FunctionComponent = () => {
     INITIAL_QUIZ_SETTINGS.isManualCount
   );
 
-  const setSettings = (quizSettings: QuizSettings) => {
-    setFeedbackType(quizSettings.feedbackType);
-    setQuestionsOrder(quizSettings.questionsOrder);
-    setMaxQuestionCount(quizSettings.maxQuestionCount);
-    setIsManualCount(quizSettings.isManualCount);
+  const setSettings = (userSettings: Partial<UserSettings>) => {
+    userSettings?.feedbackType && setFeedbackType(userSettings.feedbackType);
+    userSettings?.questionsOrder &&
+      setQuestionsOrder(userSettings.questionsOrder);
+    userSettings?.maxQuestionCount &&
+      setMaxQuestionCount(userSettings.maxQuestionCount);
+    userSettings?.isManualCount && setIsManualCount(userSettings.isManualCount);
   };
 
   useEffect(() => {
@@ -43,7 +42,7 @@ const SettingsPage: FunctionComponent = () => {
       try {
         const { data } = await getLoggedUser();
         setUser(data);
-        data?.settings && setSettings(data?.settings);
+        data?.settings && setSettings(data.settings);
       } catch (error) {
         console.error("Error fetching user: ", error);
       }
@@ -56,16 +55,13 @@ const SettingsPage: FunctionComponent = () => {
     const updateSettings = async () => {
       if (user) {
         try {
-          const settings: QuizSettings = {
+          const settings: Partial<UserSettings> = {
             feedbackType,
             questionsOrder,
             maxQuestionCount,
             isManualCount,
-            solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
-            isRandomOrder: INITIAL_QUIZ_SETTINGS.isRandomOrder,
-            displayMode: INITIAL_QUIZ_SETTINGS.displayMode,
           };
-          await updateUser(user, { settings });
+          await updateUser({ settings });
         } catch (error) {
           console.error("Error updating user: ", error);
         }
@@ -79,6 +75,10 @@ const SettingsPage: FunctionComponent = () => {
 
   return (
     <Box className={classes.root}>
+      <Typography variant="h6" gutterBottom>
+        Display Mode
+      </Typography>
+      <DisplayModeSwitch />
       <LessonConfig
         feedbackType={feedbackType}
         setFeedbackType={setFeedbackType}

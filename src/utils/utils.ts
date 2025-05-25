@@ -1,4 +1,5 @@
 import { ZodError } from 'zod';
+import {toast} from 'sonner';
 
 export const extractZodErrorMessagesByFields = <T extends {}>({
     errors
@@ -11,3 +12,8 @@ export const extractZodErrorMessagesByFields = <T extends {}>({
 
     return fieldErrors;
 };
+
+
+export const toastWarning = (message: string) => {
+    toast.warning(message);
+}

@@ -1,5 +1,11 @@
 import { QuizSettings } from "../quiz/types";
 
+export type DisplayMode = "Light" | "Dark";
+
+export type UserSettings = QuizSettings & {
+  displayMode: DisplayMode;
+};
+
 export type User = {
   email: string;
   username: string;
@@ -8,8 +14,8 @@ export type User = {
   friendRequests?: string[];
   friends?: string[];
   favoriteLessons?: string[];
-  settings?: QuizSettings;
   picture?: string;
+  settings?: Partial<UserSettings>;
 };
 
 export type UserWithId = User & { _id: string };

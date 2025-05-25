@@ -18,14 +18,15 @@ import {
 import { useLocation, useNavigate } from "react-router-dom";
 import { getMessages } from "../../api/user/api";
 import { Message } from "../../api/user/types";
+import { isNavBarAvailableInPath } from "../navBar/utils";
+import DisplayModeSwitch from "../settings/DisplayModeSwitch/DisplayModeSwitch";
 import { MAX_MESSAGES_BADGE_CONTENT, MESSAGES_INTERVAL_MS } from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
-import { isNavBarAvailableInPath } from "../navBar/utils";
 
 const AppBar: FunctionComponent = () => {
   const classes = useStyles();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [, setMessages] = useState<Message[]>([]);
   const [unReededMessagesCount, setUnReededMessagesCount] = useState<number>();
   const [lastMessagesFetch, setLastMessagesFetch] = useState<Date>();
   const navigate = useNavigate();
@@ -36,9 +37,6 @@ const AppBar: FunctionComponent = () => {
     () => isNavBarAvailableInPath(location.pathname),
     [location]
   );
-  if (!isAppBarAvaiable) {
-    return null;
-  }
 
   const fetchMessages = useCallback((abortController: AbortController) => {
     getMessages(lastMessagesFetch?.getTime(), abortController).then(
@@ -80,8 +78,9 @@ const AppBar: FunctionComponent = () => {
     )
   );
 
-  return (
+  return isAppBarAvaiable ? (
     <Toolbar className={classes.toolbar}>
+      <DisplayModeSwitch />
       <IconButton>
         <Badge
           badgeContent={unReededMessagesCount}
@@ -103,7 +102,7 @@ const AppBar: FunctionComponent = () => {
         {menuItems}
       </Menu>
     </Toolbar>
-  );
+  ) : null;
 };
 
 export default AppBar;

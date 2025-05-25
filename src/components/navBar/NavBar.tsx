@@ -47,9 +47,6 @@ const NavBar: FunctionComponent = () => {
     () => isNavBarAvailableInPath(location.pathname),
     [location]
   );
-  if (!isNavBarAvaiable) {
-    return null;
-  }
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -62,8 +59,8 @@ const NavBar: FunctionComponent = () => {
   const createNavigationHandle = (to: keyof typeof PAGES_ROUTES) => () =>
     navigate(PAGES_ROUTES[to]);
 
-  const navBarItems = navBarNavigations.map(({ text, icon, route }, index) => (
-    <ListItem disablePadding sx={listItemSx} key={index}>
+  const navBarItems = navBarNavigations.map(({ text, icon, route }) => (
+    <ListItem disablePadding sx={listItemSx} key={route}>
       <ListItemButton
         sx={listItemButtonSx(open)}
         onClick={createNavigationHandle(route)}
@@ -74,7 +71,7 @@ const NavBar: FunctionComponent = () => {
     </ListItem>
   ));
 
-  return (
+  return isNavBarAvaiable ? (
     <Drawer
       variant="permanent"
       open={open}
@@ -100,7 +97,7 @@ const NavBar: FunctionComponent = () => {
         </ListItemButton>
       </Box>
     </Drawer>
-  );
+  ) : null;
 };
 
 export default NavBar;
