@@ -1,7 +1,7 @@
 export type FeedbackType = "onSubmit" | "onSelectAnswer";
 export type QuestionsOrder = "chronological" | "random";
 
-export type ApiQuizSettings = {
+export type QuizSettings = {
   feedbackType: FeedbackType;
   isRandomOrder: boolean;
   maxQuestionCount: number;

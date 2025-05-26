@@ -2,16 +2,15 @@ import { Box, Button, OutlinedInput, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  ApiQuizSettings,
   FeedbackType,
   QuestionsOrder,
   QuizSettings,
 } from "../../api/quiz/types";
 import { getLoggedUser } from "../../api/user/api";
 
+import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
