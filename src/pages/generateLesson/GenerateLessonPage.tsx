@@ -7,14 +7,17 @@ import {
   QuizSettings,
 } from "../../api/quiz/types";
 import { getLoggedUser } from "../../api/user/api";
-
+import { useLocation } from "react-router-dom";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
-  const [videoUrl, setVideoUrl] = useState<string>("");
+  const location = useLocation();
+  const [videoUrl, setVideoUrl] = useState<string>(
+    location.state?.videoUrl || ""
+  );
 
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
     INITIAL_QUIZ_SETTINGS.feedbackType
@@ -69,7 +72,7 @@ const GenerateLessonPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ width: "50%", margin: "auto" }}>
+    <Box sx={{ width: "50vw", margin: "auto" }}>
       <Typography variant="h6" gutterBottom>
         Insert YouTube Video
       </Typography>

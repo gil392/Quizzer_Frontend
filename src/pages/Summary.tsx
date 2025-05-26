@@ -14,6 +14,7 @@ import { PAGES_ROUTES } from "../routes/routes.const";
 import useStyles from "./Summary.styles";
 import { generateQuiz } from "../api/quiz/api";
 import { toastWarning } from "../utils/utils";
+import RelatedVideos from "./lesson/RelatedVideo/RelatedVideos";
 
 const SummaryPage: React.FC = () => {
   const classes = useStyles();
@@ -57,8 +58,8 @@ const SummaryPage: React.FC = () => {
   };
 
   return (
-    <Box className={classes.container}>
-      <Card className={classes.card}>
+    <Box className={classes.container} sx={{ display: "flex", gap: 4 }}>
+      <Card className={classes.card} sx={{ flex: 2 }}>
         {loading ? (
           <Box className={classes.skeletonContainer}>
             <Skeleton variant="text" width="80%" height={40} />
@@ -95,6 +96,11 @@ const SummaryPage: React.FC = () => {
           </CardContent>
         )}
       </Card>
+      {!loading && lessonData && (
+        <Box sx={{ flex: 1, minWidth: 340 }}>
+          <RelatedVideos lessonId={lessonData._id} />
+        </Box>
+      )}
     </Box>
   );
 };

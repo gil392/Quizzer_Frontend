@@ -2,12 +2,12 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({
     container: {
-        width: "50vw",
+        width: "75vw",
         margin: "auto",
         padding: 16,
     },
     card: {
-        maxWidth: "50vw",
+        maxWidth: "75vw",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         paddingTop: 16,
         height: "85vh",

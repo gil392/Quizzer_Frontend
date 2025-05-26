@@ -29,7 +29,6 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(true); // Default to true (show summary)
 
   const navigate = useNavigate();
-  /** TODO: Issue 14 (Itay)- get these settings not hard-coded */
   const quizSettings: QuizSettings = INITIAL_QUIZ_SETTINGS;
 
   const onCreateQuiz = () => {
