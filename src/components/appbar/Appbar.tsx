@@ -1,12 +1,5 @@
 import { NotificationsOutlined } from "@mui/icons-material";
-import {
-  Avatar,
-  Badge,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-} from "@mui/material";
+import { Badge, IconButton, Menu, MenuItem, Toolbar } from "@mui/material";
 import { isNotNil, pipe } from "ramda";
 import {
   FunctionComponent,
@@ -16,10 +9,14 @@ import {
   useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getLoggedUser, getMessages } from "../../api/user/api";
+import { useSetRecoilState } from "recoil";
+import { getMessages } from "../../api/user/api";
 import { Message } from "../../api/user/types";
+import { profileImageState } from "../../recoil/profileImage";
 import { isNavBarAvailableInPath } from "../navBar/utils";
 import DisplayModeSwitch from "../settings/DisplayModeSwitch/DisplayModeSwitch";
+import { removeUserDisplayMode } from "../settings/DisplayModeSwitch/utils";
+import ProfileImage from "./components/ProfileImage";
 import {
   MAX_MESSAGES_BADGE_CONTENT,
   MESSAGES_INTERVAL_MS,
@@ -27,8 +24,6 @@ import {
 } from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
-import { useRecoilState } from "recoil";
-import { profileImageState } from "../../recoil/profileImage";
 
 const AppBar: FunctionComponent = () => {
   const classes = useStyles();
@@ -38,7 +33,7 @@ const AppBar: FunctionComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [profileImage, setProfileImage] = useRecoilState(profileImageState);
+  const setProfileImage = useSetRecoilState(profileImageState);
 
   const isAppBarAvaiable = useMemo(
     () => isNavBarAvailableInPath(location.pathname),
@@ -69,21 +64,11 @@ const AppBar: FunctionComponent = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const setUserProfileImage = async () => {
-      let userProfileImage: string | null | undefined =
-        localStorage.getItem(PROFILE_IMAGE);
-      if (!userProfileImage) {
-        const { data } = await getLoggedUser();
-        userProfileImage = data?.profileImage;
-      }
-      if (userProfileImage) {
-        setProfileImage(userProfileImage);
-        localStorage.setItem(PROFILE_IMAGE, userProfileImage);
-      }
-    };
-    setUserProfileImage();
-  }, []);
+  const handleLogout = () => {
+    removeUserDisplayMode();
+    setProfileImage(undefined);
+    localStorage.removeItem(PROFILE_IMAGE);
+  };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -93,7 +78,7 @@ const AppBar: FunctionComponent = () => {
     setAnchorEl(null);
   };
 
-  const menuItems = createAppbarMenu(navigate).map(
+  const menuItems = createAppbarMenu(navigate, handleLogout).map(
     ({ label, onClick }, index) => (
       <MenuItem key={index} onClick={pipe(onClick, handleClose)}>
         {label}
@@ -114,11 +99,7 @@ const AppBar: FunctionComponent = () => {
           <NotificationsOutlined className={classes.notifications} />
         </Badge>
       </IconButton>
-      <Avatar
-        src={profileImage}
-        className={classes.avatar}
-        onClick={handleMenu}
-      />
+      <ProfileImage handleMenu={handleMenu} />
 
       <Menu
         anchorEl={anchorEl}

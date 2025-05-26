@@ -1,11 +1,10 @@
 import { NavigateFunction } from "react-router-dom";
 import { logout } from "../../api/authentication/api";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import { removeUserDisplayMode } from "../settings/DisplayModeSwitch/utils";
-import { PROFILE_IMAGE } from "./const";
 
 export const createAppbarMenu = (
-  navigate: NavigateFunction
+  navigate: NavigateFunction,
+  handleLogout: () => void
 ): { label: string; onClick: () => void }[] => [
   {
     label: "Profile",
@@ -16,8 +15,7 @@ export const createAppbarMenu = (
   {
     label: "Sign Out",
     onClick: () => {
-      removeUserDisplayMode();
-      localStorage.removeItem(PROFILE_IMAGE);
+      handleLogout();
       logout().finally(() => navigate(PAGES_ROUTES.LOGIN));
     },
   },

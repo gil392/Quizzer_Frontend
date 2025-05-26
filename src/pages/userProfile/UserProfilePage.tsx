@@ -83,72 +83,73 @@ const UserProfilePage: FunctionComponent = () => {
   };
 
   return (
-    <div className={classes.root}>
+    <>
       <Typography variant="h4" gutterBottom>
         User Profile
       </Typography>
+      <div className={classes.root}>
+        <div className={classes.profileImageDiv}>
+          <Avatar
+            src={profileImageUrl}
+            alt={user?.username ?? "Profile"}
+            sx={{
+              width: 150,
+              height: 150,
+              mb: 2,
+              fontSize: "3em",
+            }}
+          />
+          {isEditing && (
+            <IconButton
+              component="label"
+              className={classes.imageEditIcon}
+              sx={{ position: "absolute" }}
+            >
+              <EditIcon />
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={handleProfileImageChange}
+              />
+            </IconButton>
+          )}
+        </div>
 
-      <div className={classes.profileImageDiv}>
-        <Avatar
-          src={profileImageUrl}
-          alt={user?.username ?? "Profile"}
-          sx={{
-            width: 150,
-            height: 150,
-            mb: 2,
-            fontSize: "3em",
-          }}
-        />
-        {isEditing && (
-          <IconButton
-            component="label"
-            className={classes.imageEditIcon}
-            sx={{ position: "absolute" }}
+        <Typography
+          className={classes.userTextProperty}
+          variant="subtitle1"
+          color="textSecondary"
+        >
+          {user ? user.email : <Skeleton />}
+        </Typography>
+        {isEditing ? (
+          <TextField
+            label="Username"
+            variant="outlined"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            sx={{ mt: 2 }}
+          />
+        ) : (
+          <Typography className={classes.userTextProperty} variant="h6">
+            {user ? user.username : <Skeleton />}
+          </Typography>
+        )}
+        {isEditing ? (
+          <EditingActions saveEdit={handleSave} cancelEditing={handleCancel} />
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setIsEditing(true)}
+            sx={{ mt: 3 }}
           >
-            <EditIcon />
-            <input
-              type="file"
-              accept="image/*"
-              hidden
-              onChange={handleProfileImageChange}
-            />
-          </IconButton>
+            Edit Profile
+          </Button>
         )}
       </div>
-
-      <Typography
-        className={classes.userTextProperty}
-        variant="subtitle1"
-        color="textSecondary"
-      >
-        {user ? user.email : <Skeleton />}
-      </Typography>
-      {isEditing ? (
-        <TextField
-          label="Username"
-          variant="outlined"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-          sx={{ mt: 2 }}
-        />
-      ) : (
-        <Typography className={classes.userTextProperty} variant="h6">
-          {user ? user.username : <Skeleton />}
-        </Typography>
-      )}
-      {isEditing ? (
-        <EditingActions saveEdit={handleSave} cancelEditing={handleCancel} />
-      ) : (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setIsEditing(true)}
-          sx={{ mt: 3 }}
-        >
-          Edit Profile
-        </Button>
-      )}
-    </div>
+    </>
   );
 };
 
