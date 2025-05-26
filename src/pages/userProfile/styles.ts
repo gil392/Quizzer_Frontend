@@ -6,10 +6,25 @@ const useStyles = makeStyles(() =>
       width: "100%",
       height: "100%",
       display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
     },
-    profilePannel: {
-      width: "50%",
-      height: "100%",
+    editUsername: {
+      marginTop: "8px",
+    },
+    profileImageDiv: {
+      position: "relative",
+      display: "inline-block",
+    },
+    userTextProperty: {
+      width: "100%",
+      marginTop: "1em",
+      textAlign: "center",
+    },
+    imageEditIcon: {
+      bottom: 0,
+      right: 0,
     },
   })
 );
