@@ -123,6 +123,13 @@ const UserProfilePage: FunctionComponent = () => {
         >
           {user ? user.email : <Skeleton />}
         </Typography>
+        <Typography
+          className={classes.userTextProperty}
+          variant="subtitle1"
+          color="textSecondary"
+        >
+          streak: {user ? user.streak : <Skeleton />}
+        </Typography>
         {isEditing ? (
           <TextField
             label="Username"
