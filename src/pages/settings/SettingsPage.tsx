@@ -10,7 +10,6 @@ import useStyles from "./styles";
 
 const SettingsPage: FunctionComponent = () => {
   const classes = useStyles();
-  const [user, setUser] = useState<User | null>(null);
 
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
     INITIAL_QUIZ_SETTINGS.feedbackType
@@ -41,7 +40,6 @@ const SettingsPage: FunctionComponent = () => {
     const fetchUser = async () => {
       try {
         const { data } = await getLoggedUser();
-        setUser(data);
         data?.settings && setSettings(data.settings);
       } catch (error) {
         console.error("Error fetching user: ", error);
@@ -53,20 +51,16 @@ const SettingsPage: FunctionComponent = () => {
 
   useEffect(() => {
     const updateSettings = async () => {
-      if (user) {
-        try {
-          const settings: Partial<UserSettings> = {
-            feedbackType,
-            questionsOrder,
-            maxQuestionCount,
-            isManualCount,
-          };
-          await updateUser({ settings });
-        } catch (error) {
-          console.error("Error updating user: ", error);
-        }
-      } else {
-        console.error("Error updating user: User does not exists");
+      try {
+        const settings: Partial<UserSettings> = {
+          feedbackType,
+          questionsOrder,
+          maxQuestionCount,
+          isManualCount,
+        };
+        await updateUser({ settings });
+      } catch (error) {
+        console.error("Error updating user: ", error);
       }
     };
 
