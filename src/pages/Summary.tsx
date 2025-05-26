@@ -42,7 +42,6 @@ const SummaryPage: React.FC = () => {
     }
 
     try {
-      debugger;
       const { data: quizData } = await generateQuiz(
         lessonData._id,
         location.state?.quizSettings
