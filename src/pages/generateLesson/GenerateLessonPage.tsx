@@ -56,11 +56,13 @@ const GenerateLessonPage: React.FC = () => {
   }, []);
 
   const handleSummaryNavigation = (): void => {
-    const quizSettings: ApiQuizSettings = {
+    const quizSettings: QuizSettings = {
       feedbackType,
       maxQuestionCount,
       isRandomOrder: questionsOrder !== "random",
       solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
+      questionsOrder,
+      isManualCount,
     };
     navigate(PAGES_ROUTES.SUMMARY, {
       state: { videoUrl, quizSettings },

@@ -3,7 +3,6 @@ import apiClient from "../client";
 import { LessonData } from "../lesson/types";
 import { deleteItem, updateItem } from "../utils";
 import {
-  ApiQuizSettings,
   QuizAnswerSubmittion,
   QuizAttempt,
   QuizData,

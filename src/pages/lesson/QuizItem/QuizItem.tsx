@@ -12,7 +12,7 @@ import {
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { QuizAttempt, QuizData } from "../../../api/quiz/types";
-import { getQuizAttempts } from "../../../api/quiz/api"; 
+import { getQuizAttempts } from "../../../api/quiz/api";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
@@ -35,7 +35,9 @@ const QuizItem: React.FC<QuizItemProps> = ({
   const [loadingAttempts, setLoadingAttempts] = useState<boolean>(true);
 
   const handleRetakeQuiz = () => {
-    navigate("/quiz", { state: { quizId: quiz._id, quizSettings: quiz.settings } });
+    navigate("/quiz", {
+      state: { quizId: quiz._id, quizSettings: quiz.settings },
+    });
   };
 
   const handleViewAttempt = (attempt: QuizAttempt) => {
@@ -46,7 +48,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
     const fetchAttempts = async () => {
       try {
         setLoadingAttempts(true);
-        const { data } = await getQuizAttempts(quiz._id); 
+        const { data } = await getQuizAttempts(quiz._id);
         setAttempts(data);
       } catch (error) {
         console.error("Error fetching quiz attempts:", error);
@@ -57,7 +59,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
 
     fetchAttempts();
   }, [quiz._id]);
-  
+
   const [rating, setRating] = useState<number | null>(quiz.rating);
 
   const handleRateQuiz = async (newRating: number | null) => {
@@ -90,19 +92,16 @@ const QuizItem: React.FC<QuizItemProps> = ({
             <Typography variant="body2">Loading attempts...</Typography>
           ) : attempts.length > 0 ? (
             attempts.map((attempt, index) => (
-              <Box
-                key={attempt._id}
-                className={classes.AttemptContainer}
-              >
+              <Box key={attempt._id} className={classes.AttemptContainer}>
                 <Typography variant="body1">
                   {index + 1}. Score: {attempt.score} / 100
                 </Typography>
                 <IconButton
-                  onClick={() => handleViewAttempt(attempt)} 
+                  onClick={() => handleViewAttempt(attempt)}
                   aria-label="View Attempt"
                   size="small"
                 >
-                  <ArrowForwardIcon color="primary"/>
+                  <ArrowForwardIcon color="primary" />
                 </IconButton>
               </Box>
             ))

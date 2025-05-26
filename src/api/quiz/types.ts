@@ -6,9 +6,6 @@ export type ApiQuizSettings = {
   isRandomOrder: boolean;
   maxQuestionCount: number;
   solvingTimeMs: number;
-};
-
-export type QuizSettings = ApiQuizSettings & {
   questionsOrder: QuestionsOrder;
   isManualCount: boolean;
 };

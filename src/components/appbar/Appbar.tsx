@@ -30,7 +30,7 @@ import { createAppbarMenu } from "./utils";
 
 const AppBar: FunctionComponent = () => {
   const classes = useStyles();
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [, setMessages] = useState<Message[]>([]);
   const [unReededMessagesCount, setUnReededMessagesCount] = useState<number>();
   const [lastMessagesFetch, setLastMessagesFetch] = useState<Date>();
   const navigate = useNavigate();

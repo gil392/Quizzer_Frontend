@@ -3,10 +3,11 @@ export const PAGES_ROUTES = {
   LOGIN: "/login",
   REGISTER: "/signup",
   PROFILE: "/profile",
-  SETTINGS: "/settings",
   SUMMARY: "/summary",
   QUIZ: "/quiz",
   GENERATE_LESSON: "/generate-lesson",
   LESSONS_LIST: "/lesson",
   LESSON: "/lesson/*",
+  FRIENDS: "/friends",
+  SETTINGS: "/settings",
 };
