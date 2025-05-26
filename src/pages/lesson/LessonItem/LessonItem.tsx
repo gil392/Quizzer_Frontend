@@ -2,8 +2,12 @@ import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { FunctionComponent, useState } from "react";
 import { LessonData } from "../../../api/lesson/types";
-import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import useStyles from "./LessonItem.styles";
+import { GenericIconButton } from "../../../components/GenericIconButton";
+import MergeIcon from "@mui/icons-material/Merge";
+import CheckBoxIcon from "@mui/icons-material/CheckBox";
+import UncheckedBoxIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import EditabletitleWithActions from "../../../components/EditabletitleWithActions";
 
 interface LessonItemProps {
   lesson: LessonData;
@@ -12,6 +16,11 @@ interface LessonItemProps {
   openLesson: () => void;
   mergeIcon?: React.ReactNode;
   className?: string;
+  mergingLessons: LessonData[];
+  setMergingLessons: (lessons: LessonData[]) => void;
+  isMergeLessonsMode: boolean;
+  setIsMergeLessonsMode: (isMergeMode: boolean) => void;
+  cancelMergingMode: () => void;
 }
 
 const LessonItem: FunctionComponent<LessonItemProps> = (
@@ -20,21 +29,64 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
   const [isEditing, setIsEditing] = useState(false);
   const classes = useStyles();
 
+  const isLessonMerging = () =>
+    props.mergingLessons.some((l) => l._id === props.lesson._id);
+
+  const isRelatedLesson = () =>
+    props.mergingLessons.some(
+      (l) => l.relatedLessonId === props.lesson.relatedLessonId
+    );
+
+  const handleToggleMergeLesson = () => {
+    if (isLessonMerging()) {
+      const updated = props.mergingLessons.filter(
+        (l) => l._id !== props.lesson._id
+      );
+      if (updated.length === 0) {
+        props.cancelMergingMode();
+      }
+      props.setMergingLessons(updated);
+    } else {
+      props.setMergingLessons([...props.mergingLessons, props.lesson]);
+    }
+  };
+
   return (
     <Box
       className={`${classes.lessonItem} ${
         !isEditing ? classes.lessonItemHover : ""
-      } (props.className ? ${props.className} : "")`}
+      } ${
+        props.isMergeLessonsMode && !isRelatedLesson()
+          ? classes.unrelatedLesson
+          : ""
+      }`}
       onClick={() => !isEditing && props.openLesson()}
     >
       <Box className={classes.flexContainer}>
-        <EditableTitleWithActions
+        <EditabletitleWithActions
           title={props.lesson.title}
           onSave={(newTitle) => props.updateLessonTitle(newTitle)}
           onDelete={() => props.onLessonDeleted(props.lesson._id)}
           onEditModeChange={(isEditing) => setIsEditing(isEditing)}
         />
-        {props.mergeIcon}
+        {props.isMergeLessonsMode ? (
+          <GenericIconButton
+            icon={isLessonMerging() ? <CheckBoxIcon /> : <UncheckedBoxIcon />}
+            onClick={() => {
+              isRelatedLesson() && handleToggleMergeLesson();
+            }}
+            title={isRelatedLesson() ? "Merge this lesson" : "Cannot be merged"}
+          />
+        ) : (
+          <GenericIconButton
+            icon={<MergeIcon />}
+            title={"Merge Lessons"}
+            onClick={() => {
+              props.setIsMergeLessonsMode(true);
+              props.setMergingLessons([props.lesson]);
+            }}
+          />
+        )}
       </Box>
       <Typography className={classes.successRateText}>
         Success rate: 100%

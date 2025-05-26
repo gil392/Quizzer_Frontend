@@ -13,16 +13,6 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import React, { useCallback, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import {
-  generateQuiz,
-  getQuizById,
-  createQuizAttempt,
-  getLessonById,
-} from "../api/quiz/api";
-import { QuizAttempt, QuizData, QuizResult } from "../api/quiz/types";
-import useStyles from "./Quiz.styles";
 import { toastWarning } from "../utils/utils";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";

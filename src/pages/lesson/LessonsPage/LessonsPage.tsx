@@ -19,9 +19,6 @@ import FilterLessons from "../FilterLessons/FilterLessons";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
-import MergeIcon from "@mui/icons-material/Merge";
-import CheckBoxIcon from "@mui/icons-material/CheckBox";
-import UncheckedBoxIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 
 const LessonsPage: React.FC = () => {
   const classes = useStyles();
@@ -36,26 +33,6 @@ const LessonsPage: React.FC = () => {
   );
   const [mergingLessons, setMergingLessons] = useState<LessonData[]>([]);
   const [isMergeLessonsMode, setIsMergeLessonsMode] = useState(false);
-
-  const isLessonMerging = (lesson: LessonData) =>
-    mergingLessons.some((l) => l._id === lesson._id);
-
-  const isRelatedLesson = (lesson: LessonData) =>
-    mergingLessons.some((l) => l.relatedLessonId === lesson.relatedLessonId);
-
-  const handleToggleMergeLesson = (lesson: LessonData) => {
-    setMergingLessons((prev) => {
-      if (isLessonMerging(lesson)) {
-        const updated = prev.filter((l) => l._id !== lesson._id);
-        if (updated.length === 0) {
-          cancelMergingMode()();
-        }
-        return updated;
-      } else {
-        return [...prev, lesson];
-      }
-    });
-  };
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -97,10 +74,8 @@ const LessonsPage: React.FC = () => {
   };
 
   const cancelMergingMode = () => {
-    return () => {
-      setIsMergeLessonsMode(false);
-      setMergingLessons([]);
-    };
+    setIsMergeLessonsMode(false);
+    setMergingLessons([]);
   };
 
   const createMergedLesson = () => {
@@ -144,11 +119,6 @@ const LessonsPage: React.FC = () => {
           {filteredLessons.length > 0 ? (
             filteredLessons.map((lesson) => (
               <LessonItem
-                className={
-                  isMergeLessonsMode && !isRelatedLesson(lesson)
-                    ? classes.unrelatedLesson
-                    : ""
-                }
                 key={lesson._id}
                 lesson={lesson}
                 onLessonDeleted={handleLessonDeleted}
@@ -156,37 +126,11 @@ const LessonsPage: React.FC = () => {
                 updateLessonTitle={(newTitle: string) => {
                   handleUpdateLesson({ ...lesson, title: newTitle });
                 }}
-                mergeIcon={
-                  isMergeLessonsMode ? (
-                    <GenericIconButton
-                      icon={
-                        isLessonMerging(lesson) ? (
-                          <CheckBoxIcon />
-                        ) : (
-                          <UncheckedBoxIcon />
-                        )
-                      }
-                      onClick={() => {
-                        isRelatedLesson(lesson) &&
-                          handleToggleMergeLesson(lesson);
-                      }}
-                      title={
-                        isRelatedLesson(lesson)
-                          ? "Merge this lesson"
-                          : "Cannot be merged"
-                      }
-                    />
-                  ) : (
-                    <GenericIconButton
-                      icon={<MergeIcon />}
-                      title={"Merge Lessons"}
-                      onClick={() => {
-                        setIsMergeLessonsMode(true);
-                        setMergingLessons([lesson]);
-                      }}
-                    />
-                  )
-                }
+                mergingLessons={mergingLessons}
+                setMergingLessons={setMergingLessons}
+                isMergeLessonsMode={isMergeLessonsMode}
+                setIsMergeLessonsMode={setIsMergeLessonsMode}
+                cancelMergingMode={cancelMergingMode}
               />
             ))
           ) : (
@@ -203,7 +147,7 @@ const LessonsPage: React.FC = () => {
               <Button
                 variant="outlined"
                 color="secondary"
-                onClick={cancelMergingMode()}
+                onClick={cancelMergingMode}
               >
                 Cancel Merging
               </Button>
