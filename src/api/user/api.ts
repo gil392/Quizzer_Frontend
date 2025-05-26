@@ -17,7 +17,21 @@ export const getLoggedUser = (): AxiosPromise<User> =>
 
 export const updateUser = async (updateFields: {
   username?: string;
+  imageFile?: File;
   settings?: Partial<UserSettings>;
 }) => {
-  return apiClient.put<User>("/user", updateFields);
+  const { username, imageFile, settings } = updateFields;
+  const imageUrl = imageFile ? await uploadProfileImage(imageFile) : null;
+  const profileImage = imageUrl?.data;
+  return apiClient.put<User>("/user", { username, profileImage, settings });
+};
+
+export const uploadProfileImage = (profileImage: File) => {
+  const formData = new FormData();
+  formData.append("profileImage", profileImage);
+  return apiClient.post<string>("api/files/profile-image", formData, {
+    headers: {
+      "Content-Type": "image/jpeg",
+    },
+  });
 };

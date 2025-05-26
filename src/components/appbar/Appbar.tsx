@@ -16,11 +16,15 @@ import {
   useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getMessages } from "../../api/user/api";
+import { getLoggedUser, getMessages } from "../../api/user/api";
 import { Message } from "../../api/user/types";
 import { isNavBarAvailableInPath } from "../navBar/utils";
 import DisplayModeSwitch from "../settings/DisplayModeSwitch/DisplayModeSwitch";
-import { MAX_MESSAGES_BADGE_CONTENT, MESSAGES_INTERVAL_MS } from "./const";
+import {
+  MAX_MESSAGES_BADGE_CONTENT,
+  MESSAGES_INTERVAL_MS,
+  PROFILE_IMAGE,
+} from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
 
@@ -62,6 +66,17 @@ const AppBar: FunctionComponent = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const setUserProfileImage = async () => {
+      if (!localStorage.getItem(PROFILE_IMAGE)) {
+        const { data } = await getLoggedUser();
+        data?.profileImage &&
+          localStorage.setItem(PROFILE_IMAGE, data.profileImage);
+      }
+    };
+    setUserProfileImage();
+  }, []);
+
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -91,7 +106,11 @@ const AppBar: FunctionComponent = () => {
           <NotificationsOutlined className={classes.notifications} />
         </Badge>
       </IconButton>
-      <Avatar className={classes.avatar} onClick={handleMenu} />
+      <Avatar
+        src={localStorage.getItem(PROFILE_IMAGE) ?? undefined}
+        className={classes.avatar}
+        onClick={handleMenu}
+      />
 
       <Menu
         anchorEl={anchorEl}

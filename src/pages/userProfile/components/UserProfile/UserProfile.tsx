@@ -7,12 +7,12 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { withStyles, WithStyles } from "@mui/styles";
 import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
+import { User } from "../../../../api/user/types";
 import EditingActions from "../EditingActions/EditingActions";
 import useStyles from "./styles";
-import { User } from "../../../../api/user/types";
 import { updateUser } from "../../../../api/user/api";
+import { PROFILE_IMAGE } from "../../../../components/appbar/const";
 
 interface UserProfileProps {
   user?: User;
@@ -24,13 +24,13 @@ const UserProfile: FunctionComponent<UserProfileProps> = (props) => {
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState<string>();
-  // const [profileImageUrl, setProfileImageUrl] = useState<string>();
+  const [profileImageUrl, setProfileImageUrl] = useState<string>();
   const [imageFile, setImageFile] = useState<File>();
 
   useEffect(() => {
     if (user) {
       setUsername(user.username);
-      // setProfileImageUrl(user.profileImage);
+      setProfileImageUrl(user.profileImage);
     }
   }, [user]);
 
@@ -44,9 +44,11 @@ const UserProfile: FunctionComponent<UserProfileProps> = (props) => {
       if (user && (username || imageFile)) {
         const { data: updatedUser } = await updateUser({
           username,
-          // imageFile
+          imageFile,
         });
         setUser(updatedUser);
+        updatedUser?.profileImage &&
+          localStorage.setItem(PROFILE_IMAGE, updatedUser.profileImage);
       }
     } finally {
       stopEdit();
@@ -56,7 +58,7 @@ const UserProfile: FunctionComponent<UserProfileProps> = (props) => {
   const handleCancel = () => {
     if (user) {
       setUsername(user.username);
-      // setProfileImageUrl(user.profileImage);
+      setProfileImageUrl(user.profileImage);
     }
     stopEdit();
   };
@@ -65,16 +67,20 @@ const UserProfile: FunctionComponent<UserProfileProps> = (props) => {
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      // setProfileImageUrl(imageUrl);
+      setProfileImageUrl(imageUrl);
       setImageFile(file);
     }
   };
 
   return (
     <div className={classes.root}>
+      <Typography variant="h4" gutterBottom>
+        User Profile
+      </Typography>
+
       <div className={classes.profileImageDiv}>
         <Avatar
-          // src={profileImageUrl}
+          src={profileImageUrl}
           alt={user?.username ?? "Profile"}
           sx={{
             width: 150,
