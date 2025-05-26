@@ -13,6 +13,8 @@ import EditingActions from "../EditingActions/EditingActions";
 import useStyles from "./styles";
 import { updateUser } from "../../../../api/user/api";
 import { PROFILE_IMAGE } from "../../../../components/appbar/const";
+import { useSetRecoilState } from "recoil";
+import { profileImageState } from "../../../../recoil/profileImage";
 
 interface UserProfileProps {
   user?: User;
@@ -26,6 +28,7 @@ const UserProfile: FunctionComponent<UserProfileProps> = (props) => {
   const [username, setUsername] = useState<string>();
   const [profileImageUrl, setProfileImageUrl] = useState<string>();
   const [imageFile, setImageFile] = useState<File>();
+  const setProfileImageState = useSetRecoilState(profileImageState);
 
   useEffect(() => {
     if (user) {
@@ -47,8 +50,11 @@ const UserProfile: FunctionComponent<UserProfileProps> = (props) => {
           imageFile,
         });
         setUser(updatedUser);
-        updatedUser?.profileImage &&
+
+        if (updatedUser?.profileImage) {
           localStorage.setItem(PROFILE_IMAGE, updatedUser.profileImage);
+          setProfileImageState(updatedUser.profileImage);
+        }
       }
     } finally {
       stopEdit();

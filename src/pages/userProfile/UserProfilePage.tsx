@@ -1,9 +1,8 @@
 import { FunctionComponent, useEffect, useState } from "react";
+import { getLoggedUser } from "../../api/user/api";
+import { User } from "../../api/user/types";
 import UserProfile from "./components/UserProfile/UserProfile";
 import useStyles from "./styles";
-import { User } from "../../api/user/types";
-import { getLoggedUser } from "../../api/user/api";
-import { Typography } from "@mui/material";
 
 const UserProfilePage: FunctionComponent = (props) => {
   const classes = useStyles();

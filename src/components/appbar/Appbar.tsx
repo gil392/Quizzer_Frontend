@@ -27,6 +27,8 @@ import {
 } from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
+import { useRecoilState } from "recoil";
+import { profileImageState } from "../../recoil/profileImage";
 
 const AppBar: FunctionComponent = () => {
   const classes = useStyles();
@@ -36,6 +38,7 @@ const AppBar: FunctionComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [profileImage, setProfileImage] = useRecoilState(profileImageState);
 
   const isAppBarAvaiable = useMemo(
     () => isNavBarAvailableInPath(location.pathname),
@@ -68,10 +71,15 @@ const AppBar: FunctionComponent = () => {
 
   useEffect(() => {
     const setUserProfileImage = async () => {
-      if (!localStorage.getItem(PROFILE_IMAGE)) {
+      let userProfileImage: string | null | undefined =
+        localStorage.getItem(PROFILE_IMAGE);
+      if (!userProfileImage) {
         const { data } = await getLoggedUser();
-        data?.profileImage &&
-          localStorage.setItem(PROFILE_IMAGE, data.profileImage);
+        userProfileImage = data?.profileImage;
+      }
+      if (userProfileImage) {
+        setProfileImage(userProfileImage);
+        localStorage.setItem(PROFILE_IMAGE, userProfileImage);
       }
     };
     setUserProfileImage();
@@ -107,7 +115,7 @@ const AppBar: FunctionComponent = () => {
         </Badge>
       </IconButton>
       <Avatar
-        src={localStorage.getItem(PROFILE_IMAGE) ?? undefined}
+        src={profileImage}
         className={classes.avatar}
         onClick={handleMenu}
       />
