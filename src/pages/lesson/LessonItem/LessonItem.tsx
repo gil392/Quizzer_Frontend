@@ -8,6 +8,7 @@ import MergeIcon from "@mui/icons-material/Merge";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import UncheckedBoxIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import EditabletitleWithActions from "../../../components/EditabletitleWithActions";
+import clsx from "clsx";
 
 interface LessonItemProps {
   lesson: LessonData;
@@ -53,13 +54,13 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
 
   return (
     <Box
-      className={`${classes.lessonItem} ${
-        !isEditing ? classes.lessonItemHover : ""
-      } ${
-        props.isMergeLessonsMode && !isRelatedLesson()
-          ? classes.unrelatedLesson
-          : ""
-      }`}
+      className={clsx(
+        classes.lessonItem,
+        !isEditing && classes.lessonItemHover,
+        props.isMergeLessonsMode &&
+          !isRelatedLesson() &&
+          classes.unrelatedLesson
+      )}
       onClick={() => !isEditing && props.openLesson()}
     >
       <Box className={classes.flexContainer}>
