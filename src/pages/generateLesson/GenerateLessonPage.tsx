@@ -72,7 +72,7 @@ const GenerateLessonPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ width: "50vw", margin: "auto" }}>
+    <Box sx={{ width: "60vw", margin: "auto" }}>
       <Typography variant="h6" gutterBottom>
         Insert YouTube Video
       </Typography>

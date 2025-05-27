@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => {
       boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
       borderRadius: "2px",
       transition: "0.3s",
-      width: "40vw",
+      width: "60vw",
       marginTop: "2vh",
       marginBottom: "2vh",
       backgroundColor: lessonItemBgColor,
