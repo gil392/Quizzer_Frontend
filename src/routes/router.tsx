@@ -3,9 +3,9 @@ import { SetAccessTokenFunction } from "../hooks/authentication/types";
 import GenerateLessonPage from "../pages/generateLesson/GenerateLessonPage";
 import LessonsPage from "../pages/lesson/LessonsPage/LessonsPage";
 import LoginPage from "../pages/login/LoginPage";
-import QuizPage from "../pages/Quiz";
+import QuizPage from "../pages/quiz/Quiz";
 import RegisterPage from "../pages/register/RegisterPage";
-import SummaryPage from "../pages/Summary";
+import SummaryPage from "../pages/summary/Summary";
 import { PAGES_ROUTES } from "./routes.const";
 import SettingsPage from "../pages/settings/SettingsPage";
 
