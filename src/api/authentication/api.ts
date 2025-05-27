@@ -11,3 +11,6 @@ export const refreshAuthAccessToken = () =>
   apiClient.get<LoginResponse>("/auth/refresh");
 
 export const logout = () => apiClient.post("/auth/logout");
+
+export const googleLogin = () => window.location.href = `${import.meta.env.VITE_BACKEND_URL}/auth/google`;
+
