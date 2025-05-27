@@ -9,4 +9,5 @@ export const PAGES_ROUTES = {
   LESSON: "/lesson/*",
   FRIENDS: "/friends",
   SETTINGS: "/settings",
+  AUTH_CALLBACK: "/auth/callback",
 };
