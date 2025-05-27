@@ -171,7 +171,22 @@ const QuizPage: React.FC = () => {
   };
 
   const retry = () => {
-    setQuizResult(null);
+    if (!quizData) {
+      console.error("Quiz data is not available for retry.");
+      return;
+    }
+  
+    setQuizResult({
+      quizId: quizData._id,
+      results: quizData.questions.map((question) => ({
+        questionId: question._id,
+        selectedAnswer: null,
+        correctAnswer: null,
+        isCorrect: null,
+      })),
+      score: 0,
+    });
+  
     setSelectedAnswers({});
   };
 
