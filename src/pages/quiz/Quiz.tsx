@@ -20,7 +20,6 @@ import { toastWarning } from "../../utils/utils";
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 import { createQuizAttempt, getLessonById } from "../../api/quiz/api";
 import { QuizAttempt } from "../../api/quiz/types";
-import { is } from "ramda";
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
@@ -39,7 +38,7 @@ const QuizPage: React.FC = () => {
   }>({});
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
-  const isOnSelectAnswerMode = 'onSelectAnswer'// quizSettings?.feedbackType 
+  const isOnSelectAnswerMode = quizSettings?.feedbackType 
 
   const fetchQuizById = useCallback(async (id: string) => {
     setLoading(true);
