@@ -204,18 +204,22 @@ const QuizPage: React.FC = () => {
     return "default";
   };
 
-  const areAllQuestionsSubmitted = () => {
+  const areAllQuestionsSubmitted = (isCalledFromSubmit: boolean) => {
+    if (isCalledFromSubmit) {
+      console.log("Checking if all questions are submitted...", quizResult);
+    }
+    
     return quizResult?.results.every((result) => result.correctAnswer !== null);
   };
 
-  const handleSubmitQuestionClick = async (index: number) => {
+  const handleSubmitQuestionClick = async (questionIndex: number) => {
     if (!quizData) {
       console.error("Quiz data is not available.");
       return;
     }
   
-    const question = quizData.questions[index];
-    const selectedAnswer = selectedAnswers[index];
+    const question = quizData.questions[questionIndex];
+    const selectedAnswer = selectedAnswers[questionIndex];
   
     if (!selectedAnswer) {
       console.error("Please select an answer before submitting.");
@@ -237,7 +241,7 @@ const QuizPage: React.FC = () => {
   
         const updatedResults = [...prev.results];
   
-        updatedResults[index] = {
+        updatedResults[questionIndex] = {
           questionId: question._id,
           selectedAnswer,
           correctAnswer: questionResult.correctAnswer,
@@ -249,9 +253,17 @@ const QuizPage: React.FC = () => {
           results: updatedResults,
         };
       });
-  
-
-      if (areAllQuestionsSubmitted()) {
+      
+      const allSubmitted = quizData.questions.every((_, resultIndex) => {
+        if (resultIndex === questionIndex) {
+          return true;
+        }
+        const result = quizResult?.results[resultIndex];
+        return result?.correctAnswer !== null;
+      });
+      
+      if (allSubmitted) {
+        console.log("All other questions submitted. Handling quiz submission.");
         await handleQuizSubmission();
       }
     } catch (error) {
@@ -275,7 +287,7 @@ const QuizPage: React.FC = () => {
         ) : quizData ? (
           <Box>
             <Box id={QUIZ_CONTENT_PDF_ID}>
-              {quizResult && areAllQuestionsSubmitted() && (
+              {quizResult && areAllQuestionsSubmitted(false) && (
                 <Box
                   className={classes.resultBox}
                   style={{
@@ -321,7 +333,7 @@ const QuizPage: React.FC = () => {
                                 onChange={() =>
                                   handleOptionChange(index, option)
                                 }
-                                disabled={!!quizResult && areAllQuestionsSubmitted()}
+                                disabled={!!quizResult && areAllQuestionsSubmitted(false)}
                                 sx={{
                                   "& .MuiSvgIcon-root": {
                                     border: `2px solid ${getAnswerOutlineColor(
@@ -340,7 +352,11 @@ const QuizPage: React.FC = () => {
                       <Box display="flex" justifyContent="flex-end">
                         {isOnSelectAnswerMode === "onSelectAnswer" &&
                           selectedAnswers[index] && ( 
-                            <IconButton color="primary" onClick={() => handleSubmitQuestionClick(index)}>
+                            <IconButton
+                             color="primary"
+                             onClick={() => handleSubmitQuestionClick(index)}
+                             disabled={!!quizResult?.results[index]?.correctAnswer}
+                            >
                               <ArrowForwardIcon />
                             </IconButton>
                           )}
@@ -351,7 +367,7 @@ const QuizPage: React.FC = () => {
               </Box>
             </Box>
             <Box className={classes.buttonContainer}>
-              {quizResult && areAllQuestionsSubmitted() ? (
+              {quizResult && areAllQuestionsSubmitted(false) ? (
                 <Button variant="contained" color="primary" onClick={retry}>
                   Retry
                 </Button>
