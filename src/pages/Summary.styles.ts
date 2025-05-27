@@ -1,16 +1,18 @@
 import { makeStyles } from "@mui/styles";
+import { Theme } from "@mui/material/styles";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
     container: {
-        width: "75vw",
-        margin: "auto",
-        padding: 16,
+        width: "100%",
+        height: "100%",
+        background: theme.palette.background.paper,
+        borderRadius: 12,
+        boxShadow: theme.shadows[1],
+        padding: 24,
     },
     card: {
-        maxWidth: "75vw",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
         paddingTop: 16,
-        height: "85vh",
         overflowY: "auto",
         "&::-webkit-scrollbar": {
             width: "8px",
@@ -26,7 +28,13 @@ const useStyles = makeStyles(() => ({
             backgroundColor: "#f1f1f1",
         },
     },
+    header: {
+        marginBottom: 12,
+        color: theme.palette.text.primary,
+        fontWeight: 600,
+    },
     skeletonContainer: {
+        width: "100%",
         padding: 16,
     },
     cardContent: {
