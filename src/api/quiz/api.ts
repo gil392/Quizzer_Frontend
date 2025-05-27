@@ -51,10 +51,10 @@ export const rateQuiz = (
     }
   );
 
-export const submitQuestionAnswer = (
-  questionId: string,
-  selectedAnswer: string
-): AxiosPromise<QuestionResults> =>
-  apiClient.post(`/attempt/question/${questionId}`, {
-    selectedAnswer,
-  });
+  export const submitQuestionAnswer = (
+    questionId: string,
+    selectedAnswer: string
+  ): AxiosPromise<QuestionResults> =>
+    apiClient.get(`/attempt/question/${questionId}`, {
+      params: { selectedAnswer },
+    });
