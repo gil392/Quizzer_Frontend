@@ -3,14 +3,14 @@ import { FunctionComponent, useEffect, useState } from "react";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
 import { FeedbackType, QuestionsOrder } from "../../api/quiz/types";
 import { getLoggedUser, updateUser } from "../../api/user/api";
-import { User, UserSettings } from "../../api/user/types";
+import { UserSettings } from "../../api/user/types";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import DisplayModeSwitch from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 import useStyles from "./styles";
+import { toastWarning } from "../../utils/utils";
 
 const SettingsPage: FunctionComponent = () => {
   const classes = useStyles();
-  const [user, setUser] = useState<User | null>(null);
 
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
     INITIAL_QUIZ_SETTINGS.feedbackType
@@ -41,7 +41,6 @@ const SettingsPage: FunctionComponent = () => {
     const fetchUser = async () => {
       try {
         const { data } = await getLoggedUser();
-        setUser(data);
         data?.settings && setSettings(data.settings);
       } catch (error) {
         console.error("Error fetching user: ", error);
@@ -53,20 +52,17 @@ const SettingsPage: FunctionComponent = () => {
 
   useEffect(() => {
     const updateSettings = async () => {
-      if (user) {
-        try {
-          const settings: Partial<UserSettings> = {
-            feedbackType,
-            questionsOrder,
-            maxQuestionCount,
-            isManualCount,
-          };
-          await updateUser({ settings });
-        } catch (error) {
-          console.error("Error updating user: ", error);
-        }
-      } else {
-        console.error("Error updating user: User does not exists");
+      try {
+        const settings: Partial<UserSettings> = {
+          feedbackType,
+          questionsOrder,
+          maxQuestionCount,
+          isManualCount,
+        };
+        await updateUser({ settings });
+      } catch (error) {
+        console.error("Error updating user: ", error);
+        toastWarning("Failed to update the settings. Please try again.");
       }
     };
 
