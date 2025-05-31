@@ -9,6 +9,7 @@ import SummaryPage from "../pages/Summary";
 import { PAGES_ROUTES } from "./routes.const";
 import FriendsPage from "../pages/friends/FriendsPage";
 import SettingsPage from "../pages/settings/SettingsPage";
+import UserProfilePage from "../pages/userProfile/UserProfilePage";
 
 export const createPagesRoutes = (
   setAccessToken: SetAccessTokenFunction
@@ -31,4 +32,5 @@ export const createPagesRoutes = (
   { path: PAGES_ROUTES.SUMMARY, element: <SummaryPage /> },
   { path: PAGES_ROUTES.LESSON, element: <LessonsPage /> },
   { path: PAGES_ROUTES.FRIENDS, element: <FriendsPage /> },
+  { path: PAGES_ROUTES.PROFILE, element: <UserProfilePage /> },
 ];

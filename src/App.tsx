@@ -5,19 +5,22 @@ import Layout from "./components/layout/Layout";
 import NavBar from "./components/navBar/NavBar";
 import { DisplayModeProvider } from "./components/settings/DisplayModeSwitch/globalProvider";
 import { Toaster } from "sonner";
+import { RecoilRoot } from "recoil";
 
 function App() {
   return (
     <DisplayModeProvider>
       <div className="app-container">
-        <Toaster richColors />
-        <Router>
-          <NavBar />
-          <div className="app-layout-appbar">
-            <AppBar />
-            <Layout />
-          </div>
-        </Router>
+        <RecoilRoot>
+          <Toaster richColors />
+          <Router>
+            <NavBar />
+            <div className="app-layout-appbar">
+              <AppBar />
+              <Layout />
+            </div>
+          </Router>
+        </RecoilRoot>
       </div>
     </DisplayModeProvider>
   );
