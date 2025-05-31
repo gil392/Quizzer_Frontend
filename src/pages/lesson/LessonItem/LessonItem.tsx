@@ -15,7 +15,6 @@ interface LessonItemProps {
   onLessonDeleted: (lessonId: string) => void;
   updateLessonTitle: (newTitle: string) => void;
   openLesson: () => void;
-  mergeIcon?: React.ReactNode;
   className?: string;
   mergingLessons: LessonData[];
   setMergingLessons: (lessons: LessonData[]) => void;
@@ -24,32 +23,42 @@ interface LessonItemProps {
   cancelMergingMode: () => void;
 }
 
-const LessonItem: FunctionComponent<LessonItemProps> = (
-  props: LessonItemProps
-) => {
+const LessonItem: FunctionComponent<LessonItemProps> = ({
+  lesson,
+  onLessonDeleted,
+  updateLessonTitle,
+  openLesson,
+  className,
+  mergingLessons,
+  setMergingLessons,
+  isMergeLessonsMode,
+  setIsMergeLessonsMode,
+  cancelMergingMode,
+}) => {
   const [isEditing, setIsEditing] = useState(false);
   const classes = useStyles();
 
   const isLessonMerging = () =>
-    props.mergingLessons.some((l) => l._id === props.lesson._id);
+    mergingLessons.some((lessonToCheck) => lessonToCheck._id === lesson._id);
 
   const isRelatedLesson = () =>
-    props.mergingLessons.some(
-      (l) => l.relatedLessonId === props.lesson.relatedLessonId
+    mergingLessons.some(
+      (lessonToCheck) =>
+        lessonToCheck.relatedLessonId === lesson.relatedLessonId
     );
 
   const handleToggleMergeLesson = () => {
     if (!isLessonMerging()) {
-      props.setMergingLessons([...props.mergingLessons, props.lesson]);
+      setMergingLessons([...mergingLessons, lesson]);
       return;
     }
-    const updated = props.mergingLessons.filter(
-      (l) => l._id !== props.lesson._id
+    const updated = mergingLessons.filter(
+      (lessonToCheck) => lessonToCheck._id !== lesson._id
     );
     if (updated.length === 0) {
-      props.cancelMergingMode();
+      cancelMergingMode();
     }
-    props.setMergingLessons(updated);
+    setMergingLessons(updated);
   };
 
   return (
@@ -57,20 +66,19 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
       className={clsx(
         classes.lessonItem,
         !isEditing && classes.lessonItemHover,
-        props.isMergeLessonsMode &&
-          !isRelatedLesson() &&
-          classes.unrelatedLesson
+        isMergeLessonsMode && !isRelatedLesson() && classes.unrelatedLesson,
+        className
       )}
-      onClick={() => !isEditing && props.openLesson()}
+      onClick={() => !isEditing && openLesson()}
     >
       <Box className={classes.flexContainer}>
         <EditabletitleWithActions
-          title={props.lesson.title}
-          onSave={(newTitle) => props.updateLessonTitle(newTitle)}
-          onDelete={() => props.onLessonDeleted(props.lesson._id)}
-          onEditModeChange={(isEditing) => setIsEditing(isEditing)}
+          title={lesson.title}
+          onSave={updateLessonTitle}
+          onDelete={() => onLessonDeleted(lesson._id)}
+          onEditModeChange={setIsEditing}
         />
-        {props.isMergeLessonsMode ? (
+        {isMergeLessonsMode ? (
           <GenericIconButton
             icon={isLessonMerging() ? <CheckBoxIcon /> : <UncheckedBoxIcon />}
             onClick={() => {
@@ -83,8 +91,8 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
             icon={<MergeIcon />}
             title={"Merge Lessons"}
             onClick={() => {
-              props.setIsMergeLessonsMode(true);
-              props.setMergingLessons([props.lesson]);
+              setIsMergeLessonsMode(true);
+              setMergingLessons([lesson]);
             }}
           />
         )}
