@@ -58,7 +58,6 @@ const GenerateLessonPage: React.FC = () => {
     const quizSettings: QuizSettings = {
       feedbackType,
       maxQuestionCount,
-      isRandomOrder: questionsOrder === "random",
       solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
       questionsOrder,
       isManualCount,
