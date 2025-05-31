@@ -39,17 +39,17 @@ const LessonItem: FunctionComponent<LessonItemProps> = (
     );
 
   const handleToggleMergeLesson = () => {
-    if (isLessonMerging()) {
-      const updated = props.mergingLessons.filter(
-        (l) => l._id !== props.lesson._id
-      );
-      if (updated.length === 0) {
-        props.cancelMergingMode();
-      }
-      props.setMergingLessons(updated);
-    } else {
+    if (!isLessonMerging()) {
       props.setMergingLessons([...props.mergingLessons, props.lesson]);
+      return;
     }
+    const updated = props.mergingLessons.filter(
+      (l) => l._id !== props.lesson._id
+    );
+    if (updated.length === 0) {
+      props.cancelMergingMode();
+    }
+    props.setMergingLessons(updated);
   };
 
   return (
