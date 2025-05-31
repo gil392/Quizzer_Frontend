@@ -1,20 +1,15 @@
 import EditIcon from "@mui/icons-material/Edit";
-import {
-  Avatar,
-  Button,
-  IconButton,
-  Skeleton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Avatar, Button, Skeleton, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
-import { User } from "../../api/user/types";
-import useStyles from "./styles";
 import { useSetRecoilState } from "recoil";
-import { profileImageState } from "../../recoil/profileImage";
 import { getLoggedUser, updateUser } from "../../api/user/api";
+import { User } from "../../api/user/types";
 import { PROFILE_IMAGE } from "../../components/appbar/const";
+import { GenericIconButton } from "../../components/GenericIconButton";
+import { profileImageState } from "../../recoil/profileImage";
+import { toastSuccess, toastWarning } from "../../utils/utils";
 import EditingActions from "./components/EditingActions/EditingActions";
+import useStyles from "./styles";
 
 const UserProfilePage: FunctionComponent = () => {
   const [user, setUser] = useState<User>();
@@ -59,9 +54,12 @@ const UserProfilePage: FunctionComponent = () => {
           localStorage.setItem(PROFILE_IMAGE, updatedUser.profileImage);
           setProfileImageState(updatedUser.profileImage);
         }
+        toastSuccess("Update user successfuly");
+        stopEdit();
       }
-    } finally {
-      stopEdit();
+    } catch (error) {
+      console.error("Failed updating user: ", error);
+      toastWarning("Failed to update user. Please try again");
     }
   };
 
@@ -100,19 +98,22 @@ const UserProfilePage: FunctionComponent = () => {
             }}
           />
           {isEditing && (
-            <IconButton
-              component="label"
+            <GenericIconButton
+              component={"label"}
+              title={"Upload image"}
               className={classes.imageEditIcon}
-              sx={{ position: "absolute" }}
-            >
-              <EditIcon />
-              <input
-                type="file"
-                accept="image/*"
-                hidden
-                onChange={handleProfileImageChange}
-              />
-            </IconButton>
+              icon={
+                <>
+                  <EditIcon />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={handleProfileImageChange}
+                  />
+                </>
+              }
+            />
           )}
         </div>
 

@@ -10,24 +10,30 @@ interface ProfileImageProps {
   handleMenu: (event: React.MouseEvent<HTMLElement>) => void;
 }
 
+const getUserProfileImage = async () => {
+  let userProfileImage: string | null | undefined =
+    localStorage.getItem(PROFILE_IMAGE);
+  if (!userProfileImage) {
+    const { data } = await getLoggedUser();
+    userProfileImage = data?.profileImage;
+  }
+  return userProfileImage;
+};
+
 const ProfileImage: FunctionComponent<ProfileImageProps> = (props) => {
   const classes = useStyles();
   const [profileImage, setProfileImage] = useRecoilState(profileImageState);
 
   useEffect(() => {
-    const setUserProfileImage = async () => {
+    const initUserProfileImage = async () => {
       let userProfileImage: string | null | undefined =
-        localStorage.getItem(PROFILE_IMAGE);
-      if (!userProfileImage) {
-        const { data } = await getLoggedUser();
-        userProfileImage = data?.profileImage;
-      }
+        await getUserProfileImage();
       if (userProfileImage) {
         setProfileImage(userProfileImage);
         localStorage.setItem(PROFILE_IMAGE, userProfileImage);
       }
     };
-    setUserProfileImage();
+    initUserProfileImage();
   }, []);
 
   return (

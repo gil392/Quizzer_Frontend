@@ -25,6 +25,9 @@ const useStyles = makeStyles(() =>
     imageEditIcon: {
       bottom: 0,
       right: 0,
+      "&.MuiIconButton-root": {
+        position: "absolute",
+      },
     },
   })
 );
