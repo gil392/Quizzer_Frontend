@@ -1,14 +1,15 @@
 import { Navigate, RouteProps } from "react-router-dom";
 import { SetAccessTokenFunction } from "../hooks/authentication/types";
+import FriendsPage from "../pages/friends/FriendsPage";
 import GenerateLessonPage from "../pages/generateLesson/GenerateLessonPage";
 import LessonsPage from "../pages/lesson/LessonsPage/LessonsPage";
 import LoginPage from "../pages/login/LoginPage";
+import ProfilePage from "../pages/profile/ProfilePage";
 import QuizPage from "../pages/Quiz";
 import RegisterPage from "../pages/register/RegisterPage";
+import SettingsPage from "../pages/settings/SettingsPage";
 import SummaryPage from "../pages/Summary";
 import { PAGES_ROUTES } from "./routes.const";
-import FriendsPage from "../pages/friends/FriendsPage";
-import SettingsPage from "../pages/settings/SettingsPage";
 
 export const createPagesRoutes = (
   setAccessToken: SetAccessTokenFunction
@@ -31,4 +32,5 @@ export const createPagesRoutes = (
   { path: PAGES_ROUTES.SUMMARY, element: <SummaryPage /> },
   { path: PAGES_ROUTES.LESSON, element: <LessonsPage /> },
   { path: PAGES_ROUTES.FRIENDS, element: <FriendsPage /> },
+  { path: PAGES_ROUTES.PROFILE, element: <ProfilePage /> },
 ];

@@ -6,12 +6,12 @@ import { removeUserDisplayMode } from "../settings/DisplayModeSwitch/utils";
 export const createAppbarMenu = (
   navigate: NavigateFunction
 ): { label: string; onClick: () => void }[] => [
-  // {
-  //     label: 'Profile',
-  //     onClick: () => {
-  //         navigate(PAGES_ROUTES.PROFILE);
-  //     }
-  // },
+  {
+      label: 'Profile',
+      onClick: () => {
+          navigate(PAGES_ROUTES.PROFILE);
+      }
+  },
   {
     label: "Sign Out",
     onClick: () => {
