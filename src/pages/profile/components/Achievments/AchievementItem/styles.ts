@@ -9,6 +9,7 @@ export const useStyles = makeStyles(() =>
       boxSizing: "border-box",
       overflow: "hidden",
       wordBreak: "normal",
+      position: "relative",
     },
     rewardSection: {
       padding: "0 12px 0 0",
@@ -46,6 +47,15 @@ export const useStyles = makeStyles(() =>
     detailsSection: {
       width: "100%",
       paddingBottom: "0.2em",
+    },
+    completedPlate: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      backgroundColor: "green",
+      opacity: "0.3",
     },
   })
 );

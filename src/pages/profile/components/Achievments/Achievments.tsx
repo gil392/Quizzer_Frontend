@@ -1,11 +1,14 @@
 import { Divider, Typography } from "@mui/material";
 import clsx from "clsx";
+import { isEmpty } from "ramda";
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { getAvailableAchievements } from "../../../../api/achievements/api";
 import { Achievement } from "../../../../api/achievements/types";
 import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import AchievementItem from "./AchievementItem/AchievementItem";
+import { mock } from "./mock";
 import { useStyles } from "./styles";
+import { sortAchievementsLeastCompleted } from "./utils";
 
 const Achievments: FunctionComponent = () => {
   const classes = useStyles();
@@ -15,8 +18,10 @@ const Achievments: FunctionComponent = () => {
   const fetchAchievements = useCallback(
     async (abortController?: AbortController) => {
       setIsLoading(true);
-      const { data } = await getAvailableAchievements(abortController);
-      setAchievments(data);
+      const { data: d } = await getAvailableAchievements(abortController);
+      const data: Achievement[] = isEmpty(d) ? mock : d;
+      const achivements = sortAchievementsLeastCompleted(data);
+      setAchievments(achivements);
       setIsLoading(false);
     },
     []

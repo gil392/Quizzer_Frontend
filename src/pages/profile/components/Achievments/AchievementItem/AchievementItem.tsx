@@ -57,6 +57,10 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
         </Typography>
         <div>{progresses}</div>
       </section>
+
+      {achievement.isCompleted ? (
+        <div className={classes.completedPlate} />
+      ) : null}
     </div>
   );
 };

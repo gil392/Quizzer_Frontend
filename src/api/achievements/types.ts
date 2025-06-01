@@ -10,4 +10,5 @@ export type Achievement = {
   description: string;
   reward: Reward;
   requirements: RequirmentProgress[];
+  isCompleted: boolean;
 };
