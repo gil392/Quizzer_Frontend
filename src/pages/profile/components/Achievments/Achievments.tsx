@@ -1,0 +1,57 @@
+import { Divider, Typography } from "@mui/material";
+import clsx from "clsx";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
+import { getAvailableAchievements } from "../../../../api/achievements/api";
+import { Achievement } from "../../../../api/achievements/types";
+import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
+import AchievementItem from "./AchievementItem/AchievementItem";
+import { useStyles } from "./styles";
+
+const Achievments: FunctionComponent = () => {
+  const classes = useStyles();
+  const [achievments, setAchievments] = useState<Achievement[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchAchievements = useCallback(
+    async (abortController?: AbortController) => {
+      setIsLoading(true);
+      const { data } = await getAvailableAchievements(abortController);
+      setAchievments(data);
+      setIsLoading(false);
+    },
+    []
+  );
+
+  useEffect(() => {
+    const abortController = new AbortController();
+    fetchAchievements(abortController);
+
+    return () => abortController.abort();
+  }, []);
+
+  const achievementsList = isLoading ? (
+    <SkeletonList itemClassName={classes.skeletonItem} numberOfItems={6} />
+  ) : (
+    achievments.map((achievment, index) => (
+      <>
+        <AchievementItem achievement={achievment} />
+        {index !== achievments.length - 1 ? <Divider /> : null}
+      </>
+    ))
+  );
+
+  return (
+    <div className={classes.root}>
+      <section>
+        <Typography gutterBottom variant="h5">
+          Achievements
+        </Typography>
+      </section>
+      <div className={clsx(classes.achievementsList, classes.scroller)}>
+        {achievementsList}
+      </div>
+    </div>
+  );
+};
+
+export default Achievments;
