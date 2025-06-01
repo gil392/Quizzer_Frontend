@@ -1,4 +1,5 @@
 import { LinearProgress, Typography } from "@mui/material";
+import { min } from "ramda";
 import { FunctionComponent } from "react";
 import { Achievement } from "../../../../../api/achievements/types";
 import { useStyles } from "./styles";
@@ -19,7 +20,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
         color="textSecondary"
         className={classes.progressLabel}
       >
-        {value}/{count}
+        {min(value, count)}/{count}
       </Typography>
       <LinearProgress
         variant="determinate"
