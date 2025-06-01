@@ -3,6 +3,7 @@ import LessonItem from "../LessonItem/LessonItem";
 import {
   deleteLesson,
   getLessons,
+  mergeLessons,
   updateLesson,
 } from "../../../api/lesson/api";
 import { LessonData } from "../../../api/lesson/types";
@@ -16,7 +17,7 @@ import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
 import { getFilteredLessons } from "../FilterLessons/utils";
 import FilterLessons from "../FilterLessons/FilterLessons";
 import { useNavigate } from "react-router-dom";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
 
 const LessonsPage: React.FC = () => {
@@ -30,6 +31,8 @@ const LessonsPage: React.FC = () => {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>(
     INITIAL_FILTER_OPTIONS
   );
+  const [mergingLessons, setMergingLessons] = useState<LessonData[]>([]);
+  const [isMergeLessonsMode, setIsMergeLessonsMode] = useState(false);
 
   useEffect(() => {
     const fetchLessons = async () => {
@@ -70,6 +73,23 @@ const LessonsPage: React.FC = () => {
     openPopup();
   };
 
+  const cancelMergingMode = () => {
+    setIsMergeLessonsMode(false);
+    setMergingLessons([]);
+  };
+
+  const createMergedLesson = () => {
+    return () => {
+      mergeLessons(mergingLessons.map((lesson) => lesson._id)).then(
+        (result) => {
+          setLessons((prevLessons) => [...prevLessons, result.data]);
+          setMergingLessons([]);
+          setIsMergeLessonsMode(false);
+        }
+      );
+    };
+  };
+
   return (
     <>
       {selectedLesson !== null ? (
@@ -106,6 +126,11 @@ const LessonsPage: React.FC = () => {
                 updateLessonTitle={(newTitle: string) => {
                   handleUpdateLesson({ ...lesson, title: newTitle });
                 }}
+                mergingLessons={mergingLessons}
+                setMergingLessons={setMergingLessons}
+                isMergeLessonsMode={isMergeLessonsMode}
+                setIsMergeLessonsMode={setIsMergeLessonsMode}
+                cancelMergingMode={cancelMergingMode}
               />
             ))
           ) : (
@@ -116,6 +141,25 @@ const LessonsPage: React.FC = () => {
             >
               No existing lessons.
             </Typography>
+          )}
+          {isMergeLessonsMode && (
+            <Box mt={2} display="flex" gap={2}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={cancelMergingMode}
+              >
+                Cancel Merging
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={mergingLessons.length < 2}
+                onClick={createMergedLesson()}
+              >
+                Create Merged Lesson
+              </Button>
+            </Box>
           )}
         </>
       )}
