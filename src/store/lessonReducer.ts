@@ -5,12 +5,21 @@ import {
   updateLesson,
   deleteLesson,
   mergeLessons,
+  generateLesson,
 } from "../api/lesson/api";
 
 export const fetchLessons = createAsyncThunk(
   "lesson/fetchLessons",
   async () => {
     const response = await getLessons();
+    return response.data;
+  }
+);
+
+export const createLessonAsync = createAsyncThunk(
+  "lesson/createLesson",
+  async (videoUrl: string) => {
+    const response = await generateLesson(videoUrl);
     return response.data;
   }
 );
@@ -67,6 +76,9 @@ const lessonSlice = createSlice({
         );
       })
       .addCase(mergeLessonsAsync.fulfilled, (state, action) => {
+        state.lessons.push(action.payload);
+      })
+      .addCase(createLessonAsync.fulfilled, (state, action) => {
         state.lessons.push(action.payload);
       });
   },

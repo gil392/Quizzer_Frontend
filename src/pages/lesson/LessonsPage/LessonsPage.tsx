@@ -39,7 +39,6 @@ const LessonsPage: React.FC = () => {
   const [mergingLessons, setMergingLessons] = useState<LessonData[]>([]);
   const [isMergeLessonsMode, setIsMergeLessonsMode] = useState(false);
 
-  // Fetch lessons from Redux store on mount
   useEffect(() => {
     dispatch(fetchLessons());
   }, [dispatch]);
@@ -48,10 +47,6 @@ const LessonsPage: React.FC = () => {
     () => getFilteredLessons(lessons, filterOptions),
     [lessons, filterOptions]
   );
-
-  const handleLessonDeleted = async (lessonId: string) => {
-    await dispatch(deleteLessonAsync(lessonId));
-  };
 
   const handleUpdateLesson = async (lesson: LessonData) => {
     await dispatch(updateLessonAsync(lesson));
@@ -111,7 +106,6 @@ const LessonsPage: React.FC = () => {
               <LessonItem
                 key={lesson._id}
                 lesson={lesson}
-                onLessonDeleted={handleLessonDeleted}
                 openLesson={() => openLesson(lesson)}
                 updateLessonTitle={(newTitle: string) => {
                   handleUpdateLesson({ ...lesson, title: newTitle });

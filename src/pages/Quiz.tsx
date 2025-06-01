@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { generateQuiz, getQuizById } from "../api/quiz/api";
+import { getQuizById } from "../api/quiz/api";
 import { QuizData, QuizResult } from "../api/quiz/types";
 import useStyles from "./Quiz.styles";
 import { exportToPDF } from "../utils/pdfUtils";
@@ -18,6 +18,9 @@ import { toastWarning } from "../utils/utils";
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 import { createQuizAttempt, getLessonById } from "../api/quiz/api";
 import { QuizAttempt } from "../api/quiz/types";
+import { useDispatch } from "react-redux";
+import { generateQuizAsync } from "../store/quizReducer";
+import { AppDispatch } from "../store/store";
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
@@ -36,18 +39,23 @@ const QuizPage: React.FC = () => {
   }>({});
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
-  const fetchQuizById = useCallback(async (id: string) => {
-    setLoading(true);
+  const dispatch = useDispatch<AppDispatch>();
 
-    try {
-      const { data } = await getQuizById(id);
-      setQuizData(data);
-    } catch (error) {
-      console.error("Error fetching quiz:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const fetchQuiz = useCallback(
+    async (id: string) => {
+      setLoading(true);
+
+      try {
+        const { data } = await getQuizById(id);
+        setQuizData(data);
+      } catch (error) {
+        console.error("Error fetching quiz:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [dispatch]
+  );
 
   const generateNewQuiz = useCallback(async () => {
     if (!lessonDataState?._id) {
@@ -72,10 +80,12 @@ const QuizPage: React.FC = () => {
     setSelectedAnswers({});
 
     try {
-      const { data } = await generateQuiz(
-        lessonDataState?._id || quizData?.lessonId,
-        quizSettings || quizData?.settings
-      );
+      const data = await dispatch(
+        generateQuizAsync({
+          lessonId: lessonDataState?._id || quizData?.lessonId,
+          settings: quizSettings || quizData?.settings,
+        })
+      ).unwrap();
       setQuizData(data);
     } catch (error) {
       console.error("Error generating quiz:", error);
@@ -90,7 +100,7 @@ const QuizPage: React.FC = () => {
       setQuizResult(attempt);
 
       if (attempt.quizId) {
-        fetchQuizById(attempt.quizId);
+        fetchQuiz(attempt.quizId);
       }
 
       if (!lessonDataState && quizData?.lessonId) {
@@ -111,7 +121,7 @@ const QuizPage: React.FC = () => {
 
   useEffect(() => {
     if (quizId) {
-      fetchQuizById(quizId);
+      fetchQuiz(quizId);
     }
   }, [quizId]);
 
