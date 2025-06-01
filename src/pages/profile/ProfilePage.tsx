@@ -1,18 +1,12 @@
 import { FunctionComponent } from "react";
 import Achievments from "./components/Achievments/Achievments";
+import { useStyles } from "./styles";
 
 const ProfilePage: FunctionComponent = () => {
+  const classes = useStyles();
+
   return (
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "column",
-      }}
-    >
+    <div className={classes.root}>
       <Achievments />
     </div>
   );
