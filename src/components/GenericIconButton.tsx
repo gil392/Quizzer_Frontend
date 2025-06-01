@@ -23,7 +23,7 @@ export const GenericIconButton: FunctionComponent<GenericIconButtonProps> = ({
         className={className}
         aria-label={title}
         style={{ outline: "none" }}
-        onClick={(event) => {
+        onClick={(event: React.MouseEvent) => {
           event.stopPropagation();
           onClick?.(event);
         }}
