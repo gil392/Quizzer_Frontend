@@ -23,7 +23,6 @@ export const GenericIconButton: FunctionComponent<GenericIconButtonProps> = ({
         className={className}
         aria-label={title}
         style={{ outline: "none" }}
-        sx={{ position: "absoulte" }}
         onClick={onClick}
       >
         {icon}
