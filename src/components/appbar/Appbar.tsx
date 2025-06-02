@@ -20,7 +20,6 @@ import ProfileImage from "./components/ProfileImage";
 import {
   MAX_MESSAGES_BADGE_CONTENT,
   MESSAGES_INTERVAL_MS,
-  PROFILE_IMAGE,
 } from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
@@ -67,7 +66,6 @@ const AppBar: FunctionComponent = () => {
   const handleLogout = () => {
     removeUserDisplayMode();
     setProfileImage(undefined);
-    localStorage.removeItem(PROFILE_IMAGE);
   };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {

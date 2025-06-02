@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   fetchLessons,
   updateLessonAsync,
-  deleteLessonAsync,
   mergeLessonsAsync,
 } from "../../../store/lessonReducer";
 import { LessonData } from "../../../api/lesson/types";

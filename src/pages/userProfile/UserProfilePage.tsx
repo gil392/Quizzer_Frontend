@@ -4,15 +4,18 @@ import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { getLoggedUser, updateUser } from "../../api/user/api";
 import { User } from "../../api/user/types";
-import { PROFILE_IMAGE } from "../../components/appbar/const";
 import { GenericIconButton } from "../../components/GenericIconButton";
 import { profileImageState } from "../../recoil/profileImage";
 import { toastSuccess, toastWarning } from "../../utils/utils";
 import EditingActions from "./components/EditingActions/EditingActions";
 import useStyles from "./styles";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const UserProfilePage: FunctionComponent = () => {
-  const [user, setUser] = useState<User>();
+  const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
+  console.log("loggedUser: ", loggedUser);
+  const [user, setUser] = useState<User>(loggedUser!);
 
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
@@ -51,7 +54,6 @@ const UserProfilePage: FunctionComponent = () => {
         setUser(updatedUser);
 
         if (updatedUser?.profileImage) {
-          localStorage.setItem(PROFILE_IMAGE, updatedUser.profileImage);
           setProfileImageState(updatedUser.profileImage);
         }
         toastSuccess("Update user successfuly");
