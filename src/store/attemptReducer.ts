@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getQuizAttempts, createQuizAttempt, rateQuiz } from "../api/quiz/api";
 import { QuizAttempt, QuizAnswerSubmittion } from "../api/quiz/types";
 
@@ -41,7 +41,6 @@ const attemptSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchQuizAttempts.fulfilled, (state, action) => {
-        console.log("Fetched quiz attempts:", action.payload);
         state.attemptsByQuiz[action.payload.quizId] = action.payload.attempts;
       })
       .addCase(createQuizAttemptAsync.fulfilled, (state, action) => {
