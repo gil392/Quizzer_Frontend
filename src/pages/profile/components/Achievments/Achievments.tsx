@@ -6,7 +6,7 @@ import { Achievement } from "../../../../api/achievements/types";
 import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import AchievementItem from "./AchievementItem/AchievementItem";
 import { useStyles } from "./styles";
-import { sortAchievementsLeastCompleted } from "./utils";
+import { moveCompletedAchievementsToEnd } from "./utils";
 
 const Achievments: FunctionComponent = () => {
   const classes = useStyles();
@@ -17,7 +17,7 @@ const Achievments: FunctionComponent = () => {
     async (abortController?: AbortController) => {
       setIsLoading(true);
       const { data } = await getAvailableAchievements(abortController);
-      const achivements = sortAchievementsLeastCompleted(data);
+      const achivements = moveCompletedAchievementsToEnd(data);
       setAchievments(achivements);
       setIsLoading(false);
     },
@@ -37,7 +37,7 @@ const Achievments: FunctionComponent = () => {
     achievments.map((achievment, index) => (
       <>
         <AchievementItem achievement={achievment} />
-        {index !== achievments.length - 1 ? <Divider /> : null}
+        {index !== achievments.length - 1 && <Divider />}
       </>
     ))
   );
