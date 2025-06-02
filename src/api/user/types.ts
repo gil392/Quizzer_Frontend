@@ -9,6 +9,7 @@ export type UserSettings = QuizSettings & {
 export type User = {
   email: string;
   username: string;
+  profileImage?: string;
   streak: number;
   xp: number;
   friendRequests?: string[];
