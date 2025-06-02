@@ -1,20 +1,18 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { Avatar, Button, Skeleton, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { getLoggedUser, updateUser } from "../../api/user/api";
+import { getLoggedUser } from "../../api/user/api";
 import { User } from "../../api/user/types";
 import { GenericIconButton } from "../../components/GenericIconButton";
-import { profileImageState } from "../../recoil/profileImage";
 import { toastSuccess, toastWarning } from "../../utils/utils";
 import EditingActions from "./components/EditingActions/EditingActions";
 import useStyles from "./styles";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { updateUserAsync } from "../../store/userReducer";
 
 const UserProfilePage: FunctionComponent = () => {
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
-  console.log("loggedUser: ", loggedUser);
   const [user, setUser] = useState<User>(loggedUser!);
 
   const classes = useStyles();
@@ -22,7 +20,7 @@ const UserProfilePage: FunctionComponent = () => {
   const [username, setUsername] = useState<string>();
   const [profileImageUrl, setProfileImageUrl] = useState<string>();
   const [imageFile, setImageFile] = useState<File>();
-  const setProfileImageState = useSetRecoilState(profileImageState);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -47,15 +45,13 @@ const UserProfilePage: FunctionComponent = () => {
   const handleSave = async () => {
     try {
       if (user && (username || imageFile)) {
-        const { data: updatedUser } = await updateUser({
-          username,
-          imageFile,
-        });
-        setUser(updatedUser);
+        await dispatch(
+          updateUserAsync({
+            username,
+            imageFile,
+          })
+        ).unwrap();
 
-        if (updatedUser?.profileImage) {
-          setProfileImageState(updatedUser.profileImage);
-        }
         toastSuccess("Update user successfuly");
         stopEdit();
       }

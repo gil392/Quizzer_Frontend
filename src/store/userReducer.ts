@@ -7,8 +7,10 @@ import {
   declineFriendRequest,
   submitFriendRequest,
   searchUsers,
+  updateUser,
 } from "../api/user/api";
-import { User, UserWithId } from "../api/user/types";
+import { User, UserSettings, UserWithId } from "../api/user/types";
+import { Settings } from "@mui/icons-material";
 
 export const fetchFriends = createAsyncThunk("user/fetchFriends", async () => {
   const response = await getFriends();
@@ -63,6 +65,18 @@ export const searchUsersAsync = createAsyncThunk(
   }
 );
 
+export const updateUserAsync = createAsyncThunk(
+  "user/updateUser",
+  async (updateFields: {
+    username?: string;
+    imageFile?: File;
+    settings?: Partial<UserSettings>;
+  }) => {
+    const response = await updateUser(updateFields);
+    return response.data;
+  }
+);
+
 interface UserState {
   friends: UserWithId[];
   pendingFriends: UserWithId[];
@@ -90,6 +104,14 @@ const userSlice = createSlice({
       .addCase(fetchLoggedUser.fulfilled, (state, action) => {
         console.log("Logged user fetched:", action.payload);
         state.loggedUser = action.payload;
+      })
+      .addCase(updateUserAsync.fulfilled, (state, action) => {
+        if (state.loggedUser) {
+          state.loggedUser = {
+            ...state.loggedUser,
+            ...action.payload,
+          };
+        }
       })
       .addCase(acceptFriend.fulfilled, (state, action) => {
         state.pendingFriends = state.pendingFriends.filter(

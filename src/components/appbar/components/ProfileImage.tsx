@@ -1,11 +1,9 @@
 import { Avatar } from "@mui/material";
 import { FunctionComponent, useEffect } from "react";
 import useStyles from "../styles";
-import { useRecoilState } from "recoil";
-import { profileImageState } from "../../../recoil/profileImage";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { fetchLoggedUser } from "../../../store/userReducer";
-import { AppDispatch } from "../../../store/store";
+import { AppDispatch, RootState } from "../../../store/store";
 
 interface ProfileImageProps {
   handleMenu: (event: React.MouseEvent<HTMLElement>) => void;
@@ -18,15 +16,11 @@ const getUserProfileImage = async (dispatch: AppDispatch) => {
 
 const ProfileImage: FunctionComponent<ProfileImageProps> = (props) => {
   const classes = useStyles();
-  const [profileImage, setProfileImage] = useRecoilState(profileImageState);
   const dispatch = useDispatch<AppDispatch>();
+  const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
   useEffect(() => {
     const initUserProfileImage = async () => {
-      let userProfileImage: string | null | undefined =
-        await getUserProfileImage(dispatch);
-      if (userProfileImage) {
-        setProfileImage(userProfileImage);
-      }
+      await getUserProfileImage(dispatch);
     };
     initUserProfileImage();
   }, []);
@@ -34,7 +28,7 @@ const ProfileImage: FunctionComponent<ProfileImageProps> = (props) => {
   return (
     <>
       <Avatar
-        src={profileImage}
+        src={loggedUser?.profileImage}
         className={classes.avatar}
         onClick={props.handleMenu}
       />
