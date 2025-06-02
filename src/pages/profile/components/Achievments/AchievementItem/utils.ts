@@ -7,7 +7,6 @@ export const formatNumberWithPostfix = (num: number): string => {
   const scale = Math.pow(10, tier * 3);
   const scaled = num / scale;
   const formatted = scaled % 1 === 0 ? scaled.toFixed(0) : scaled.toFixed(1);
-  console.log("tomer", {num, log: Math.log10(num), tier, scale, scaled, formatted });
 
   return `${formatted}${units[tier]}`;
 };

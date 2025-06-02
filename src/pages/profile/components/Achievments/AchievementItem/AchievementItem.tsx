@@ -56,12 +56,10 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
         <Typography variant="body2" color="textSecondary">
           {achievement.description}
         </Typography>
-        <div>{progresses}</div>
+        {progresses}
       </section>
 
-      {achievement.isCompleted ? (
-        <div className={classes.completedPlate} />
-      ) : null}
+      {achievement.isCompleted && <div className={classes.completedPlate} />}
     </div>
   );
 };
