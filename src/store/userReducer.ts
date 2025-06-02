@@ -5,22 +5,22 @@ import {
   getLoggedUser,
   acceptFriendRequest,
   declineFriendRequest,
-  submitFriendRequest,
-  searchUsers,
   updateUser,
 } from "../api/user/api";
 import { User, UserSettings, UserWithId } from "../api/user/types";
-import { Settings } from "@mui/icons-material";
 
-export const fetchFriends = createAsyncThunk("user/fetchFriends", async () => {
-  const response = await getFriends();
-  return response.data;
-});
+export const fetchFriends = createAsyncThunk(
+  "user/fetchFriends",
+  async (abortController?: AbortController) => {
+    const response = await getFriends(abortController);
+    return response.data;
+  }
+);
 
 export const fetchPendingFriends = createAsyncThunk(
   "user/fetchPendingFriends",
-  async () => {
-    const response = await getPendingFriends();
+  async (abortController?: AbortController) => {
+    const response = await getPendingFriends(abortController);
     return response.data;
   }
 );
@@ -46,22 +46,6 @@ export const declineFriend = createAsyncThunk(
   async (userId: string) => {
     await declineFriendRequest(userId);
     return userId;
-  }
-);
-
-export const sendFriendRequest = createAsyncThunk(
-  "user/sendFriendRequest",
-  async (userId: string) => {
-    await submitFriendRequest(userId);
-    return userId;
-  }
-);
-
-export const searchUsersAsync = createAsyncThunk(
-  "user/searchUsers",
-  async (searchTerm: string) => {
-    const response = await searchUsers(searchTerm);
-    return response.data;
   }
 );
 
@@ -102,7 +86,6 @@ const userSlice = createSlice({
         state.pendingFriends = action.payload;
       })
       .addCase(fetchLoggedUser.fulfilled, (state, action) => {
-        console.log("Logged user fetched:", action.payload);
         state.loggedUser = action.payload;
       })
       .addCase(updateUserAsync.fulfilled, (state, action) => {
@@ -114,6 +97,12 @@ const userSlice = createSlice({
         }
       })
       .addCase(acceptFriend.fulfilled, (state, action) => {
+        const acceptedUser = state.pendingFriends.find(
+          (user) => user._id === action.payload
+        );
+        if (acceptedUser) {
+          state.friends.push(acceptedUser);
+        }
         state.pendingFriends = state.pendingFriends.filter(
           (user) => user._id !== action.payload
         );

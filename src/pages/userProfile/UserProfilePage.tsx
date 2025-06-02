@@ -1,8 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { Avatar, Button, Skeleton, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
-import { getLoggedUser } from "../../api/user/api";
-import { User } from "../../api/user/types";
 import { GenericIconButton } from "../../components/GenericIconButton";
 import { toastSuccess, toastWarning } from "../../utils/utils";
 import EditingActions from "./components/EditingActions/EditingActions";
@@ -20,13 +18,6 @@ const UserProfilePage: FunctionComponent = () => {
   const [profileImageUrl, setProfileImageUrl] = useState<string>();
   const [imageFile, setImageFile] = useState<File>();
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      await getLoggedUser();
-    };
-    fetchUser();
-  }, []);
 
   useEffect(() => {
     if (user) {
