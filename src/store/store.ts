@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-
 import lessonReducer from "./lessonReducer";
 import quizReducer from "./quizReducer";
 import userReducer from "./userReducer";

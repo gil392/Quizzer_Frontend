@@ -55,7 +55,7 @@ const QuizPage: React.FC = () => {
         setLoading(false);
       }
     },
-    [dispatch]
+    []
   );
 
   const generateNewQuiz = useCallback(async () => {

@@ -12,7 +12,7 @@ const FriendsPage: FunctionComponent = () => {
   const [excludedIdsFromSearch, setExcludedIdsFromSearch] = useState<string[]>(
     []
   );
-  const {pendingFriends, friends} = useSelector(
+  const { pendingFriends, friends } = useSelector(
     (state: RootState) => state.user
   );
   const dispatch = useDispatch<AppDispatch>();
@@ -48,17 +48,6 @@ const FriendsPage: FunctionComponent = () => {
     );
   }, [friends, pendingFriends]);
 
-  // const removeFriendRequest = (
-  //   user: UserWithId,
-  //   requestIndex: number,
-  //   action: FriendRequestItemAction
-  // ) => {
-  //   setPendingFriends(remove(requestIndex, 1));
-  //   if (action === "accept") {
-  //     setFriends(concat([user]));
-  //   }
-  // };
-
   return (
     <div className={classes.root}>
       <FriendsPannel
@@ -69,7 +58,6 @@ const FriendsPage: FunctionComponent = () => {
       <PendingFriendsPannel
         pendingFriends={pendingFriends}
         excludedIdsFromSearch={excludedIdsFromSearch}
-        // removePendingFriend={removeFriendRequest}
         loading={isPendingFriendsLoading}
         className={classes.pendingFriendsPannel}
       />
