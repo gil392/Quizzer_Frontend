@@ -12,8 +12,7 @@ import { AppDispatch, RootState } from "../../store/store";
 import { updateUserAsync } from "../../store/userReducer";
 
 const UserProfilePage: FunctionComponent = () => {
-  const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
-  const [user, setUser] = useState<User>(loggedUser!);
+  const { loggedUser: user } = useSelector((state: RootState) => state.user);
 
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
@@ -24,8 +23,7 @@ const UserProfilePage: FunctionComponent = () => {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data } = await getLoggedUser();
-      setUser(data);
+      await getLoggedUser();
     };
     fetchUser();
   }, []);
