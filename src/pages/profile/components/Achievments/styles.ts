@@ -6,7 +6,7 @@ export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: "33%",
-      flexGrow: 1,
+      height: "65%",
       display: "flex",
       flexDirection: "column",
     },
