@@ -16,11 +16,12 @@ import {
 import { toastWarning } from "../utils/utils";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
-import { createQuizAttempt, getLessonById } from "../api/quiz/api";
+import { getLessonById } from "../api/quiz/api";
 import { QuizAttempt } from "../api/quiz/types";
 import { useDispatch } from "react-redux";
 import { generateQuizAsync } from "../store/quizReducer";
 import { AppDispatch } from "../store/store";
+import { createQuizAttemptAsync } from "../store/attemptReducer";
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
@@ -155,7 +156,7 @@ const QuizPage: React.FC = () => {
           })),
       };
 
-      const { data: result } = await createQuizAttempt(submissionData);
+      const result = await dispatch(createQuizAttemptAsync(submissionData)).unwrap();
       setQuizResult(result);
     } catch (error) {
       console.error("Error submitting quiz:", error);
