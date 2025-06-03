@@ -52,7 +52,7 @@ const attemptSlice = createSlice({
         state.attemptsByQuiz[quizId].push(action.payload);
       })
       .addCase(deleteQuizAsync.fulfilled, (state, action) => {
-        delete state.attemptsByQuiz[action.payload.quizId];
+        delete state.attemptsByQuiz[action.payload];
       });
   },
 });

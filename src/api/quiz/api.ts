@@ -7,7 +7,6 @@ import {
   QuizAnswerSubmittion,
   QuizAttempt,
   QuizData,
-  QuizResult,
   QuizSettings,
 } from "./types";
 

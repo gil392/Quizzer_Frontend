@@ -57,7 +57,11 @@ const SummaryPage: React.FC = () => {
       ).unwrap();
 
       navigate(PAGES_ROUTES.QUIZ, {
-        state: { lessonData, quizId: data._id },
+        state: {
+          lessonData,
+          quizId: data._id,
+          quizSettings: location.state?.quizSettings,
+        },
       });
     } catch (error) {
       console.error("Error generating quiz:", error);
