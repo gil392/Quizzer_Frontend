@@ -38,7 +38,7 @@ const QuizPage: React.FC = () => {
   }>({});
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
-  const isOnSelectAnswerMode = quizSettings?.feedbackType 
+  const isOnSelectAnswerMode = quizSettings?.feedbackType  === "onSelectAnswer"
 
   const fetchQuizById = useCallback(async (id: string) => {
     setLoading(true);
@@ -364,7 +364,7 @@ const QuizPage: React.FC = () => {
                         ))}
                       </Box>
                       <Box display="flex" justifyContent="flex-end">
-                        {isOnSelectAnswerMode === "onSelectAnswer" &&
+                        {isOnSelectAnswerMode &&
                           selectedAnswers[index] && ( 
                             <IconButton
                              color="primary"
@@ -385,7 +385,7 @@ const QuizPage: React.FC = () => {
                 <Button variant="contained" color="primary" onClick={retry}>
                   Retry
                 </Button>
-              ) : ( isOnSelectAnswerMode !== 'onSelectAnswer' && (
+              ) : ( !isOnSelectAnswerMode && (
                 <Button
                   variant="contained"
                   color="primary"
