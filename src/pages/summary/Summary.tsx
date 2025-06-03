@@ -8,14 +8,14 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { LessonData } from "../api/lesson/types";
-import { PAGES_ROUTES } from "../routes/routes.const";
 import useStyles from "./Summary.styles";
-import { toastWarning } from "../utils/utils";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store/store";
-import { createLessonAsync } from "../store/lessonReducer";
-import { generateQuizAsync } from "../store/quizReducer";
+import { LessonData } from "../../api/lesson/types";
+import { PAGES_ROUTES } from "../../routes/routes.const";
+import { createLessonAsync } from "../../store/lessonReducer";
+import { generateQuizAsync } from "../../store/quizReducer";
+import { AppDispatch } from "../../store/store";
+import { toastWarning } from "../../utils/utils";
 
 const SummaryPage: React.FC = () => {
   const classes = useStyles();
