@@ -1,29 +1,31 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { generateQuiz, getQuizById } from "../api/quiz/api";
-import { QuizData, QuizResult } from "../api/quiz/types";
+import { generateQuiz, getQuizById, submitQuestionAnswer } from "../../api/quiz/api";
+import { QuizData, QuizResult, QuizSettings } from "../../api/quiz/types";
 import useStyles from "./Quiz.styles";
-import { exportToPDF } from "../utils/pdfUtils";
+import { exportToPDF } from "../../utils/pdfUtils";
 import {
   Box,
   Button,
   Card,
   Checkbox,
   FormControlLabel,
+  IconButton,
   Skeleton,
   Typography,
 } from "@mui/material";
-import { toastWarning } from "../utils/utils";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { toastWarning } from "../../utils/utils";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
-import { createQuizAttempt, getLessonById } from "../api/quiz/api";
-import { QuizAttempt } from "../api/quiz/types";
+import { createQuizAttempt, getLessonById } from "../../api/quiz/api";
+import { QuizAttempt } from "../../api/quiz/types";
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
 
-  const quizSettings = location.state?.quizSettings;
+  const quizSettings: QuizSettings = location.state?.quizSettings;
   const lessonData = location.state?.lessonData;
   const quizId = location.state?.quizId;
   const attempt: QuizAttempt = location.state?.attempt;
@@ -36,12 +38,26 @@ const QuizPage: React.FC = () => {
   }>({});
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
 
+  const isOnSelectAnswerMode = quizSettings?.feedbackType  === "onSelectAnswer"
+
   const fetchQuizById = useCallback(async (id: string) => {
     setLoading(true);
 
     try {
       const { data } = await getQuizById(id);
       setQuizData(data);
+
+      setQuizResult({
+        quizId: data._id,
+        results: data.questions.map((question) => ({
+          questionId: question._id,
+          selectedAnswer: null,
+          correctAnswer: null,
+          isCorrect: null,
+        })),
+        score: 0,
+      });
+
     } catch (error) {
       console.error("Error fetching quiz:", error);
     } finally {
@@ -154,7 +170,23 @@ const QuizPage: React.FC = () => {
   };
 
   const retry = () => {
-    setQuizResult(null);
+    if (!quizData) {
+      toastWarning("Quiz retry failed loading.");
+      console.error("Quiz data is not available for retry.");
+      return;
+    }
+  
+    setQuizResult({
+      quizId: quizData._id,
+      results: quizData.questions.map((question) => ({
+        questionId: question._id,
+        selectedAnswer: null,
+        correctAnswer: null,
+        isCorrect: null,
+      })),
+      score: 0,
+    });
+  
     setSelectedAnswers({});
   };
 
@@ -187,6 +219,70 @@ const QuizPage: React.FC = () => {
     return "default";
   };
 
+  const areAllQuestionsSubmitted = () => {
+    return quizResult?.results.every((result) => result.correctAnswer !== null);
+  };
+
+  const handleSubmitQuestionClick = async (questionIndex: number) => {
+    if (!quizData) {
+      console.error("Quiz data is not available.");
+      return;
+    }
+  
+    const question = quizData.questions[questionIndex];
+    const selectedAnswer = selectedAnswers[questionIndex];
+  
+    if (!selectedAnswer) {
+      console.error("Please select an answer before submitting.");
+      toastWarning("Please select an answer before submitting.");
+      return;
+    }
+  
+    try {
+      const { data: questionResult } = await submitQuestionAnswer(
+        question._id,
+        selectedAnswer
+      );
+  
+      setQuizResult((prev) => {
+        if (!prev) {
+          console.error("Quiz result state is not initialized.");
+          return null;
+        }
+  
+        const updatedResults = [...prev.results];
+  
+        updatedResults[questionIndex] = {
+          questionId: question._id,
+          selectedAnswer,
+          correctAnswer: questionResult.correctAnswer,
+          isCorrect: questionResult.isCorrect,
+        };
+  
+        return {
+          ...prev,
+          results: updatedResults,
+        };
+      });
+      
+      const allSubmitted = quizData.questions.every((_, resultIndex) => {
+        if (resultIndex === questionIndex) {
+          return true;
+        }
+        const result = quizResult?.results[resultIndex];
+        return result?.correctAnswer !== null;
+      });
+      
+      if (allSubmitted) {
+        console.log("All other questions submitted. Handling quiz submission.");
+        await handleQuizSubmission();
+      }
+    } catch (error) {
+      console.error("Error submitting question:", error);
+      toastWarning("Failed to submit question. Please try again.");
+    }
+  };
+
   return (
     <Box className={classes.container}>
       <Box className={classes.quizBox}>
@@ -202,7 +298,7 @@ const QuizPage: React.FC = () => {
         ) : quizData ? (
           <Box>
             <Box id={QUIZ_CONTENT_PDF_ID}>
-              {quizResult && (
+              {quizResult && areAllQuestionsSubmitted() && (
                 <Box
                   className={classes.resultBox}
                   style={{
@@ -248,7 +344,7 @@ const QuizPage: React.FC = () => {
                                 onChange={() =>
                                   handleOptionChange(index, option)
                                 }
-                                disabled={!!quizResult}
+                                disabled={!!quizResult && areAllQuestionsSubmitted()}
                                 sx={{
                                   "& .MuiSvgIcon-root": {
                                     border: `2px solid ${getAnswerOutlineColor(
@@ -264,17 +360,29 @@ const QuizPage: React.FC = () => {
                           />
                         ))}
                       </Box>
+                      <Box display="flex" justifyContent="flex-end">
+                        {isOnSelectAnswerMode &&
+                          selectedAnswers[index] && ( 
+                            <IconButton
+                             color="primary"
+                             onClick={() => handleSubmitQuestionClick(index)}
+                             disabled={!!quizResult?.results[index]?.correctAnswer}
+                            >
+                              <ArrowForwardIcon />
+                            </IconButton>
+                          )}
+                      </Box>
                     </Card>
                   </Box>
                 ))}
               </Box>
             </Box>
             <Box className={classes.buttonContainer}>
-              {quizResult ? (
+              {quizResult && areAllQuestionsSubmitted() ? (
                 <Button variant="contained" color="primary" onClick={retry}>
                   Retry
                 </Button>
-              ) : (
+              ) : ( !isOnSelectAnswerMode && (
                 <Button
                   variant="contained"
                   color="primary"
@@ -282,7 +390,7 @@ const QuizPage: React.FC = () => {
                   disabled={!allQuestionsAnswered}
                 >
                   Submit
-                </Button>
+                </Button> )   
               )}
               <Button
                 variant="contained"
