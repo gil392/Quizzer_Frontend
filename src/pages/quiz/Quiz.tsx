@@ -171,6 +171,7 @@ const QuizPage: React.FC = () => {
 
   const retry = () => {
     if (!quizData) {
+      toastWarning("Quiz retry failed loading.");
       console.error("Quiz data is not available for retry.");
       return;
     }
