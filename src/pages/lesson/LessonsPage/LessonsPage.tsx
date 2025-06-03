@@ -1,40 +1,44 @@
-import { FunctionComponent, useEffect, useState } from "react";
-import { LessonData } from "../../../services/backend/types";
+import React, { useEffect, useMemo, useState } from "react";
 import LessonItem from "../LessonItem/LessonItem";
 import {
   deleteLesson,
   getLessons,
+  mergeLessons,
   updateLesson,
-} from "../../../services/backend/service";
-import LessonInfo from "../LessonInfo/LessonInfo";
-import Typography from "@mui/material/Typography";
-import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
-import { Add } from "@mui/icons-material";
-import Box from "@mui/material/Box";
-import { useNavigate } from "react-router-dom";
+} from "../../../api/lesson/api";
+import { LessonData } from "../../../api/lesson/types";
 import { GenericIconButton } from "../../../components/GenericIconButton";
-import styles from "./LessonsPage.styles";
-import { withStyles, WithStyles } from "@mui/styles";
+import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
+import LessonInfo from "../LessonInfo/LessonInfo";
+import useStyles from "./LessonsPage.styles";
+import { FilterOptions } from "../FilterLessons/types";
+import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
+import { getFilteredLessons } from "../FilterLessons/utils";
+import FilterLessons from "../FilterLessons/FilterLessons";
+import { useNavigate } from "react-router-dom";
+import { Box, Button, Typography } from "@mui/material";
+import { Add } from "@mui/icons-material";
 
-interface LessonsPageProps extends WithStyles<typeof styles> {}
-
-const LessonsPage: FunctionComponent<LessonsPageProps> = (
-  props: LessonsPageProps
-) => {
+const LessonsPage: React.FC = () => {
+  const classes = useStyles();
   const navigate = useNavigate();
-  const { classes } = props;
   const [lessons, setLessons] = useState<LessonData[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
     setSelectedLesson(null)
   );
+  const [filterOptions, setFilterOptions] = useState<FilterOptions>(
+    INITIAL_FILTER_OPTIONS
+  );
+  const [mergingLessons, setMergingLessons] = useState<LessonData[]>([]);
+  const [isMergeLessonsMode, setIsMergeLessonsMode] = useState(false);
 
   useEffect(() => {
     const fetchLessons = async () => {
       try {
-        const response = await getLessons();
-        setLessons(response);
+        const { data } = await getLessons();
+        setLessons(data);
       } catch (error) {
         console.error("Error fetching lessons:", error);
       }
@@ -42,6 +46,11 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
 
     fetchLessons();
   }, []);
+
+  const filteredLessons = useMemo(
+    () => getFilteredLessons(lessons, filterOptions),
+    [lessons, filterOptions]
+  );
 
   const handleLessonDeleted = async (lessonId: string) => {
     await deleteLesson(lessonId);
@@ -62,6 +71,23 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
   const openLesson = (lesson: LessonData) => {
     setSelectedLesson(lesson);
     openPopup();
+  };
+
+  const cancelMergingMode = () => {
+    setIsMergeLessonsMode(false);
+    setMergingLessons([]);
+  };
+
+  const createMergedLesson = () => {
+    return () => {
+      mergeLessons(mergingLessons.map((lesson) => lesson._id)).then(
+        (result) => {
+          setLessons((prevLessons) => [...prevLessons, result.data]);
+          setMergingLessons([]);
+          setIsMergeLessonsMode(false);
+        }
+      );
+    };
   };
 
   return (
@@ -85,8 +111,13 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
             )}
           </Box>
 
-          {lessons.length > 0 ? (
-            lessons.map((lesson) => (
+          <FilterLessons
+            setFilterOptions={setFilterOptions}
+            filterOptions={filterOptions}
+          />
+
+          {filteredLessons.length > 0 ? (
+            filteredLessons.map((lesson) => (
               <LessonItem
                 key={lesson._id}
                 lesson={lesson}
@@ -95,6 +126,11 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
                 updateLessonTitle={(newTitle: string) => {
                   handleUpdateLesson({ ...lesson, title: newTitle });
                 }}
+                mergingLessons={mergingLessons}
+                setMergingLessons={setMergingLessons}
+                isMergeLessonsMode={isMergeLessonsMode}
+                setIsMergeLessonsMode={setIsMergeLessonsMode}
+                cancelMergingMode={cancelMergingMode}
               />
             ))
           ) : (
@@ -106,10 +142,29 @@ const LessonsPage: FunctionComponent<LessonsPageProps> = (
               No existing lessons.
             </Typography>
           )}
+          {isMergeLessonsMode && (
+            <Box mt={2} display="flex" gap={2}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={cancelMergingMode}
+              >
+                Cancel Merging
+              </Button>
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={mergingLessons.length < 2}
+                onClick={createMergedLesson()}
+              >
+                Create Merged Lesson
+              </Button>
+            </Box>
+          )}
         </>
       )}
     </>
   );
 };
 
-export default withStyles(styles)(LessonsPage);
+export default LessonsPage;

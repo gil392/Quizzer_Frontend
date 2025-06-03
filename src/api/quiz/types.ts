@@ -1,14 +1,13 @@
+export type FeedbackType = "onSubmit" | "onSelectAnswer";
+export type QuestionsOrder = "chronological" | "random";
+
 export type QuizSettings = {
-  checkType: "onSubmit" | "onSelectAnswer";
+  feedbackType: FeedbackType;
   isRandomOrder: boolean;
   maxQuestionCount: number;
   solvingTimeMs: number;
-};
-
-export type LessonData = {
-  _id: string;
-  title: string;
-  summary: string;
+  questionsOrder: QuestionsOrder;
+  isManualCount: boolean;
 };
 
 export type QuizData = {
@@ -21,6 +20,7 @@ export type QuizData = {
     answers: string[];
   }[];
   settings: QuizSettings;
+  rating: number | null;
 };
 
 export type QuizAnswerSubmittion = {
@@ -45,3 +45,7 @@ export type QuestionResults = {
   correctAnswer: string;
   isCorrect: boolean;
 };
+
+export type QuizAttempt = {
+  _id: string;
+} & QuizResult;

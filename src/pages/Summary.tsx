@@ -1,17 +1,19 @@
 import {
   Box,
+  Button,
   Card,
   CardContent,
-  Typography,
-  Button,
   Skeleton,
+  Typography,
 } from "@mui/material";
-import { useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { LessonData } from "../services/backend/types";
+import { useLocation, useNavigate } from "react-router-dom";
+import { generateLesson } from "../api/lesson/api";
+import { LessonData } from "../api/lesson/types";
 import { PAGES_ROUTES } from "../routes/routes.const";
-import { generateLesson, generateQuiz } from "../services/backend/service";
 import useStyles from "./Summary.styles";
+import { generateQuiz } from "../api/quiz/api";
+import { toastWarning } from "../utils/utils";
 
 const SummaryPage: React.FC = () => {
   const classes = useStyles();
@@ -22,7 +24,7 @@ const SummaryPage: React.FC = () => {
 
   useEffect(() => {
     generateLesson(location.state?.videoUrl)
-      .then((data: LessonData) => {
+      .then(({ data }) => {
         setLessonData(data);
         setLoading(false);
       })
@@ -35,12 +37,12 @@ const SummaryPage: React.FC = () => {
 
   const handleQuizNavigation = async () => {
     if (!lessonData) {
-      alert("Lesson data is not available.");
+      toastWarning("Lesson data is not available.");
       return;
     }
 
     try {
-      const quizData = await generateQuiz(
+      const { data: quizData } = await generateQuiz(
         lessonData._id,
         location.state?.quizSettings
       );
@@ -50,7 +52,7 @@ const SummaryPage: React.FC = () => {
       });
     } catch (error) {
       console.error("Error generating quiz:", error);
-      alert("Failed to generate quiz. Please try again.");
+      toastWarning("Failed to generate quiz. Please try again.");
     }
   };
 

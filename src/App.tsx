@@ -1,32 +1,29 @@
-import { ThemeProvider } from '@mui/material';
-import { BrowserRouter as Router } from 'react-router-dom';
-import './App.css';
-import Layout from './components/layout/Layout';
-import quizzerTheme from './theme';
-import NavBar from './components/navBar/NavBar';
+import { BrowserRouter as Router } from "react-router-dom";
+import "./App.css";
+import AppBar from "./components/appbar/Appbar";
+import Layout from "./components/layout/Layout";
+import NavBar from "./components/navBar/NavBar";
+import { DisplayModeProvider } from "./components/settings/DisplayModeSwitch/globalProvider";
+import { Toaster } from "sonner";
+import { RecoilRoot } from "recoil";
 
 function App() {
-    return (
-        <ThemeProvider theme={quizzerTheme}>
-            <div
-                style={
-                    {
-                        width: '100%',
-                        height: '100%',
-                        '--primary-main': quizzerTheme.palette.primary.main,
-                        '--primary-light': quizzerTheme.palette.primary.light,
-                        '--primary-contrastText':
-                            quizzerTheme.palette.primary.contrastText
-                    } as React.CSSProperties
-                }
-            >
-                <Router>
-                    <NavBar />
-                    <Layout />
-                </Router>
+  return (
+    <DisplayModeProvider>
+      <div className="app-container">
+        <RecoilRoot>
+          <Toaster richColors />
+          <Router>
+            <NavBar />
+            <div className="app-layout-appbar">
+              <AppBar />
+              <Layout />
             </div>
-        </ThemeProvider>
-    );
+          </Router>
+        </RecoilRoot>
+      </div>
+    </DisplayModeProvider>
+  );
 }
 
 export default App;

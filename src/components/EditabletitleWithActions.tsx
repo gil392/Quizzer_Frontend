@@ -28,8 +28,7 @@ const EditableTitleWithActions: FunctionComponent<
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(title);
 
-  const handleEditClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const handleEditClick = () => {
     setIsEditing(true);
     onEditModeChange?.(true);
   };
@@ -42,24 +41,16 @@ const EditableTitleWithActions: FunctionComponent<
     window.open(twitterUrl, "_blank");
   };
 
-  const handleSaveClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    shareToTwitter();
-    //onSave(newTitle);
+  const handleSaveClick = () => {
+    onSave(newTitle);
     setIsEditing(false);
     onEditModeChange?.(false);
   };
 
-  const handleCancelClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
+  const handleCancelClick = () => {
     setNewTitle(title);
     setIsEditing(false);
     onEditModeChange?.(false);
-  };
-
-  const handleDeleteClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    onDelete();
   };
 
   return (
@@ -101,7 +92,7 @@ const EditableTitleWithActions: FunctionComponent<
             <GenericIconButton
               icon={<DeleteIcon />}
               title={"Delete"}
-              onClick={handleDeleteClick}
+              onClick={onDelete}
             />
           </>
         )}

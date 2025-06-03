@@ -1,26 +1,22 @@
-import Box from "@mui/material/Box";
 import {
-  LessonData,
-  QuizData,
-  QuizSettings,
-} from "../../../services/backend/types";
-import { useState, useEffect } from "react";
-import {
-  deleteQuiz,
-  getQuizzes,
-  updateQuiz,
-} from "../../../services/backend/service";
-import QuizItem from "../QuizItem/QuizItem";
-import {
-  Card,
-  CardContent,
-  CardActions,
   Button,
-  Typography,
+  Card,
+  CardActions,
+  CardContent,
   Collapse,
+  Link,
+  Stack,
+  Typography,
 } from "@mui/material";
+import Box from "@mui/material/Box";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LessonData } from "../../../api/lesson/types";
+import { deleteQuiz, getQuizzes, updateQuiz } from "../../../api/quiz/api";
+import { QuizData, QuizSettings } from "../../../api/quiz/types";
+import QuizItem from "../QuizItem/QuizItem";
 import useStyles from "./LessonInfo.styles";
+import { INITIAL_QUIZ_SETTINGS } from "../../../api/quiz/constants";
 
 interface LessonInfoProps {
   lesson: LessonData;
@@ -34,12 +30,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
 
   const navigate = useNavigate();
   /** TODO: Issue 14 (Itay)- get these settings not hard-coded */
-  const quizSettings: QuizSettings = {
-    checkType: "onSubmit",
-    isRandomOrder: true,
-    maxQuestionCount: 10,
-    solvingTimeMs: 60000,
-  };
+  const quizSettings: QuizSettings = INITIAL_QUIZ_SETTINGS;
 
   const onCreateQuiz = () => {
     navigate("/quiz", { state: { lessonData: lesson, quizSettings } });
@@ -48,8 +39,8 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   useEffect(() => {
     const fetchQuizzesByLessonId = async () => {
       try {
-        const response = await getQuizzes(lesson._id);
-        setQuizzes(response);
+        const { data } = await getQuizzes(lesson._id);
+        setQuizzes(data);
       } catch (error) {
         console.error("Error fetching lessons:", error);
       }
@@ -76,6 +67,18 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
     <Box className={classes.container}>
       <Box className={classes.leftBox}>
         <Typography className={classes.title}>{lesson.title}</Typography>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Typography>Video link:</Typography>
+          <Link
+            href={lesson.videoUrl}
+            target="_blank"
+            rel="noopener"
+            underline="hover"
+          >
+            {lesson.videoUrl}
+          </Link>
+        </Stack>
+
         <Card className={classes.card}>
           <CardActions>
             <Button
@@ -85,6 +88,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
               {isSummaryExpanded ? "Hide Summary" : "Show Summary"}
             </Button>
           </CardActions>
+
           <Collapse
             in={isSummaryExpanded}
             timeout="auto"
