@@ -219,11 +219,7 @@ const QuizPage: React.FC = () => {
     return "default";
   };
 
-  const areAllQuestionsSubmitted = (isCalledFromSubmit: boolean) => {
-    if (isCalledFromSubmit) {
-      console.log("Checking if all questions are submitted...", quizResult);
-    }
-    
+  const areAllQuestionsSubmitted = () => {
     return quizResult?.results.every((result) => result.correctAnswer !== null);
   };
 
@@ -302,7 +298,7 @@ const QuizPage: React.FC = () => {
         ) : quizData ? (
           <Box>
             <Box id={QUIZ_CONTENT_PDF_ID}>
-              {quizResult && areAllQuestionsSubmitted(false) && (
+              {quizResult && areAllQuestionsSubmitted() && (
                 <Box
                   className={classes.resultBox}
                   style={{
@@ -348,7 +344,7 @@ const QuizPage: React.FC = () => {
                                 onChange={() =>
                                   handleOptionChange(index, option)
                                 }
-                                disabled={!!quizResult && areAllQuestionsSubmitted(false)}
+                                disabled={!!quizResult && areAllQuestionsSubmitted()}
                                 sx={{
                                   "& .MuiSvgIcon-root": {
                                     border: `2px solid ${getAnswerOutlineColor(
@@ -382,7 +378,7 @@ const QuizPage: React.FC = () => {
               </Box>
             </Box>
             <Box className={classes.buttonContainer}>
-              {quizResult && areAllQuestionsSubmitted(false) ? (
+              {quizResult && areAllQuestionsSubmitted() ? (
                 <Button variant="contained" color="primary" onClick={retry}>
                   Retry
                 </Button>
