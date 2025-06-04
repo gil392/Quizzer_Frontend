@@ -1,5 +1,6 @@
 import { Theme } from "@mui/material";
 import { createStyles, makeStyles } from "@mui/styles";
+import { createScrollerStyleClass } from "../../styles/quizzer.styles";
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -16,20 +17,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       width: "40%",
       margin: theme.spacing(6, 0),
     },
-    scroller: {
-      "&::-webkit-scrollbar": {
-        width: "8px",
-      },
-      "&::-webkit-scrollbar-thumb": {
-        backgroundColor: "rgba(0, 0, 0, 0.2)",
-        borderRadius: "4px",
-        border: "2px solid transparent",
-        backgroundClip: "content-box",
-      },
-      "&::-webkit-scrollbar-thumb:hover": {
-        backgroundColor: "rgba(0, 0, 0, 0.4)",
-      },
-    },
+    scroller: createScrollerStyleClass(theme),
     skeletonItem: {
       padding: "1.5em 0",
     },

@@ -8,12 +8,12 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { generateLesson } from "../api/lesson/api";
-import { LessonData } from "../api/lesson/types";
-import { PAGES_ROUTES } from "../routes/routes.const";
+import { generateLesson } from "../../api/lesson/api";
+import { LessonData } from "../../api/lesson/types";
+import { PAGES_ROUTES } from "../../routes/routes.const";
 import useStyles from "./Summary.styles";
-import { generateQuiz } from "../api/quiz/api";
-import { toastWarning } from "../utils/utils";
+import { generateQuiz } from "../../api/quiz/api";
+import { toastWarning } from "../../utils/utils";
 
 const SummaryPage: React.FC = () => {
   const classes = useStyles();

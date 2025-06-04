@@ -1,15 +1,15 @@
 import { Navigate, RouteProps } from "react-router-dom";
 import { SetAccessTokenFunction } from "../hooks/authentication/types";
+import FriendsPage from "../pages/friends/FriendsPage";
 import GenerateLessonPage from "../pages/generateLesson/GenerateLessonPage";
 import LessonsPage from "../pages/lesson/LessonsPage/LessonsPage";
 import LoginPage from "../pages/login/LoginPage";
-import QuizPage from "../pages/Quiz";
+import QuizPage from "../pages/quiz/Quiz";
 import RegisterPage from "../pages/register/RegisterPage";
-import SummaryPage from "../pages/Summary";
-import { PAGES_ROUTES } from "./routes.const";
-import FriendsPage from "../pages/friends/FriendsPage";
 import SettingsPage from "../pages/settings/SettingsPage";
+import SummaryPage from "../pages/summary/Summary";
 import UserProfilePage from "../pages/userProfile/UserProfilePage";
+import { PAGES_ROUTES } from "./routes.const";
 
 export const createPagesRoutes = (
   setAccessToken: SetAccessTokenFunction
