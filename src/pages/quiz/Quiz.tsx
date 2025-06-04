@@ -92,9 +92,11 @@ const QuizPage: React.FC = () => {
 
   const generateNewQuiz = useCallback(async () => {
     if (!lessonDataState?._id) {
-      if (quizData?.lessonId) {
+      const lessonIdFromState =
+        quizData?.lessonId || location.state?.lessonData?.lessonId;
+      if (lessonIdFromState) {
         try {
-          const { data } = await getLessonById(quizData.lessonId);
+          const { data } = await getLessonById(lessonIdFromState);
           setLessonDataState(data);
         } catch (error) {
           console.error("Error fetching lesson data:", error);
@@ -194,6 +196,8 @@ const QuizPage: React.FC = () => {
   }, [quizResult, isLocked, loading]);
 
   useEffect(() => {
+    console.log("quizData", quizData);
+    // todo
     setTimeLeft(QUIZ_TIME_LIMIT_SECONDS);
     setIsLocked(false);
     //if (timerRef.current) clearInterval(timerRef.current);
@@ -301,7 +305,10 @@ const QuizPage: React.FC = () => {
   };
 
   const areAllQuestionsSubmitted = () => {
-    return quizResult?.results.every((result) => result.correctAnswer !== null);
+    return (
+      quizData?.questions.length === quizResult?.results.length &&
+      quizResult?.results.every((result) => result.correctAnswer !== null)
+    );
   };
 
   const handleSubmitQuestionClick = async (questionIndex: number) => {

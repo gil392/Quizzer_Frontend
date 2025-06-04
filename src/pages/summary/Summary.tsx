@@ -48,25 +48,12 @@ const SummaryPage: React.FC = () => {
       return;
     }
 
-    try {
-      const data = await dispatch(
-        generateQuizAsync({
-          lessonId: lessonData._id,
-          settings: location.state?.quizSettings,
-        })
-      ).unwrap();
-
-      navigate(PAGES_ROUTES.QUIZ, {
-        state: {
-          lessonData,
-          quizId: data._id,
-          quizSettings: location.state?.quizSettings,
-        },
-      });
-    } catch (error) {
-      console.error("Error generating quiz:", error);
-      toastWarning("Failed to generate quiz. Please try again.");
-    }
+    navigate(PAGES_ROUTES.QUIZ, {
+      state: {
+        lessonData,
+        quizSettings: location.state?.quizSettings,
+      },
+    });
   };
 
   return (
