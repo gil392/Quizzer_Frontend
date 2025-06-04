@@ -1,16 +1,18 @@
 import { Box, Button, OutlinedInput, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   FeedbackType,
   QuestionsOrder,
   QuizSettings,
 } from "../../api/quiz/types";
-import { getLoggedUser } from "../../api/user/api";
 import { useLocation } from "react-router-dom";
+
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,44 +20,24 @@ const GenerateLessonPage: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>(
     location.state?.videoUrl || ""
   );
+  const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
 
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
     INITIAL_QUIZ_SETTINGS.feedbackType
   );
 
   const [questionsOrder, setQuestionsOrder] = useState<QuestionsOrder>(
-    INITIAL_QUIZ_SETTINGS.questionsOrder
+    loggedUser?.settings?.questionsOrder ?? INITIAL_QUIZ_SETTINGS.questionsOrder
   );
 
   const [maxQuestionCount, setMaxQuestionCount] = useState<number>(
-    INITIAL_QUIZ_SETTINGS.maxQuestionCount
+    loggedUser?.settings?.maxQuestionCount ??
+      INITIAL_QUIZ_SETTINGS.maxQuestionCount
   );
 
   const [isManualCount, setIsManualCount] = useState<boolean>(
-    INITIAL_QUIZ_SETTINGS.isManualCount
+    loggedUser?.settings?.isManualCount ?? INITIAL_QUIZ_SETTINGS.isManualCount
   );
-
-  const setQuizSettings = (quizSettings: Partial<QuizSettings> | undefined) => {
-    quizSettings?.feedbackType && setFeedbackType(quizSettings.feedbackType);
-    quizSettings?.questionsOrder &&
-      setQuestionsOrder(quizSettings.questionsOrder);
-    quizSettings?.maxQuestionCount &&
-      setMaxQuestionCount(quizSettings.maxQuestionCount);
-    quizSettings?.isManualCount && setIsManualCount(quizSettings.isManualCount);
-  };
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data } = await getLoggedUser();
-        setQuizSettings(data.settings);
-      } catch (error) {
-        console.error("Error fetching user: ", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   const handleSummaryNavigation = (): void => {
     const quizSettings: QuizSettings = {

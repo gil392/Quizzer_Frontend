@@ -2,58 +2,39 @@ import { Box, Typography } from "@mui/material";
 import { FunctionComponent, useEffect, useState } from "react";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
 import { FeedbackType, QuestionsOrder } from "../../api/quiz/types";
-import { getLoggedUser, updateUser } from "../../api/user/api";
-import { User, UserSettings } from "../../api/user/types";
+import { UserSettings } from "../../api/user/types";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import DisplayModeSwitch from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 import useStyles from "./styles";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { updateUserAsync } from "../../store/userReducer";
 
 const SettingsPage: FunctionComponent = () => {
   const classes = useStyles();
-  const [user, setUser] = useState<User | null>(null);
+  const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
+  const dispatch = useDispatch<AppDispatch>();
 
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
-    INITIAL_QUIZ_SETTINGS.feedbackType
+    loggedUser?.settings?.feedbackType ?? INITIAL_QUIZ_SETTINGS.feedbackType
   );
 
   const [questionsOrder, setQuestionsOrder] = useState<QuestionsOrder>(
-    INITIAL_QUIZ_SETTINGS.questionsOrder
+    loggedUser?.settings?.questionsOrder ?? INITIAL_QUIZ_SETTINGS.questionsOrder
   );
 
   const [maxQuestionCount, setMaxQuestionCount] = useState<number>(
-    INITIAL_QUIZ_SETTINGS.maxQuestionCount
+    loggedUser?.settings?.maxQuestionCount ??
+      INITIAL_QUIZ_SETTINGS.maxQuestionCount
   );
 
   const [isManualCount, setIsManualCount] = useState<boolean>(
-    INITIAL_QUIZ_SETTINGS.isManualCount
+    loggedUser?.settings?.isManualCount ?? INITIAL_QUIZ_SETTINGS.isManualCount
   );
-
-  const setSettings = (userSettings: Partial<UserSettings>) => {
-    userSettings?.feedbackType && setFeedbackType(userSettings.feedbackType);
-    userSettings?.questionsOrder &&
-      setQuestionsOrder(userSettings.questionsOrder);
-    userSettings?.maxQuestionCount &&
-      setMaxQuestionCount(userSettings.maxQuestionCount);
-    userSettings?.isManualCount && setIsManualCount(userSettings.isManualCount);
-  };
-
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const { data } = await getLoggedUser();
-        setUser(data);
-        data?.settings && setSettings(data.settings);
-      } catch (error) {
-        console.error("Error fetching user: ", error);
-      }
-    };
-
-    fetchUser();
-  }, []);
 
   useEffect(() => {
     const updateSettings = async () => {
-      if (user) {
+      if (loggedUser) {
         try {
           const settings: Partial<UserSettings> = {
             feedbackType,
@@ -61,7 +42,7 @@ const SettingsPage: FunctionComponent = () => {
             maxQuestionCount,
             isManualCount,
           };
-          await updateUser({ settings });
+          await dispatch(updateUserAsync({ settings }));
         } catch (error) {
           console.error("Error updating user: ", error);
         }

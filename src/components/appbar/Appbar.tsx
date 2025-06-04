@@ -1,12 +1,5 @@
 import { NotificationsOutlined } from "@mui/icons-material";
-import {
-  Avatar,
-  Badge,
-  IconButton,
-  Menu,
-  MenuItem,
-  Toolbar,
-} from "@mui/material";
+import { Badge, IconButton, Menu, MenuItem, Toolbar } from "@mui/material";
 import { isNotNil, pipe } from "ramda";
 import {
   FunctionComponent,
@@ -20,7 +13,12 @@ import { getMessages } from "../../api/user/api";
 import { Message } from "../../api/user/types";
 import { isNavBarAvailableInPath } from "../navBar/utils";
 import DisplayModeSwitch from "../settings/DisplayModeSwitch/DisplayModeSwitch";
-import { MAX_MESSAGES_BADGE_CONTENT, MESSAGES_INTERVAL_MS } from "./const";
+import { removeUserDisplayMode } from "../settings/DisplayModeSwitch/utils";
+import ProfileImage from "./components/ProfileImage";
+import {
+  MAX_MESSAGES_BADGE_CONTENT,
+  MESSAGES_INTERVAL_MS,
+} from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
 
@@ -62,6 +60,10 @@ const AppBar: FunctionComponent = () => {
     };
   }, []);
 
+  const handleLogout = () => {
+    removeUserDisplayMode();
+  };
+
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -70,7 +72,7 @@ const AppBar: FunctionComponent = () => {
     setAnchorEl(null);
   };
 
-  const menuItems = createAppbarMenu(navigate).map(
+  const menuItems = createAppbarMenu(navigate, handleLogout).map(
     ({ label, onClick }, index) => (
       <MenuItem key={index} onClick={pipe(onClick, handleClose)}>
         {label}
@@ -91,7 +93,7 @@ const AppBar: FunctionComponent = () => {
           <NotificationsOutlined className={classes.notifications} />
         </Badge>
       </IconButton>
-      <Avatar className={classes.avatar} onClick={handleMenu} />
+      <ProfileImage handleMenu={handleMenu} />
 
       <Menu
         anchorEl={anchorEl}

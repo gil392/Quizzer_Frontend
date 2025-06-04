@@ -36,6 +36,12 @@ const useStyles = makeStyles((theme: Theme) => {
       paddingLeft: "0.5vw",
       textAlign: "left",
     },
+    unrelatedLesson: {
+      backgroundColor: "#b1aaaa",
+      "&:hover": {
+        backgroundColor: "#a1a1a0",
+      },
+    },
   });
 });
 

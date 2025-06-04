@@ -6,17 +6,19 @@ import {
   AccordionDetails,
   AccordionSummary,
   Typography,
-  IconButton,
   Rating,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
 import { QuizAttempt, QuizData } from "../../../api/quiz/types";
-import { getQuizAttempts } from "../../../api/quiz/api";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
+import { GenericIconButton } from "../../../components/GenericIconButton";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/store";
+import { fetchQuizAttempts } from "../../../store/attemptReducer";
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -31,8 +33,11 @@ const QuizItem: React.FC<QuizItemProps> = ({
 }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [attempts, setAttempts] = useState<QuizAttempt[]>([]);
-  const [loadingAttempts, setLoadingAttempts] = useState<boolean>(true);
+  const dispatch = useDispatch<AppDispatch>();
+  const attempts = useSelector(
+    (state: RootState) => state.attempt.attemptsByQuiz[quiz._id]
+  );
+  const [loadingAttempts, setLoadingAttempts] = useState<boolean>(false);
 
   const handleRetakeQuiz = () => {
     navigate("/quiz", {
@@ -46,14 +51,15 @@ const QuizItem: React.FC<QuizItemProps> = ({
 
   useEffect(() => {
     const fetchAttempts = async () => {
-      try {
-        setLoadingAttempts(true);
-        const { data } = await getQuizAttempts(quiz._id);
-        setAttempts(data);
-      } catch (error) {
-        console.error("Error fetching quiz attempts:", error);
-      } finally {
-        setLoadingAttempts(false);
+      if (!attempts) {
+        try {
+          setLoadingAttempts(true);
+          await dispatch(fetchQuizAttempts(quiz._id)).unwrap();
+        } catch (error) {
+          console.error("Error fetching quiz attempts:", error);
+        } finally {
+          setLoadingAttempts(false);
+        }
       }
     };
 
@@ -75,13 +81,11 @@ const QuizItem: React.FC<QuizItemProps> = ({
           onSave={(newTitle) => updateQuizTitle(newTitle)}
           onDelete={deleteQuiz}
         />
-        <IconButton
+        <GenericIconButton
+          icon={<ReplayIcon />}
+          title="Retake Quiz"
           onClick={handleRetakeQuiz}
-          aria-label="Retake Quiz"
-          className={classes.retakeButton}
-        >
-          <ReplayIcon />
-        </IconButton>
+        />
       </Box>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -90,19 +94,17 @@ const QuizItem: React.FC<QuizItemProps> = ({
         <AccordionDetails>
           {loadingAttempts ? (
             <Typography variant="body2">Loading attempts...</Typography>
-          ) : attempts.length > 0 ? (
+          ) : attempts && attempts.length > 0 ? (
             attempts.map((attempt, index) => (
               <Box key={attempt._id} className={classes.AttemptContainer}>
                 <Typography variant="body1">
                   {index + 1}. Score: {attempt.score} / 100
                 </Typography>
-                <IconButton
+                <GenericIconButton
+                  icon={<ArrowForwardIcon color="primary" />}
+                  title="View Attempt"
                   onClick={() => handleViewAttempt(attempt)}
-                  aria-label="View Attempt"
-                  size="small"
-                >
-                  <ArrowForwardIcon color="primary" />
-                </IconButton>
+                />
               </Box>
             ))
           ) : (
