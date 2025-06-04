@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import {
-  generateQuiz,
   getQuizById,
   submitQuestionAnswer,
-  createQuizAttempt,
   getLessonById,
 } from "../../api/quiz/api";
 import {
@@ -27,6 +25,10 @@ import {
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { toastWarning } from "../../utils/utils";
+import { createQuizAttemptAsync } from "../../store/attemptReducer";
+import { generateQuizAsync } from "../../store/quizReducer";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 const QUIZ_TIME_LIMIT_SECONDS = 60 * 1;
@@ -62,9 +64,11 @@ const QuizPage: React.FC = () => {
     quizDataRef.current = quizData;
   }, [quizData]);
 
+  const dispatch = useDispatch<AppDispatch>();
+
   const isOnSelectAnswerMode = quizSettings?.feedbackType === "onSelectAnswer";
 
-  const fetchQuizById = useCallback(async (id: string) => {
+  const fetchQuiz = useCallback(async (id: string) => {
     setLoading(true);
     try {
       const { data } = await getQuizById(id);
@@ -109,10 +113,12 @@ const QuizPage: React.FC = () => {
     setSelectedAnswers({});
 
     try {
-      const { data } = await generateQuiz(
-        lessonDataState?._id || quizData?.lessonId,
-        quizSettings || quizData?.settings
-      );
+      const data = await dispatch(
+        generateQuizAsync({
+          lessonId: lessonDataState?._id || quizData?.lessonId,
+          settings: quizSettings || quizData?.settings,
+        })
+      ).unwrap();
       setQuizData(data);
     } catch (error) {
       console.error("Error generating quiz:", error);
@@ -127,7 +133,7 @@ const QuizPage: React.FC = () => {
       setQuizResult(attempt);
 
       if (attempt.quizId) {
-        fetchQuizById(attempt.quizId);
+        fetchQuiz(attempt.quizId);
       }
 
       if (!lessonDataState && quizData?.lessonId) {
@@ -148,7 +154,7 @@ const QuizPage: React.FC = () => {
 
   useEffect(() => {
     if (quizId) {
-      fetchQuizById(quizId);
+      fetchQuiz(quizId);
     }
   }, [quizId]);
 
@@ -234,7 +240,9 @@ const QuizPage: React.FC = () => {
           })),
       };
 
-      const { data: result } = await createQuizAttempt(submissionData);
+      const result = await dispatch(
+        createQuizAttemptAsync(submissionData)
+      ).unwrap();
       setQuizResult(result);
     } catch (error) {
       console.error("Error submitting quiz:", error);

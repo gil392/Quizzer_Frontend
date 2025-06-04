@@ -11,7 +11,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { darkTheme, lightTheme } from "../../../theme";
+import { darkTheme, lightTheme } from "../../../styles/theme";
 import { DisplayModeContext } from "./config";
 import { DisplayMode } from "../../../api/user/types";
 
