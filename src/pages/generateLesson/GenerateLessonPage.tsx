@@ -7,7 +7,6 @@ import {
   QuizSettings,
 } from "../../api/quiz/types";
 import { useLocation } from "react-router-dom";
-
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
@@ -20,6 +19,7 @@ const GenerateLessonPage: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>(
     location.state?.videoUrl || ""
   );
+  const relatedLessonId = location.state?.relatedLessonId || null;
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
 
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
@@ -49,7 +49,7 @@ const GenerateLessonPage: React.FC = () => {
       isManualCount,
     };
     navigate(PAGES_ROUTES.SUMMARY, {
-      state: { videoUrl, quizSettings },
+      state: { videoUrl, quizSettings, relatedLessonId },
     });
   };
 

@@ -1,11 +1,15 @@
 import { Box } from "@mui/material";
 import { useLocation } from "react-router-dom";
-import Summary from "../../Summary";
+import Summary from "../../summary/Summary";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { createLessonAsync } from "../../../store/lessonReducer";
+import { AppDispatch } from "../../../store/store";
+import { toastWarning } from "../../../utils/utils";
 import RelatedVideos from "../RelatedVideo/RelatedVideos";
 import useStyles from "./LessonOverviewPage.styles.ts";
 import { LessonData } from "../../../api/lesson/types";
-import { generateLesson, getRelatedLessons } from "../../../api/lesson/api";
+import { getRelatedLessons } from "../../../api/lesson/api";
 import { RelatedVideo } from "../../../api/lesson/types";
 import LessonOverviewSkeleton from "./LessonOverviewSkeleton.tsx";
 
@@ -13,27 +17,53 @@ const LessonOverviewPage: React.FC = () => {
   const location = useLocation();
   const videoUrl = location.state?.videoUrl;
   const quizSettings = location.state?.quizSettings;
+  const relatedLessonId = location.state?.relatedLessonId;
+
   const classes = useStyles();
 
   const [lessonData, setLessonData] = useState<LessonData | null>(null);
   const [relatedVideos, setRelatedVideos] = useState<RelatedVideo[]>([]);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch<AppDispatch>();
+
+  // useEffect(() => {
+  //   setLoading(true);
+  //   generateLesson(videoUrl)
+  //     .then(({ data: lesson }) => {
+  //       setLessonData(lesson);
+  //       return getRelatedLessons(lesson._id).then(({ data }) => {
+  //         setRelatedVideos(data);
+  //         setLoading(false);
+  //       });
+  //     })
+  //     .catch(() => {
+  //       toastWarning("Failed to generate Lesson. Please try again.");
+  //       setLessonData(null);
+  //       setRelatedVideos([]);
+  //       setLoading(false);
+  //     });
+  // }, [videoUrl]);
 
   useEffect(() => {
     setLoading(true);
-    generateLesson(videoUrl)
-      .then(({ data: lesson }) => {
-        setLessonData(lesson);
-        return getRelatedLessons(lesson._id).then(({ data }) => {
-          setRelatedVideos(data);
-          setLoading(false);
-        });
-      })
-      .catch(() => {
+    (async () => {
+      try {
+        const data = await dispatch(
+          createLessonAsync(videoUrl, relatedLessonId)
+        ).unwrap();
+        setLessonData(data);
+
+        const { data: related } = await getRelatedLessons(data._id);
+        setRelatedVideos(related);
+        setLoading(false);
+      } catch (error) {
+        toastWarning("Failed to generate Lesson. Please try again.");
+        console.error("Error generating lesson:", error);
         setLessonData(null);
         setRelatedVideos([]);
         setLoading(false);
-      });
+      }
+    })();
   }, [videoUrl]);
 
   if (loading) {
@@ -48,7 +78,10 @@ const LessonOverviewPage: React.FC = () => {
         )}
       </Box>
       <Box className={classes.relatedBox}>
-        <RelatedVideos videos={relatedVideos} />
+        <RelatedVideos
+          videos={relatedVideos}
+          relaetdLessonId={lessonData?._id}
+        />
       </Box>
     </Box>
   );
