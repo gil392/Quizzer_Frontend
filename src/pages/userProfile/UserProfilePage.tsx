@@ -4,6 +4,9 @@ import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
 import { GenericIconButton } from "../../components/GenericIconButton";
 import { toastSuccess, toastWarning } from "../../utils/utils";
 import EditingActions from "./components/EditingActions/EditingActions";
+import { FunctionComponent } from "react";
+import Achievments from "./components/Achievments/Achievments";
+import UserProfileDetails from "./components/UserProfileDetails/UserProfileDetails";
 import useStyles from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
@@ -68,83 +71,14 @@ const UserProfilePage: FunctionComponent = () => {
   };
 
   return (
-    <>
-      <Typography variant="h4" gutterBottom>
-        User Profile
-      </Typography>
-      <div className={classes.root}>
-        <div className={classes.profileImageDiv}>
-          <Avatar
-            src={profileImageUrl}
-            alt={user?.username ?? "Profile"}
-            sx={{
-              width: 150,
-              height: 150,
-              mb: 2,
-              fontSize: "3em",
-            }}
-          />
-          {isEditing && (
-            <GenericIconButton
-              component={"label"}
-              title={"Upload image"}
-              className={classes.imageEditIcon}
-              icon={
-                <>
-                  <EditIcon />
-                  <input
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={handleProfileImageChange}
-                  />
-                </>
-              }
-            />
-          )}
-        </div>
-
-        <Typography
-          className={classes.userTextProperty}
-          variant="subtitle1"
-          color="textSecondary"
-        >
-          {user ? user.email : <Skeleton />}
-        </Typography>
-        <Typography
-          className={classes.userTextProperty}
-          variant="subtitle1"
-          color="textSecondary"
-        >
-          streak: {user ? user.streak : <Skeleton />}
-        </Typography>
-        {isEditing ? (
-          <TextField
-            label="Username"
-            variant="outlined"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            sx={{ mt: 2 }}
-          />
-        ) : (
-          <Typography className={classes.userTextProperty} variant="h6">
-            {user ? user.username : <Skeleton />}
-          </Typography>
-        )}
-        {isEditing ? (
-          <EditingActions saveEdit={handleSave} cancelEditing={handleCancel} />
-        ) : (
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={() => setIsEditing(true)}
-            sx={{ mt: 3 }}
-          >
-            Edit Profile
-          </Button>
-        )}
-      </div>
-    </>
+    <div className={classes.root}>
+      <section className={classes.pannel}>
+        <Achievments className={classes.achievements} />
+      </section>
+      <section className={classes.pannel}>
+        <UserProfileDetails />
+      </section>
+    </div>
   );
 };
 
