@@ -8,13 +8,12 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { generateLesson } from "../api/lesson/api";
-import { LessonData } from "../api/lesson/types";
-import { PAGES_ROUTES } from "../routes/routes.const";
+import { generateLesson } from "../../api/lesson/api";
+import { LessonData } from "../../api/lesson/types";
+import { PAGES_ROUTES } from "../../routes/routes.const";
 import useStyles from "./Summary.styles";
-import { generateQuiz } from "../api/quiz/api";
-import { toastWarning } from "../utils/utils";
-import { QuizSettings } from "../api/quiz/types";
+import { generateQuiz } from "../../api/quiz/api";
+import { toastWarning } from "../../utils/utils";
 
 const SummaryPage: React.FC = () => {
   const classes = useStyles();
@@ -22,7 +21,6 @@ const SummaryPage: React.FC = () => {
   const location = useLocation();
   const [lessonData, setLessonData] = useState<LessonData | null>(null);
   const [loading, setLoading] = useState(true);
-  const quizSettings: QuizSettings | undefined = location.state?.quizSettings;
 
   useEffect(() => {
     generateLesson(location.state?.videoUrl)
@@ -46,11 +44,11 @@ const SummaryPage: React.FC = () => {
     try {
       const { data: quizData } = await generateQuiz(
         lessonData._id,
-        quizSettings
+        location.state?.quizSettings
       );
 
       navigate(PAGES_ROUTES.QUIZ, {
-        state: { lessonData, quizSettings, quizId: quizData._id },
+        state: { lessonData, quizId: quizData._id },
       });
     } catch (error) {
       console.error("Error generating quiz:", error);

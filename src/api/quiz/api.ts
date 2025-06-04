@@ -3,6 +3,7 @@ import apiClient from "../client";
 import { LessonData } from "../lesson/types";
 import { deleteItem, updateItem } from "../utils";
 import {
+  QuestionResults,
   QuizAnswerSubmittion,
   QuizAttempt,
   QuizData,
@@ -49,3 +50,11 @@ export const rateQuiz = (
       params: { quizId },
     }
   );
+
+  export const submitQuestionAnswer = (
+    questionId: string,
+    selectedAnswer: string
+  ): AxiosPromise<QuestionResults> =>
+    apiClient.get(`/attempt/question/${questionId}`, {
+      params: { selectedAnswer },
+    });

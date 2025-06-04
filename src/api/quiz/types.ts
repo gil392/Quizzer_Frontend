@@ -40,9 +40,9 @@ export type QuizResult = {
 
 export type QuestionResults = {
   questionId: string;
-  selectedAnswer: string;
-  correctAnswer: string;
-  isCorrect: boolean;
+  selectedAnswer: string | null;
+  correctAnswer: string | null;
+  isCorrect: boolean | null;
 };
 
 export type QuizAttempt = {
