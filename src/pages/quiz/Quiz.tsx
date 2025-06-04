@@ -1,7 +1,18 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { generateQuiz, getQuizById, submitQuestionAnswer } from "../../api/quiz/api";
-import { QuizData, QuizResult, QuizSettings } from "../../api/quiz/types";
+import {
+  generateQuiz,
+  getQuizById,
+  submitQuestionAnswer,
+  createQuizAttempt,
+  getLessonById,
+} from "../../api/quiz/api";
+import {
+  QuizData,
+  QuizResult,
+  QuizSettings,
+  QuizAttempt,
+} from "../../api/quiz/types";
 import useStyles from "./Quiz.styles";
 import { exportToPDF } from "../../utils/pdfUtils";
 import {
@@ -18,8 +29,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { toastWarning } from "../../utils/utils";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
-import { createQuizAttempt, getLessonById } from "../../api/quiz/api";
-import { QuizAttempt } from "../../api/quiz/types";
+const QUIZ_TIME_LIMIT_SECONDS = 60 * 1;
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
@@ -37,16 +47,28 @@ const QuizPage: React.FC = () => {
     [key: number]: string | null;
   }>({});
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  const [timeLeft, setTimeLeft] = useState<number>(QUIZ_TIME_LIMIT_SECONDS);
+  const [isLocked, setIsLocked] = useState(false);
+  const timerRef = useRef<number | null>(null);
 
-  const isOnSelectAnswerMode = quizSettings?.feedbackType  === "onSelectAnswer"
+  const selectedAnswersRef = useRef(selectedAnswers);
+  const quizDataRef = useRef<QuizData | null>(quizData);
+  
+  useEffect(() => {
+    selectedAnswersRef.current = selectedAnswers;
+  }, [selectedAnswers]);
+
+  useEffect(() => {
+    quizDataRef.current = quizData;
+  }, [quizData]);
+
+  const isOnSelectAnswerMode = quizSettings?.feedbackType === "onSelectAnswer";
 
   const fetchQuizById = useCallback(async (id: string) => {
     setLoading(true);
-
     try {
       const { data } = await getQuizById(id);
       setQuizData(data);
-
       setQuizResult({
         quizId: data._id,
         results: data.questions.map((question) => ({
@@ -57,7 +79,6 @@ const QuizPage: React.FC = () => {
         })),
         score: 0,
       });
-
     } catch (error) {
       console.error("Error fetching quiz:", error);
     } finally {
@@ -137,26 +158,73 @@ const QuizPage: React.FC = () => {
     }
   }, [lessonDataState, quizSettings, generateNewQuiz]);
 
+  useEffect(() => {
+    if (quizResult && areAllQuestionsSubmitted()) {
+      if (timerRef.current) clearInterval(timerRef.current);
+      return;
+    }
+    if (isLocked) return;
+
+    timerRef.current = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timerRef.current!);
+          setIsLocked(true);
+          handleQuizSubmission(quizDataRef.current, selectedAnswersRef.current);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [quizResult, isLocked]);
+
+  useEffect(() => {
+    setTimeLeft(QUIZ_TIME_LIMIT_SECONDS);
+    setIsLocked(false);
+    //if (timerRef.current) clearInterval(timerRef.current);
+  }, [quizData?._id]);
+
+  const formatTime = (seconds: number) => {
+    const m = Math.floor(seconds / 60)
+      .toString()
+      .padStart(2, "0");
+    const s = (seconds % 60).toString().padStart(2, "0");
+    return `${m}:${s}`;
+  };
+
   const handleOptionChange = (questionIndex: number, option: string) => {
+    if (isLocked) return;
     setSelectedAnswers((prev) => ({
       ...prev,
       [questionIndex]: option,
     }));
   };
 
-  const handleQuizSubmission = async () => {
+  const handleQuizSubmission = async (
+    quizDataOverride?: QuizData | null,
+    answersOverride?: {
+      [key: number]: string | null;
+    }
+  ) => {
     if (!quizData) {
       toastWarning("Quiz data is not available.");
       return;
     }
 
+    const answersToUse = answersOverride ?? selectedAnswers;
+    const quizDataToUse = quizDataOverride ?? quizData;
+
     try {
       const submissionData = {
         quizId: quizData._id,
-        questions: Object.entries(selectedAnswers)
+        questions: Object.entries(answersToUse)
           .filter(([_, answer]) => answer !== null)
           .map(([questionIndex, answer]) => ({
-            questionId: quizData.questions[parseInt(questionIndex)]._id,
+            questionId: quizDataToUse.questions[parseInt(questionIndex)]._id,
             selectedAnswer: answer as string,
           })),
       };
@@ -175,7 +243,7 @@ const QuizPage: React.FC = () => {
       console.error("Quiz data is not available for retry.");
       return;
     }
-  
+
     setQuizResult({
       quizId: quizData._id,
       results: quizData.questions.map((question) => ({
@@ -186,7 +254,7 @@ const QuizPage: React.FC = () => {
       })),
       score: 0,
     });
-  
+
     setSelectedAnswers({});
   };
 
@@ -228,43 +296,43 @@ const QuizPage: React.FC = () => {
       console.error("Quiz data is not available.");
       return;
     }
-  
+
     const question = quizData.questions[questionIndex];
     const selectedAnswer = selectedAnswers[questionIndex];
-  
+
     if (!selectedAnswer) {
       console.error("Please select an answer before submitting.");
       toastWarning("Please select an answer before submitting.");
       return;
     }
-  
+
     try {
       const { data: questionResult } = await submitQuestionAnswer(
         question._id,
         selectedAnswer
       );
-  
+
       setQuizResult((prev) => {
         if (!prev) {
           console.error("Quiz result state is not initialized.");
           return null;
         }
-  
+
         const updatedResults = [...prev.results];
-  
+
         updatedResults[questionIndex] = {
           questionId: question._id,
           selectedAnswer,
           correctAnswer: questionResult.correctAnswer,
           isCorrect: questionResult.isCorrect,
         };
-  
+
         return {
           ...prev,
           results: updatedResults,
         };
       });
-      
+
       const allSubmitted = quizData.questions.every((_, resultIndex) => {
         if (resultIndex === questionIndex) {
           return true;
@@ -272,9 +340,8 @@ const QuizPage: React.FC = () => {
         const result = quizResult?.results[resultIndex];
         return result?.correctAnswer !== null;
       });
-      
+
       if (allSubmitted) {
-        console.log("All other questions submitted. Handling quiz submission.");
         await handleQuizSubmission();
       }
     } catch (error) {
@@ -286,6 +353,14 @@ const QuizPage: React.FC = () => {
   return (
     <Box className={classes.container}>
       <Box className={classes.quizBox}>
+        <Box display="flex" justifyContent="flex-end" mb={2}>
+          <Typography
+            variant="h6"
+            color={timeLeft <= 10 ? "error" : "textPrimary"}
+          >
+            Time Left: {formatTime(timeLeft)}
+          </Typography>
+        </Box>
         {loading ? (
           <Box>
             <Skeleton variant="text" width="80%" height={40} />
@@ -344,7 +419,9 @@ const QuizPage: React.FC = () => {
                                 onChange={() =>
                                   handleOptionChange(index, option)
                                 }
-                                disabled={!!quizResult && areAllQuestionsSubmitted()}
+                                disabled={
+                                  !!quizResult && areAllQuestionsSubmitted()
+                                }
                                 sx={{
                                   "& .MuiSvgIcon-root": {
                                     border: `2px solid ${getAnswerOutlineColor(
@@ -361,16 +438,17 @@ const QuizPage: React.FC = () => {
                         ))}
                       </Box>
                       <Box display="flex" justifyContent="flex-end">
-                        {isOnSelectAnswerMode &&
-                          selectedAnswers[index] && ( 
-                            <IconButton
-                             color="primary"
-                             onClick={() => handleSubmitQuestionClick(index)}
-                             disabled={!!quizResult?.results[index]?.correctAnswer}
-                            >
-                              <ArrowForwardIcon />
-                            </IconButton>
-                          )}
+                        {isOnSelectAnswerMode && selectedAnswers[index] && (
+                          <IconButton
+                            color="primary"
+                            onClick={() => handleSubmitQuestionClick(index)}
+                            disabled={
+                              !!quizResult?.results[index]?.correctAnswer
+                            }
+                          >
+                            <ArrowForwardIcon />
+                          </IconButton>
+                        )}
                       </Box>
                     </Card>
                   </Box>
@@ -382,15 +460,17 @@ const QuizPage: React.FC = () => {
                 <Button variant="contained" color="primary" onClick={retry}>
                   Retry
                 </Button>
-              ) : ( !isOnSelectAnswerMode && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleQuizSubmission}
-                  disabled={!allQuestionsAnswered}
-                >
-                  Submit
-                </Button> )   
+              ) : (
+                !isOnSelectAnswerMode && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleQuizSubmission()} {/** Can't shorten it or it'd get the click event as the first parameter */}
+                    disabled={!allQuestionsAnswered}
+                  >
+                    Submit
+                  </Button>
+                )
               )}
               <Button
                 variant="contained"
@@ -412,6 +492,11 @@ const QuizPage: React.FC = () => {
                 Export to PDF
               </Button>
             </Box>
+            {isLocked && (
+              <Typography color="error" mt={2}>
+                Time is up! The quiz has been submitted automatically.
+              </Typography>
+            )}
           </Box>
         ) : (
           <Typography variant="h6" color="error">
