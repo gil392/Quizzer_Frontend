@@ -1,7 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import { generateQuiz, getQuizById, submitQuestionAnswer } from "../../api/quiz/api";
-import { QuizData, QuizResult, QuizSettings } from "../../api/quiz/types";
 import useStyles from "./Quiz.styles";
 import { exportToPDF } from "../../utils/pdfUtils";
 import {
@@ -16,10 +14,23 @@ import {
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { toastWarning } from "../../utils/utils";
+import {
+  getLessonById,
+  getQuizById,
+  submitQuestionAnswer,
+} from "../../api/quiz/api";
+import {
+  QuizSettings,
+  QuizAttempt,
+  QuizData,
+  QuizResult,
+} from "../../api/quiz/types";
+import { createQuizAttemptAsync } from "../../store/attemptReducer";
+import { generateQuizAsync } from "../../store/quizReducer";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
-import { createQuizAttempt, getLessonById } from "../../api/quiz/api";
-import { QuizAttempt } from "../../api/quiz/types";
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
@@ -37,10 +48,11 @@ const QuizPage: React.FC = () => {
     [key: number]: string | null;
   }>({});
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
-  const isOnSelectAnswerMode = quizSettings?.feedbackType  === "onSelectAnswer"
+  const isOnSelectAnswerMode = quizSettings?.feedbackType === "onSelectAnswer";
 
-  const fetchQuizById = useCallback(async (id: string) => {
+  const fetchQuiz = useCallback(async (id: string) => {
     setLoading(true);
 
     try {
@@ -57,7 +69,6 @@ const QuizPage: React.FC = () => {
         })),
         score: 0,
       });
-
     } catch (error) {
       console.error("Error fetching quiz:", error);
     } finally {
@@ -88,10 +99,12 @@ const QuizPage: React.FC = () => {
     setSelectedAnswers({});
 
     try {
-      const { data } = await generateQuiz(
-        lessonDataState?._id || quizData?.lessonId,
-        quizSettings || quizData?.settings
-      );
+      const data = await dispatch(
+        generateQuizAsync({
+          lessonId: lessonDataState?._id || quizData?.lessonId,
+          settings: quizSettings || quizData?.settings,
+        })
+      ).unwrap();
       setQuizData(data);
     } catch (error) {
       console.error("Error generating quiz:", error);
@@ -106,7 +119,7 @@ const QuizPage: React.FC = () => {
       setQuizResult(attempt);
 
       if (attempt.quizId) {
-        fetchQuizById(attempt.quizId);
+        fetchQuiz(attempt.quizId);
       }
 
       if (!lessonDataState && quizData?.lessonId) {
@@ -127,7 +140,7 @@ const QuizPage: React.FC = () => {
 
   useEffect(() => {
     if (quizId) {
-      fetchQuizById(quizId);
+      fetchQuiz(quizId);
     }
   }, [quizId]);
 
@@ -161,7 +174,9 @@ const QuizPage: React.FC = () => {
           })),
       };
 
-      const { data: result } = await createQuizAttempt(submissionData);
+      const result = await dispatch(
+        createQuizAttemptAsync(submissionData)
+      ).unwrap();
       setQuizResult(result);
     } catch (error) {
       console.error("Error submitting quiz:", error);
@@ -175,7 +190,7 @@ const QuizPage: React.FC = () => {
       console.error("Quiz data is not available for retry.");
       return;
     }
-  
+
     setQuizResult({
       quizId: quizData._id,
       results: quizData.questions.map((question) => ({
@@ -186,7 +201,7 @@ const QuizPage: React.FC = () => {
       })),
       score: 0,
     });
-  
+
     setSelectedAnswers({});
   };
 
@@ -228,43 +243,43 @@ const QuizPage: React.FC = () => {
       console.error("Quiz data is not available.");
       return;
     }
-  
+
     const question = quizData.questions[questionIndex];
     const selectedAnswer = selectedAnswers[questionIndex];
-  
+
     if (!selectedAnswer) {
       console.error("Please select an answer before submitting.");
       toastWarning("Please select an answer before submitting.");
       return;
     }
-  
+
     try {
       const { data: questionResult } = await submitQuestionAnswer(
         question._id,
         selectedAnswer
       );
-  
+
       setQuizResult((prev) => {
         if (!prev) {
           console.error("Quiz result state is not initialized.");
           return null;
         }
-  
+
         const updatedResults = [...prev.results];
-  
+
         updatedResults[questionIndex] = {
           questionId: question._id,
           selectedAnswer,
           correctAnswer: questionResult.correctAnswer,
           isCorrect: questionResult.isCorrect,
         };
-  
+
         return {
           ...prev,
           results: updatedResults,
         };
       });
-      
+
       const allSubmitted = quizData.questions.every((_, resultIndex) => {
         if (resultIndex === questionIndex) {
           return true;
@@ -272,7 +287,7 @@ const QuizPage: React.FC = () => {
         const result = quizResult?.results[resultIndex];
         return result?.correctAnswer !== null;
       });
-      
+
       if (allSubmitted) {
         console.log("All other questions submitted. Handling quiz submission.");
         await handleQuizSubmission();
@@ -344,7 +359,9 @@ const QuizPage: React.FC = () => {
                                 onChange={() =>
                                   handleOptionChange(index, option)
                                 }
-                                disabled={!!quizResult && areAllQuestionsSubmitted()}
+                                disabled={
+                                  !!quizResult && areAllQuestionsSubmitted()
+                                }
                                 sx={{
                                   "& .MuiSvgIcon-root": {
                                     border: `2px solid ${getAnswerOutlineColor(
@@ -361,16 +378,17 @@ const QuizPage: React.FC = () => {
                         ))}
                       </Box>
                       <Box display="flex" justifyContent="flex-end">
-                        {isOnSelectAnswerMode &&
-                          selectedAnswers[index] && ( 
-                            <IconButton
-                             color="primary"
-                             onClick={() => handleSubmitQuestionClick(index)}
-                             disabled={!!quizResult?.results[index]?.correctAnswer}
-                            >
-                              <ArrowForwardIcon />
-                            </IconButton>
-                          )}
+                        {isOnSelectAnswerMode && selectedAnswers[index] && (
+                          <IconButton
+                            color="primary"
+                            onClick={() => handleSubmitQuestionClick(index)}
+                            disabled={
+                              !!quizResult?.results[index]?.correctAnswer
+                            }
+                          >
+                            <ArrowForwardIcon />
+                          </IconButton>
+                        )}
                       </Box>
                     </Card>
                   </Box>
@@ -382,15 +400,17 @@ const QuizPage: React.FC = () => {
                 <Button variant="contained" color="primary" onClick={retry}>
                   Retry
                 </Button>
-              ) : ( !isOnSelectAnswerMode && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleQuizSubmission}
-                  disabled={!allQuestionsAnswered}
-                >
-                  Submit
-                </Button> )   
+              ) : (
+                !isOnSelectAnswerMode && (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleQuizSubmission}
+                    disabled={!allQuestionsAnswered}
+                  >
+                    Submit
+                  </Button>
+                )
               )}
               <Button
                 variant="contained"

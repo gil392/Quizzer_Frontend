@@ -5,13 +5,14 @@ import Layout from "./components/layout/Layout";
 import NavBar from "./components/navBar/NavBar";
 import { DisplayModeProvider } from "./components/settings/DisplayModeSwitch/globalProvider";
 import { Toaster } from "sonner";
-import { RecoilRoot } from "recoil";
+import { Provider } from "react-redux";
+import { store } from "./store/store";
 
 function App() {
   return (
-    <DisplayModeProvider>
-      <div className="app-container">
-        <RecoilRoot>
+    <Provider store={store}>
+      <DisplayModeProvider>
+        <div className="app-container">
           <Toaster richColors />
           <Router>
             <NavBar />
@@ -20,9 +21,9 @@ function App() {
               <Layout />
             </div>
           </Router>
-        </RecoilRoot>
-      </div>
-    </DisplayModeProvider>
+        </div>
+      </DisplayModeProvider>
+    </Provider>
   );
 }
 

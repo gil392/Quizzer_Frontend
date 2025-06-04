@@ -9,10 +9,8 @@ import {
   useState,
 } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useSetRecoilState } from "recoil";
 import { getMessages } from "../../api/user/api";
 import { Message } from "../../api/user/types";
-import { profileImageState } from "../../recoil/profileImage";
 import { isNavBarAvailableInPath } from "../navBar/utils";
 import DisplayModeSwitch from "../settings/DisplayModeSwitch/DisplayModeSwitch";
 import { removeUserDisplayMode } from "../settings/DisplayModeSwitch/utils";
@@ -20,7 +18,6 @@ import ProfileImage from "./components/ProfileImage";
 import {
   MAX_MESSAGES_BADGE_CONTENT,
   MESSAGES_INTERVAL_MS,
-  PROFILE_IMAGE,
 } from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
@@ -33,7 +30,6 @@ const AppBar: FunctionComponent = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const setProfileImage = useSetRecoilState(profileImageState);
 
   const isAppBarAvaiable = useMemo(
     () => isNavBarAvailableInPath(location.pathname),
@@ -66,8 +62,6 @@ const AppBar: FunctionComponent = () => {
 
   const handleLogout = () => {
     removeUserDisplayMode();
-    setProfileImage(undefined);
-    localStorage.removeItem(PROFILE_IMAGE);
   };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
