@@ -48,7 +48,11 @@ const SummaryPage: React.FC = () => {
       );
 
       navigate(PAGES_ROUTES.QUIZ, {
-        state: { lessonData, quizId: quizData._id },
+        state: {
+          lessonData,
+          quizId: quizData._id,
+          quizSettings: quizData.settings,
+        },
       });
     } catch (error) {
       console.error("Error generating quiz:", error);

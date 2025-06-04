@@ -17,6 +17,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
 import { GenericIconButton } from "../../../components/GenericIconButton";
+import { PAGES_ROUTES } from "../../../routes/routes.const";
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -35,13 +36,13 @@ const QuizItem: React.FC<QuizItemProps> = ({
   const [loadingAttempts, setLoadingAttempts] = useState<boolean>(true);
 
   const handleRetakeQuiz = () => {
-    navigate("/quiz", {
+    navigate(PAGES_ROUTES.QUIZ, {
       state: { quizId: quiz._id, quizSettings: quiz.settings },
     });
   };
 
   const handleViewAttempt = (attempt: QuizAttempt) => {
-    navigate("/quiz", { state: { attempt } });
+    navigate(PAGES_ROUTES.QUIZ, { state: { attempt } });
   };
 
   useEffect(() => {

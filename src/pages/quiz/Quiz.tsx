@@ -53,7 +53,7 @@ const QuizPage: React.FC = () => {
 
   const selectedAnswersRef = useRef(selectedAnswers);
   const quizDataRef = useRef<QuizData | null>(quizData);
-  
+
   useEffect(() => {
     selectedAnswersRef.current = selectedAnswers;
   }, [selectedAnswers]);
@@ -165,22 +165,27 @@ const QuizPage: React.FC = () => {
     }
     if (isLocked) return;
 
-    timerRef.current = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timerRef.current!);
-          setIsLocked(true);
-          handleQuizSubmission(quizDataRef.current, selectedAnswersRef.current);
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
+    if (!loading && !attempt) {
+      timerRef.current = setInterval(() => {
+        setTimeLeft((prev) => {
+          if (prev <= 1) {
+            clearInterval(timerRef.current!);
+            setIsLocked(true);
+            handleQuizSubmission(
+              quizDataRef.current,
+              selectedAnswersRef.current
+            );
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
 
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [quizResult, isLocked]);
+  }, [quizResult, isLocked, loading]);
 
   useEffect(() => {
     setTimeLeft(QUIZ_TIME_LIMIT_SECONDS);
@@ -353,14 +358,16 @@ const QuizPage: React.FC = () => {
   return (
     <Box className={classes.container}>
       <Box className={classes.quizBox}>
-        <Box display="flex" justifyContent="flex-end" mb={2}>
-          <Typography
-            variant="h6"
-            color={timeLeft <= 10 ? "error" : "textPrimary"}
-          >
-            Time Left: {formatTime(timeLeft)}
-          </Typography>
-        </Box>
+        {!loading && !attempt && (
+          <Box display="flex" justifyContent="flex-end" mb={2}>
+            <Typography
+              variant="h6"
+              color={timeLeft <= 10 ? "error" : "textPrimary"}
+            >
+              Time Left: {formatTime(timeLeft)}
+            </Typography>
+          </Box>
+        )}
         {loading ? (
           <Box>
             <Skeleton variant="text" width="80%" height={40} />
@@ -465,7 +472,7 @@ const QuizPage: React.FC = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => handleQuizSubmission()} {/** Can't shorten it or it'd get the click event as the first parameter */}
+                    onClick={() => handleQuizSubmission()} // Can't shorten it or it'd get the click event as the first parameter
                     disabled={!allQuestionsAnswered}
                   >
                     Submit
