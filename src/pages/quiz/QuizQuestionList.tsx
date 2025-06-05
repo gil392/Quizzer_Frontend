@@ -12,6 +12,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { addAnswerToQuizAttemptAsync } from "../../store/attemptReducer";
 import useStyles from "./Quiz.styles";
+import { useEffect } from "react";
 
 type QuizQuestionListProps = {
   quizData: QuizData;
@@ -33,6 +34,10 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
 }) => {
   const dispatch = useDispatch<AppDispatch>();
   const classes = useStyles();
+
+  useEffect(() => {
+    console.log("QuizQuestionList mounted with quizData:", quizData);
+  }, [quizData]);
 
   const answerQuestionInAttempt = async (answer: QuizAnswer) => {
     await dispatch(addAnswerToQuizAttemptAsync(answer));

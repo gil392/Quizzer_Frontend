@@ -12,6 +12,7 @@ import { AppDispatch, RootState } from "../../store/store";
 import QuizTimer from "./QuizTimer";
 import { LessonData } from "../../api/lesson/types";
 import QuizQuestionList from "./QuizQuestionList";
+import { selectAttemptSelector } from "../../store/selectors/attemptSelector";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
@@ -22,6 +23,7 @@ const QuizPage: React.FC = () => {
   const quizSettings: QuizSettings | undefined = location.state?.quizSettings; // passed when creating a new quiz
   const lessonData: LessonData | undefined = location.state?.lessonData; // passed when creating a new quiz
   const attempt: QuizAttempt | undefined = location.state?.attempt; // passed when viewing an existing attempt
+  const [attemptId, setAttemptId] = useState<string | undefined>(attempt?._id);
 
   const [quizId, setQuizId] = useState<string | undefined>(
     location.state?.quizId || attempt?.quizId
@@ -29,30 +31,28 @@ const QuizPage: React.FC = () => {
   const quizData = useSelector((state: RootState) =>
     quizId ? state.quizzes.quizzes.find((q) => q._id === quizId) : null
   );
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | null;
   }>({});
   const currentAttempt: QuizAttempt | undefined = useSelector(
-    (state: RootState) =>
-      quizId
-        ? (attempt
-            ? state.attempt.attemptsByQuiz[quizId]?.find(
-                (a) => a._id === attempt._id
-              )
-            : state.attempt.attemptsByQuiz[quizId]?.[0]) || undefined
-        : undefined
+    (state: RootState) => selectAttemptSelector(state, quizId, attemptId)
   );
 
   useEffect(() => {
-    if (!currentAttempt && quizId) {
-      dispatch(
-        createQuizAttemptAsync({
-          quizId: quizId,
-          questions: [],
-        })
-      );
-    }
+    const createEmptyAttemptIfNeeded = async () => {
+      if (!currentAttempt && quizId) {
+        const emptyAttempt = await dispatch(
+          createQuizAttemptAsync({
+            quizId: quizId,
+            questions: [],
+          })
+        ).unwrap();
+        setAttemptId(emptyAttempt._id);
+      }
+    };
+
+    createEmptyAttemptIfNeeded();
   }, [quizId]);
 
   const [isLocked, setIsLocked] = useState(false);
