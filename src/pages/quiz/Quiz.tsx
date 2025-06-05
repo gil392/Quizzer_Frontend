@@ -133,9 +133,6 @@ const QuizPage: React.FC = () => {
   }, [lessonDataState?._id, quizData?.lessonId, quizSettings]);
 
   useEffect(() => {
-    console.log("isLocked state changed:", isLocked);
-  }, [isLocked]);
-  useEffect(() => {
     if (attempt) {
       setQuizResult(attempt);
 
