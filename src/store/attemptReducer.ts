@@ -1,6 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getQuizAttempts, createQuizAttempt, rateQuiz } from "../api/quiz/api";
-import { QuizAttempt, QuizAnswerSubmittion } from "../api/quiz/types";
+import {
+  getQuizAttempts,
+  createQuizAttempt,
+  rateQuiz,
+  addAnswerToQuizAttempt,
+} from "../api/quiz/api";
+import {
+  QuizAttempt,
+  QuizAnswerSubmittion,
+  QuizAnswer,
+} from "../api/quiz/types";
 import { deleteQuizAsync } from "./quizReducer";
 
 export const fetchQuizAttempts = createAsyncThunk(
@@ -15,6 +24,14 @@ export const createQuizAttemptAsync = createAsyncThunk(
   "attempt/createQuizAttempt",
   async (data: QuizAnswerSubmittion) => {
     const response = await createQuizAttempt(data);
+    return response.data;
+  }
+);
+
+export const addAnswerToQuizAttemptAsync = createAsyncThunk(
+  "attempt/addAnswerToQuizAttempt",
+  async (data: QuizAnswer) => {
+    const response = await addAnswerToQuizAttempt(data);
     return response.data;
   }
 );
@@ -50,6 +67,17 @@ const attemptSlice = createSlice({
           state.attemptsByQuiz[quizId] = [];
         }
         state.attemptsByQuiz[quizId].push(action.payload);
+      })
+      .addCase(addAnswerToQuizAttemptAsync.fulfilled, (state, action) => {
+        const quizId = action.payload.quizId;
+        if (state.attemptsByQuiz[quizId]) {
+          const attemptIndex = state.attemptsByQuiz[quizId].findIndex(
+            (attempt) => attempt._id === action.payload._id
+          );
+          if (attemptIndex !== -1) {
+            state.attemptsByQuiz[quizId][attemptIndex] = action.payload;
+          }
+        }
       })
       .addCase(deleteQuizAsync.fulfilled, (state, action) => {
         delete state.attemptsByQuiz[action.payload];

@@ -2,14 +2,12 @@ import React, { useCallback, useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import {
   getQuizById,
-  submitQuestionAnswer,
-  getLessonById,
 } from "../../api/quiz/api";
 import {
   QuizData,
-  QuizResult,
   QuizSettings,
   QuizAttempt,
+  QuizAnswer,
 } from "../../api/quiz/types";
 import useStyles from "./Quiz.styles";
 import { exportToPDF } from "../../utils/pdfUtils";
@@ -25,11 +23,15 @@ import {
 } from "@mui/material";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { toastWarning } from "../../utils/utils";
-import { createQuizAttemptAsync } from "../../store/attemptReducer";
+import {
+  addAnswerToQuizAttemptAsync,
+  createQuizAttemptAsync,
+} from "../../store/attemptReducer";
 import { generateQuizAsync } from "../../store/quizReducer";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
 import QuizTimer from "./QuizTimer";
+import { LessonData } from "../../api/lesson/types";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
@@ -37,18 +39,46 @@ const QuizPage: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
 
-  const quizSettings: QuizSettings = location.state?.quizSettings;
-  const lessonData = location.state?.lessonData;
-  const quizId = location.state?.quizId;
-  const attempt: QuizAttempt = location.state?.attempt;
+  const quizSettings: QuizSettings | undefined = location.state?.quizSettings; // passed when creating a new quiz
+  const lessonData: LessonData | undefined = location.state?.lessonData; // passed when creating a new quiz
+  const quizId: string | undefined = location.state?.quizId; // passed when retaking a quiz
+  const attempt: QuizAttempt | undefined = location.state?.attempt; // passed when viewing an existing attempt
 
   const [quizData, setQuizData] = useState<QuizData | null>(null);
-  const [lessonDataState, setLessonDataState] = useState(lessonData || null);
   const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | null;
   }>({});
-  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+  const currentAttempt: QuizAttempt | undefined = useSelector(
+    (state: RootState) =>
+      attempt
+        ? state.attempt.attemptsByQuiz[attempt.quizId]?.find(
+            (a) => a._id === attempt._id
+          )
+        : undefined
+  );
+
+  useEffect(() => {
+    console.log(
+      "Checking in useEffect",
+      currentAttempt,
+      quizData?._id || quizId
+    );
+    if (!currentAttempt) {
+      console.log(
+        "No current attempt found, creating a new one for quizId:",
+        quizId
+      );
+      dispatch(
+        createQuizAttemptAsync({
+          quizId: quizData?._id || quizId!,
+          questions: [],
+        })
+      );
+    }
+  }, []);
+
+  //const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const [isLocked, setIsLocked] = useState(false);
 
   const selectedAnswersRef = useRef(selectedAnswers);
@@ -75,16 +105,6 @@ const QuizPage: React.FC = () => {
     try {
       const { data } = await getQuizById(id);
       setQuizData(data);
-      setQuizResult({
-        quizId: data._id,
-        results: data.questions.map((question) => ({
-          questionId: question._id,
-          selectedAnswer: null,
-          correctAnswer: null,
-          isCorrect: null,
-        })),
-        score: 0,
-      });
     } catch (error) {
       console.error("Error fetching quiz:", error);
     } finally {
@@ -93,33 +113,13 @@ const QuizPage: React.FC = () => {
   }, []);
 
   const generateNewQuiz = useCallback(async () => {
-    if (!lessonDataState?._id) {
-      const lessonIdFromState =
-        quizData?.lessonId || location.state?.lessonData?.lessonId;
-      if (lessonIdFromState) {
-        try {
-          const { data } = await getLessonById(lessonIdFromState);
-          setLessonDataState(data);
-        } catch (error) {
-          console.error("Error fetching lesson data:", error);
-          alert("Failed to fetch lesson data. Cannot generate a new quiz.");
-          return;
-        }
-      } else {
-        console.error("Lesson data is not available.");
-        alert("Lesson data is missing. Cannot generate a new quiz.");
-        return;
-      }
-    }
-
     setLoading(true);
-    setQuizResult(null);
     setSelectedAnswers({});
 
     try {
       const data = await dispatch(
         generateQuizAsync({
-          lessonId: lessonDataState?._id || quizData?.lessonId,
+          lessonId: lessonData!._id,
           settings: quizSettings || quizData?.settings,
         })
       ).unwrap();
@@ -130,22 +130,12 @@ const QuizPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [lessonDataState?._id, quizData?.lessonId, quizSettings]);
+  }, [lessonData?._id, quizSettings]);
 
   useEffect(() => {
     if (attempt) {
-      setQuizResult(attempt);
-
       if (attempt.quizId) {
         fetchQuiz(attempt.quizId);
-      }
-
-      if (!lessonDataState && quizData?.lessonId) {
-        getLessonById(quizData.lessonId)
-          .then(({ data }) => setLessonDataState(data))
-          .catch((error) =>
-            console.error("Error fetching lesson data from attempt:", error)
-          );
       }
 
       const preselectedAnswers: { [key: number]: string | null } = {};
@@ -163,10 +153,10 @@ const QuizPage: React.FC = () => {
   }, [quizId]);
 
   useEffect(() => {
-    if (!quizData && lessonDataState && quizSettings) {
+    if (!quizData && lessonData && quizSettings) {
       generateNewQuiz();
     }
-  }, [lessonDataState, quizSettings, generateNewQuiz]);
+  }, [lessonData, quizSettings, generateNewQuiz]);
 
   const handleOptionChange = (questionIndex: number, option: string) => {
     if (isLocked) return;
@@ -174,6 +164,10 @@ const QuizPage: React.FC = () => {
       ...prev,
       [questionIndex]: option,
     }));
+  };
+
+  const answerQuestionInAttempt = async (answer: QuizAnswer) => {
+    await dispatch(addAnswerToQuizAttemptAsync(answer));
   };
 
   const handleQuizSubmission = async (
@@ -203,10 +197,10 @@ const QuizPage: React.FC = () => {
 
       console.log("Submitting quiz with data:", submissionData);
 
-      const result = await dispatch(
+      await dispatch(
         createQuizAttemptAsync(submissionData)
       ).unwrap();
-      setQuizResult(() => result);
+      //setQuizResult(() => result);
       areAllQuestionsSubmitted() && setIsLocked(true);
     } catch (error) {
       console.error("Error submitting quiz:", error);
@@ -221,16 +215,7 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    setQuizResult({
-      quizId: quizData._id,
-      results: quizData.questions.map((question) => ({
-        questionId: question._id,
-        selectedAnswer: null,
-        correctAnswer: null,
-        isCorrect: null,
-      })),
-      score: 0,
-    });
+    // todo: fix retry logic
 
     setSelectedAnswers({});
   };
@@ -247,9 +232,9 @@ const QuizPage: React.FC = () => {
     questionId: string,
     option: string
   ): string => {
-    if (!quizResult) return "default";
+    if (!currentAttempt) return "default";
 
-    const questionResult = quizResult.results.find(
+    const questionResult = currentAttempt.results.find(
       (result) => result && result.questionId === questionId
     );
 
@@ -266,69 +251,12 @@ const QuizPage: React.FC = () => {
 
   const areAllQuestionsSubmitted = () => {
     return (
-      quizData?.questions.length === quizResult?.results.length &&
-      quizResult?.results.every((result) => result.correctAnswer !== null)
+      quizData?.questions.length === currentAttempt?.results.length &&
+      currentAttempt?.results.every((result) => result.correctAnswer !== null)
     );
   };
 
-  const handleSubmitQuestionClick = async (questionIndex: number) => {
-    if (!quizData) {
-      console.error("Quiz data is not available.");
-      return;
-    }
 
-    const question = quizData.questions[questionIndex];
-    const selectedAnswer = selectedAnswers[questionIndex];
-
-    if (!selectedAnswer) {
-      console.error("Please select an answer before submitting.");
-      toastWarning("Please select an answer before submitting.");
-      return;
-    }
-
-    try {
-      const { data: questionResult } = await submitQuestionAnswer(
-        question._id,
-        selectedAnswer
-      );
-
-      setQuizResult((prev) => {
-        if (!prev) {
-          console.error("Quiz result state is not initialized.");
-          return null;
-        }
-
-        const updatedResults = [...prev.results];
-
-        updatedResults[questionIndex] = {
-          questionId: question._id,
-          selectedAnswer,
-          correctAnswer: questionResult.correctAnswer,
-          isCorrect: questionResult.isCorrect,
-        };
-
-        return {
-          ...prev,
-          results: updatedResults,
-        };
-      });
-
-      const allSubmitted = quizData.questions.every((_, resultIndex) => {
-        if (resultIndex === questionIndex) {
-          return true;
-        }
-        const result = quizResult?.results[resultIndex];
-        return result?.correctAnswer !== null;
-      });
-
-      if (allSubmitted) {
-        await handleQuizSubmission();
-      }
-    } catch (error) {
-      console.error("Error submitting question:", error);
-      toastWarning("Failed to submit question. Please try again.");
-    }
-  };
 
   return (
     <Box className={classes.container}>
@@ -337,7 +265,7 @@ const QuizPage: React.FC = () => {
           quizId={quizId}
           isLocked={isLocked}
           canHaveTimer={!loading && !attempt}
-          quizResult={quizResult}
+          quizResult={currentAttempt}
           areAllQuestionsSubmitted={areAllQuestionsSubmitted}
           onTimeUp={() =>
             handleQuizSubmission(
@@ -359,19 +287,19 @@ const QuizPage: React.FC = () => {
         ) : quizData ? (
           <Box>
             <Box id={QUIZ_CONTENT_PDF_ID}>
-              {quizResult && isLocked && (
+              {currentAttempt && isLocked && (
                 <Box
                   className={classes.resultBox}
                   style={{
                     backgroundColor:
-                      quizResult.score >= 60 ? "#e8f5e9" : "#ffebee",
+                      currentAttempt.score >= 60 ? "#e8f5e9" : "#ffebee",
                   }}
                 >
                   <Typography
                     variant="h5"
-                    color={quizResult.score >= 60 ? "green" : "red"}
+                    color={currentAttempt.score >= 60 ? "green" : "red"}
                   >
-                    Your Score: {quizResult.score} / 100
+                    Your Score: {currentAttempt.score} / 100
                   </Typography>
                 </Box>
               )}
@@ -425,9 +353,15 @@ const QuizPage: React.FC = () => {
                         {isOnSelectAnswerMode && selectedAnswers[index] && (
                           <IconButton
                             color="primary"
-                            onClick={() => handleSubmitQuestionClick(index)}
+                            onClick={() =>
+                              answerQuestionInAttempt({
+                                questionId: question._id,
+                                selectedAnswer: selectedAnswers[index]!,
+                                attemptId: attempt?._id || "",
+                              })
+                            }
                             disabled={
-                              !!quizResult?.results[index]?.correctAnswer
+                              !!currentAttempt?.results[index]?.correctAnswer
                             }
                           >
                             <ArrowForwardIcon />
@@ -440,7 +374,7 @@ const QuizPage: React.FC = () => {
               </Box>
             </Box>
             <Box className={classes.buttonContainer}>
-              {quizResult && isLocked ? (
+              {currentAttempt && isLocked ? (
                 <Button variant="contained" color="primary" onClick={retry}>
                   Retry
                 </Button>

@@ -13,7 +13,6 @@ import { useDispatch } from "react-redux";
 import { LessonData } from "../../api/lesson/types";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { createLessonAsync } from "../../store/lessonReducer";
-import { generateQuizAsync } from "../../store/quizReducer";
 import { AppDispatch } from "../../store/store";
 import { toastWarning } from "../../utils/utils";
 

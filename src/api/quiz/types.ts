@@ -28,6 +28,12 @@ export type QuizAnswerSubmittion = {
   questions: QuestionAnswerSubmittion[];
 };
 
+export type QuizAnswer = {
+  attemptId: string;
+  questionId: string;
+  selectedAnswer: string;
+};
+
 export type QuestionAnswerSubmittion = {
   questionId: string;
   selectedAnswer: string;
