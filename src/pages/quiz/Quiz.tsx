@@ -324,7 +324,7 @@ const QuizPage: React.FC = () => {
             New Quiz Settings
           </Typography>
           <LessonConfig
-            defaultQuizSettings={quizSettings}
+            defaultQuizSettings={defaultQuizSettings}
             onChange={(quizSettings: QuizSettings) => {
               setQuizSettings(quizSettings);
             }}
