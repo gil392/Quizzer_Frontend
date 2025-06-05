@@ -49,7 +49,7 @@ const LessonOverviewPage: React.FC = () => {
     (async () => {
       try {
         const data = await dispatch(
-          createLessonAsync(videoUrl, relatedLessonId)
+          createLessonAsync({ videoUrl, relatedLessonId })
         ).unwrap();
         setLessonData(data);
 
