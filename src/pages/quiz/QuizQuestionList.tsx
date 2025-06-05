@@ -12,12 +12,13 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { addAnswerToQuizAttemptAsync } from "../../store/attemptReducer";
 import useStyles from "./Quiz.styles";
-import { useEffect } from "react";
+import { areAllQuestionsSubmitted } from "./Utils";
 
 type QuizQuestionListProps = {
   quizData: QuizData;
   selectedAnswers: { [key: number]: string | null };
   isLocked: boolean;
+  setIsLocked: (locked: boolean) => void;
   isOnSelectAnswerMode: boolean;
   currentAttempt?: QuizAttempt;
   attempt?: QuizAttempt;
@@ -28,6 +29,7 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
   quizData,
   selectedAnswers,
   isLocked,
+  setIsLocked,
   isOnSelectAnswerMode,
   currentAttempt,
   handleOptionChange,
@@ -35,12 +37,11 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
   const dispatch = useDispatch<AppDispatch>();
   const classes = useStyles();
 
-  useEffect(() => {
-    console.log("QuizQuestionList mounted with quizData:", quizData);
-  }, [quizData]);
-
   const answerQuestionInAttempt = async (answer: QuizAnswer) => {
-    await dispatch(addAnswerToQuizAttemptAsync(answer));
+    const attempt = await dispatch(addAnswerToQuizAttemptAsync(answer)).unwrap();
+    if (areAllQuestionsSubmitted(quizData, attempt)) {
+      setIsLocked(true);
+    }
   };
 
   const getAnswerOutlineColor = (

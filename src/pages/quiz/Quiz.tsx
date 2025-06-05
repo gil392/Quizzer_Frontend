@@ -13,6 +13,7 @@ import QuizTimer from "./QuizTimer";
 import { LessonData } from "../../api/lesson/types";
 import QuizQuestionList from "./QuizQuestionList";
 import { selectAttemptSelector } from "../../store/selectors/attemptSelector";
+import { areAllQuestionsSubmitted } from "./Utils";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
@@ -173,13 +174,6 @@ const QuizPage: React.FC = () => {
       )
     : false;
 
-  const areAllQuestionsSubmitted = () => {
-    return (
-      quizData?.questions.length === currentAttempt?.results.length &&
-      currentAttempt?.results.every((result) => result.correctAnswer !== null)
-    );
-  };
-
   return (
     <Box className={classes.container}>
       <Box className={classes.quizBox}>
@@ -188,7 +182,9 @@ const QuizPage: React.FC = () => {
           isLocked={isLocked}
           canHaveTimer={!loading && !currentAttempt}
           quizResult={currentAttempt}
-          areAllQuestionsSubmitted={areAllQuestionsSubmitted}
+          areAllQuestionsSubmitted={() =>
+            areAllQuestionsSubmitted(quizData, currentAttempt)
+          }
           onTimeUp={() =>
             handleQuizSubmission(
               quizDataRef.current,
@@ -233,6 +229,7 @@ const QuizPage: React.FC = () => {
                   quizData={quizData}
                   selectedAnswers={selectedAnswers}
                   isLocked={isLocked}
+                  setIsLocked={setIsLocked}
                   isOnSelectAnswerMode={isOnSelectAnswerMode}
                   currentAttempt={currentAttempt}
                   handleOptionChange={handleOptionChange}
