@@ -53,8 +53,8 @@ const QuizPage: React.FC = () => {
 
   const [showQuizSettings, setShowQuizSettings] = useState(false);
 
-  const defaultQuizSettings: QuizSettings = getDefaultQuizSettings(
-    location.state?.quizSettings
+  const [defaultQuizSettings, setDefaultQuizSettings] = useState(
+    getDefaultQuizSettings(location.state?.quizSettings)
   );
 
   const [quizSettings, setQuizSettings] = useState(defaultQuizSettings);
@@ -90,6 +90,7 @@ const QuizPage: React.FC = () => {
 
   const generateNewQuiz = useCallback(async () => {
     setShowQuizSettings(false);
+    setDefaultQuizSettings(quizSettings);
     if (!lessonDataState?._id) {
       if (quizData?.lessonId) {
         try {
