@@ -73,6 +73,16 @@ const QuizPage: React.FC = () => {
     try {
       const { data } = await getQuizById(id);
       setQuizData(data);
+      setQuizResult({
+        quizId: data._id,
+        results: data.questions.map((question) => ({
+          questionId: question._id,
+          selectedAnswer: null,
+          correctAnswer: null,
+          isCorrect: null,
+        })),
+        score: 0,
+      });
     } catch (error) {
       console.error("Error fetching quiz:", error);
     } finally {
@@ -186,8 +196,6 @@ const QuizPage: React.FC = () => {
   }, [quizResult, isLocked, loading]);
 
   useEffect(() => {
-    console.log("quizData", quizData);
-    // todo
     setTimeLeft(QUIZ_TIME_LIMIT_SECONDS);
     setIsLocked(false);
     //if (timerRef.current) clearInterval(timerRef.current);
@@ -280,7 +288,7 @@ const QuizPage: React.FC = () => {
     if (!quizResult) return "default";
 
     const questionResult = quizResult.results.find(
-      (result) => result.questionId === questionId
+      (result) => result && result.questionId === questionId
     );
 
     if (!questionResult) return "default";
