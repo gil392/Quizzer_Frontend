@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Typography, Box } from "@mui/material";
 
-const QUIZ_TIME_LIMIT_SECONDS = 60 * 0.2;
+const QUIZ_TIME_LIMIT_SECONDS = 60 * 0.5;
 
 type QuizTimerProps = {
   quizId?: string;

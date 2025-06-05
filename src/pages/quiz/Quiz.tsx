@@ -206,7 +206,8 @@ const QuizPage: React.FC = () => {
       const result = await dispatch(
         createQuizAttemptAsync(submissionData)
       ).unwrap();
-      setQuizResult(result);
+      setQuizResult(() => result);
+      areAllQuestionsSubmitted() && setIsLocked(true);
     } catch (error) {
       console.error("Error submitting quiz:", error);
       toastWarning("Failed to submit quiz. Please try again.");
