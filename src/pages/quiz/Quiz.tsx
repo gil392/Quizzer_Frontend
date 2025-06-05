@@ -1,7 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useLocation } from "react-router-dom";
-import useStyles from "./Quiz.styles";
-import { exportToPDF } from "../../utils/pdfUtils";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import {
   Box,
   Button,
@@ -12,27 +9,28 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { toastWarning } from "../../utils/utils";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation } from "react-router-dom";
 import {
   getLessonById,
   getQuizById,
   submitQuestionAnswer,
 } from "../../api/quiz/api";
 import {
-  QuizSettings,
   QuizAttempt,
   QuizData,
   QuizResult,
-  FeedbackType,
-  QuestionsOrder,
+  QuizSettings,
 } from "../../api/quiz/types";
+import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { createQuizAttemptAsync } from "../../store/attemptReducer";
 import { generateQuizAsync } from "../../store/quizReducer";
-import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
-import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
-import LessonConfig from "../../components/lessonConfig/LessonConfig";
+import { exportToPDF } from "../../utils/pdfUtils";
+import { toastWarning } from "../../utils/utils";
+import useStyles from "./Quiz.styles";
+import { getDefaultQuizSettings } from "../../components/lessonConfig/components/utils";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
@@ -55,39 +53,14 @@ const QuizPage: React.FC = () => {
 
   const [showQuizSettings, setShowQuizSettings] = useState(false);
 
-  const [feedbackType, setFeedbackType] = useState<FeedbackType>(
-    location.state?.quizSettings?.feedbackType ??
-      INITIAL_QUIZ_SETTINGS.feedbackType
+  const defaultQuizSettings: QuizSettings = getDefaultQuizSettings(
+    location.state?.quizSettings
   );
 
-  const [questionsOrder, setQuestionsOrder] = useState<QuestionsOrder>(
-    location.state?.quizSettings?.questionsOrder ??
-      INITIAL_QUIZ_SETTINGS.questionsOrder
-  );
-
-  const [maxQuestionCount, setMaxQuestionCount] = useState<number>(
-    location.state?.quizSettings?.maxQuestionCount ??
-      INITIAL_QUIZ_SETTINGS.maxQuestionCount
-  );
-
-  const [isManualCount, setIsManualCount] = useState<boolean>(
-    location.state?.quizSettings?.isManualCount ??
-      INITIAL_QUIZ_SETTINGS.isManualCount
-  );
-
-  const quizSettings: QuizSettings = useMemo(
-    () => ({
-      feedbackType,
-      questionsOrder,
-      maxQuestionCount,
-      isManualCount,
-      solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
-    }),
-    [feedbackType, questionsOrder, maxQuestionCount, isManualCount]
-  );
+  const [quizSettings, setQuizSettings] = useState(defaultQuizSettings);
 
   const isOnSelectAnswerMode = useMemo(
-    () => quizSettings.feedbackType === "onSelectAnswer",
+    () => quizSettings?.feedbackType === "onSelectAnswer",
     [quizSettings]
   );
 
@@ -350,14 +323,10 @@ const QuizPage: React.FC = () => {
             New Quiz Settings
           </Typography>
           <LessonConfig
-            feedbackType={feedbackType}
-            setFeedbackType={setFeedbackType}
-            questionsOrder={questionsOrder}
-            setQuestionsOrder={setQuestionsOrder}
-            maxQuestionCount={maxQuestionCount}
-            setMaxQuestionCount={setMaxQuestionCount}
-            isManualCount={isManualCount}
-            setIsManualCount={setIsManualCount}
+            defaultQuizSettings={quizSettings}
+            onChange={(quizSettings: QuizSettings) => {
+              setQuizSettings(quizSettings);
+            }}
           />
           <Button
             variant="contained"

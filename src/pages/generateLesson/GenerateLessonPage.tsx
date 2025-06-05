@@ -12,37 +12,19 @@ import { PAGES_ROUTES } from "../../routes/routes.const";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
+import { getDefaultQuizSettings } from "../../components/lessonConfig/components/utils";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
   const [videoUrl, setVideoUrl] = useState<string>("");
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
 
-  const [feedbackType, setFeedbackType] = useState<FeedbackType>(
-    INITIAL_QUIZ_SETTINGS.feedbackType
-  );
+  const defaultQuizSettings = getDefaultQuizSettings(loggedUser?.settings);
 
-  const [questionsOrder, setQuestionsOrder] = useState<QuestionsOrder>(
-    loggedUser?.settings?.questionsOrder ?? INITIAL_QUIZ_SETTINGS.questionsOrder
-  );
-
-  const [maxQuestionCount, setMaxQuestionCount] = useState<number>(
-    loggedUser?.settings?.maxQuestionCount ??
-      INITIAL_QUIZ_SETTINGS.maxQuestionCount
-  );
-
-  const [isManualCount, setIsManualCount] = useState<boolean>(
-    loggedUser?.settings?.isManualCount ?? INITIAL_QUIZ_SETTINGS.isManualCount
-  );
+  const [quizSettings, setQuizSettings] =
+    useState<QuizSettings>(defaultQuizSettings);
 
   const handleSummaryNavigation = (): void => {
-    const quizSettings: QuizSettings = {
-      feedbackType,
-      maxQuestionCount,
-      solvingTimeMs: INITIAL_QUIZ_SETTINGS.solvingTimeMs,
-      questionsOrder,
-      isManualCount,
-    };
     navigate(PAGES_ROUTES.SUMMARY, {
       state: { videoUrl, quizSettings },
     });
@@ -66,14 +48,10 @@ const GenerateLessonPage: React.FC = () => {
       />
 
       <LessonConfig
-        feedbackType={feedbackType}
-        setFeedbackType={setFeedbackType}
-        questionsOrder={questionsOrder}
-        setQuestionsOrder={setQuestionsOrder}
-        maxQuestionCount={maxQuestionCount}
-        setMaxQuestionCount={setMaxQuestionCount}
-        isManualCount={isManualCount}
-        setIsManualCount={setIsManualCount}
+        defaultQuizSettings={defaultQuizSettings}
+        onChange={(quizSettings: QuizSettings) => {
+          setQuizSettings(quizSettings);
+        }}
       />
 
       <Button
