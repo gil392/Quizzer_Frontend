@@ -55,6 +55,10 @@ const QuizPage: React.FC = () => {
   const quizDataRef = useRef<QuizData | null>(quizData);
 
   useEffect(() => {
+    setIsLocked(false);
+  }, [quizId]);
+
+  useEffect(() => {
     selectedAnswersRef.current = selectedAnswers;
   }, [selectedAnswers]);
 
@@ -129,6 +133,9 @@ const QuizPage: React.FC = () => {
   }, [lessonDataState?._id, quizData?.lessonId, quizSettings]);
 
   useEffect(() => {
+    console.log("isLocked state changed:", isLocked);
+  }, [isLocked]);
+  useEffect(() => {
     if (attempt) {
       setQuizResult(attempt);
 
@@ -196,6 +203,8 @@ const QuizPage: React.FC = () => {
             selectedAnswer: answer as string,
           })),
       };
+
+      console.log("Submitting quiz with data:", submissionData);
 
       const result = await dispatch(
         createQuizAttemptAsync(submissionData)
@@ -329,8 +338,7 @@ const QuizPage: React.FC = () => {
         <QuizTimer
           quizId={quizId}
           isLocked={isLocked}
-          attempt={attempt}
-          loading={loading}
+          canHaveTimer={!loading && !attempt}
           quizResult={quizResult}
           areAllQuestionsSubmitted={areAllQuestionsSubmitted}
           onTimeUp={() =>
@@ -353,7 +361,7 @@ const QuizPage: React.FC = () => {
         ) : quizData ? (
           <Box>
             <Box id={QUIZ_CONTENT_PDF_ID}>
-              {quizResult && areAllQuestionsSubmitted() && (
+              {quizResult && isLocked && (
                 <Box
                   className={classes.resultBox}
                   style={{
@@ -399,9 +407,7 @@ const QuizPage: React.FC = () => {
                                 onChange={() =>
                                   handleOptionChange(index, option)
                                 }
-                                disabled={
-                                  !!quizResult && areAllQuestionsSubmitted()
-                                }
+                                disabled={isLocked}
                                 sx={{
                                   "& .MuiSvgIcon-root": {
                                     border: `2px solid ${getAnswerOutlineColor(
@@ -436,7 +442,7 @@ const QuizPage: React.FC = () => {
               </Box>
             </Box>
             <Box className={classes.buttonContainer}>
-              {quizResult && areAllQuestionsSubmitted() ? (
+              {quizResult && isLocked ? (
                 <Button variant="contained" color="primary" onClick={retry}>
                   Retry
                 </Button>
@@ -473,11 +479,6 @@ const QuizPage: React.FC = () => {
                 Export to PDF
               </Button>
             </Box>
-            {isLocked && (
-              <Typography color="error" mt={2}>
-                Time is up! The quiz has been submitted automatically.
-              </Typography>
-            )}
           </Box>
         ) : (
           <Typography variant="h6" color="error">

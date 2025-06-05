@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Typography, Box } from "@mui/material";
 
-const QUIZ_TIME_LIMIT_SECONDS = 60 * 1;
+const QUIZ_TIME_LIMIT_SECONDS = 60 * 0.2;
 
 type QuizTimerProps = {
   quizId?: string;
   isLocked: boolean;
-  attempt: any;
-  loading: boolean;
+  canHaveTimer?: boolean;
   quizResult: any;
   areAllQuestionsSubmitted: () => boolean | undefined;
   onTimeUp: () => void;
@@ -17,8 +16,7 @@ type QuizTimerProps = {
 const QuizTimer: React.FC<QuizTimerProps> = ({
   quizId,
   isLocked,
-  attempt,
-  loading,
+  canHaveTimer = false,
   quizResult,
   areAllQuestionsSubmitted,
   onTimeUp,
@@ -34,13 +32,16 @@ const QuizTimer: React.FC<QuizTimerProps> = ({
     }
     if (isLocked) return;
 
-    if (!loading && !attempt) {
+    if (canHaveTimer) {
       timerRef.current = window.setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
             clearInterval(timerRef.current!);
-            setIsLocked(true);
-            onTimeUp();
+            setTimeout(() => {
+              console.log("Time is up!");
+              setIsLocked(true);
+              onTimeUp();
+            }, 0);
             return 0;
           }
           return prev - 1;
@@ -51,11 +52,10 @@ const QuizTimer: React.FC<QuizTimerProps> = ({
     return () => {
       if (timerRef.current) clearInterval(timerRef.current);
     };
-  }, [quizResult, isLocked, loading, attempt]);
+  }, [quizResult, isLocked, canHaveTimer]);
 
   useEffect(() => {
     setTimeLeft(QUIZ_TIME_LIMIT_SECONDS);
-    setIsLocked(false);
     //if (timerRef.current) clearInterval(timerRef.current);
   }, [quizId]);
 
@@ -67,7 +67,7 @@ const QuizTimer: React.FC<QuizTimerProps> = ({
     return `${m}:${s}`;
   };
 
-  if (loading || attempt) return null;
+  if (!canHaveTimer) return null;
 
   return (
     <Box display="flex" justifyContent="flex-end" mb={2}>
