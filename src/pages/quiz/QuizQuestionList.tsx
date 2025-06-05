@@ -29,7 +29,6 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
   isLocked,
   isOnSelectAnswerMode,
   currentAttempt,
-  attempt,
   handleOptionChange,
 }) => {
   const dispatch = useDispatch<AppDispatch>();
@@ -97,21 +96,23 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
               ))}
             </Box>
             <Box display="flex" justifyContent="flex-end">
-              {isOnSelectAnswerMode && selectedAnswers[index] && (
-                <IconButton
-                  color="primary"
-                  onClick={() =>
-                    answerQuestionInAttempt({
-                      questionId: question._id,
-                      selectedAnswer: selectedAnswers[index]!,
-                      attemptId: attempt?._id || "",
-                    })
-                  }
-                  disabled={!!currentAttempt?.results[index]?.correctAnswer}
-                >
-                  <ArrowForwardIcon />
-                </IconButton>
-              )}
+              {isOnSelectAnswerMode &&
+                selectedAnswers[index] &&
+                currentAttempt && (
+                  <IconButton
+                    color="primary"
+                    onClick={() =>
+                      answerQuestionInAttempt({
+                        questionId: question._id,
+                        selectedAnswer: selectedAnswers[index]!,
+                        attemptId: currentAttempt._id,
+                      })
+                    }
+                    disabled={!!currentAttempt?.results[index]?.correctAnswer}
+                  >
+                    <ArrowForwardIcon />
+                  </IconButton>
+                )}
             </Box>
           </Card>
         </Box>

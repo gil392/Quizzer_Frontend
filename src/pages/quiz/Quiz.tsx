@@ -23,9 +23,11 @@ const QuizPage: React.FC = () => {
   const lessonData: LessonData | undefined = location.state?.lessonData; // passed when creating a new quiz
   const attempt: QuizAttempt | undefined = location.state?.attempt; // passed when viewing an existing attempt
 
-  const [quizId, setQuizId] = useState<string | undefined>(location.state?.quizId);
+  const [quizId, setQuizId] = useState<string | undefined>(
+    location.state?.quizId || attempt?.quizId
+  );
   const quizData = useSelector((state: RootState) =>
-    quizId ? state.quizzes.quizzes.find(q => q._id === quizId) : null
+    quizId ? state.quizzes.quizzes.find((q) => q._id === quizId) : null
   );
   const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState<{
@@ -33,23 +35,25 @@ const QuizPage: React.FC = () => {
   }>({});
   const currentAttempt: QuizAttempt | undefined = useSelector(
     (state: RootState) =>
-      attempt
-        ? state.attempt.attemptsByQuiz[attempt.quizId]?.find(
-            (a) => a._id === attempt._id
-          )
+      quizId
+        ? (attempt
+            ? state.attempt.attemptsByQuiz[quizId]?.find(
+                (a) => a._id === attempt._id
+              )
+            : state.attempt.attemptsByQuiz[quizId]?.[0]) || undefined
         : undefined
   );
 
   useEffect(() => {
-    if (!currentAttempt) {
+    if (!currentAttempt && quizId) {
       dispatch(
         createQuizAttemptAsync({
-          quizId: quizData?._id || quizId!,
+          quizId: quizId,
           questions: [],
         })
       );
     }
-  }, []);
+  }, [quizId]);
 
   const [isLocked, setIsLocked] = useState(false);
 
@@ -94,10 +98,6 @@ const QuizPage: React.FC = () => {
 
   useEffect(() => {
     if (currentAttempt) {
-      // if (currentAttempt.quizId) {
-      //   fetchQuiz(currentAttempt.quizId);
-      // }
-
       const preselectedAnswers: { [key: number]: string | null } = {};
       currentAttempt.results.forEach((result, index) => {
         preselectedAnswers[index] = result.selectedAnswer || null;
@@ -234,7 +234,6 @@ const QuizPage: React.FC = () => {
                   selectedAnswers={selectedAnswers}
                   isLocked={isLocked}
                   isOnSelectAnswerMode={isOnSelectAnswerMode}
-                  attempt={currentAttempt}
                   currentAttempt={currentAttempt}
                   handleOptionChange={handleOptionChange}
                 />
