@@ -32,7 +32,7 @@ const QuizPage: React.FC = () => {
   const quizData = useSelector((state: RootState) =>
     quizId ? state.quizzes.quizzes.find((q) => q._id === quizId) : null
   );
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | null;
   }>({});
@@ -146,8 +146,11 @@ const QuizPage: React.FC = () => {
           })),
       };
 
-      await dispatch(createQuizAttemptAsync(submissionData)).unwrap();
-      areAllQuestionsSubmitted() && setIsLocked(true);
+      const createdAttempt = await dispatch(
+        createQuizAttemptAsync(submissionData)
+      ).unwrap();
+      setIsLocked(true);
+      setAttemptId(createdAttempt._id);
     } catch (error) {
       console.error("Error submitting quiz:", error);
       toastWarning("Failed to submit quiz. Please try again.");
@@ -180,7 +183,7 @@ const QuizPage: React.FC = () => {
         <QuizTimer
           quizId={quizId}
           isLocked={isLocked}
-          canHaveTimer={!loading && !currentAttempt}
+          canHaveTimer={!loading}
           quizResult={currentAttempt}
           areAllQuestionsSubmitted={() =>
             areAllQuestionsSubmitted(quizData, currentAttempt)
