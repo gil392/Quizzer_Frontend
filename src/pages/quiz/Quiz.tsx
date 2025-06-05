@@ -29,9 +29,9 @@ import { createQuizAttemptAsync } from "../../store/attemptReducer";
 import { generateQuizAsync } from "../../store/quizReducer";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
+import QuizTimer from "./QuizTimer";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
-const QUIZ_TIME_LIMIT_SECONDS = 60 * 1;
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
@@ -49,9 +49,7 @@ const QuizPage: React.FC = () => {
     [key: number]: string | null;
   }>({});
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
-  const [timeLeft, setTimeLeft] = useState<number>(QUIZ_TIME_LIMIT_SECONDS);
   const [isLocked, setIsLocked] = useState(false);
-  const timerRef = useRef<number | null>(null);
 
   const selectedAnswersRef = useRef(selectedAnswers);
   const quizDataRef = useRef<QuizData | null>(quizData);
@@ -165,49 +163,6 @@ const QuizPage: React.FC = () => {
       generateNewQuiz();
     }
   }, [lessonDataState, quizSettings, generateNewQuiz]);
-
-  useEffect(() => {
-    if (quizResult && areAllQuestionsSubmitted()) {
-      if (timerRef.current) clearInterval(timerRef.current);
-      return;
-    }
-    if (isLocked) return;
-
-    if (!loading && !attempt) {
-      timerRef.current = setInterval(() => {
-        setTimeLeft((prev) => {
-          if (prev <= 1) {
-            clearInterval(timerRef.current!);
-            setIsLocked(true);
-            handleQuizSubmission(
-              quizDataRef.current,
-              selectedAnswersRef.current
-            );
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [quizResult, isLocked, loading]);
-
-  useEffect(() => {
-    setTimeLeft(QUIZ_TIME_LIMIT_SECONDS);
-    setIsLocked(false);
-    //if (timerRef.current) clearInterval(timerRef.current);
-  }, [quizData?._id]);
-
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const s = (seconds % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  };
 
   const handleOptionChange = (questionIndex: number, option: string) => {
     if (isLocked) return;
@@ -371,16 +326,21 @@ const QuizPage: React.FC = () => {
   return (
     <Box className={classes.container}>
       <Box className={classes.quizBox}>
-        {!loading && !attempt && (
-          <Box display="flex" justifyContent="flex-end" mb={2}>
-            <Typography
-              variant="h6"
-              color={timeLeft <= 10 ? "error" : "textPrimary"}
-            >
-              Time Left: {formatTime(timeLeft)}
-            </Typography>
-          </Box>
-        )}
+        <QuizTimer
+          quizId={quizId}
+          isLocked={isLocked}
+          attempt={attempt}
+          loading={loading}
+          quizResult={quizResult}
+          areAllQuestionsSubmitted={areAllQuestionsSubmitted}
+          onTimeUp={() =>
+            handleQuizSubmission(
+              quizDataRef.current,
+              selectedAnswersRef.current
+            )
+          }
+          setIsLocked={setIsLocked}
+        />
         {loading ? (
           <Box>
             <Skeleton variant="text" width="80%" height={40} />
