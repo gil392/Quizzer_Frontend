@@ -14,6 +14,7 @@ import { LessonData } from "../../api/lesson/types";
 import QuizQuestionList from "./QuizQuestionList";
 import { selectAttemptSelector } from "../../store/selectors/attemptSelector";
 import { areAllQuestionsSubmitted } from "./Utils";
+import { useUpdateEffect } from "../../hooks/useUpdateEffect";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
@@ -25,6 +26,7 @@ const QuizPage: React.FC = () => {
   const lessonData: LessonData | undefined = location.state?.lessonData; // passed when creating a new quiz
   const attempt: QuizAttempt | undefined = location.state?.attempt; // passed when viewing an existing attempt
   const [attemptId, setAttemptId] = useState<string | undefined>(attempt?._id);
+  const [isLocked, setIsLocked] = useState(!!location.state?.attempt);
 
   const [quizId, setQuizId] = useState<string | undefined>(
     location.state?.quizId || attempt?.quizId
@@ -32,7 +34,7 @@ const QuizPage: React.FC = () => {
   const quizData = useSelector((state: RootState) =>
     quizId ? state.quizzes.quizzes.find((q) => q._id === quizId) : null
   );
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | null;
   }>({});
@@ -56,12 +58,10 @@ const QuizPage: React.FC = () => {
     createEmptyAttemptIfNeeded();
   }, [quizId]);
 
-  const [isLocked, setIsLocked] = useState(false);
-
   const selectedAnswersRef = useRef(selectedAnswers);
   const quizDataRef = useRef<QuizData | null | undefined>(quizData);
 
-  useEffect(() => {
+  useUpdateEffect(() => {
     setIsLocked(false);
   }, [quizId]);
 
@@ -84,7 +84,7 @@ const QuizPage: React.FC = () => {
     try {
       const data = await dispatch(
         generateQuizAsync({
-          lessonId: lessonData!._id,
+          lessonId: lessonData?._id || quizData?.lessonId!,
           settings: quizSettings || quizData?.settings,
         })
       ).unwrap();
@@ -108,7 +108,7 @@ const QuizPage: React.FC = () => {
   }, [currentAttempt]);
 
   useEffect(() => {
-    if (!quizData && lessonData && quizSettings) {
+    if (!location.state?.quizId && quizSettings) {
       generateNewQuiz();
     }
   }, [lessonData, quizSettings, generateNewQuiz]);

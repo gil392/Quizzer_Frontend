@@ -38,7 +38,9 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
   const classes = useStyles();
 
   const answerQuestionInAttempt = async (answer: QuizAnswer) => {
-    const attempt = await dispatch(addAnswerToQuizAttemptAsync(answer)).unwrap();
+    const attempt = await dispatch(
+      addAnswerToQuizAttemptAsync(answer)
+    ).unwrap();
     if (areAllQuestionsSubmitted(quizData, attempt)) {
       setIsLocked(true);
     }

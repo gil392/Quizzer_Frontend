@@ -55,8 +55,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
       if (!attempts) {
         try {
           setLoadingAttempts(true);
-          const attempts = await dispatch(fetchQuizAttempts(quiz._id)).unwrap();
-          console.log("Fetched quiz attempts:", attempts);
+          await dispatch(fetchQuizAttempts(quiz._id)).unwrap();
         } catch (error) {
           console.error("Error fetching quiz attempts:", error);
         } finally {
