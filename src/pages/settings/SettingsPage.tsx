@@ -34,20 +34,16 @@ const SettingsPage: FunctionComponent = () => {
 
   useEffect(() => {
     const updateSettings = async () => {
-      if (loggedUser) {
-        try {
-          const settings: Partial<UserSettings> = {
-            feedbackType,
-            questionsOrder,
-            maxQuestionCount,
-            isManualCount,
-          };
-          await dispatch(updateUserAsync({ settings }));
-        } catch (error) {
-          console.error("Error updating user: ", error);
-        }
-      } else {
-        console.error("Error updating user: User does not exists");
+      try {
+        const settings: Partial<UserSettings> = {
+          feedbackType,
+          questionsOrder,
+          maxQuestionCount,
+          isManualCount,
+        };
+        await dispatch(updateUserAsync({ settings }));
+      } catch (error) {
+        console.error("Error updating user: ", error);
       }
     };
 
