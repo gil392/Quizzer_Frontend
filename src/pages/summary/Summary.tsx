@@ -8,11 +8,13 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { generateLesson } from "../../api/lesson/api";
+import useStyles from "./Summary.styles";
+import { useDispatch } from "react-redux";
 import { LessonData } from "../../api/lesson/types";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import useStyles from "./Summary.styles";
-import { generateQuiz } from "../../api/quiz/api";
+import { createLessonAsync } from "../../store/lessonReducer";
+import { generateQuizAsync } from "../../store/quizReducer";
+import { AppDispatch } from "../../store/store";
 import { toastWarning } from "../../utils/utils";
 
 const SummaryPage: React.FC = () => {
@@ -21,18 +23,23 @@ const SummaryPage: React.FC = () => {
   const location = useLocation();
   const [lessonData, setLessonData] = useState<LessonData | null>(null);
   const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    generateLesson(location.state?.videoUrl)
-      .then(({ data }) => {
+    async function generateLessonData() {
+      try {
+        const data = await dispatch(
+          createLessonAsync(location.state?.videoUrl)
+        ).unwrap();
         setLessonData(data);
         setLoading(false);
-      })
-      .catch((error: any) => {
+      } catch (error) {
         console.error("Error loading lesson:", error);
         setLessonData(null);
         setLoading(false);
-      });
+      }
+    }
+    generateLessonData();
   }, [location.state]);
 
   const handleQuizNavigation = async () => {
@@ -42,13 +49,19 @@ const SummaryPage: React.FC = () => {
     }
 
     try {
-      const { data: quizData } = await generateQuiz(
-        lessonData._id,
-        location.state?.quizSettings
-      );
+      const data = await dispatch(
+        generateQuizAsync({
+          lessonId: lessonData._id,
+          settings: location.state?.quizSettings,
+        })
+      ).unwrap();
 
       navigate(PAGES_ROUTES.QUIZ, {
-        state: { lessonData, quizId: quizData._id },
+        state: {
+          lessonData,
+          quizId: data._id,
+          quizSettings: location.state?.quizSettings,
+        },
       });
     } catch (error) {
       console.error("Error generating quiz:", error);

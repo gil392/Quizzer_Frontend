@@ -7,7 +7,6 @@ import {
   QuizAnswerSubmittion,
   QuizAttempt,
   QuizData,
-  QuizResult,
   QuizSettings,
 } from "./types";
 
@@ -37,7 +36,7 @@ export const getQuizAttempts = (quizId: string): AxiosPromise<QuizAttempt[]> =>
 
 export const createQuizAttempt = (
   data: QuizAnswerSubmittion
-): AxiosPromise<QuizResult> => apiClient.post("/attempt", data);
+): AxiosPromise<QuizAttempt> => apiClient.post("/attempt", data);
 
 export const rateQuiz = (
   quizId: string,

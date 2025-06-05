@@ -1,30 +1,30 @@
 import EditIcon from "@mui/icons-material/Edit";
 import { Avatar, Button, Skeleton, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
-import { useSetRecoilState } from "recoil";
-import { getLoggedUser, updateUser } from "../../../../api/user/api";
-import { User } from "../../../../api/user/types";
-import { PROFILE_IMAGE } from "../../../../components/appbar/const";
 import { GenericIconButton } from "../../../../components/GenericIconButton";
-import { profileImageState } from "../../../../recoil/profileImage";
 import { toastSuccess, toastWarning } from "../../../../utils/utils";
 import EditingActions from "../EditingActions/EditingActions";
 import { useStyles } from "./styles";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../store/store";
+import {
+  fetchLoggedUser,
+  updateUserAsync,
+} from "../../../../store/userReducer";
 
 const UserProfileDetails: FunctionComponent = () => {
   const classes = useStyles();
 
-  const [user, setUser] = useState<User>();
   const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState<string>();
   const [profileImageUrl, setProfileImageUrl] = useState<string>();
   const [imageFile, setImageFile] = useState<File>();
-  const setProfileImageState = useSetRecoilState(profileImageState);
+  const dispatch = useDispatch<AppDispatch>();
+  const { loggedUser: user } = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const { data } = await getLoggedUser();
-      setUser(data);
+      await dispatch(fetchLoggedUser()).unwrap();
     };
     fetchUser();
   }, []);
@@ -44,16 +44,12 @@ const UserProfileDetails: FunctionComponent = () => {
   const handleSave = async () => {
     try {
       if (user && (username || imageFile)) {
-        const { data: updatedUser } = await updateUser({
-          username,
-          imageFile,
-        });
-        setUser(updatedUser);
-
-        if (updatedUser?.profileImage) {
-          localStorage.setItem(PROFILE_IMAGE, updatedUser.profileImage);
-          setProfileImageState(updatedUser.profileImage);
-        }
+        await dispatch(
+          updateUserAsync({
+            username,
+            imageFile,
+          })
+        ).unwrap();
         toastSuccess("Update user successfuly");
         stopEdit();
       }

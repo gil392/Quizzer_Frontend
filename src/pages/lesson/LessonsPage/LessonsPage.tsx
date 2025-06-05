@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
 import LessonItem from "../LessonItem/LessonItem";
+import { useDispatch, useSelector } from "react-redux";
 import {
-  deleteLesson,
-  getLessons,
-  mergeLessons,
-  updateLesson,
-} from "../../../api/lesson/api";
+  fetchLessons,
+  updateLessonAsync,
+  mergeLessonsAsync,
+} from "../../../store/lessonReducer";
 import { LessonData } from "../../../api/lesson/types";
 import { GenericIconButton } from "../../../components/GenericIconButton";
 import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
@@ -19,11 +19,15 @@ import FilterLessons from "../FilterLessons/FilterLessons";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Typography } from "@mui/material";
 import { Add } from "@mui/icons-material";
+import { AppDispatch, RootState } from "../../../store/store";
 
 const LessonsPage: React.FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [lessons, setLessons] = useState<LessonData[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+
+  const lessons = useSelector((state: RootState) => state.lessons.lessons);
+
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
     setSelectedLesson(null)
@@ -35,37 +39,16 @@ const LessonsPage: React.FC = () => {
   const [isMergeLessonsMode, setIsMergeLessonsMode] = useState(false);
 
   useEffect(() => {
-    const fetchLessons = async () => {
-      try {
-        const { data } = await getLessons();
-        setLessons(data);
-      } catch (error) {
-        console.error("Error fetching lessons:", error);
-      }
-    };
-
-    fetchLessons();
-  }, []);
+    dispatch(fetchLessons());
+  }, [dispatch]);
 
   const filteredLessons = useMemo(
     () => getFilteredLessons(lessons, filterOptions),
     [lessons, filterOptions]
   );
 
-  const handleLessonDeleted = async (lessonId: string) => {
-    await deleteLesson(lessonId);
-    setLessons((prevLessons) =>
-      prevLessons.filter((lesson) => lesson._id !== lessonId)
-    );
-  };
-
   const handleUpdateLesson = async (lesson: LessonData) => {
-    await updateLesson(lesson._id, lesson);
-    setLessons((prevLessons) =>
-      prevLessons.map((lessonToCheck) =>
-        lessonToCheck._id === lesson._id ? lesson : lessonToCheck
-      )
-    );
+    await dispatch(updateLessonAsync(lesson));
   };
 
   const openLesson = (lesson: LessonData) => {
@@ -78,16 +61,17 @@ const LessonsPage: React.FC = () => {
     setMergingLessons([]);
   };
 
-  const createMergedLesson = () => {
-    return () => {
-      mergeLessons(mergingLessons.map((lesson) => lesson._id)).then(
-        (result) => {
-          setLessons((prevLessons) => [...prevLessons, result.data]);
-          setMergingLessons([]);
-          setIsMergeLessonsMode(false);
-        }
-      );
-    };
+  const createMergedLesson = () => async () => {
+    const result = await dispatch(
+      mergeLessonsAsync({
+        lessonIds: mergingLessons.map((lesson) => lesson._id),
+      })
+    );
+
+    if (!result.type.endsWith("rejected")) {
+      setMergingLessons([]);
+      setIsMergeLessonsMode(false);
+    }
   };
 
   return (
@@ -121,7 +105,6 @@ const LessonsPage: React.FC = () => {
               <LessonItem
                 key={lesson._id}
                 lesson={lesson}
-                onLessonDeleted={handleLessonDeleted}
                 openLesson={() => openLesson(lesson)}
                 updateLessonTitle={(newTitle: string) => {
                   handleUpdateLesson({ ...lesson, title: newTitle });
