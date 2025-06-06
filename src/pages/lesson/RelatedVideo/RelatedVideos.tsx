@@ -25,7 +25,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({
     navigate(PAGES_ROUTES.GENERATE_LESSON, {
       state: {
         videoUrl: `https://youtube.com/watch?v=${video.videoId}`,
-        relatedLessonGroupId: relatedLessonGroupId,
+        relatedLessonGroupId,
       },
     });
   };
