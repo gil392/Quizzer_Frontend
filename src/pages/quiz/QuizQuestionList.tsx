@@ -16,13 +16,13 @@ import { areAllQuestionsSubmitted } from "./Utils";
 
 type QuizQuestionListProps = {
   quizData: QuizData;
-  selectedAnswers: { [key: number]: string | null };
+  selectedAnswers: { [questionId: string]: string | null };
   isLocked: boolean;
   setIsLocked: (locked: boolean) => void;
   isOnSelectAnswerMode: boolean;
   currentAttempt?: QuizAttempt;
   attempt?: QuizAttempt;
-  handleOptionChange: (questionIndex: number, option: string) => void;
+  handleOptionChange: (questionId: string, option: string) => void;
 };
 
 const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
@@ -69,62 +69,72 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
 
   return (
     <Box>
-      {quizData.questions.map((question, index) => (
-        <Box
-          key={index}
-          style={{ pageBreakInside: "avoid" }}
-          className={classes.questionBox}
-        >
-          <Card>
-            <Typography variant="h6" gutterBottom>
-              {index + 1}. {question.text}
-            </Typography>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              {question.answers.map((option) => (
-                <FormControlLabel
-                  key={option}
-                  control={
-                    <Checkbox
-                      checked={selectedAnswers[index] === option}
-                      onChange={() => handleOptionChange(index, option)}
-                      disabled={isLocked}
-                      sx={{
-                        "& .MuiSvgIcon-root": {
-                          border: `2px solid ${
-                            isLocked &&
-                            getAnswerOutlineColor(question._id, option)
-                          }`,
-                          borderRadius: "4px",
-                        },
-                      }}
-                    />
-                  }
-                  label={option}
-                />
-              ))}
-            </Box>
-            <Box display="flex" justifyContent="flex-end">
-              {isOnSelectAnswerMode &&
-                selectedAnswers[index] &&
-                currentAttempt && (
-                  <IconButton
-                    color="primary"
-                    onClick={() =>
-                      answerQuestionInAttempt({
-                        questionId: question._id,
-                        selectedAnswer: selectedAnswers[index]!,
-                        attemptId: currentAttempt._id,
-                      })
+      {quizData.questions.map((question, index) => {
+        const isQuestionLocked =
+          isLocked ||
+          (isOnSelectAnswerMode &&
+            currentAttempt?.results.some(
+              (result) => result.questionId === question._id
+            ));
+        return (
+          <Box
+            key={index}
+            style={{ pageBreakInside: "avoid" }}
+            className={classes.questionBox}
+          >
+            <Card>
+              <Typography variant="h6" gutterBottom>
+                {index + 1}. {question.text}
+              </Typography>
+              <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                {question.answers.map((option) => (
+                  <FormControlLabel
+                    key={option}
+                    control={
+                      <Checkbox
+                        checked={selectedAnswers[question._id] === option}
+                        onChange={() =>
+                          handleOptionChange(question._id, option)
+                        }
+                        disabled={isQuestionLocked}
+                        sx={{
+                          "& .MuiSvgIcon-root": {
+                            border: `2px solid ${
+                              isQuestionLocked &&
+                              getAnswerOutlineColor(question._id, option)
+                            }`,
+                            borderRadius: "4px",
+                          },
+                        }}
+                      />
                     }
-                    disabled={!!currentAttempt?.results[index]?.correctAnswer}
-                  >
-                    <ArrowForwardIcon />
-                  </IconButton>
-                )}
-            </Box>
-          </Card>
-        </Box>
-      ))}
+                    label={option}
+                  />
+                ))}
+              </Box>
+              <Box display="flex" justifyContent="flex-end">
+                {isOnSelectAnswerMode &&
+                  selectedAnswers[question._id] &&
+                  currentAttempt && (
+                    <IconButton
+                      color="primary"
+                      onClick={() =>
+                        answerQuestionInAttempt({
+                          questionId: question._id,
+                          selectedAnswer: selectedAnswers[question._id]!,
+                          attemptId: currentAttempt._id,
+                        })
+                      }
+                      disabled={!!currentAttempt?.results[index]?.correctAnswer}
+                    >
+                      <ArrowForwardIcon />
+                    </IconButton>
+                  )}
+              </Box>
+            </Card>
+          </Box>
+        );
+      })}
     </Box>
   );
 };

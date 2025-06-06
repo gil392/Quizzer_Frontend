@@ -45,7 +45,7 @@ const QuizPage: React.FC = () => {
   );
   const [loading, setLoading] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<{
-    [key: number]: string | null;
+    [questionId: string]: string | null;
   }>({});
 
   const currentAttempt: QuizAttempt | undefined = useSelector(
@@ -69,7 +69,6 @@ const QuizPage: React.FC = () => {
   }, [quizId, currentAttempt !== undefined]);
 
   const selectedAnswersRef = useRef(selectedAnswers);
-  const quizDataRef = useRef<QuizData | null | undefined>(quizData);
 
   useUpdateEffect(() => {
     setIsLocked(false);
@@ -78,10 +77,6 @@ const QuizPage: React.FC = () => {
   useEffect(() => {
     selectedAnswersRef.current = selectedAnswers;
   }, [selectedAnswers]);
-
-  useEffect(() => {
-    quizDataRef.current = quizData;
-  }, [quizData]);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -109,9 +104,9 @@ const QuizPage: React.FC = () => {
 
   useEffect(() => {
     if (currentAttempt) {
-      const preselectedAnswers: { [key: number]: string | null } = {};
-      currentAttempt.results.forEach((result, index) => {
-        preselectedAnswers[index] = result.selectedAnswer || null;
+      const preselectedAnswers: { [key: string]: string | null } = {};
+      currentAttempt.results.forEach((result) => {
+        preselectedAnswers[result.questionId] = result.selectedAnswer || null;
       });
       setSelectedAnswers(preselectedAnswers);
     }
@@ -123,22 +118,21 @@ const QuizPage: React.FC = () => {
     }
   }, [lessonData, quizSettings, generateNewQuiz]);
 
-  const handleOptionChange = (questionIndex: number, option: string) => {
+  const handleOptionChange = (questionId: string, option: string) => {
     if (isLocked) return;
     setSelectedAnswers((prev) => ({
       ...prev,
-      [questionIndex]: option,
+      [questionId]: option,
     }));
   };
 
   const continueLater = async () => {
     if (!isOnSelectAnswerMode) {
-      await handleQuizSubmission(undefined, undefined, true);
+      await handleQuizSubmission(undefined, true);
     }
     navigate(PAGES_ROUTES.LESSON);
   };
   const handleQuizSubmission = async (
-    quizDataOverride?: QuizData | null,
     answersOverride?: {
       [key: number]: string | null;
     },
@@ -150,7 +144,6 @@ const QuizPage: React.FC = () => {
     }
 
     const answersToUse = answersOverride ?? selectedAnswers;
-    const quizDataToUse = quizDataOverride ?? quizData;
 
     try {
       const submissionData = {
@@ -158,8 +151,8 @@ const QuizPage: React.FC = () => {
         quizId: quizData._id,
         questions: Object.entries(answersToUse)
           .filter(([_, answer]) => answer !== null)
-          .map(([questionIndex, answer]) => ({
-            questionId: quizDataToUse.questions[parseInt(questionIndex)]._id,
+          .map(([questionId, answer]) => ({
+            questionId,
             selectedAnswer: answer as string,
           })),
       };
@@ -193,9 +186,9 @@ const QuizPage: React.FC = () => {
 
   const allQuestionsAnswered = quizData
     ? quizData.questions.every(
-        (_, index) =>
-          selectedAnswers[index] !== undefined &&
-          selectedAnswers[index] !== null
+        (question) =>
+          selectedAnswers[question._id] !== undefined &&
+          selectedAnswers[question._id] !== null
       )
     : false;
 
@@ -218,10 +211,7 @@ const QuizPage: React.FC = () => {
             }
             onTimeUp={() => {
               setIsLocked(true);
-              handleQuizSubmission(
-                quizDataRef.current,
-                selectedAnswersRef.current
-              );
+              handleQuizSubmission(selectedAnswersRef.current);
             }}
           />
         )}
