@@ -2,12 +2,12 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({
     container: {
-        width: "50vw",
+        width: "75vw",
         margin: "auto",
         padding: 16,
     },
     quizBox: {
-        maxWidth: "50vw",
+        maxWidth: "75vw",
         height: "85vh",
         overflowY: "auto",
         backgroundColor: "#f5f5f5",

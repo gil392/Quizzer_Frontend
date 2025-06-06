@@ -50,7 +50,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
   const isRelatedLesson = () =>
     mergingLessons.some(
       (lessonToCheck) =>
-        lessonToCheck.relatedLessonId === lesson.relatedLessonId
+        lessonToCheck.relatedLessonGroupId === lesson.relatedLessonGroupId
     );
 
   const handleUpdateTitle = async (title: string, lesson: LessonData) => {
@@ -107,7 +107,9 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
           <GenericIconButton
             icon={isLessonMerging() ? <CheckBoxIcon /> : <UncheckedBoxIcon />}
             onClick={() => {
-              isRelatedLesson() && handleToggleMergeLesson();
+              if (isRelatedLesson()) {
+                handleToggleMergeLesson();
+              }
             }}
             title={isRelatedLesson() ? "Merge this lesson" : "Cannot be merged"}
           />
