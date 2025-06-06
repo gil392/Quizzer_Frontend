@@ -1,25 +1,34 @@
-import React, { useEffect, useMemo, useState } from "react";
-import LessonItem from "../LessonItem/LessonItem";
-import { useDispatch, useSelector } from "react-redux";
+import { Add } from "@mui/icons-material";
 import {
-  fetchLessons,
-  updateLessonAsync,
-  mergeLessonsAsync,
-} from "../../../store/lessonReducer";
+  Box,
+  Button,
+  MenuItem,
+  Select,
+  Stack,
+  Typography,
+} from "@mui/material";
+import React, { useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { LessonData } from "../../../api/lesson/types";
 import { GenericIconButton } from "../../../components/GenericIconButton";
 import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
-import LessonInfo from "../LessonInfo/LessonInfo";
-import useStyles from "./LessonsPage.styles";
-import { FilterOptions } from "../FilterLessons/types";
-import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
-import { getFilteredLessons } from "../FilterLessons/utils";
-import FilterLessons from "../FilterLessons/FilterLessons";
-import { useNavigate } from "react-router-dom";
-import { Box, Button, Typography } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import {
+  fetchLessons,
+  mergeLessonsAsync,
+  updateLessonAsync,
+} from "../../../store/lessonReducer";
 import { AppDispatch, RootState } from "../../../store/store";
+import { INITIAL_FILTER_OPTIONS } from "../FilterLessons/constants";
+import FilterLessons from "../FilterLessons/FilterLessons";
+import { FilterOptions } from "../FilterLessons/types";
+import { getFilteredLessons } from "../FilterLessons/utils";
+import LessonInfo from "../LessonInfo/LessonInfo";
+import LessonItem from "../LessonItem/LessonItem";
+import { DEFAULT_SORT_OPTION, SORT_OPTIONS } from "./components/constants";
+import { sortLessons } from "./components/utils";
+import useStyles from "./LessonsPage.styles";
 
 const LessonsPage: React.FC = () => {
   const classes = useStyles();
@@ -35,6 +44,9 @@ const LessonsPage: React.FC = () => {
   const [filterOptions, setFilterOptions] = useState<FilterOptions>(
     INITIAL_FILTER_OPTIONS
   );
+  const [sortByField, setSortByField] = useState(
+    DEFAULT_SORT_OPTION.sortableField
+  );
   const [mergingLessons, setMergingLessons] = useState<LessonData[]>([]);
   const [isMergeLessonsMode, setIsMergeLessonsMode] = useState(false);
 
@@ -45,6 +57,11 @@ const LessonsPage: React.FC = () => {
   const filteredLessons = useMemo(
     () => getFilteredLessons(lessons, filterOptions),
     [lessons, filterOptions]
+  );
+
+  const displayLessons = useMemo(
+    () => sortLessons(filteredLessons, sortByField),
+    [filteredLessons, sortByField]
   );
 
   const handleUpdateLesson = async (lesson: LessonData) => {
@@ -94,14 +111,37 @@ const LessonsPage: React.FC = () => {
               />
             )}
           </Box>
+          <Box className={classes.headerActionsContainer}>
+            <FilterLessons
+              setFilterOptions={setFilterOptions}
+              filterOptions={filterOptions}
+            />
+            <Stack className={classes.sortContainer}>
+              <Typography variant="h6" gutterBottom>
+                Sort By
+              </Typography>
 
-          <FilterLessons
-            setFilterOptions={setFilterOptions}
-            filterOptions={filterOptions}
-          />
+              <Select
+                value={sortByField}
+                className={classes.sortOption}
+                onChange={({ target }) => {
+                  setSortByField(target.value);
+                }}
+              >
+                {SORT_OPTIONS.map((option) => (
+                  <MenuItem
+                    key={option.sortableField}
+                    value={option.sortableField}
+                  >
+                    {option.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </Stack>
+          </Box>
 
-          {filteredLessons.length > 0 ? (
-            filteredLessons.map((lesson) => (
+          {displayLessons.length > 0 ? (
+            displayLessons.map((lesson) => (
               <LessonItem
                 key={lesson._id}
                 lesson={lesson}

@@ -7,6 +7,8 @@ import { GenericIconButton } from "../../../components/GenericIconButton";
 import MergeIcon from "@mui/icons-material/Merge";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import UncheckedBoxIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import EditabletitleWithActions from "../../../components/EditabletitleWithActions";
 import clsx from "clsx";
 import { useDispatch } from "react-redux";
@@ -55,6 +57,12 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
     await dispatch(updateLessonAsync({ ...lesson, title }));
   };
 
+  const changeIsFavorite = async (lesson: LessonData) => {
+    await dispatch(
+      updateLessonAsync({ ...lesson, isFavorite: !lesson.isFavorite })
+    );
+  };
+
   const handleLessonDeleted = async (lessonId: string) => {
     await dispatch(deleteLessonAsync(lessonId));
   };
@@ -89,6 +97,11 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
           onSave={(title: string) => handleUpdateTitle(title, lesson)}
           onDelete={() => handleLessonDeleted(lesson._id)}
           onEditModeChange={setIsEditing}
+        />
+        <GenericIconButton
+          icon={lesson.isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          title={"Favorite"}
+          onClick={() => changeIsFavorite(lesson)}
         />
         {isMergeLessonsMode ? (
           <GenericIconButton
