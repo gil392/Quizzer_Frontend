@@ -50,7 +50,7 @@ const QuizPage: React.FC = () => {
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
-  const isOnSelectAnswerMode = quizSettings?.feedbackType === "onSelectAnswer" || true;
+  const isOnSelectAnswerMode = quizSettings?.feedbackType === "onSelectAnswer";
 
   const fetchQuiz = useCallback(async (id: string) => {
     setLoading(true);
@@ -130,7 +130,6 @@ const QuizPage: React.FC = () => {
 
   useEffect(() => {
     if (attempt) {
-      console.log("Attempt data received:", attempt);
       setQuizResult(attempt);
 
       if (attempt.quizId) {
@@ -250,7 +249,6 @@ const QuizPage: React.FC = () => {
   };
 
   const areAllQuestionsSubmitted = () => {
-    console.log("Checking if all questions are submitted...", quizResult, quizResult?.results.every((result) => result.correctAnswer !== null));
     return quizResult?.results.every((result) => result.correctAnswer !== null);
   };
 
@@ -305,7 +303,6 @@ const QuizPage: React.FC = () => {
       });
 
       if (allSubmitted) {
-        console.log("All other questions submitted. Handling quiz submission.");
         await handleQuizSubmission();
       }
     } catch (error) {
