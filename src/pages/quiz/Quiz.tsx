@@ -50,7 +50,7 @@ const QuizPage: React.FC = () => {
   const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
   const dispatch = useDispatch<AppDispatch>();
 
-  const isOnSelectAnswerMode = quizSettings?.feedbackType === "onSelectAnswer";
+  const isOnSelectAnswerMode = quizSettings?.feedbackType === "onSelectAnswer" || true;
 
   const fetchQuiz = useCallback(async (id: string) => {
     setLoading(true);
@@ -58,17 +58,21 @@ const QuizPage: React.FC = () => {
     try {
       const { data } = await getQuizById(id);
       setQuizData(data);
-
-      setQuizResult({
-        quizId: data._id,
-        results: data.questions.map((question) => ({
-          questionId: question._id,
-          selectedAnswer: null,
-          correctAnswer: null,
-          isCorrect: null,
-        })),
-        score: 0,
+        
+      setQuizResult((prev) => {
+        if (prev) return prev; 
+        return {
+          quizId: data._id,
+          results: data.questions.map((question) => ({
+            questionId: question._id,
+            selectedAnswer: null,
+            correctAnswer: null,
+            isCorrect: null,
+          })),
+          score: 0,
+        };
       });
+
     } catch (error) {
       console.error("Error fetching quiz:", error);
     } finally {
@@ -106,6 +110,16 @@ const QuizPage: React.FC = () => {
         })
       ).unwrap();
       setQuizData(data);
+      setQuizResult({
+        quizId: data._id,
+        results: data.questions.map((question) => ({
+          questionId: question._id,
+          selectedAnswer: null,
+          correctAnswer: null,
+          isCorrect: null,
+        })),
+        score: 0,
+      });
     } catch (error) {
       console.error("Error generating quiz:", error);
       alert("Failed to generate a new quiz. Please try again.");
@@ -116,6 +130,7 @@ const QuizPage: React.FC = () => {
 
   useEffect(() => {
     if (attempt) {
+      console.log("Attempt data received:", attempt);
       setQuizResult(attempt);
 
       if (attempt.quizId) {
@@ -235,6 +250,7 @@ const QuizPage: React.FC = () => {
   };
 
   const areAllQuestionsSubmitted = () => {
+    console.log("Checking if all questions are submitted...", quizResult, quizResult?.results.every((result) => result.correctAnswer !== null));
     return quizResult?.results.every((result) => result.correctAnswer !== null);
   };
 
@@ -300,21 +316,8 @@ const QuizPage: React.FC = () => {
 
   return (
     <Box className={classes.container}>
-      <Box className={classes.quizBox}>
-        {loading ? (
-          <Box>
-            <Skeleton variant="text" width="80%" height={40} />
-            <Skeleton variant="rectangular" width="100%" height={200} />
-            <Skeleton variant="rectangular" width="100%" height={50} />
-            <Skeleton variant="text" width="80%" height={40} />
-            <Skeleton variant="rectangular" width="100%" height={200} />
-            <Skeleton variant="rectangular" width="100%" height={50} />
-          </Box>
-        ) : quizData ? (
-          <Box>
-            <Box id={QUIZ_CONTENT_PDF_ID}>
-              {quizResult && areAllQuestionsSubmitted() && (
-                <Box
+      {quizResult && areAllQuestionsSubmitted() && (
+                <Box 
                   className={classes.resultBox}
                   style={{
                     backgroundColor:
@@ -329,6 +332,21 @@ const QuizPage: React.FC = () => {
                   </Typography>
                 </Box>
               )}
+      <Box className={classes.quizBox}>
+        {loading ? (
+          <Box>
+            <Skeleton variant="text" width="80%" height={40} />
+            <Skeleton variant="rectangular" width="100%" height={200} />
+            <Skeleton variant="rectangular" width="100%" height={50} />
+            <Skeleton variant="text" width="80%" height={40} />
+            <Skeleton variant="rectangular" width="100%" height={200} />
+            <Skeleton variant="rectangular" width="100%" height={50} />
+          </Box>
+        ) : quizData ? (
+          <Box>
+            <Box id={QUIZ_CONTENT_PDF_ID}>
+              
+              
               <Box>
                 <Typography variant="h5" component="div" gutterBottom>
                   {lessonData?.lessonTitle}

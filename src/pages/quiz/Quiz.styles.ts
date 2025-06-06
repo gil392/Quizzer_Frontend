@@ -28,10 +28,12 @@ const useStyles = makeStyles(() => ({
         },
     },
     resultBox: {
+        position: "sticky",
+        top: 0,
+        zIndex: 1,
+        overflowY: "auto",
         textAlign: "center",
-        marginBottom: 24,
         padding: 16,
-        borderRadius: "8px",
         boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
     },
     questionBox: {
