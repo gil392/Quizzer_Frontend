@@ -26,24 +26,6 @@ const LessonOverviewPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
 
-  // useEffect(() => {
-  //   setLoading(true);
-  //   generateLesson(videoUrl)
-  //     .then(({ data: lesson }) => {
-  //       setLessonData(lesson);
-  //       return getRelatedLessons(lesson._id).then(({ data }) => {
-  //         setRelatedVideos(data);
-  //         setLoading(false);
-  //       });
-  //     })
-  //     .catch(() => {
-  //       toastWarning("Failed to generate Lesson. Please try again.");
-  //       setLessonData(null);
-  //       setRelatedVideos([]);
-  //       setLoading(false);
-  //     });
-  // }, [videoUrl]);
-
   useEffect(() => {
     setLoading(true);
     (async () => {
