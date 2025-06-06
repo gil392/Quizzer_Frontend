@@ -23,3 +23,6 @@ export const getRelatedLessons = (lessonId: string): AxiosPromise<RelatedVideo[]
 export const mergeLessons = (lessonIds: string[], title?: string) => {
   return apiClient.post("/lesson/merge", { lessonIds, title });
 };
+
+export const getLessonSuccessRate = (lessonId: string): AxiosPromise<{ successRate: number }> =>
+  apiClient.get(`/lesson/${lessonId}/successRate`);
