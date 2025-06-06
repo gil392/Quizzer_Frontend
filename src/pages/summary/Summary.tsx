@@ -7,6 +7,7 @@ import { LessonData } from "../../api/lesson/types";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { AppDispatch } from "../../store/store";
 import { useDispatch } from "react-redux";
+import { generateQuizAsync } from "../../store/quizReducer";
 
 interface SummaryProps {
   lessonData: LessonData;

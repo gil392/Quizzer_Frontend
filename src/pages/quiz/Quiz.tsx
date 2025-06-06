@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState, useRef } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { QuizData, QuizSettings, QuizAttempt } from "../../api/quiz/types";
 import useStyles from "./Quiz.styles";
 import { exportToPDF } from "../../utils/pdfUtils";
@@ -18,6 +18,7 @@ import QuizQuestionList from "./QuizQuestionList";
 import { selectAttemptSelector } from "../../store/selectors/attemptSelector";
 import { areAllQuestionsSubmitted } from "./Utils";
 import { useUpdateEffect } from "../../hooks/useUpdateEffect";
+import { PAGES_ROUTES } from "../../routes/routes.const";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
@@ -29,8 +30,9 @@ const QuizPage: React.FC = () => {
   const lessonData: LessonData | undefined = location.state?.lessonData; // passed when creating a new quiz
   const attempt: QuizAttempt | undefined = location.state?.attempt; // passed when viewing an existing attempt
   const [attemptId, setAttemptId] = useState<string | undefined>(
-    attempt?._id || location.state.attemptToContinue
+    attempt?._id || location.state.attemptToContinue?._id
   );
+  const navigate = useNavigate();
   const [isLocked, setIsLocked] = useState(!!location.state?.attempt);
 
   const [quizId, setQuizId] = useState<string | undefined>(
@@ -45,6 +47,7 @@ const QuizPage: React.FC = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: number]: string | null;
   }>({});
+
   const currentAttempt: QuizAttempt | undefined = useSelector(
     (state: RootState) => selectAttemptSelector(state, quizId, attemptId)
   );
@@ -128,11 +131,18 @@ const QuizPage: React.FC = () => {
     }));
   };
 
+  const continueLater = async () => {
+    if (!isOnSelectAnswerMode) {
+      await handleQuizSubmission(undefined, undefined, true);
+    }
+    navigate(PAGES_ROUTES.LESSON);
+  };
   const handleQuizSubmission = async (
     quizDataOverride?: QuizData | null,
     answersOverride?: {
       [key: number]: string | null;
-    }
+    },
+    isNavigatingAfter?: boolean
   ) => {
     if (!quizData) {
       toastWarning("Quiz data is not available.");
@@ -157,8 +167,10 @@ const QuizPage: React.FC = () => {
       const updatedAttempt = await dispatch(
         updateAttemptWithAnswersAsync(submissionData)
       ).unwrap();
-      setIsLocked(true);
       setAttemptId(updatedAttempt._id);
+      if (!isNavigatingAfter) {
+        setIsLocked(true);
+      }
     } catch (error) {
       console.error("Error submitting quiz:", error);
       toastWarning("Failed to submit quiz. Please try again.");
@@ -262,16 +274,26 @@ const QuizPage: React.FC = () => {
                   Retry
                 </Button>
               ) : (
-                !isOnSelectAnswerMode &&
                 !isLocked && (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => handleQuizSubmission()} // Can't shorten it or it'd get the click event as the first parameter
-                    disabled={!allQuestionsAnswered}
-                  >
-                    Submit
-                  </Button>
+                  <>
+                    {!areAllQuestionsSubmitted(quizData, currentAttempt) && (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={continueLater}
+                      >
+                        Continue later
+                      </Button>
+                    )}
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => handleQuizSubmission()} // Can't shorten it or it'd get the click event as the first parameter
+                      disabled={!allQuestionsAnswered}
+                    >
+                      Submit
+                    </Button>
+                  </>
                 )
               )}
               <Button

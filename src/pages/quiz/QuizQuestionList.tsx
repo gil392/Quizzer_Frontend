@@ -90,10 +90,10 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
                       disabled={isLocked}
                       sx={{
                         "& .MuiSvgIcon-root": {
-                          border: `2px solid ${getAnswerOutlineColor(
-                            question._id,
-                            option
-                          )}`,
+                          border: `2px solid ${
+                            isLocked &&
+                            getAnswerOutlineColor(question._id, option)
+                          }`,
                           borderRadius: "4px",
                         },
                       }}

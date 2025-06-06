@@ -109,15 +109,22 @@ const QuizItem: React.FC<QuizItemProps> = ({
               return (
                 <Box key={attempt._id} className={classes.AttemptContainer}>
                   <Typography variant="body1">
-                    {index + 1}. Score: {attempt.score} / 100
+                    {index + 1}.{" "}
+                    {isFinished || timeLeft < 0
+                      ? "Score: " + attempt.score + " / 100"
+                      : "Unfinished"}
                   </Typography>
                   {!isFinished && <QuizTimer initialTime={timeLeft} />}
 
                   <GenericIconButton
                     icon={<ArrowForwardIcon color="primary" />}
-                    title={isFinished ? "View Attempt" : "Continue Attempt"}
+                    title={
+                      isFinished || timeLeft < 0
+                        ? "View Attempt"
+                        : "Continue Attempt"
+                    }
                     onClick={
-                      isFinished
+                      isFinished || timeLeft < 0
                         ? () => handleViewAttempt(attempt)
                         : () => handleContinueAttempt(attempt)
                     }
