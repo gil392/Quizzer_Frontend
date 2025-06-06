@@ -19,7 +19,7 @@ const useStyles = makeStyles(() =>
       alignItems: "flex-end",
       width: "60vw",
       marginTop: "1rem",
-      marginBottom: "1rem",
+      marginBottom: "2rem",
     },
     sortContainer: {
       display: "flex",
