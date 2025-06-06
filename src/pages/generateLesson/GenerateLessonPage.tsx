@@ -6,7 +6,7 @@ import {
   QuestionsOrder,
   QuizSettings,
 } from "../../api/quiz/types";
-
+import { useLocation } from "react-router-dom";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
@@ -15,7 +15,11 @@ import { RootState } from "../../store/store";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
-  const [videoUrl, setVideoUrl] = useState<string>("");
+  const location = useLocation();
+  const [videoUrl, setVideoUrl] = useState<string>(
+    location.state?.videoUrl || ""
+  );
+  const relatedLessonGroupId = location.state?.relatedLessonGroupId || null;
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
 
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
@@ -45,12 +49,12 @@ const GenerateLessonPage: React.FC = () => {
       isManualCount,
     };
     navigate(PAGES_ROUTES.SUMMARY, {
-      state: { videoUrl, quizSettings },
+      state: { videoUrl, quizSettings, relatedLessonGroupId },
     });
   };
 
   return (
-    <Box sx={{ width: "50%", margin: "auto" }}>
+    <Box sx={{ width: "60vw", margin: "auto" }}>
       <Typography variant="h6" gutterBottom>
         Insert YouTube Video
       </Typography>
