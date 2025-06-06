@@ -39,6 +39,10 @@ export const createQuizAttempt = (
   data: QuizAnswerSubmittion
 ): AxiosPromise<QuizAttempt> => apiClient.post("/attempt", data);
 
+export const updateAttemptWithAnswers = (
+  data: QuizAnswerSubmittion
+): AxiosPromise<QuizAttempt> => apiClient.post("/attempt/update", data);
+
 export const addAnswerToQuizAttempt = (
   data: QuizAnswer
 ): AxiosPromise<QuizAttempt> => apiClient.post("/attempt/answer", data);
@@ -55,10 +59,10 @@ export const rateQuiz = (
     }
   );
 
-  export const submitQuestionAnswer = (
-    questionId: string,
-    selectedAnswer: string
-  ): AxiosPromise<QuestionResults> =>
-    apiClient.get(`/attempt/question/${questionId}`, {
-      params: { selectedAnswer },
-    });
+export const submitQuestionAnswer = (
+  questionId: string,
+  selectedAnswer: string
+): AxiosPromise<QuestionResults> =>
+  apiClient.get(`/attempt/question/${questionId}`, {
+    params: { selectedAnswer },
+  });

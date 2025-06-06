@@ -21,6 +21,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { fetchQuizAttempts } from "../../../store/attemptReducer";
 import QuizTimer from "../../quiz/QuizTimer";
+import { areAllQuestionsSubmitted } from "../../quiz/Utils";
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -98,15 +99,12 @@ const QuizItem: React.FC<QuizItemProps> = ({
             <Typography variant="body2">Loading attempts...</Typography>
           ) : attempts && attempts.length > 0 ? (
             attempts.map((attempt, index) => {
-              const isExpired = attempt.expiryTime
-                ? new Date().getTime() > new Date(attempt.expiryTime).getTime()
-                : true;
               return (
                 <Box key={attempt._id} className={classes.AttemptContainer}>
                   <Typography variant="body1">
                     {index + 1}. Score: {attempt.score} / 100
                   </Typography>
-                  {!isExpired && (
+                  {!areAllQuestionsSubmitted(quiz, attempt) && (
                     <QuizTimer
                       initialTime={attempt.expiryTime - new Date().getTime()}
                     />

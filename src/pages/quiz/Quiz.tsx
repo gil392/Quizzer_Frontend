@@ -5,7 +5,10 @@ import useStyles from "./Quiz.styles";
 import { exportToPDF } from "../../utils/pdfUtils";
 import { Box, Button, Skeleton, Typography } from "@mui/material";
 import { toastWarning } from "../../utils/utils";
-import { createQuizAttemptAsync } from "../../store/attemptReducer";
+import {
+  createQuizAttemptAsync,
+  updateAttemptWithAnswersAsync,
+} from "../../store/attemptReducer";
 import { generateQuizAsync } from "../../store/quizReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
@@ -44,7 +47,7 @@ const QuizPage: React.FC = () => {
 
   useEffect(() => {
     const createEmptyAttemptIfNeeded = async () => {
-      if (isOnSelectAnswerMode && !currentAttempt && quizId) {
+      if (!currentAttempt && quizId) {
         const emptyAttempt = await dispatch(
           createQuizAttemptAsync({
             quizId: quizId,
@@ -137,6 +140,7 @@ const QuizPage: React.FC = () => {
 
     try {
       const submissionData = {
+        attemptId: attemptId,
         quizId: quizData._id,
         questions: Object.entries(answersToUse)
           .filter(([_, answer]) => answer !== null)
@@ -146,11 +150,11 @@ const QuizPage: React.FC = () => {
           })),
       };
 
-      const createdAttempt = await dispatch(
-        createQuizAttemptAsync(submissionData)
+      const updatedAttempt = await dispatch(
+        updateAttemptWithAnswersAsync(submissionData)
       ).unwrap();
       setIsLocked(true);
-      setAttemptId(createdAttempt._id);
+      setAttemptId(updatedAttempt._id);
     } catch (error) {
       console.error("Error submitting quiz:", error);
       toastWarning("Failed to submit quiz. Please try again.");
@@ -182,22 +186,29 @@ const QuizPage: React.FC = () => {
   return (
     <Box className={classes.container}>
       <Box className={classes.quizBox}>
-        <QuizTimer
-          quizId={quizId}
-          isLocked={isLocked}
-          canHaveTimer={!loading}
-          timerCancelled={
-            !!currentAttempt &&
-            areAllQuestionsSubmitted(quizData, currentAttempt)
-          }
-          onTimeUp={() => {
-            setIsLocked(true);
-            handleQuizSubmission(
-              quizDataRef.current,
-              selectedAnswersRef.current
-            );
-          }}
-        />
+        {currentAttempt && (
+          <QuizTimer
+            quizId={quizId}
+            isLocked={isLocked}
+            canHaveTimer={!loading}
+            timerCancelled={
+              !!currentAttempt &&
+              areAllQuestionsSubmitted(quizData, currentAttempt)
+            }
+            initialTime={
+              currentAttempt
+                ? currentAttempt.expiryTime - new Date().getTime()
+                : undefined
+            }
+            onTimeUp={() => {
+              setIsLocked(true);
+              handleQuizSubmission(
+                quizDataRef.current,
+                selectedAnswersRef.current
+              );
+            }}
+          />
+        )}
         {loading ? (
           <Box>
             <Skeleton variant="text" width="80%" height={40} />
