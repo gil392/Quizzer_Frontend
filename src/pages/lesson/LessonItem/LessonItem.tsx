@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { LessonData } from "../../../api/lesson/types";
 import useStyles from "./LessonItem.styles";
 import { GenericIconButton } from "../../../components/GenericIconButton";
@@ -15,6 +15,7 @@ import {
   deleteLessonAsync,
   updateLessonAsync,
 } from "../../../store/lessonReducer";
+import { getLessonSuccessRate } from "../../../api/lesson/api";
 
 interface LessonItemProps {
   lesson: LessonData;
@@ -39,8 +40,22 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
   cancelMergingMode,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [successRate, setSuccessRate] = useState<number | null>(null); // State for success rate
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    const fetchSuccessRate = async () => {
+      try {
+        const { data } = await getLessonSuccessRate(lesson._id);
+        setSuccessRate(data.successRate);
+      } catch (error) {
+        console.error(`Error fetching success rate for lesson ${lesson._id}:`, error);
+      }
+    };
+
+    fetchSuccessRate();
+  }, [lesson._id]);
 
   const isLessonMerging = () =>
     mergingLessons.some((lessonToCheck) => lessonToCheck._id === lesson._id);
@@ -112,7 +127,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
         )}
       </Box>
       <Typography className={classes.successRateText}>
-        Success rate: 100%
+        Success rate: {successRate !== null ? `${successRate}%` : "Loading..."}
       </Typography>
     </Box>
   );
