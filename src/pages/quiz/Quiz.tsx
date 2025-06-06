@@ -28,11 +28,15 @@ const QuizPage: React.FC = () => {
   const quizSettings: QuizSettings | undefined = location.state?.quizSettings; // passed when creating a new quiz
   const lessonData: LessonData | undefined = location.state?.lessonData; // passed when creating a new quiz
   const attempt: QuizAttempt | undefined = location.state?.attempt; // passed when viewing an existing attempt
-  const [attemptId, setAttemptId] = useState<string | undefined>(attempt?._id);
+  const [attemptId, setAttemptId] = useState<string | undefined>(
+    attempt?._id || location.state.attemptToContinue
+  );
   const [isLocked, setIsLocked] = useState(!!location.state?.attempt);
 
   const [quizId, setQuizId] = useState<string | undefined>(
-    location.state?.quizId || attempt?.quizId
+    location.state?.quizId ||
+      attempt?.quizId ||
+      location.state.attemptToContinue?.quizId
   );
   const quizData = useSelector((state: RootState) =>
     quizId ? state.quizzes.quizzes.find((q) => q._id === quizId) : null

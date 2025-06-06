@@ -52,6 +52,10 @@ const QuizItem: React.FC<QuizItemProps> = ({
     navigate(PAGES_ROUTES.QUIZ, { state: { attempt } });
   };
 
+  const handleContinueAttempt = (attemptToContinue: QuizAttempt) => {
+    navigate(PAGES_ROUTES.QUIZ, { state: { attemptToContinue } });
+  };
+
   useEffect(() => {
     const fetchAttempts = async () => {
       if (!attempts) {
@@ -99,21 +103,24 @@ const QuizItem: React.FC<QuizItemProps> = ({
             <Typography variant="body2">Loading attempts...</Typography>
           ) : attempts && attempts.length > 0 ? (
             attempts.map((attempt, index) => {
+              const timeLeft = attempt.expiryTime - new Date().getTime();
+              const isFinished =
+                timeLeft && areAllQuestionsSubmitted(quiz, attempt);
               return (
                 <Box key={attempt._id} className={classes.AttemptContainer}>
                   <Typography variant="body1">
                     {index + 1}. Score: {attempt.score} / 100
                   </Typography>
-                  {!areAllQuestionsSubmitted(quiz, attempt) && (
-                    <QuizTimer
-                      initialTime={attempt.expiryTime - new Date().getTime()}
-                    />
-                  )}
+                  {!isFinished && <QuizTimer initialTime={timeLeft} />}
 
                   <GenericIconButton
                     icon={<ArrowForwardIcon color="primary" />}
-                    title="View Attempt"
-                    onClick={() => handleViewAttempt(attempt)}
+                    title={isFinished ? "View Attempt" : "Continue Attempt"}
+                    onClick={
+                      isFinished
+                        ? () => handleViewAttempt(attempt)
+                        : () => handleContinueAttempt(attempt)
+                    }
                   />
                 </Box>
               );
