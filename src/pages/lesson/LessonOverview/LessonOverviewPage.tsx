@@ -17,7 +17,7 @@ const LessonOverviewPage: React.FC = () => {
   const location = useLocation();
   const videoUrl = location.state?.videoUrl;
   const quizSettings = location.state?.quizSettings;
-  const relatedLessonId = location.state?.relatedLessonId;
+  const relatedLessonGroupId = location.state?.relatedLessonGroupId;
 
   const classes = useStyles();
 
@@ -31,7 +31,7 @@ const LessonOverviewPage: React.FC = () => {
     (async () => {
       try {
         const data = await dispatch(
-          createLessonAsync({ videoUrl, relatedLessonId })
+          createLessonAsync({ videoUrl, relatedLessonGroupId })
         ).unwrap();
         setLessonData(data);
 
@@ -62,7 +62,7 @@ const LessonOverviewPage: React.FC = () => {
       <Box className={classes.relatedBox}>
         <RelatedVideos
           videos={relatedVideos}
-          relaetdLessonId={lessonData?._id}
+          relatedLessonGroupId={lessonData?._id}
         />
       </Box>
     </Box>

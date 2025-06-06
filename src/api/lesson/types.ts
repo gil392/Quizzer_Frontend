@@ -3,7 +3,7 @@ export type LessonData = {
   title: string;
   summary: string;
   videoUrl: string;
-  relatedLessonId?: string;
+  relatedLessonGroupId?: string;
 };
 
 export type RelatedVideo = {

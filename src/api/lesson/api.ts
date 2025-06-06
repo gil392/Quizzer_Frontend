@@ -3,8 +3,8 @@ import apiClient from '../client';
 import { deleteItem, updateItem } from '../utils';
 import { LessonData, RelatedVideo } from './types';
 
-export const generateLesson = (videoUrl: string, relatedLessonId: string | null): AxiosPromise<LessonData> =>
-  apiClient.post("/lesson", { videoUrl, relatedLessonId });
+export const generateLesson = (videoUrl: string, relatedLessonGroupId: string | null): AxiosPromise<LessonData> =>
+  apiClient.post("/lesson", { videoUrl, relatedLessonGroupId });
 
 export const getLessons = (): AxiosPromise<LessonData[]> =>
   apiClient.get("/lesson");

@@ -12,11 +12,11 @@ import useStyles from "./RelatedVideos.styles";
 
 interface RelatedVideosProps {
   videos: RelatedVideo[];
-  relaetdLessonId?: string;
+  relatedLessonGroupId?: string;
 }
 const RelatedVideos: React.FC<RelatedVideosProps> = ({
   videos,
-  relaetdLessonId,
+  relatedLessonGroupId,
 }) => {
   const navigate = useNavigate();
   const classes = useStyles();
@@ -25,7 +25,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({
     navigate(PAGES_ROUTES.GENERATE_LESSON, {
       state: {
         videoUrl: `https://youtube.com/watch?v=${video.videoId}`,
-        relatedLessonId: relaetdLessonId,
+        relatedLessonGroupId: relatedLessonGroupId,
       },
     });
   };

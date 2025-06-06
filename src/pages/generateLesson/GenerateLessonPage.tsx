@@ -19,7 +19,7 @@ const GenerateLessonPage: React.FC = () => {
   const [videoUrl, setVideoUrl] = useState<string>(
     location.state?.videoUrl || ""
   );
-  const relatedLessonId = location.state?.relatedLessonId || null;
+  const relatedLessonGroupId = location.state?.relatedLessonGroupId || null;
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
 
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
@@ -49,7 +49,7 @@ const GenerateLessonPage: React.FC = () => {
       isManualCount,
     };
     navigate(PAGES_ROUTES.SUMMARY, {
-      state: { videoUrl, quizSettings, relatedLessonId },
+      state: { videoUrl, quizSettings, relatedLessonGroupId },
     });
   };
 
