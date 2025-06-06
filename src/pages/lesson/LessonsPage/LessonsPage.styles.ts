@@ -17,7 +17,7 @@ const useStyles = makeStyles(() =>
       display: "flex",
       justifyContent: "space-between",
       alignItems: "flex-end",
-      width: "40vw",
+      width: "60vw",
       marginTop: "1rem",
       marginBottom: "1rem",
     },
