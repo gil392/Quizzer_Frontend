@@ -62,7 +62,7 @@ const LessonOverviewPage: React.FC = () => {
       <Box className={classes.relatedBox}>
         <RelatedVideos
           videos={relatedVideos}
-          relatedLessonGroupId={lessonData?._id}
+          relatedLessonGroupId={lessonData?.relatedLessonGroupId}
         />
       </Box>
     </Box>
