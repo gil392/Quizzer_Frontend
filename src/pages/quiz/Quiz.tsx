@@ -44,7 +44,7 @@ const QuizPage: React.FC = () => {
 
   useEffect(() => {
     const createEmptyAttemptIfNeeded = async () => {
-      if (!currentAttempt && quizId) {
+      if (isOnSelectAnswerMode && !currentAttempt && quizId) {
         const emptyAttempt = await dispatch(
           createQuizAttemptAsync({
             quizId: quizId,
@@ -56,7 +56,7 @@ const QuizPage: React.FC = () => {
     };
 
     createEmptyAttemptIfNeeded();
-  }, [quizId]);
+  }, [quizId, currentAttempt !== undefined]);
 
   const selectedAnswersRef = useRef(selectedAnswers);
   const quizDataRef = useRef<QuizData | null | undefined>(quizData);
@@ -164,7 +164,9 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    // todo: fix retry logic
+    // todo: when retry, reset the timer
+    setAttemptId(undefined);
+    setIsLocked(false);
 
     setSelectedAnswers({});
   };
@@ -184,17 +186,17 @@ const QuizPage: React.FC = () => {
           quizId={quizId}
           isLocked={isLocked}
           canHaveTimer={!loading}
-          quizResult={currentAttempt}
-          areAllQuestionsSubmitted={() =>
+          timerCancelled={
+            !!currentAttempt &&
             areAllQuestionsSubmitted(quizData, currentAttempt)
           }
-          onTimeUp={() =>
+          onTimeUp={() => {
+            setIsLocked(true);
             handleQuizSubmission(
               quizDataRef.current,
               selectedAnswersRef.current
-            )
-          }
-          setIsLocked={setIsLocked}
+            );
+          }}
         />
         {loading ? (
           <Box>

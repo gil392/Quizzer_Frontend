@@ -54,4 +54,5 @@ export type QuestionResults = {
 
 export type QuizAttempt = {
   _id: string;
+  expiryTime: number;
 } & QuizResult;

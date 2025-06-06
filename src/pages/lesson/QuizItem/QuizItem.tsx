@@ -20,6 +20,7 @@ import { PAGES_ROUTES } from "../../../routes/routes.const";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { fetchQuizAttempts } from "../../../store/attemptReducer";
+import QuizTimer from "../../quiz/QuizTimer";
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -96,18 +97,29 @@ const QuizItem: React.FC<QuizItemProps> = ({
           {loadingAttempts ? (
             <Typography variant="body2">Loading attempts...</Typography>
           ) : attempts && attempts.length > 0 ? (
-            attempts.map((attempt, index) => (
-              <Box key={attempt._id} className={classes.AttemptContainer}>
-                <Typography variant="body1">
-                  {index + 1}. Score: {attempt.score} / 100
-                </Typography>
-                <GenericIconButton
-                  icon={<ArrowForwardIcon color="primary" />}
-                  title="View Attempt"
-                  onClick={() => handleViewAttempt(attempt)}
-                />
-              </Box>
-            ))
+            attempts.map((attempt, index) => {
+              const isExpired = attempt.expiryTime
+                ? new Date().getTime() > new Date(attempt.expiryTime).getTime()
+                : true;
+              return (
+                <Box key={attempt._id} className={classes.AttemptContainer}>
+                  <Typography variant="body1">
+                    {index + 1}. Score: {attempt.score} / 100
+                  </Typography>
+                  {!isExpired && (
+                    <QuizTimer
+                      initialTime={attempt.expiryTime - new Date().getTime()}
+                    />
+                  )}
+
+                  <GenericIconButton
+                    icon={<ArrowForwardIcon color="primary" />}
+                    title="View Attempt"
+                    onClick={() => handleViewAttempt(attempt)}
+                  />
+                </Box>
+              );
+            })
           ) : (
             <Typography variant="body2">No attempts found.</Typography>
           )}
