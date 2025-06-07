@@ -42,7 +42,7 @@ export const createQuizAttempt = (
 
 export const updateAttemptWithAnswers = (
   data: QuizAnswerUpdateSubmittion
-): AxiosPromise<QuizAttempt> => apiClient.post("/attempt/update", data);
+): AxiosPromise<QuizAttempt> => apiClient.put("/attempt/update", data);
 
 export const addAnswerToQuizAttempt = (
   data: QuizAnswer

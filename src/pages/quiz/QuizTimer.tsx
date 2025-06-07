@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Typography, Box, Paper } from "@mui/material";
 //import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import useStyles from "./Quiztimer.styles";
 
 const QUIZ_TIME_LIMIT_MILLISECONDS = 60 * 2 * 1000;
 
@@ -25,6 +26,7 @@ const QuizTimer: React.FC<QuizTimerProps> = ({
   const [timeLeft, setTimeLeft] = useState<number>(
     initialTime ?? QUIZ_TIME_LIMIT_MILLISECONDS
   );
+  const classes = useStyles();
 
   useEffect(() => {
     if (timerCancelled) {
@@ -72,34 +74,14 @@ const QuizTimer: React.FC<QuizTimerProps> = ({
     <Box display="flex" justifyContent="flex-end" mb={2}>
       <Paper
         elevation={2}
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          px: 2,
-          py: 1,
-          bgcolor: timeLeft <= 10 ? "error.lighter" : "background.paper",
-          color: timeLeft <= 10 ? "error.main" : "primary.main",
-          borderRadius: 3,
-          minWidth: 120,
-          maxWidth: 200,
-        }}
+        className={`${classes.timer} ${
+          seconds <= 10 ? classes.runningOutOfTime : classes.enoughTime
+        }`}
       >
-        <span
-          style={{ fontSize: 24, marginRight: 8 }}
-          role="img"
-          aria-label="timer"
-        >
+        <span className={classes.icon} role="img" aria-label="timer">
           ⏰
         </span>
-        <Typography
-          variant="h6"
-          sx={{
-            fontWeight: 700,
-            color: "inherit",
-            fontVariantNumeric: "tabular-nums",
-            letterSpacing: "0.08em",
-          }}
-        >
+        <Typography variant="h6" className={classes.timeDisplay}>
           {formatTime(seconds)}
         </Typography>
       </Paper>

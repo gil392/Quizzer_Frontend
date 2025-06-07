@@ -5,7 +5,7 @@ import QuizTimer from "../../quiz/QuizTimer";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
-import useStyles from './AttemptItem.styles';
+import useStyles from "./AttemptItem.styles";
 
 type AttemptItemProps = {
   attempt: QuizAttempt;
@@ -13,16 +13,12 @@ type AttemptItemProps = {
   isFinished: boolean | undefined;
 };
 
-export function AttemptItem({
-  attempt,
-  index,
-  isFinished,
-}: AttemptItemProps) {
+export function AttemptItem({ attempt, index, isFinished }: AttemptItemProps) {
   const navigate = useNavigate();
   const classes = useStyles();
 
   const handleViewAttempt = (attempt: QuizAttempt) => {
-    navigate(PAGES_ROUTES.QUIZ, { state: { attempt } });
+    navigate(PAGES_ROUTES.QUIZ, { state: { viewAttempt: attempt } });
   };
 
   const handleContinueAttempt = (attemptToContinue: QuizAttempt) => {

@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { QuizData, QuizSettings, QuizAttempt } from "../../api/quiz/types";
+import { QuizSettings, QuizAttempt } from "../../api/quiz/types";
 import useStyles from "./Quiz.styles";
 import { exportToPDF } from "../../utils/pdfUtils";
 import { Box, Button, Skeleton, Typography } from "@mui/material";
@@ -313,7 +313,8 @@ const QuizPage: React.FC = () => {
                   Retry
                 </Button>
               ) : (
-                !isLocked && currentAttempt && (
+                !isLocked &&
+                currentAttempt && (
                   <>
                     {!areAllQuestionsSubmitted(quizData, currentAttempt) && (
                       <Button
