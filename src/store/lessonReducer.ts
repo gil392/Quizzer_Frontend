@@ -18,8 +18,8 @@ export const fetchLessons = createAsyncThunk(
 
 export const createLessonAsync = createAsyncThunk(
   "lesson/createLesson",
-  async (videoUrl: string) => {
-    const response = await generateLesson(videoUrl);
+  async ({ videoUrl, relatedLessonGroupId }: { videoUrl: string; relatedLessonGroupId?: string }) => {
+    const response = await generateLesson(videoUrl, relatedLessonGroupId ?? null);
     return response.data;
   }
 );

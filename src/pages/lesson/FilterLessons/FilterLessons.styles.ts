@@ -16,7 +16,7 @@ const useStyles = makeStyles(() =>
       "& .MuiOutlinedInput-root": {
         borderRadius: "20px",
       },
-      width: "40vw",
+      width: "60vw",
     },
   })
 );

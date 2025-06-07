@@ -2,12 +2,12 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({
   container: {
-    width: "50vw",
+    width: "75vw",
     margin: "auto",
     padding: 16,
   },
   quizBox: {
-    maxWidth: "50vw",
+    maxWidth: "75vw",
     height: "85vh",
     overflowY: "auto",
     backgroundColor: "#f5f5f5",
@@ -49,19 +49,6 @@ const useStyles = makeStyles(() => ({
     justifyContent: "center",
     padding: 16,
     gap: 16,
-  },
-  settingsTitle: {
-    display: "flex",
-    justifyContent: "center",
-
-    "&.MuiTypography-root": {
-      marginBottom: "2rem",
-    },
-  },
-  submitSettingsButton: {
-    width: "100%",
-    height: "3rem",
-    borderRadius: "8px",
   },
 }));
 

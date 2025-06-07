@@ -7,7 +7,7 @@ const useStyles = makeStyles(() =>
       justifyContent: "space-between",
       alignItems: "center",
       marginBottom: "1rem",
-      width: "40vw",
+      width: "60vw",
     },
     title: {
       flexGrow: 1,
