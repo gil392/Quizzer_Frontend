@@ -10,6 +10,7 @@ import {
   QuizAttempt,
   QuizAnswerSubmittion,
   QuizAnswer,
+  QuizAnswerUpdateSubmittion,
 } from "../api/quiz/types";
 import { deleteQuizAsync } from "./quizReducer";
 import { WritableDraft } from "immer";
@@ -32,7 +33,7 @@ export const createQuizAttemptAsync = createAsyncThunk(
 
 export const updateAttemptWithAnswersAsync = createAsyncThunk(
   "attempt/updateAttemptWithAnswers",
-  async (data: QuizAnswerSubmittion) => {
+  async (data: QuizAnswerUpdateSubmittion) => {
     const response = await updateAttemptWithAnswers(data);
     return response.data;
   }

@@ -6,6 +6,7 @@ import {
   QuestionResults,
   QuizAnswer,
   QuizAnswerSubmittion,
+  QuizAnswerUpdateSubmittion,
   QuizAttempt,
   QuizData,
   QuizSettings,
@@ -40,7 +41,7 @@ export const createQuizAttempt = (
 ): AxiosPromise<QuizAttempt> => apiClient.post("/attempt", data);
 
 export const updateAttemptWithAnswers = (
-  data: QuizAnswerSubmittion
+  data: QuizAnswerUpdateSubmittion
 ): AxiosPromise<QuizAttempt> => apiClient.post("/attempt/update", data);
 
 export const addAnswerToQuizAttempt = (

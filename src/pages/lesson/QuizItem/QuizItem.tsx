@@ -10,9 +10,8 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-import { QuizAttempt, QuizData } from "../../../api/quiz/types";
+import { QuizData } from "../../../api/quiz/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
 import { GenericIconButton } from "../../../components/GenericIconButton";
@@ -20,8 +19,8 @@ import { PAGES_ROUTES } from "../../../routes/routes.const";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { fetchQuizAttempts } from "../../../store/attemptReducer";
-import QuizTimer from "../../quiz/QuizTimer";
 import { areAllQuestionsSubmitted } from "../../quiz/Utils";
+import { AttemptItem } from "./AttemptItem";
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -46,14 +45,6 @@ const QuizItem: React.FC<QuizItemProps> = ({
     navigate(PAGES_ROUTES.QUIZ, {
       state: { quizId: quiz._id, quizSettings: quiz.settings },
     });
-  };
-
-  const handleViewAttempt = (attempt: QuizAttempt) => {
-    navigate(PAGES_ROUTES.QUIZ, { state: { attempt } });
-  };
-
-  const handleContinueAttempt = (attemptToContinue: QuizAttempt) => {
-    navigate(PAGES_ROUTES.QUIZ, { state: { attemptToContinue } });
   };
 
   useEffect(() => {
@@ -102,36 +93,13 @@ const QuizItem: React.FC<QuizItemProps> = ({
           {loadingAttempts ? (
             <Typography variant="body2">Loading attempts...</Typography>
           ) : attempts && attempts.length > 0 ? (
-            attempts.map((attempt, index) => {
-              const timeLeft = attempt.expiryTime - new Date().getTime();
-              const isFinished =
-                timeLeft && areAllQuestionsSubmitted(quiz, attempt);
-              return (
-                <Box key={attempt._id} className={classes.AttemptContainer}>
-                  <Typography variant="body1">
-                    {index + 1}.{" "}
-                    {isFinished || timeLeft < 0
-                      ? "Score: " + attempt.score + " / 100"
-                      : "Unfinished"}
-                  </Typography>
-                  {!isFinished && <QuizTimer initialTime={timeLeft} />}
-
-                  <GenericIconButton
-                    icon={<ArrowForwardIcon color="primary" />}
-                    title={
-                      isFinished || timeLeft < 0
-                        ? "View Attempt"
-                        : "Continue Attempt"
-                    }
-                    onClick={
-                      isFinished || timeLeft < 0
-                        ? () => handleViewAttempt(attempt)
-                        : () => handleContinueAttempt(attempt)
-                    }
-                  />
-                </Box>
-              );
-            })
+            attempts.map((attempt, index) => (
+              <AttemptItem
+                attempt={attempt}
+                index={index}
+                isFinished={areAllQuestionsSubmitted(quiz, attempt)}
+              />
+            ))
           ) : (
             <Typography variant="body2">No attempts found.</Typography>
           )}

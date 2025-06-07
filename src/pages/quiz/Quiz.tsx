@@ -19,26 +19,70 @@ import { selectAttemptSelector } from "../../store/selectors/attemptSelector";
 import { areAllQuestionsSubmitted } from "./Utils";
 import { useUpdateEffect } from "../../hooks/useUpdateEffect";
 import { PAGES_ROUTES } from "../../routes/routes.const";
+import InvalidNavigationGuard from "./InvalidNavigationGuard";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
+
+type LocationProps =
+  | {
+      lessonData: LessonData;
+      quizSettings: QuizSettings;
+      quizId?: string;
+      viewAttempt?: undefined;
+      attemptToContinue?: undefined;
+    }
+  | {
+      quizId: string;
+      quizSettings: QuizSettings;
+      lessonData?: undefined;
+      viewAttempt?: undefined;
+      attemptToContinue?: undefined;
+    }
+  | {
+      viewAttempt: QuizAttempt;
+      lessonData?: undefined;
+      quizSettings?: undefined;
+      quizId?: undefined;
+      attemptToContinue?: undefined;
+    }
+  | {
+      lessonData: LessonData;
+      quizSettings: QuizSettings;
+      quizId: string;
+      viewAttempt?: undefined;
+      attemptToContinue?: undefined;
+    }
+  | {
+      attemptToContinue: QuizAttempt;
+      lessonData?: undefined;
+      quizSettings?: undefined;
+      quizId?: undefined;
+      viewAttempt?: undefined;
+    };
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
+  const locationState = location.state as LocationProps | undefined;
 
-  const quizSettings: QuizSettings | undefined = location.state?.quizSettings; // passed when creating a new quiz
-  const lessonData: LessonData | undefined = location.state?.lessonData; // passed when creating a new quiz
-  const attempt: QuizAttempt | undefined = location.state?.attempt; // passed when viewing an existing attempt
+  if (
+    !locationState ||
+    (!locationState.lessonData &&
+      !locationState.quizId &&
+      !locationState.viewAttempt &&
+      !locationState.attemptToContinue)
+  ) {
+    return <InvalidNavigationGuard show missingData="Quiz data" />;
+  }
   const [attemptId, setAttemptId] = useState<string | undefined>(
-    attempt?._id || location.state.attemptToContinue?._id
+    locationState.viewAttempt?._id || locationState.attemptToContinue?._id
   );
   const navigate = useNavigate();
-  const [isLocked, setIsLocked] = useState(!!location.state?.attempt);
+  const [isLocked, setIsLocked] = useState(!!locationState.viewAttempt);
 
   const [quizId, setQuizId] = useState<string | undefined>(
-    location.state?.quizId ||
-      attempt?.quizId ||
-      location.state.attemptToContinue?.quizId
+    locationState.quizId ||
+      (locationState.viewAttempt || locationState.attemptToContinue)?.quizId
   );
   const quizData = useSelector((state: RootState) =>
     quizId ? state.quizzes.quizzes.find((q) => q._id === quizId) : null
@@ -80,17 +124,18 @@ const QuizPage: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const isOnSelectAnswerMode = quizSettings?.feedbackType === "onSelectAnswer";
+  const isOnSelectAnswerMode =
+    locationState.quizSettings?.feedbackType === "onSelectAnswer";
 
-  const generateNewQuiz = useCallback(async () => {
+  const generateNewQuiz = async () => {
     setLoading(true);
     setSelectedAnswers({});
 
     try {
       const data = await dispatch(
         generateQuizAsync({
-          lessonId: lessonData?._id || quizData?.lessonId!,
-          settings: quizSettings || quizData?.settings,
+          lessonId: locationState.lessonData?._id || quizData?.lessonId!,
+          settings: locationState.quizSettings || quizData?.settings,
         })
       ).unwrap();
       setQuizId(data._id);
@@ -100,7 +145,7 @@ const QuizPage: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [lessonData?._id, quizSettings]);
+  };
 
   useEffect(() => {
     if (currentAttempt) {
@@ -113,10 +158,10 @@ const QuizPage: React.FC = () => {
   }, [currentAttempt]);
 
   useEffect(() => {
-    if (!location.state?.quizId && quizSettings) {
+    if (!locationState.quizId && locationState.quizSettings) {
       generateNewQuiz();
     }
-  }, [lessonData, quizSettings, generateNewQuiz]);
+  }, []);
 
   const handleOptionChange = (questionId: string, option: string) => {
     if (isLocked) return;
@@ -143,12 +188,17 @@ const QuizPage: React.FC = () => {
       return;
     }
 
+    if (!attemptId) {
+      console.warn("Attempt id is missing when trying to submit a quiz");
+      toastWarning("Quiz data is not available.");
+      return;
+    }
+
     const answersToUse = answersOverride ?? selectedAnswers;
 
     try {
       const submissionData = {
         attemptId: attemptId,
-        quizId: quizData._id,
         questions: Object.entries(answersToUse)
           .filter(([_, answer]) => answer !== null)
           .map(([questionId, answer]) => ({
@@ -177,7 +227,6 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    // todo: when retry, reset the timer
     setAttemptId(undefined);
     setIsLocked(false);
 
@@ -195,7 +244,7 @@ const QuizPage: React.FC = () => {
   return (
     <Box className={classes.container}>
       <Box className={classes.quizBox}>
-        {currentAttempt && (
+        {currentAttempt && quizData && (
           <QuizTimer
             quizId={quizId}
             isLocked={isLocked}
@@ -245,7 +294,7 @@ const QuizPage: React.FC = () => {
               )}
               <Box>
                 <Typography variant="h5" component="div" gutterBottom>
-                  {lessonData?.title}
+                  {locationState.lessonData?.title}
                 </Typography>
                 <QuizQuestionList
                   quizData={quizData}
@@ -264,7 +313,7 @@ const QuizPage: React.FC = () => {
                   Retry
                 </Button>
               ) : (
-                !isLocked && (
+                !isLocked && currentAttempt && (
                   <>
                     {!areAllQuestionsSubmitted(quizData, currentAttempt) && (
                       <Button
