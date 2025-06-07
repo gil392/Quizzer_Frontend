@@ -10,15 +10,17 @@ import {
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-import { QuizAttempt, QuizData } from "../../../api/quiz/types";
+import { QuizData } from "../../../api/quiz/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
 import { GenericIconButton } from "../../../components/GenericIconButton";
+import { PAGES_ROUTES } from "../../../routes/routes.const";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { fetchQuizAttempts } from "../../../store/attemptReducer";
+import { areAllQuestionsSubmitted } from "../../quiz/Utils";
+import { AttemptItem } from "./AttemptItem";
 
 type QuizItemProps = {
   quiz: QuizData;
@@ -40,13 +42,9 @@ const QuizItem: React.FC<QuizItemProps> = ({
   const [loadingAttempts, setLoadingAttempts] = useState<boolean>(false);
 
   const handleRetakeQuiz = () => {
-    navigate("/quiz", {
+    navigate(PAGES_ROUTES.QUIZ, {
       state: { quizId: quiz._id, quizSettings: quiz.settings },
     });
-  };
-
-  const handleViewAttempt = (attempt: QuizAttempt) => {
-    navigate("/quiz", { state: { attempt } });
   };
 
   useEffect(() => {
@@ -96,16 +94,11 @@ const QuizItem: React.FC<QuizItemProps> = ({
             <Typography variant="body2">Loading attempts...</Typography>
           ) : attempts && attempts.length > 0 ? (
             attempts.map((attempt, index) => (
-              <Box key={attempt._id} className={classes.AttemptContainer}>
-                <Typography variant="body1">
-                  {index + 1}. Score: {attempt.score} / 100
-                </Typography>
-                <GenericIconButton
-                  icon={<ArrowForwardIcon color="primary" />}
-                  title="View Attempt"
-                  onClick={() => handleViewAttempt(attempt)}
-                />
-              </Box>
+              <AttemptItem
+                attempt={attempt}
+                index={index}
+                isFinished={areAllQuestionsSubmitted(quiz, attempt)}
+              />
             ))
           ) : (
             <Typography variant="body2">No attempts found.</Typography>

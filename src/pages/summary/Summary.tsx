@@ -5,9 +5,9 @@ import { toastWarning } from "../../utils/utils";
 import { QuizSettings } from "../../api/quiz/types";
 import { LessonData } from "../../api/lesson/types";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import { generateQuizAsync } from "../../store/quizReducer";
 import { AppDispatch } from "../../store/store";
 import { useDispatch } from "react-redux";
+import { generateQuizAsync } from "../../store/quizReducer";
 
 interface SummaryProps {
   lessonData: LessonData;
