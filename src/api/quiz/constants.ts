@@ -7,5 +7,4 @@ export const INITIAL_QUIZ_SETTINGS: QuizSettings = {
   maxQuestionCount: LOW_QUESTIONS_COUNT,
   isManualCount: false,
   solvingTimeMs: 60000,
-  isRandomOrder: false,
 };
