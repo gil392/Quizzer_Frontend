@@ -26,26 +26,24 @@ const FilterLessons: FunctionComponent<FilterLessonsProps> = ({
   };
 
   return (
-    <Box className={classes.filterBody}>
-      <Box className={classes.searchTextContainer}>
-        <TextField
-          className={classes.searchText}
-          value={filterOptions.searchText}
-          onChange={({ target }) => onFilterChange("searchText", target.value)}
-          placeholder="Search titles and links"
-          variant="outlined"
-          size="medium"
-          slotProps={{
-            input: {
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              ),
-            },
-          }}
-        />
-      </Box>
+    <Box>
+      <TextField
+        className={classes.searchText}
+        value={filterOptions.searchText}
+        onChange={({ target }) => onFilterChange("searchText", target.value)}
+        placeholder="Search titles and links"
+        variant="outlined"
+        size="medium"
+        slotProps={{
+          input: {
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          },
+        }}
+      />
     </Box>
   );
 };
