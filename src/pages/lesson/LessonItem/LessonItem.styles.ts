@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme: Theme) => {
         backgroundColor: "#a1a1a0",
       },
     },
+    favoriteIcon: {
+      color: "#e0245e",
+    },
   });
 });
 
