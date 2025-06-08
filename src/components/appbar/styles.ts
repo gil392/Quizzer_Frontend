@@ -11,10 +11,23 @@ const useStyles = makeStyles((theme: Theme) =>
       cursor: "pointer",
       margin: theme.spacing(0, 2),
     },
-    notifications: {},
     badge: {
       backgroundColor: theme.palette.primary.main,
       color: theme.palette.primary.contrastText,
+      fontWeight: 600,
+      fontSize: "0.85rem",
+      minWidth: 22,
+      height: 22,
+      borderRadius: 11,
+      boxShadow: theme.shadows[1],
+    },
+    notificaion: {
+      fontSize: 28,
+      color: (props: { unreadCount?: number }) =>
+        props.unreadCount && props.unreadCount > 0
+          ? theme.palette.primary.main
+          : theme.palette.text.secondary,
+      transition: "color 0.2s",
     },
     menu: {
       marginTop: theme.spacing(1),
