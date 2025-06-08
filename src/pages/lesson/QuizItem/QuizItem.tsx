@@ -21,17 +21,20 @@ import { AppDispatch, RootState } from "../../../store/store";
 import { fetchQuizAttempts } from "../../../store/attemptReducer";
 import { areAllQuestionsSubmitted } from "../../quiz/Utils";
 import { AttemptItem } from "./AttemptItem";
+import { LessonData } from "../../../api/lesson/types";
 
 type QuizItemProps = {
   quiz: QuizData;
   deleteQuiz: () => void;
   updateQuizTitle: (newTitle: string) => void;
+  lesson: LessonData;
 };
 
 const QuizItem: React.FC<QuizItemProps> = ({
   quiz,
   deleteQuiz,
   updateQuizTitle,
+  lesson,
 }) => {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -43,7 +46,11 @@ const QuizItem: React.FC<QuizItemProps> = ({
 
   const handleRetakeQuiz = () => {
     navigate(PAGES_ROUTES.QUIZ, {
-      state: { quizId: quiz._id, quizSettings: quiz.settings },
+      state: {
+        quizId: quiz._id,
+        quizSettings: quiz.settings,
+        lessonData: lesson,
+      },
     });
   };
 
@@ -98,6 +105,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
                 attempt={attempt}
                 index={index}
                 isFinished={areAllQuestionsSubmitted(quiz, attempt)}
+                lesson={lesson}
               />
             ))
           ) : (

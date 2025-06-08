@@ -7,9 +7,10 @@ import { Box, Button, Skeleton, Typography } from "@mui/material";
 import { toastWarning } from "../../utils/utils";
 import {
   createQuizAttemptAsync,
+  fetchQuizAttempts,
   updateAttemptWithAnswersAsync,
 } from "../../store/attemptReducer";
-import { generateQuizAsync } from "../../store/quizReducer";
+import { fetchQuizzes, generateQuizAsync } from "../../store/quizReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
 import QuizTimer from "./QuizTimer";
@@ -25,7 +26,6 @@ const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
 type LocationProps =
   | {
-      lessonData: LessonData;
       quizSettings: QuizSettings;
       quizId?: string;
       viewAttempt?: undefined;
@@ -34,19 +34,16 @@ type LocationProps =
   | {
       quizId: string;
       quizSettings: QuizSettings;
-      lessonData?: undefined;
       viewAttempt?: undefined;
       attemptToContinue?: undefined;
     }
   | {
       viewAttempt: QuizAttempt;
-      lessonData?: undefined;
       quizSettings?: undefined;
       quizId?: undefined;
       attemptToContinue?: undefined;
     }
   | {
-      lessonData: LessonData;
       quizSettings: QuizSettings;
       quizId: string;
       viewAttempt?: undefined;
@@ -54,7 +51,6 @@ type LocationProps =
     }
   | {
       attemptToContinue: QuizAttempt;
-      lessonData?: undefined;
       quizSettings?: undefined;
       quizId?: undefined;
       viewAttempt?: undefined;
@@ -63,30 +59,34 @@ type LocationProps =
 const QuizPage: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
-  const locationState = location.state as LocationProps | undefined;
+  const locationState = location.state as
+    | (LocationProps & { lessonData: LessonData })
+    | undefined;
 
-  if (
-    !locationState ||
-    (!locationState.lessonData &&
-      !locationState.quizId &&
-      !locationState.viewAttempt &&
-      !locationState.attemptToContinue)
-  ) {
-    return <InvalidNavigationGuard show missingData="Quiz data" />;
-  }
   const [attemptId, setAttemptId] = useState<string | undefined>(
-    locationState.viewAttempt?._id || locationState.attemptToContinue?._id
+    locationState?.viewAttempt?._id || locationState?.attemptToContinue?._id
   );
   const navigate = useNavigate();
-  const [isLocked, setIsLocked] = useState(!!locationState.viewAttempt);
+  const [isLocked, setIsLocked] = useState(!!locationState?.viewAttempt);
 
   const [quizId, setQuizId] = useState<string | undefined>(
-    locationState.quizId ||
-      (locationState.viewAttempt || locationState.attemptToContinue)?.quizId
+    locationState?.quizId ||
+      (locationState?.viewAttempt || locationState?.attemptToContinue)?.quizId
   );
   const quizData = useSelector((state: RootState) =>
     quizId ? state.quizzes.quizzes.find((q) => q._id === quizId) : null
   );
+
+  useEffect(() => {
+    const syncRedux = async () => {
+      if (quizId && !quizData && locationState) {
+        await dispatch(fetchQuizzes(locationState.lessonData._id));
+      }
+    };
+
+    syncRedux();
+  }, []);
+
   const [loading, setLoading] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [questionId: string]: string | null;
@@ -125,16 +125,17 @@ const QuizPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const isOnSelectAnswerMode =
-    locationState.quizSettings?.feedbackType === "onSelectAnswer";
+    locationState?.quizSettings?.feedbackType === "onSelectAnswer";
 
   const generateNewQuiz = async () => {
     setLoading(true);
     setSelectedAnswers({});
+    if (!locationState) return;
 
     try {
       const data = await dispatch(
         generateQuizAsync({
-          lessonId: locationState.lessonData?._id || quizData?.lessonId!,
+          lessonId: locationState.lessonData._id,
           settings: locationState.quizSettings || quizData?.settings,
         })
       ).unwrap();
@@ -158,7 +159,7 @@ const QuizPage: React.FC = () => {
   }, [currentAttempt]);
 
   useEffect(() => {
-    if (!locationState.quizId && locationState.quizSettings) {
+    if (!locationState?.quizId && locationState?.quizSettings) {
       generateNewQuiz();
     }
   }, []);
@@ -294,7 +295,7 @@ const QuizPage: React.FC = () => {
               )}
               <Box>
                 <Typography variant="h5" component="div" gutterBottom>
-                  {locationState.lessonData?.title}
+                  {locationState?.lessonData.title}
                 </Typography>
                 <QuizQuestionList
                   quizData={quizData}
