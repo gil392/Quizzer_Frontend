@@ -19,7 +19,7 @@ export const useStyles = makeStyles(() =>
       justifyContent: "center",
     },
     rewardIcon: {
-      width: "4em",
+      width: "5em",
       height: "5em",
       borderRadius: "16px",
     },
@@ -57,5 +57,6 @@ export const useStyles = makeStyles(() =>
       backgroundColor: "green",
       opacity: "0.3",
     },
+
   })
 );
