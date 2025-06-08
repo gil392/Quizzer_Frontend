@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Typography, Box, Paper } from "@mui/material";
 import useStyles from "./QuizTimer.styles";
+import { formatTime } from "./Utils";
 
 const QUIZ_TIME_LIMIT_MILLISECONDS = 60 * 2 * 1000;
 
@@ -35,7 +36,7 @@ const QuizTimer: React.FC<QuizTimerProps> = ({
     if (isLocked) return;
 
     if (canHaveTimer) {
-      timerRef.current = window.setInterval(() => {
+      timerRef.current = setInterval(() => {
         setTimeLeft((prev) => {
           if (prev <= 1) {
             clearInterval(timerRef.current!);
@@ -61,13 +62,6 @@ const QuizTimer: React.FC<QuizTimerProps> = ({
   if (!canHaveTimer || isLocked) return null;
 
   const seconds = Math.max(0, Math.floor(timeLeft / 1000));
-  const formatTime = (seconds: number) => {
-    const m = Math.floor(seconds / 60)
-      .toString()
-      .padStart(2, "0");
-    const s = (seconds % 60).toString().padStart(2, "0");
-    return `${m}:${s}`;
-  };
 
   return (
     <Box display="flex" justifyContent="flex-end" mb={2}>
