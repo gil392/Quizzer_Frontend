@@ -6,8 +6,8 @@ import {
   updateQuiz,
 } from "../api/quiz/api";
 import { QuizData, QuizSettings } from "../api/quiz/types";
+import { deleteLessonAsync } from "./lessonReducer";
 
-// Async thunks
 export const fetchQuizzes = createAsyncThunk(
   "quiz/fetchQuizzes",
   async (lessonId: string) => {
@@ -80,6 +80,11 @@ const quizSlice = createSlice({
       .addCase(updateQuizAsync.fulfilled, (state, action) => {
         state.quizzes = state.quizzes.map((quiz) =>
           quiz._id === action.payload._id ? action.payload : quiz
+        );
+      })
+      .addCase(deleteLessonAsync.fulfilled, (state, action) => {
+        state.quizzes = state.quizzes.filter(
+          (quiz) => quiz.lessonId !== action.payload.lessonId
         );
       });
   },

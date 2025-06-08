@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { getQuizAttempts, createQuizAttempt, rateQuiz } from "../api/quiz/api";
 import { QuizAttempt, QuizAnswerSubmittion } from "../api/quiz/types";
 import { deleteQuizAsync } from "./quizReducer";
+import { deleteLessonAsync } from "./lessonReducer";
 
 export const fetchQuizAttempts = createAsyncThunk(
   "attempt/fetchQuizAttempts",
@@ -53,6 +54,12 @@ const attemptSlice = createSlice({
       })
       .addCase(deleteQuizAsync.fulfilled, (state, action) => {
         delete state.attemptsByQuiz[action.payload];
+      })
+      .addCase(deleteLessonAsync.fulfilled, (state, action) => {
+        const { quizIds } = action.payload;
+        for (const id of quizIds) {
+          delete state.attemptsByQuiz[id];
+        }
       });
   },
 });
