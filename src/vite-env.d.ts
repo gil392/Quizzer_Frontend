@@ -2,7 +2,7 @@
 
 interface ImportMetaEnv {
     readonly VITE_BACKEND_URL: string;
-    readonly VITE_MESSAGES_INTERVAL_MS: number;
+    readonly VITE_NOTIFICATIONS_INTERVAL_MS: number;
 }
 
 interface ImportMeta {

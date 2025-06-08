@@ -12,7 +12,7 @@ import NotificationBell from "./components/NotificationBell";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 
 const AppBar: FunctionComponent = () => {
-  const classes = useStyles();
+  const classes = useStyles({});
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);

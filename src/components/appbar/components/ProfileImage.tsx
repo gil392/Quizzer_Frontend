@@ -15,7 +15,7 @@ const getUserProfileImage = async (dispatch: AppDispatch) => {
 };
 
 const ProfileImage: FunctionComponent<ProfileImageProps> = (props) => {
-  const classes = useStyles();
+  const classes = useStyles({});
   const dispatch = useDispatch<AppDispatch>();
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
   useEffect(() => {

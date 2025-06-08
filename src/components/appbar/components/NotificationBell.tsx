@@ -1,7 +1,10 @@
 import { useEffect, useState, useRef } from "react";
 import { Badge, IconButton } from "@mui/material";
 import { NotificationsOutlined } from "@mui/icons-material";
-import { MAX_MESSAGES_BADGE_CONTENT, MESSAGES_INTERVAL_MS } from "../const";
+import {
+  MAX_MESSAGES_BADGE_CONTENT,
+  NOTIFICATIONS_INTERVAL_MS,
+} from "../const";
 import useStyles from "../styles";
 import { getNotifications } from "../../../api/notifications/api";
 import { Notification } from "../../../api/notifications/types";
@@ -28,7 +31,10 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
 
   useEffect(() => {
     fetchNotifications();
-    intervalRef.current = setInterval(fetchNotifications, MESSAGES_INTERVAL_MS);
+    intervalRef.current = setInterval(
+      fetchNotifications,
+      NOTIFICATIONS_INTERVAL_MS
+    );
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
