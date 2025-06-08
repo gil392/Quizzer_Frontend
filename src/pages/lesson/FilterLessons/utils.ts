@@ -1,8 +1,13 @@
 import { LessonData } from "../../../api/lesson/types";
 import { FilterOptions } from "./types";
 
-const includesText = (lessonText: string, seatchText: string): boolean =>
-  lessonText.toLowerCase().includes(seatchText.toLowerCase());
+const includesText = (
+  lessonText: string | undefined,
+  seatchText: string
+): boolean =>
+  lessonText
+    ? lessonText.toLowerCase().includes(seatchText.toLowerCase())
+    : false;
 
 export const getFilteredLessons = (
   lessons: LessonData[],

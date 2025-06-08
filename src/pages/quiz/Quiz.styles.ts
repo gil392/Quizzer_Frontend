@@ -51,6 +51,19 @@ const useStyles = makeStyles(() => ({
     padding: 16,
     gap: 16,
   },
+  settingsTitle: {
+    display: "flex",
+    justifyContent: "center",
+
+    "&.MuiTypography-root": {
+      marginBottom: "2rem",
+    },
+  },
+  submitSettingsButton: {
+    width: "100%",
+    height: "3rem",
+    borderRadius: "8px",
+  },
 }));
 
 export default useStyles;
