@@ -10,11 +10,11 @@ import { moveCompletedAchievementsToEnd } from "./utils";
 
 interface AchievmentsProps {
   className?: string;
+  isEditing: boolean; 
 }
 
 const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
-  const { className } = props;
-
+  const { className, isEditing } = props; 
   const classes = useStyles();
   const [achievments, setAchievments] = useState<Achievement[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -40,9 +40,9 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
   const achievementsList = isLoading ? (
     <SkeletonList itemClassName={classes.skeletonItem} numberOfItems={6} />
   ) : (
-    achievments.map((achievment, index) => (
+    achievments.map((achievement, index) => (
       <>
-        <AchievementItem achievement={achievment} />
+        <AchievementItem achievement={achievement} isEditing={isEditing} /> 
         {index !== achievments.length - 1 && <Divider />}
       </>
     ))

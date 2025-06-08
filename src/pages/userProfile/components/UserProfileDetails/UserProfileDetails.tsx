@@ -12,10 +12,15 @@ import {
   updateUserAsync,
 } from "../../../../store/userReducer";
 
-const UserProfileDetails: FunctionComponent = () => {
+interface UserProfileDetailsProps {
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
+}
+
+const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) => {
+  const { setIsEditing, isEditing } = props; // Props passed from UserProfilePage
   const classes = useStyles();
 
-  const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState<string>();
   const [profileImageUrl, setProfileImageUrl] = useState<string>();
   const [imageFile, setImageFile] = useState<File>();
@@ -38,7 +43,7 @@ const UserProfileDetails: FunctionComponent = () => {
 
   const stopEdit = () => {
     setImageFile(undefined);
-    setIsEditing(false);
+    setIsEditing(false); // Exit editing mode
   };
 
   const handleSave = async () => {
@@ -142,7 +147,7 @@ const UserProfileDetails: FunctionComponent = () => {
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setIsEditing(true)}
+          onClick={() => setIsEditing(true)} // Enter editing mode
           sx={{ mt: 3 }}
         >
           Edit Profile

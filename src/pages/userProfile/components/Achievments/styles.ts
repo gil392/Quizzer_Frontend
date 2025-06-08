@@ -16,7 +16,6 @@ export const useStyles = makeStyles((theme: Theme) =>
       border: "solid 2px",
       borderColor: theme.palette.grey[200],
       borderRadius: "8px",
-      width: "40em"
     },
     scroller: createScrollerStyleClass(theme),
     skeletonItem: {
