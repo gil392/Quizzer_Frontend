@@ -17,23 +17,17 @@ import { LessonData } from "../../api/lesson/types";
 import QuizQuestionList from "./QuizQuestionList";
 import { selectAttemptSelector } from "../../store/selectors/attemptSelector";
 import { areAllQuestionsSubmitted } from "./Utils";
-import { useUpdateEffect } from "../../hooks/useUpdateEffect";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { getDefaultQuizSettings } from "../../components/lessonConfig/components/utils";
+import { isNotNil } from "ramda";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
 type LocationProps =
   | {
       quizSettings: QuizSettings;
-      quizId?: string;
-      viewAttempt?: undefined;
-      attemptToContinue?: undefined;
-    }
-  | {
-      quizId: string;
-      quizSettings: QuizSettings;
+      quizId?: undefined;
       viewAttempt?: undefined;
       attemptToContinue?: undefined;
     }
@@ -41,12 +35,6 @@ type LocationProps =
       viewAttempt: QuizAttempt;
       quizSettings?: undefined;
       quizId?: undefined;
-      attemptToContinue?: undefined;
-    }
-  | {
-      quizSettings: QuizSettings;
-      quizId: string;
-      viewAttempt?: undefined;
       attemptToContinue?: undefined;
     }
   | {
@@ -113,10 +101,6 @@ const QuizPage: React.FC = () => {
 
   const selectedAnswersRef = useRef(selectedAnswers);
 
-  useUpdateEffect(() => {
-    setIsLocked(false);
-  }, [quizId]);
-
   useEffect(() => {
     selectedAnswersRef.current = selectedAnswers;
   }, [selectedAnswers]);
@@ -141,6 +125,7 @@ const QuizPage: React.FC = () => {
   const generateNewQuiz = async () => {
     setShowQuizSettings(false);
     setLoading(true);
+
     setSelectedAnswers({});
     if (!locationState) return;
 
@@ -152,6 +137,7 @@ const QuizPage: React.FC = () => {
         })
       ).unwrap();
       setQuizId(data._id);
+      setIsLocked(false);
     } catch (error) {
       console.error("Error generating quiz:", error);
       alert("Failed to generate a new quiz. Please try again.");
@@ -171,7 +157,7 @@ const QuizPage: React.FC = () => {
   }, [currentAttempt]);
 
   useEffect(() => {
-    if (!locationState?.quizId && locationState?.quizSettings) {
+    if (!quizId) {
       generateNewQuiz();
     }
   }, []);
@@ -216,14 +202,11 @@ const QuizPage: React.FC = () => {
           .filter(([_, answer]) => answer !== null)
           .map(([questionId, answer]) => ({
             questionId,
-            selectedAnswer: answer as string,
+            selectedAnswer: answer!,
           })),
       };
 
-      const updatedAttempt = await dispatch(
-        updateAttemptWithAnswersAsync(submissionData)
-      ).unwrap();
-      setAttemptId(updatedAttempt._id);
+      await dispatch(updateAttemptWithAnswersAsync(submissionData)).unwrap();
       if (!isNavigatingAfter) {
         setIsLocked(true);
       }
@@ -247,10 +230,8 @@ const QuizPage: React.FC = () => {
   };
 
   const allQuestionsAnswered = quizData
-    ? quizData.questions.every(
-        (question) =>
-          selectedAnswers[question._id] !== undefined &&
-          selectedAnswers[question._id] !== null
+    ? quizData.questions.every((question) =>
+        isNotNil(selectedAnswers[question._id])
       )
     : false;
 

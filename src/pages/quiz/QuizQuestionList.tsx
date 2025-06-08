@@ -11,7 +11,7 @@ import { QuizData, QuizAttempt, QuizAnswer } from "../../api/quiz/types";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { addAnswerToQuizAttemptAsync } from "../../store/attemptReducer";
-import useStyles from "./Quiz.styles";
+import useStyles from "./QuizQuestionList.styles";
 import { areAllQuestionsSubmitted } from "./Utils";
 
 type QuizQuestionListProps = {
@@ -93,15 +93,17 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
                           handleOptionChange(question._id, option)
                         }
                         disabled={isQuestionLocked}
-                        sx={{
-                          "& .MuiSvgIcon-root": {
-                            border: `2px solid ${
-                              isQuestionLocked &&
-                              getAnswerOutlineColor(question._id, option)
-                            }`,
-                            borderRadius: "4px",
-                          },
-                        }}
+                        className={
+                          isQuestionLocked
+                            ? getAnswerOutlineColor(question._id, option) ===
+                              "green"
+                              ? classes.checkboxGreen
+                              : getAnswerOutlineColor(question._id, option) ===
+                                "red"
+                              ? classes.checkboxRed
+                              : classes.checkbox
+                            : classes.checkbox
+                        }
                       />
                     }
                     label={option}

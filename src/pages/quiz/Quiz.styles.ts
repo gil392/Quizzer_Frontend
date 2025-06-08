@@ -34,11 +34,6 @@ const useStyles = makeStyles(() => ({
     borderRadius: "8px",
     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
   },
-  questionBox: {
-    pageBreakInside: "avoid",
-    padding: 24,
-    backgroundColor: "#f5f5f5",
-  },
   card: {
     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
     textAlign: "left",
