@@ -125,7 +125,7 @@ const LessonsPage: React.FC = () => {
                 value={sortByField}
                 className={classes.sortOption}
                 onChange={({ target }) => {
-                  setSortByField(target.value);
+                  setSortByField(target.value as typeof sortByField);
                 }}
               >
                 {SORT_OPTIONS.map((option) => (
