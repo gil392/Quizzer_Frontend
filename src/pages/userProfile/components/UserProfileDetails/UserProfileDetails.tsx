@@ -2,28 +2,29 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Avatar, Button, Skeleton, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
 import { GenericIconButton } from "../../../../components/GenericIconButton";
-import { toastSuccess, toastWarning } from "../../../../utils/utils";
 import EditingActions from "../EditingActions/EditingActions";
 import { useStyles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import {
   fetchLoggedUser,
-  updateUserAsync,
 } from "../../../../store/userReducer";
 
 interface UserProfileDetailsProps {
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
+  imageFile?: File;
+  setImageFile: (file: File | undefined) => void;
+  profileImageUrl: string | undefined;
+  setProfileImageUrl: (url: string | undefined) => void;
 }
 
 const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) => {
-  const { setIsEditing, isEditing } = props; // Props passed from UserProfilePage
+  const { setIsEditing, isEditing, imageFile, setImageFile, profileImageUrl, setProfileImageUrl } = props; 
   const classes = useStyles();
 
   const [username, setUsername] = useState<string>();
-  const [profileImageUrl, setProfileImageUrl] = useState<string>();
-  const [imageFile, setImageFile] = useState<File>();
+
   const dispatch = useDispatch<AppDispatch>();
   const { loggedUser: user } = useSelector((state: RootState) => state.user);
 
@@ -43,25 +44,7 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) =
 
   const stopEdit = () => {
     setImageFile(undefined);
-    setIsEditing(false); // Exit editing mode
-  };
-
-  const handleSave = async () => {
-    try {
-      if (user && (username || imageFile)) {
-        await dispatch(
-          updateUserAsync({
-            username,
-            imageFile,
-          })
-        ).unwrap();
-        toastSuccess("Update user successfuly");
-        stopEdit();
-      }
-    } catch (error) {
-      console.error("Failed updating user: ", error);
-      toastWarning("Failed to update user. Please try again");
-    }
+    setIsEditing(false); 
   };
 
   const handleCancel = () => {
@@ -76,6 +59,7 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) =
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
+      console.log("Image URL:", imageUrl);
       setProfileImageUrl(imageUrl);
       setImageFile(file);
     }
@@ -142,12 +126,12 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) =
         </Typography>
       )}
       {isEditing ? (
-        <EditingActions saveEdit={handleSave} cancelEditing={handleCancel} />
+        <EditingActions user={user} username={username} imageFile={imageFile} cancelEditing={handleCancel} stopEdit={stopEdit}/>
       ) : (
         <Button
           variant="contained"
           color="primary"
-          onClick={() => setIsEditing(true)} // Enter editing mode
+          onClick={() => setIsEditing(true)} 
           sx={{ mt: 3 }}
         >
           Edit Profile

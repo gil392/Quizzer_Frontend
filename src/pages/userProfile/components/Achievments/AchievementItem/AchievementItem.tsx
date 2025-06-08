@@ -4,21 +4,19 @@ import { FunctionComponent, useEffect, useState } from "react";
 import { Achievement } from "../../../../../api/achievements/types";
 import { formatNumberWithPostfix } from "./utils";
 import { getAchievementImage } from "../../../../../api/achievements/api";
-import { useDispatch } from "react-redux";
-import { updateUserAsync } from "../../../../../store/userReducer";
-import { AppDispatch } from "../../../../../store/store";
 import { useStyles } from "./styles";
 
 interface AchievementItemProps {
   achievement: Achievement;
   isEditing: boolean;
+  setImageFile: (file: File | undefined) => void;
+  setProfileImageUrl: (url: string | undefined) => void;
 }
 
 const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
-  const { achievement, isEditing } = props;
+  const { achievement, isEditing, setImageFile, setProfileImageUrl} = props;
   const classes = useStyles();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const fetchAchievementImage = async () => {
@@ -40,13 +38,11 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
       const blob = await response.blob();
       const file = new File([blob], `${achievement.title}.png`, { type: "image/png" });
 
-      await dispatch(
-        updateUserAsync({
-          imageFile: file,
-        })
-      ).unwrap();
+      setImageFile(file);
+      setProfileImageUrl(URL.createObjectURL(blob));
 
     } catch (error) {
+
       console.error("Failed to update profile image:", error);
 
     }

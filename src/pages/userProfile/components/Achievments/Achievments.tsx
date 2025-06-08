@@ -10,11 +10,13 @@ import { moveCompletedAchievementsToEnd } from "./utils";
 
 interface AchievmentsProps {
   className?: string;
-  isEditing: boolean; 
+  isEditing: boolean;
+  setImageFile: (file: File | undefined) => void;
+  setProfileImageUrl: (url: string | undefined) => void; 
 }
 
 const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
-  const { className, isEditing } = props; 
+  const { className, isEditing, setImageFile, setProfileImageUrl } = props; 
   const classes = useStyles();
   const [achievments, setAchievments] = useState<Achievement[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -42,7 +44,12 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
   ) : (
     achievments.map((achievement, index) => (
       <>
-        <AchievementItem achievement={achievement} isEditing={isEditing} /> 
+        <AchievementItem 
+          achievement={achievement}
+          isEditing={isEditing} 
+          setImageFile={setImageFile}
+          setProfileImageUrl={setProfileImageUrl}
+          /> 
         {index !== achievments.length - 1 && <Divider />}
       </>
     ))
