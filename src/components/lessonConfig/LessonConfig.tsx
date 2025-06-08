@@ -1,27 +1,29 @@
 import { FunctionComponent, useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   FeedbackType,
   QuestionsOrder,
   QuizSettings,
 } from "../../api/quiz/types";
+import { RootState } from "../../store/store";
 import {
   FEEDBACK_OPTIONS,
   QUESTIONS_ORDER_OPTIONS,
 } from "./components/constants";
 import GeneralSelectOption from "./components/GeneralSelectOption";
-import { Option } from "./components/types";
 import MaxQuestionCount from "./components/MaxQuestionCount";
-import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
+import { Option } from "./components/types";
+import { getDefaultQuizSettings } from "./components/utils";
 
 interface LessonConfigProps {
-  defaultQuizSettings: QuizSettings;
   onChange: (quizSettings: QuizSettings) => void;
 }
 
-const LessonConfig: FunctionComponent<LessonConfigProps> = ({
-  defaultQuizSettings,
-  onChange,
-}) => {
+const LessonConfig: FunctionComponent<LessonConfigProps> = ({ onChange }) => {
+  const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
+
+  const defaultQuizSettings = getDefaultQuizSettings(loggedUser?.settings);
+
   const [feedbackType, setFeedbackType] = useState<FeedbackType>(
     defaultQuizSettings.feedbackType
   );
@@ -44,9 +46,7 @@ const LessonConfig: FunctionComponent<LessonConfigProps> = ({
       questionsOrder,
       maxQuestionCount,
       isManualCount,
-      solvingTimeMs:
-        defaultQuizSettings?.solvingTimeMs ??
-        INITIAL_QUIZ_SETTINGS.solvingTimeMs,
+      solvingTimeMs: defaultQuizSettings.solvingTimeMs,
     });
   }, [feedbackType, questionsOrder, maxQuestionCount, isManualCount]);
 

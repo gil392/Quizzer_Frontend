@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import {
   getLessonById,
@@ -26,7 +26,7 @@ import {
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { createQuizAttemptAsync } from "../../store/attemptReducer";
 import { generateQuizAsync } from "../../store/quizReducer";
-import { AppDispatch } from "../../store/store";
+import { AppDispatch, RootState } from "../../store/store";
 import { exportToPDF } from "../../utils/pdfUtils";
 import { toastWarning } from "../../utils/utils";
 import useStyles from "./Quiz.styles";
@@ -53,11 +53,13 @@ const QuizPage: React.FC = () => {
 
   const [showQuizSettings, setShowQuizSettings] = useState(false);
 
-  const [defaultQuizSettings, setDefaultQuizSettings] = useState(
-    getDefaultQuizSettings(location.state?.quizSettings)
-  );
+  const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
 
-  const [quizSettings, setQuizSettings] = useState(defaultQuizSettings);
+  const userQuizSettings = getDefaultQuizSettings(loggedUser?.settings);
+
+  const [quizSettings, setQuizSettings] = useState(
+    location.state?.quizSettings
+  );
 
   const isOnSelectAnswerMode = useMemo(
     () => quizSettings?.feedbackType === "onSelectAnswer",
@@ -90,7 +92,6 @@ const QuizPage: React.FC = () => {
 
   const generateNewQuiz = useCallback(async () => {
     setShowQuizSettings(false);
-    setDefaultQuizSettings(quizSettings);
     if (!lessonDataState?._id) {
       if (quizData?.lessonId) {
         try {
@@ -324,7 +325,6 @@ const QuizPage: React.FC = () => {
             New Quiz Settings
           </Typography>
           <LessonConfig
-            defaultQuizSettings={defaultQuizSettings}
             onChange={(quizSettings: QuizSettings) => {
               setQuizSettings(quizSettings);
             }}
@@ -455,7 +455,10 @@ const QuizPage: React.FC = () => {
                   <Button
                     variant="contained"
                     color="primary"
-                    onClick={() => setShowQuizSettings(true)}
+                    onClick={() => {
+                      setQuizSettings(userQuizSettings);
+                      setShowQuizSettings(true);
+                    }}
                   >
                     Generate New Quiz
                   </Button>

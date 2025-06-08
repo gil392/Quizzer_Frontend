@@ -1,18 +1,12 @@
 import { Box, Button, OutlinedInput, Typography } from "@mui/material";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import {
-  FeedbackType,
-  QuestionsOrder,
-  QuizSettings,
-} from "../../api/quiz/types";
-import { useLocation } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
+import { QuizSettings } from "../../api/quiz/types";
+import { getDefaultQuizSettings } from "../../components/lessonConfig/components/utils";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import { INITIAL_QUIZ_SETTINGS } from "../../api/quiz/constants";
-import { useSelector } from "react-redux";
 import { RootState } from "../../store/store";
-import { getDefaultQuizSettings } from "../../components/lessonConfig/components/utils";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
@@ -52,7 +46,6 @@ const GenerateLessonPage: React.FC = () => {
       />
 
       <LessonConfig
-        defaultQuizSettings={defaultQuizSettings}
         onChange={(quizSettings: QuizSettings) => {
           setQuizSettings(quizSettings);
         }}
