@@ -77,11 +77,7 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
               (result) => result.questionId === question._id
             ));
         return (
-          <Box
-            key={index}
-            style={{ pageBreakInside: "avoid" }}
-            className={classes.questionBox}
-          >
+          <Box key={index} className={classes.questionBox}>
             <Card>
               <Typography variant="h6" gutterBottom>
                 {index + 1}. {question.text}

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Typography, Box, Paper } from "@mui/material";
 //import AccessTimeIcon from "@mui/icons-material/AccessTime";
-import useStyles from "./Quiztimer.styles";
+import useStyles from "./QuizTimer.styles";
 
 const QUIZ_TIME_LIMIT_MILLISECONDS = 60 * 2 * 1000;
 
