@@ -1,9 +1,10 @@
 import { LinearProgress, Typography } from "@mui/material";
 import { min } from "ramda";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { Achievement } from "../../../../../api/achievements/types";
 import { useStyles } from "./styles";
 import { formatNumberWithPostfix } from "./utils";
+import { getAchievementImage } from "../../../../../api/achievements/api";
 
 interface AchievementItemProps {
   achievement: Achievement;
@@ -12,6 +13,22 @@ interface AchievementItemProps {
 const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
   const { achievement } = props;
   const classes = useStyles();
+  const [imageSrc, setImageSrc] = useState<string | null>(null); 
+
+  useEffect(() => {
+    const fetchAchievementImage = async () => {
+      try {
+        const response = await getAchievementImage(achievement._id);
+        const blobUrl = URL.createObjectURL(response); 
+        setImageSrc(blobUrl);
+      } catch (error) {
+        console.error(`Error fetching image for achievement ${achievement._id}:`, error);
+      }
+    };
+
+    fetchAchievementImage();
+  }, [achievement._id]);
+
 
   const progresses = achievement.requirements.map(({ value, count }) => (
     <div className={classes.progress}>
@@ -36,8 +53,8 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
       <section className={classes.rewardSection}>
         <img
           className={classes.rewardIcon}
-          src="/images/achievement1.png"
-          alt="tome"
+          src={imageSrc || "//images/achievement1.png"}
+          alt={achievement.title}
         />
         <Typography
           variant="caption"
