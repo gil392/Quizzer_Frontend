@@ -121,7 +121,7 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
                           attemptId: currentAttempt._id,
                         })
                       }
-                      disabled={!!currentAttempt?.results[index]?.correctAnswer}
+                      disabled={isQuestionLocked}
                     >
                       <ArrowForwardIcon />
                     </IconButton>
