@@ -30,6 +30,14 @@ import { DEFAULT_SORT_OPTION, SORT_OPTIONS } from "./components/constants";
 import { sortLessons } from "./components/utils";
 import useStyles from "./LessonsPage.styles";
 
+type sortFieldType =
+  | "_id"
+  | "summary"
+  | "title"
+  | "videoUrl"
+  | "relatedLessonGroupId"
+  | "isFavorite";
+
 const LessonsPage: React.FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -125,15 +133,7 @@ const LessonsPage: React.FC = () => {
                 value={sortByField}
                 className={classes.sortOption}
                 onChange={({ target }) => {
-                  setSortByField(
-                    target.value as
-                      | "_id"
-                      | "summary"
-                      | "title"
-                      | "videoUrl"
-                      | "relatedLessonGroupId"
-                      | "isFavorite"
-                  );
+                  setSortByField(target.value as sortFieldType);
                 }}
               >
                 {SORT_OPTIONS.map((option) => (

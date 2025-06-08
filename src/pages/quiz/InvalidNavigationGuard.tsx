@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Button, Typography, Paper } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import useStyles from "./Quiz.styles";
+import useStyles from "./InvalidNavigationGuard.styles";
 
 interface QuizInvalidGuardProps {
   missingData: string;
@@ -26,7 +26,7 @@ const InvalidNavigationGuard: React.FC<QuizInvalidGuardProps> = ({
       alignItems="center"
       minHeight="60vh"
     >
-      <Paper elevation={4} sx={{ p: 4, maxWidth: 500, width: "100%" }}>
+      <Paper elevation={4} className={classes.paper}>
         <Typography
           variant="h5"
           color="error"
@@ -40,7 +40,7 @@ const InvalidNavigationGuard: React.FC<QuizInvalidGuardProps> = ({
           variant="body1"
           color="textSecondary"
           align="center"
-          sx={{ mb: 3 }}
+          className={classes.margin}
         >
           <b>{missingData}</b> is missing.
           <br />

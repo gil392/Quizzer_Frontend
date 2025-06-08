@@ -59,19 +59,18 @@ type LocationProps =
 const QuizPage: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
-  const locationState = location.state as
-    | (LocationProps & { lessonData: LessonData })
-    | undefined;
+  const locationState =
+    (location.state as LocationProps & { lessonData: LessonData }) || undefined;
 
   const [attemptId, setAttemptId] = useState<string | undefined>(
-    locationState?.viewAttempt?._id || locationState?.attemptToContinue?._id
+    locationState?.viewAttempt?._id ?? locationState?.attemptToContinue?._id
   );
   const navigate = useNavigate();
   const [isLocked, setIsLocked] = useState(!!locationState?.viewAttempt);
 
   const [quizId, setQuizId] = useState<string | undefined>(
-    locationState?.quizId ||
-      (locationState?.viewAttempt || locationState?.attemptToContinue)?.quizId
+    locationState?.quizId ??
+      (locationState?.viewAttempt ?? locationState?.attemptToContinue)?.quizId
   );
   const quizData = useSelector((state: RootState) =>
     quizId ? state.quizzes.quizzes.find((q) => q._id === quizId) : null
@@ -131,7 +130,7 @@ const QuizPage: React.FC = () => {
   const userQuizSettings = getDefaultQuizSettings(loggedUser?.settings);
 
   const [quizSettings, setQuizSettings] = useState(
-    locationState?.quizSettings || quizData?.settings
+    locationState?.quizSettings ?? quizData?.settings
   );
 
   const isOnSelectAnswerMode = useMemo(
@@ -149,7 +148,7 @@ const QuizPage: React.FC = () => {
       const data = await dispatch(
         generateQuizAsync({
           lessonId: locationState.lessonData._id,
-          settings: locationState.quizSettings || quizData?.settings,
+          settings: locationState.quizSettings ?? quizData?.settings,
         })
       ).unwrap();
       setQuizId(data._id);
