@@ -3,7 +3,6 @@ export type QuestionsOrder = "chronological" | "random";
 
 export type QuizSettings = {
   feedbackType: FeedbackType;
-  isRandomOrder: boolean;
   maxQuestionCount: number;
   solvingTimeMs: number;
   questionsOrder: QuestionsOrder;
