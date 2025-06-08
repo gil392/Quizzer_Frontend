@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { QuizSettings, QuizAttempt } from "../../api/quiz/types";
 import useStyles from "./Quiz.styles";
@@ -7,7 +7,6 @@ import { Box, Button, Skeleton, Typography } from "@mui/material";
 import { toastWarning } from "../../utils/utils";
 import {
   createQuizAttemptAsync,
-  fetchQuizAttempts,
   updateAttemptWithAnswersAsync,
 } from "../../store/attemptReducer";
 import { fetchQuizzes, generateQuizAsync } from "../../store/quizReducer";
@@ -20,7 +19,8 @@ import { selectAttemptSelector } from "../../store/selectors/attemptSelector";
 import { areAllQuestionsSubmitted } from "./Utils";
 import { useUpdateEffect } from "../../hooks/useUpdateEffect";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import InvalidNavigationGuard from "./InvalidNavigationGuard";
+import LessonConfig from "../../components/lessonConfig/LessonConfig";
+import { getDefaultQuizSettings } from "../../components/lessonConfig/components/utils";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
@@ -131,7 +131,7 @@ const QuizPage: React.FC = () => {
   const userQuizSettings = getDefaultQuizSettings(loggedUser?.settings);
 
   const [quizSettings, setQuizSettings] = useState(
-    location.state?.quizSettings
+    locationState?.quizSettings || quizData?.settings
   );
 
   const isOnSelectAnswerMode = useMemo(
@@ -256,9 +256,9 @@ const QuizPage: React.FC = () => {
     : false;
 
   return (
-    <>
+    <Box className={classes.container}>
       {showQuizSettings ? (
-        <Box className={classes.container}>
+        <>
           <Typography
             variant="h4"
             gutterBottom
@@ -279,275 +279,132 @@ const QuizPage: React.FC = () => {
           >
             Generate New Quiz
           </Button>
-        </Box>
+        </>
       ) : (
-        <Box className={classes.container}>
-          <Box className={classes.quizBox}>
-            {loading ? (
-              <Box>
-                <Skeleton variant="text" width="80%" height={40} />
-                <Skeleton variant="rectangular" width="100%" height={200} />
-                <Skeleton variant="rectangular" width="100%" height={50} />
-                <Skeleton variant="text" width="80%" height={40} />
-                <Skeleton variant="rectangular" width="100%" height={200} />
-                <Skeleton variant="rectangular" width="100%" height={50} />
-              </Box>
-            ) : quizData ? (
-              <Box>
-                <Box id={QUIZ_CONTENT_PDF_ID}>
-                  {quizResult && areAllQuestionsSubmitted() && (
-                    <Box
-                      className={classes.resultBox}
-                      style={{
-                        backgroundColor:
-                          quizResult.score >= 60 ? "#e8f5e9" : "#ffebee",
-                      }}
+        <Box className={classes.quizBox}>
+          {currentAttempt && quizData && (
+            <QuizTimer
+              quizId={quizId}
+              isLocked={isLocked}
+              canHaveTimer={!loading}
+              timerCancelled={
+                !!currentAttempt &&
+                areAllQuestionsSubmitted(quizData, currentAttempt)
+              }
+              initialTime={
+                currentAttempt
+                  ? currentAttempt.expiryTime - new Date().getTime()
+                  : undefined
+              }
+              onTimeUp={() => {
+                setIsLocked(true);
+                handleQuizSubmission(selectedAnswersRef.current);
+              }}
+            />
+          )}
+          {loading ? (
+            <Box>
+              <Skeleton variant="text" width="80%" height={40} />
+              <Skeleton variant="rectangular" width="100%" height={200} />
+              <Skeleton variant="rectangular" width="100%" height={50} />
+              <Skeleton variant="text" width="80%" height={40} />
+              <Skeleton variant="rectangular" width="100%" height={200} />
+              <Skeleton variant="rectangular" width="100%" height={50} />
+            </Box>
+          ) : quizData ? (
+            <Box>
+              <Box id={QUIZ_CONTENT_PDF_ID}>
+                {currentAttempt && isLocked && (
+                  <Box
+                    className={classes.resultBox}
+                    style={{
+                      backgroundColor:
+                        currentAttempt.score >= 60 ? "#e8f5e9" : "#ffebee",
+                    }}
+                  >
+                    <Typography
+                      variant="h5"
+                      color={currentAttempt.score >= 60 ? "green" : "red"}
                     >
-                      <Typography
-                        variant="h5"
-                        color={quizResult.score >= 60 ? "green" : "red"}
-                      >
-                        Your Score: {quizResult.score} / 100
-                      </Typography>
-                    </Box>
-                  )}
-                  <Box>
-                    <Typography variant="h5" component="div" gutterBottom>
-                      {lessonData?.lessonTitle}
+                      Your Score: {currentAttempt.score} / 100
                     </Typography>
-                    {quizData.questions.map((question, index) => (
-                      <Box
-                        key={index}
-                        style={{ pageBreakInside: "avoid" }}
-                        className={classes.questionBox}
-                      >
-                        <Card className={classes.card}>
-                          <Typography variant="h6" gutterBottom>
-                            {index + 1}. {question.text}
-                          </Typography>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: 1,
-                            }}
-                          >
-                            {question.answers.map((option) => (
-                              <FormControlLabel
-                                key={option}
-                                control={
-                                  <Checkbox
-                                    checked={selectedAnswers[index] === option}
-                                    onChange={() =>
-                                      handleOptionChange(index, option)
-                                    }
-                                    disabled={
-                                      !!quizResult && areAllQuestionsSubmitted()
-                                    }
-                                    sx={{
-                                      "& .MuiSvgIcon-root": {
-                                        border: `2px solid ${getAnswerOutlineColor(
-                                          question._id,
-                                          option
-                                        )}`,
-                                        borderRadius: "4px",
-                                      },
-                                    }}
-                                  />
-                                }
-                                label={option}
-                              />
-                            ))}
-                          </Box>
-                          <Box display="flex" justifyContent="flex-end">
-                            {isOnSelectAnswerMode && selectedAnswers[index] && (
-                              <IconButton
-                                color="primary"
-                                onClick={() => handleSubmitQuestionClick(index)}
-                                disabled={
-                                  !!quizResult?.results[index]?.correctAnswer
-                                }
-                              >
-                                <ArrowForwardIcon />
-                              </IconButton>
-                            )}
-                          </Box>
-                        </Card>
-                      </Box>
-                    ))}
                   </Box>
+                )}
+                <Box>
+                  <Typography variant="h5" component="div" gutterBottom>
+                    {locationState?.lessonData.title}
+                  </Typography>
+                  <QuizQuestionList
+                    quizData={quizData}
+                    selectedAnswers={selectedAnswers}
+                    isLocked={isLocked}
+                    setIsLocked={setIsLocked}
+                    isOnSelectAnswerMode={isOnSelectAnswerMode}
+                    currentAttempt={currentAttempt}
+                    handleOptionChange={handleOptionChange}
+                  />
                 </Box>
-                <Box className={classes.buttonContainer}>
-                  {quizResult && areAllQuestionsSubmitted() ? (
-                    <Button variant="contained" color="primary" onClick={retry}>
-                      Retry
-                    </Button>
-                  ) : (
-                    !isOnSelectAnswerMode && (
+              </Box>
+              <Box className={classes.buttonContainer}>
+                {currentAttempt && isLocked ? (
+                  <Button variant="contained" color="primary" onClick={retry}>
+                    Retry
+                  </Button>
+                ) : (
+                  !isLocked &&
+                  currentAttempt && (
+                    <>
+                      {!areAllQuestionsSubmitted(quizData, currentAttempt) && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={continueLater}
+                        >
+                          Continue later
+                        </Button>
+                      )}
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleQuizSubmission}
+                        onClick={() => handleQuizSubmission()} // Can't shorten it or it'd get the click event as the first parameter
                         disabled={!allQuestionsAnswered}
                       >
                         Submit
                       </Button>
-                    )
-                  )}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      setQuizSettings(userQuizSettings);
-                      setShowQuizSettings(true);
-                    }}
-                  >
-                    Generate New Quiz
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() =>
-                      exportToPDF(
-                        QUIZ_CONTENT_PDF_ID,
-                        "Quiz_" + quizData.title + ".pdf"
-                      )
-                    }
-                  >
-                    Export to PDF
-                  </Button>
-                </Box>
-              </Box>
-            ) : (
-              <Typography variant="h6" color="error">
-                Failed to load quiz data.
-              </Typography>
-            )}
-          </Box>
-        </Box>
-      )}
-    </>
-    <Box className={classes.container}>
-      <Box className={classes.quizBox}>
-        {currentAttempt && quizData && (
-          <QuizTimer
-            quizId={quizId}
-            isLocked={isLocked}
-            canHaveTimer={!loading}
-            timerCancelled={
-              !!currentAttempt &&
-              areAllQuestionsSubmitted(quizData, currentAttempt)
-            }
-            initialTime={
-              currentAttempt
-                ? currentAttempt.expiryTime - new Date().getTime()
-                : undefined
-            }
-            onTimeUp={() => {
-              setIsLocked(true);
-              handleQuizSubmission(selectedAnswersRef.current);
-            }}
-          />
-        )}
-        {loading ? (
-          <Box>
-            <Skeleton variant="text" width="80%" height={40} />
-            <Skeleton variant="rectangular" width="100%" height={200} />
-            <Skeleton variant="rectangular" width="100%" height={50} />
-            <Skeleton variant="text" width="80%" height={40} />
-            <Skeleton variant="rectangular" width="100%" height={200} />
-            <Skeleton variant="rectangular" width="100%" height={50} />
-          </Box>
-        ) : quizData ? (
-          <Box>
-            <Box id={QUIZ_CONTENT_PDF_ID}>
-              {currentAttempt && isLocked && (
-                <Box
-                  className={classes.resultBox}
-                  style={{
-                    backgroundColor:
-                      currentAttempt.score >= 60 ? "#e8f5e9" : "#ffebee",
+                    </>
+                  )
+                )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setQuizSettings(userQuizSettings);
+                    setShowQuizSettings(true);
                   }}
                 >
-                  <Typography
-                    variant="h5"
-                    color={currentAttempt.score >= 60 ? "green" : "red"}
-                  >
-                    Your Score: {currentAttempt.score} / 100
-                  </Typography>
-                </Box>
-              )}
-              <Box>
-                <Typography variant="h5" component="div" gutterBottom>
-                  {locationState?.lessonData.title}
-                </Typography>
-                <QuizQuestionList
-                  quizData={quizData}
-                  selectedAnswers={selectedAnswers}
-                  isLocked={isLocked}
-                  setIsLocked={setIsLocked}
-                  isOnSelectAnswerMode={isOnSelectAnswerMode}
-                  currentAttempt={currentAttempt}
-                  handleOptionChange={handleOptionChange}
-                />
+                  Generate New Quiz
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() =>
+                    exportToPDF(
+                      QUIZ_CONTENT_PDF_ID,
+                      "Quiz_" + quizData.title + ".pdf"
+                    )
+                  }
+                >
+                  Export to PDF
+                </Button>
               </Box>
             </Box>
-            <Box className={classes.buttonContainer}>
-              {currentAttempt && isLocked ? (
-                <Button variant="contained" color="primary" onClick={retry}>
-                  Retry
-                </Button>
-              ) : (
-                !isLocked &&
-                currentAttempt && (
-                  <>
-                    {!areAllQuestionsSubmitted(quizData, currentAttempt) && (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={continueLater}
-                      >
-                        Continue later
-                      </Button>
-                    )}
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={() => handleQuizSubmission()} // Can't shorten it or it'd get the click event as the first parameter
-                      disabled={!allQuestionsAnswered}
-                    >
-                      Submit
-                    </Button>
-                  </>
-                )
-              )}
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={generateNewQuiz}
-              >
-                Generate New Quiz
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() =>
-                  exportToPDF(
-                    QUIZ_CONTENT_PDF_ID,
-                    "Quiz_" + quizData.title + ".pdf"
-                  )
-                }
-              >
-                Export to PDF
-              </Button>
-            </Box>
-          </Box>
-        ) : (
-          <Typography variant="h6" color="error">
-            Failed to load quiz data.
-          </Typography>
-        )}
-      </Box>
+          ) : (
+            <Typography variant="h6" color="error">
+              Failed to load quiz data.
+            </Typography>
+          )}
+        </Box>
+      )}
     </Box>
   );
 };

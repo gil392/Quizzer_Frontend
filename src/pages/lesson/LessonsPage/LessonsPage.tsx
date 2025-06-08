@@ -125,7 +125,15 @@ const LessonsPage: React.FC = () => {
                 value={sortByField}
                 className={classes.sortOption}
                 onChange={({ target }) => {
-                  setSortByField(target.value);
+                  setSortByField(
+                    target.value as
+                      | "_id"
+                      | "summary"
+                      | "title"
+                      | "videoUrl"
+                      | "relatedLessonGroupId"
+                      | "isFavorite"
+                  );
                 }}
               >
                 {SORT_OPTIONS.map((option) => (
