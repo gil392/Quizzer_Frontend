@@ -10,7 +10,7 @@ import LessonOverviewPage from "../pages/lesson/LessonOverview/LessonOverviewPag
 import { PAGES_ROUTES } from "./routes.const";
 import SettingsPage from "../pages/settings/SettingsPage";
 import UserProfilePage from "../pages/userProfile/UserProfilePage";
-import NotificationPage from "../pages/notifications/NotificationPage";
+import NotificationPage from "../pages/notifications/NotificationPage/NotificationPage";
 
 export const createPagesRoutes = (
   setAccessToken: SetAccessTokenFunction

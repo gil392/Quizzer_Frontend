@@ -22,7 +22,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
     try {
       const { data } = await getNotifications();
       setUnreadCount(
-        data.filter((notificaion: Notification) => !notificaion.isRead).length
+        data.filter((notificaion: Notification) => !notificaion.read).length
       );
     } catch {
       setUnreadCount(0);

@@ -1,7 +1,7 @@
 import { ZodError } from 'zod';
 import { toast } from 'sonner';
 
-export const extractZodErrorMessagesByFields = <T extends {}>({
+export const extractZodErrorMessagesByFields = <T extends object>({
   errors,
 }: ZodError<T>) => {
   const fieldErrors: Partial<Record<keyof T, string>> = {};
@@ -53,6 +53,35 @@ export const formatDuration = (isoDuration: string | undefined) => {
       .padStart(2, "0")}`;
   }
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+}
+
+export function formatNotificationTime(dateString: string): string {
+  const now = new Date();
+  const date = new Date(dateString);
+  const diffMs = now.getTime() - date.getTime();
+  const diffSec = Math.floor(diffMs / 1000);
+  const diffMin = Math.floor(diffSec / 60);
+  const diffHr = Math.floor(diffMin / 60);
+  const diffDay = Math.floor(diffHr / 24);
+
+  if (diffSec < 60) {
+    return "just now";
+  } else if (diffMin < 60) {
+    return `${diffMin} minute${diffMin === 1 ? "" : "s"} ago`;
+  } else if (diffHr < 24) {
+    return `${diffHr} hour${diffHr === 1 ? "" : "s"} ago`;
+  } else if (diffDay < 2) {
+    return "1 day ago";
+  } else {
+    // Show as date + time (e.g., 2024-06-09 14:30)
+    return date.toLocaleString(undefined, {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  }
 }
 
 export const toastSuccess = (message: string) => {
