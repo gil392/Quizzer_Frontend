@@ -111,6 +111,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
               updateQuizTitle={(newTitle: string) => {
                 handleUpdateQuiz({ ...quiz, title: newTitle });
               }}
+              lesson={lesson}
             />
           ))
         ) : (

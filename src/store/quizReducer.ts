@@ -7,7 +7,6 @@ import {
 } from "../api/quiz/api";
 import { QuizData, QuizSettings } from "../api/quiz/types";
 
-// Async thunks
 export const fetchQuizzes = createAsyncThunk(
   "quiz/fetchQuizzes",
   async (lessonId: string) => {

@@ -1,54 +1,110 @@
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import {
-  Box,
-  Button,
-  Card,
-  Checkbox,
-  FormControlLabel,
-  IconButton,
-  Skeleton,
-  Typography,
-} from "@mui/material";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
-import {
-  getLessonById,
-  getQuizById,
-  submitQuestionAnswer,
-} from "../../api/quiz/api";
-import {
-  QuizAttempt,
-  QuizData,
-  QuizResult,
-  QuizSettings,
-} from "../../api/quiz/types";
-import LessonConfig from "../../components/lessonConfig/LessonConfig";
-import { createQuizAttemptAsync } from "../../store/attemptReducer";
-import { generateQuizAsync } from "../../store/quizReducer";
-import { AppDispatch, RootState } from "../../store/store";
-import { exportToPDF } from "../../utils/pdfUtils";
-import { toastWarning } from "../../utils/utils";
+import React, { useEffect, useState, useRef, useMemo } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { QuizSettings, QuizAttempt } from "../../api/quiz/types";
 import useStyles from "./Quiz.styles";
+import { exportToPDF } from "../../utils/pdfUtils";
+import { Box, Button, Skeleton, Typography } from "@mui/material";
+import { toastWarning } from "../../utils/utils";
+import {
+  createQuizAttemptAsync,
+  updateAttemptWithAnswersAsync,
+} from "../../store/attemptReducer";
+import { fetchQuizzes, generateQuizAsync } from "../../store/quizReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import QuizTimer from "./QuizTimer";
+import { LessonData } from "../../api/lesson/types";
+import QuizQuestionList from "./QuizQuestionList";
+import { selectAttemptSelector } from "../../store/selectors/attemptSelector";
+import { areAllQuestionsSubmitted } from "./Utils";
+import { PAGES_ROUTES } from "../../routes/routes.const";
+import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { getDefaultQuizSettings } from "../../components/lessonConfig/components/utils";
+import { isNotNil } from "ramda";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
+
+type LocationProps =
+  | {
+      quizSettings: QuizSettings;
+      quizId?: undefined;
+      viewAttempt?: undefined;
+      attemptToContinue?: undefined;
+    }
+  | {
+      viewAttempt: QuizAttempt;
+      quizSettings?: undefined;
+      quizId?: undefined;
+      attemptToContinue?: undefined;
+    }
+  | {
+      attemptToContinue: QuizAttempt;
+      quizSettings?: undefined;
+      quizId?: undefined;
+      viewAttempt?: undefined;
+    };
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
   const location = useLocation();
+  const locationState =
+    (location.state as LocationProps & { lessonData: LessonData }) || undefined;
 
-  const lessonData = location.state?.lessonData;
-  const quizId = location.state?.quizId;
-  const attempt: QuizAttempt = location.state?.attempt;
+  const [attemptId, setAttemptId] = useState<string | undefined>(
+    locationState?.viewAttempt?._id ?? locationState?.attemptToContinue?._id
+  );
+  const navigate = useNavigate();
+  const [isLocked, setIsLocked] = useState(!!locationState?.viewAttempt);
 
-  const [quizData, setQuizData] = useState<QuizData | null>(null);
-  const [lessonDataState, setLessonDataState] = useState(lessonData || null);
-  const [loading, setLoading] = useState(true);
+  const [quizId, setQuizId] = useState<string | undefined>(
+    locationState?.quizId ??
+      (locationState?.viewAttempt ?? locationState?.attemptToContinue)?.quizId
+  );
+  const quizData = useSelector((state: RootState) =>
+    quizId ? state.quizzes.quizzes.find((q) => q._id === quizId) : null
+  );
+
+  useEffect(() => {
+    const syncRedux = async () => {
+      if (quizId && !quizData && locationState) {
+        await dispatch(fetchQuizzes(locationState.lessonData._id));
+      }
+    };
+
+    syncRedux();
+  }, []);
+
+  const [loading, setLoading] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<{
-    [key: number]: string | null;
+    [questionId: string]: string | null;
   }>({});
-  const [quizResult, setQuizResult] = useState<QuizResult | null>(null);
+
+  const currentAttempt: QuizAttempt | undefined = useSelector(
+    (state: RootState) => selectAttemptSelector(state, quizId, attemptId)
+  );
+
+  useEffect(() => {
+    const createEmptyAttemptIfNeeded = async () => {
+      if (!currentAttempt && quizId) {
+        const emptyAttempt = await dispatch(
+          createQuizAttemptAsync({
+            quizId: quizId,
+            questions: [],
+          })
+        ).unwrap();
+        setAttemptId(emptyAttempt._id);
+      }
+    };
+
+    createEmptyAttemptIfNeeded();
+  }, [quizId, currentAttempt !== undefined]);
+
+  const selectedAnswersRef = useRef(selectedAnswers);
+
+  useEffect(() => {
+    selectedAnswersRef.current = selectedAnswers;
+  }, [selectedAnswers]);
+
   const dispatch = useDispatch<AppDispatch>();
 
   const [showQuizSettings, setShowQuizSettings] = useState(false);
@@ -58,7 +114,7 @@ const QuizPage: React.FC = () => {
   const userQuizSettings = getDefaultQuizSettings(loggedUser?.settings);
 
   const [quizSettings, setQuizSettings] = useState(
-    location.state?.quizSettings
+    locationState?.quizSettings ?? quizData?.settings
   );
 
   const isOnSelectAnswerMode = useMemo(
@@ -66,133 +122,94 @@ const QuizPage: React.FC = () => {
     [quizSettings]
   );
 
-  const fetchQuiz = useCallback(async (id: string) => {
-    setLoading(true);
-
-    try {
-      const { data } = await getQuizById(id);
-      setQuizData(data);
-
-      setQuizResult({
-        quizId: data._id,
-        results: data.questions.map((question) => ({
-          questionId: question._id,
-          selectedAnswer: null,
-          correctAnswer: null,
-          isCorrect: null,
-        })),
-        score: 0,
-      });
-    } catch (error) {
-      console.error("Error fetching quiz:", error);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const generateNewQuiz = useCallback(async () => {
+  const generateNewQuiz = async () => {
     setShowQuizSettings(false);
-    if (!lessonDataState?._id) {
-      if (quizData?.lessonId) {
-        try {
-          const { data } = await getLessonById(quizData.lessonId);
-          setLessonDataState(data);
-        } catch (error) {
-          console.error("Error fetching lesson data:", error);
-          alert("Failed to fetch lesson data. Cannot generate a new quiz.");
-          return;
-        }
-      } else {
-        console.error("Lesson data is not available.");
-        alert("Lesson data is missing. Cannot generate a new quiz.");
-        return;
-      }
-    }
-
     setLoading(true);
-    setQuizResult(null);
+
     setSelectedAnswers({});
+    if (!locationState) return;
 
     try {
       const data = await dispatch(
         generateQuizAsync({
-          lessonId: lessonDataState?._id || quizData?.lessonId,
-          settings: quizSettings || quizData?.settings,
+          lessonId: locationState.lessonData._id,
+          settings: locationState.quizSettings ?? quizData?.settings,
         })
       ).unwrap();
-      setQuizData(data);
+      setQuizId(data._id);
+      setIsLocked(false);
     } catch (error) {
       console.error("Error generating quiz:", error);
       alert("Failed to generate a new quiz. Please try again.");
     } finally {
       setLoading(false);
     }
-  }, [lessonDataState?._id, quizData?.lessonId, quizSettings]);
+  };
 
   useEffect(() => {
-    if (attempt) {
-      setQuizResult(attempt);
-
-      if (attempt.quizId) {
-        fetchQuiz(attempt.quizId);
-      }
-
-      if (!lessonDataState && quizData?.lessonId) {
-        getLessonById(quizData.lessonId)
-          .then(({ data }) => setLessonDataState(data))
-          .catch((error) =>
-            console.error("Error fetching lesson data from attempt:", error)
-          );
-      }
-
-      const preselectedAnswers: { [key: number]: string | null } = {};
-      attempt.results.forEach((result, index) => {
-        preselectedAnswers[index] = result.selectedAnswer || null;
+    if (currentAttempt) {
+      const preselectedAnswers: { [key: string]: string | null } = {};
+      currentAttempt.results.forEach((result) => {
+        preselectedAnswers[result.questionId] = result.selectedAnswer || null;
       });
       setSelectedAnswers(preselectedAnswers);
     }
-  }, [attempt]);
+  }, [currentAttempt]);
 
   useEffect(() => {
-    if (quizId) {
-      fetchQuiz(quizId);
-    }
-  }, [quizId]);
-
-  useEffect(() => {
-    if (!quizData && lessonDataState && quizSettings) {
+    if (!quizId) {
       generateNewQuiz();
     }
-  }, [lessonDataState, quizSettings, generateNewQuiz]);
+  }, []);
 
-  const handleOptionChange = (questionIndex: number, option: string) => {
+  const handleOptionChange = (questionId: string, option: string) => {
+    if (isLocked) return;
     setSelectedAnswers((prev) => ({
       ...prev,
-      [questionIndex]: option,
+      [questionId]: option,
     }));
   };
 
-  const handleQuizSubmission = async () => {
+  const continueLater = async () => {
+    if (!isOnSelectAnswerMode) {
+      await handleQuizSubmission(undefined, true);
+    }
+    navigate(PAGES_ROUTES.LESSON);
+  };
+  const handleQuizSubmission = async (
+    answersOverride?: {
+      [key: number]: string | null;
+    },
+    isNavigatingAfter?: boolean
+  ) => {
     if (!quizData) {
       toastWarning("Quiz data is not available.");
       return;
     }
 
+    if (!attemptId) {
+      console.warn("Attempt id is missing when trying to submit a quiz");
+      toastWarning("Quiz data is not available.");
+      return;
+    }
+
+    const answersToUse = answersOverride ?? selectedAnswers;
+
     try {
       const submissionData = {
-        quizId: quizData._id,
-        questions: Object.entries(selectedAnswers)
+        attemptId: attemptId,
+        questions: Object.entries(answersToUse)
           .filter(([_, answer]) => answer !== null)
-          .map(([questionIndex, answer]) => ({
-            questionId: quizData.questions[parseInt(questionIndex)]._id,
-            selectedAnswer: answer as string,
+          .map(([questionId, answer]) => ({
+            questionId,
+            selectedAnswer: answer!,
           })),
       };
 
-      const result = await dispatch(
-        createQuizAttemptAsync(submissionData)
-      ).unwrap();
-      setQuizResult(result);
+      await dispatch(updateAttemptWithAnswersAsync(submissionData)).unwrap();
+      if (!isNavigatingAfter) {
+        setIsLocked(true);
+      }
     } catch (error) {
       console.error("Error submitting quiz:", error);
       toastWarning("Failed to submit quiz. Please try again.");
@@ -206,117 +223,22 @@ const QuizPage: React.FC = () => {
       return;
     }
 
-    setQuizResult({
-      quizId: quizData._id,
-      results: quizData.questions.map((question) => ({
-        questionId: question._id,
-        selectedAnswer: null,
-        correctAnswer: null,
-        isCorrect: null,
-      })),
-      score: 0,
-    });
+    setAttemptId(undefined);
+    setIsLocked(false);
 
     setSelectedAnswers({});
   };
 
   const allQuestionsAnswered = quizData
-    ? quizData.questions.every(
-        (_, index) =>
-          selectedAnswers[index] !== undefined &&
-          selectedAnswers[index] !== null
+    ? quizData.questions.every((question) =>
+        isNotNil(selectedAnswers[question._id])
       )
     : false;
 
-  const getAnswerOutlineColor = (
-    questionId: string,
-    option: string
-  ): string => {
-    if (!quizResult) return "default";
-
-    const questionResult = quizResult.results.find(
-      (result) => result.questionId === questionId
-    );
-
-    if (!questionResult) return "default";
-    if (questionResult.correctAnswer === option) return "green";
-    if (
-      questionResult.selectedAnswer === option &&
-      questionResult.correctAnswer !== option
-    )
-      return "red";
-
-    return "default";
-  };
-
-  const areAllQuestionsSubmitted = () => {
-    return quizResult?.results.every((result) => result.correctAnswer !== null);
-  };
-
-  const handleSubmitQuestionClick = async (questionIndex: number) => {
-    if (!quizData) {
-      console.error("Quiz data is not available.");
-      return;
-    }
-
-    const question = quizData.questions[questionIndex];
-    const selectedAnswer = selectedAnswers[questionIndex];
-
-    if (!selectedAnswer) {
-      console.error("Please select an answer before submitting.");
-      toastWarning("Please select an answer before submitting.");
-      return;
-    }
-
-    try {
-      const { data: questionResult } = await submitQuestionAnswer(
-        question._id,
-        selectedAnswer
-      );
-
-      setQuizResult((prev) => {
-        if (!prev) {
-          console.error("Quiz result state is not initialized.");
-          return null;
-        }
-
-        const updatedResults = [...prev.results];
-
-        updatedResults[questionIndex] = {
-          questionId: question._id,
-          selectedAnswer,
-          correctAnswer: questionResult.correctAnswer,
-          isCorrect: questionResult.isCorrect,
-        };
-
-        return {
-          ...prev,
-          results: updatedResults,
-        };
-      });
-
-      const allSubmitted = quizData.questions.every((_, resultIndex) => {
-        if (resultIndex === questionIndex) {
-          return true;
-        }
-        const result = quizResult?.results[resultIndex];
-        return result?.correctAnswer !== null;
-      });
-
-      if (allSubmitted) {
-        console.log("All other questions submitted. Handling quiz submission.");
-        await handleQuizSubmission();
-      }
-    } catch (error) {
-      console.error("Error submitting question:", error);
-      toastWarning("Failed to submit question. Please try again.");
-    }
-  };
-
   return (
-    <>
+    <Box className={classes.container}>
       {showQuizSettings ? (
-        <Box className={classes.container}>
+        <>
           <Typography
             variant="h4"
             gutterBottom
@@ -337,154 +259,133 @@ const QuizPage: React.FC = () => {
           >
             Generate New Quiz
           </Button>
-        </Box>
+        </>
       ) : (
-        <Box className={classes.container}>
-          <Box className={classes.quizBox}>
-            {loading ? (
-              <Box>
-                <Skeleton variant="text" width="80%" height={40} />
-                <Skeleton variant="rectangular" width="100%" height={200} />
-                <Skeleton variant="rectangular" width="100%" height={50} />
-                <Skeleton variant="text" width="80%" height={40} />
-                <Skeleton variant="rectangular" width="100%" height={200} />
-                <Skeleton variant="rectangular" width="100%" height={50} />
-              </Box>
-            ) : quizData ? (
-              <Box>
-                <Box id={QUIZ_CONTENT_PDF_ID}>
-                  {quizResult && areAllQuestionsSubmitted() && (
-                    <Box
-                      className={classes.resultBox}
-                      style={{
-                        backgroundColor:
-                          quizResult.score >= 60 ? "#e8f5e9" : "#ffebee",
-                      }}
+        <Box className={classes.quizBox}>
+          {currentAttempt && quizData && (
+            <QuizTimer
+              quizId={quizId}
+              isLocked={isLocked}
+              canHaveTimer={!loading}
+              timerCancelled={
+                !!currentAttempt &&
+                areAllQuestionsSubmitted(quizData, currentAttempt)
+              }
+              initialTime={
+                currentAttempt
+                  ? currentAttempt.expiryTime - new Date().getTime()
+                  : undefined
+              }
+              onTimeUp={() => {
+                setIsLocked(true);
+                handleQuizSubmission(selectedAnswersRef.current);
+              }}
+            />
+          )}
+          {loading ? (
+            <Box>
+              <Skeleton variant="text" width="80%" height={40} />
+              <Skeleton variant="rectangular" width="100%" height={200} />
+              <Skeleton variant="rectangular" width="100%" height={50} />
+              <Skeleton variant="text" width="80%" height={40} />
+              <Skeleton variant="rectangular" width="100%" height={200} />
+              <Skeleton variant="rectangular" width="100%" height={50} />
+            </Box>
+          ) : quizData ? (
+            <Box>
+              <Box id={QUIZ_CONTENT_PDF_ID}>
+                {currentAttempt && isLocked && (
+                  <Box
+                    className={classes.resultBox}
+                    style={{
+                      backgroundColor:
+                        currentAttempt.score >= 60 ? "#e8f5e9" : "#ffebee",
+                    }}
+                  >
+                    <Typography
+                      variant="h5"
+                      color={currentAttempt.score >= 60 ? "green" : "red"}
                     >
-                      <Typography
-                        variant="h5"
-                        color={quizResult.score >= 60 ? "green" : "red"}
-                      >
-                        Your Score: {quizResult.score} / 100
-                      </Typography>
-                    </Box>
-                  )}
-                  <Box>
-                    <Typography variant="h5" component="div" gutterBottom>
-                      {lessonData?.lessonTitle}
+                      Your Score: {currentAttempt.score} / 100
                     </Typography>
-                    {quizData.questions.map((question, index) => (
-                      <Box
-                        key={index}
-                        style={{ pageBreakInside: "avoid" }}
-                        className={classes.questionBox}
-                      >
-                        <Card className={classes.card}>
-                          <Typography variant="h6" gutterBottom>
-                            {index + 1}. {question.text}
-                          </Typography>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: 1,
-                            }}
-                          >
-                            {question.answers.map((option) => (
-                              <FormControlLabel
-                                key={option}
-                                control={
-                                  <Checkbox
-                                    checked={selectedAnswers[index] === option}
-                                    onChange={() =>
-                                      handleOptionChange(index, option)
-                                    }
-                                    disabled={
-                                      !!quizResult && areAllQuestionsSubmitted()
-                                    }
-                                    sx={{
-                                      "& .MuiSvgIcon-root": {
-                                        border: `2px solid ${getAnswerOutlineColor(
-                                          question._id,
-                                          option
-                                        )}`,
-                                        borderRadius: "4px",
-                                      },
-                                    }}
-                                  />
-                                }
-                                label={option}
-                              />
-                            ))}
-                          </Box>
-                          <Box display="flex" justifyContent="flex-end">
-                            {isOnSelectAnswerMode && selectedAnswers[index] && (
-                              <IconButton
-                                color="primary"
-                                onClick={() => handleSubmitQuestionClick(index)}
-                                disabled={
-                                  !!quizResult?.results[index]?.correctAnswer
-                                }
-                              >
-                                <ArrowForwardIcon />
-                              </IconButton>
-                            )}
-                          </Box>
-                        </Card>
-                      </Box>
-                    ))}
                   </Box>
+                )}
+                <Box>
+                  <Typography variant="h5" component="div" gutterBottom>
+                    {locationState?.lessonData.title}
+                  </Typography>
+                  <QuizQuestionList
+                    quizData={quizData}
+                    selectedAnswers={selectedAnswers}
+                    isLocked={isLocked}
+                    setIsLocked={setIsLocked}
+                    isOnSelectAnswerMode={isOnSelectAnswerMode}
+                    currentAttempt={currentAttempt}
+                    handleOptionChange={handleOptionChange}
+                  />
                 </Box>
-                <Box className={classes.buttonContainer}>
-                  {quizResult && areAllQuestionsSubmitted() ? (
-                    <Button variant="contained" color="primary" onClick={retry}>
-                      Retry
-                    </Button>
-                  ) : (
-                    !isOnSelectAnswerMode && (
+              </Box>
+              <Box className={classes.buttonContainer}>
+                {currentAttempt && isLocked ? (
+                  <Button variant="contained" color="primary" onClick={retry}>
+                    Retry
+                  </Button>
+                ) : (
+                  !isLocked &&
+                  currentAttempt && (
+                    <>
+                      {!areAllQuestionsSubmitted(quizData, currentAttempt) && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          onClick={continueLater}
+                        >
+                          Continue later
+                        </Button>
+                      )}
                       <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleQuizSubmission}
+                        onClick={() => handleQuizSubmission()} // Can't shorten it or it'd get the click event as the first parameter
                         disabled={!allQuestionsAnswered}
                       >
                         Submit
                       </Button>
+                    </>
+                  )
+                )}
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    setQuizSettings(userQuizSettings);
+                    setShowQuizSettings(true);
+                  }}
+                >
+                  Generate New Quiz
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() =>
+                    exportToPDF(
+                      QUIZ_CONTENT_PDF_ID,
+                      "Quiz_" + quizData.title + ".pdf"
                     )
-                  )}
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      setQuizSettings(userQuizSettings);
-                      setShowQuizSettings(true);
-                    }}
-                  >
-                    Generate New Quiz
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() =>
-                      exportToPDF(
-                        QUIZ_CONTENT_PDF_ID,
-                        "Quiz_" + quizData.title + ".pdf"
-                      )
-                    }
-                  >
-                    Export to PDF
-                  </Button>
-                </Box>
+                  }
+                >
+                  Export to PDF
+                </Button>
               </Box>
-            ) : (
-              <Typography variant="h6" color="error">
-                Failed to load quiz data.
-              </Typography>
-            )}
-          </Box>
+            </Box>
+          ) : (
+            <Typography variant="h6" color="error">
+              Failed to load quiz data.
+            </Typography>
+          )}
         </Box>
       )}
-    </>
+    </Box>
   );
 };
 
