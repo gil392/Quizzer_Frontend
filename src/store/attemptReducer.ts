@@ -1,8 +1,20 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { getQuizAttempts, createQuizAttempt, rateQuiz } from "../api/quiz/api";
-import { QuizAttempt, QuizAnswerSubmittion } from "../api/quiz/types";
+import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
+import {
+  getQuizAttempts,
+  createQuizAttempt,
+  rateQuiz,
+  addAnswerToQuizAttempt,
+  updateAttemptWithAnswers,
+} from "../api/quiz/api";
+import {
+  QuizAttempt,
+  QuizAnswerSubmittion,
+  QuizAnswer,
+  QuizAnswerUpdateSubmittion,
+} from "../api/quiz/types";
 import { deleteQuizAsync } from "./quizReducer";
 import { deleteLessonAsync } from "./lessonReducer";
+import { WritableDraft } from "immer";
 
 export const fetchQuizAttempts = createAsyncThunk(
   "attempt/fetchQuizAttempts",
@@ -16,6 +28,22 @@ export const createQuizAttemptAsync = createAsyncThunk(
   "attempt/createQuizAttempt",
   async (data: QuizAnswerSubmittion) => {
     const response = await createQuizAttempt(data);
+    return response.data;
+  }
+);
+
+export const updateAttemptWithAnswersAsync = createAsyncThunk(
+  "attempt/updateAttemptWithAnswers",
+  async (data: QuizAnswerUpdateSubmittion) => {
+    const response = await updateAttemptWithAnswers(data);
+    return response.data;
+  }
+);
+
+export const addAnswerToQuizAttemptAsync = createAsyncThunk(
+  "attempt/addAnswerToQuizAttempt",
+  async (data: QuizAnswer) => {
+    const response = await addAnswerToQuizAttempt(data);
     return response.data;
   }
 );
@@ -52,6 +80,8 @@ const attemptSlice = createSlice({
         }
         state.attemptsByQuiz[quizId].push(action.payload);
       })
+      .addCase(addAnswerToQuizAttemptAsync.fulfilled, updateAttempt)
+      .addCase(updateAttemptWithAnswersAsync.fulfilled, updateAttempt)
       .addCase(deleteQuizAsync.fulfilled, (state, action) => {
         delete state.attemptsByQuiz[action.payload];
       })
@@ -65,3 +95,18 @@ const attemptSlice = createSlice({
 });
 
 export default attemptSlice.reducer;
+
+function updateAttempt(
+  state: WritableDraft<AttemptsState>,
+  action: PayloadAction<QuizAttempt>
+) {
+  const quizId = action.payload.quizId;
+  if (state.attemptsByQuiz[quizId]) {
+    const attemptIndex = state.attemptsByQuiz[quizId].findIndex(
+      (attempt) => attempt._id === action.payload._id
+    );
+    if (attemptIndex !== -1) {
+      state.attemptsByQuiz[quizId][attemptIndex] = action.payload;
+    }
+  }
+}

@@ -27,6 +27,17 @@ export type QuizAnswerSubmittion = {
   questions: QuestionAnswerSubmittion[];
 };
 
+export type QuizAnswerUpdateSubmittion = {
+  attemptId: string;
+  questions: QuestionAnswerSubmittion[];
+};
+
+export type QuizAnswer = {
+  attemptId: string;
+  questionId: string;
+  selectedAnswer: string;
+};
+
 export type QuestionAnswerSubmittion = {
   questionId: string;
   selectedAnswer: string;
@@ -47,4 +58,5 @@ export type QuestionResults = {
 
 export type QuizAttempt = {
   _id: string;
+  expiryTime: number;
 } & QuizResult;
