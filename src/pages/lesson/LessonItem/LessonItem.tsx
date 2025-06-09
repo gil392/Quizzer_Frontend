@@ -131,7 +131,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
         )}
       </Box>
       <Typography className={classes.successRateText}>
-        Success rate: 100%
+        Success rate: {lesson.successRate}%
       </Typography>
     </Box>
   );
