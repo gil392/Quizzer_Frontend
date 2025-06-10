@@ -9,6 +9,7 @@ import { AppDispatch, RootState } from "../../../../store/store";
 import {
   fetchLoggedUser,
 } from "../../../../store/userReducer";
+import { UserWithId } from "../../../../api/user/types";
 
 interface UserProfileDetailsProps {
   isEditing: boolean;
@@ -17,6 +18,7 @@ interface UserProfileDetailsProps {
   setImageFile: (file: File | undefined) => void;
   profileImageUrl: string | undefined;
   setProfileImageUrl: (url: string | undefined) => void;
+  user?: UserWithId | null;
 }
 
 const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) => {
