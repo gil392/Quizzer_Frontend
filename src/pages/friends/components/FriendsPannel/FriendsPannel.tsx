@@ -29,7 +29,7 @@ const FriendsPannel: FunctionComponent<FriendsPannelProps> = (props) => {
     </span>
   ) : (
     friends.map((user, index) => (
-      <FriendItem
+      <FriendItem 
         key={index}
         className={clsx({
           [friendsPageClasses.firstItem]: index === 0,
@@ -42,6 +42,9 @@ const FriendsPannel: FunctionComponent<FriendsPannelProps> = (props) => {
 
   return (
     <div className={clsx(classes.root, className)}>
+      <Typography variant="h5" gutterBottom>
+        Friends List
+      </Typography>
       <span className={clsx(classes.friendsList, friendsPageClasses.scroller)}>
         {loading ? (
           <SkeletonList

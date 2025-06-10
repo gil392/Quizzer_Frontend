@@ -12,10 +12,11 @@ import { toast } from "sonner";
 interface FriendItemProps {
   user: UserWithId;
   className?: string;
+  isPending?: boolean;
 }
 
 const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
-  const { user, className } = props;
+  const { user, className, isPending } = props;
   const classes = useStyles();
   const navigate = useNavigate();
 
@@ -62,26 +63,28 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
           </Typography>
         </div>
       </div>
-      <div className={classes.rightIcons}>
-        <Tooltip title="View Profile" arrow>
-          <IconButton
-            className={classes.viewProfileButton}
-            onClick={handleViewProfile}
-            size="small"
-          >
-            <AccountCircleIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip title="Delete Friend" arrow>
-          <IconButton
-            className={classes.deleteButton}
-            onClick={handleDeleteFriend}
-            size="small"
-          >
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      </div>
+      { !isPending && (
+        <div className={classes.rightIcons}>
+          <Tooltip title="View Profile" arrow>
+            <IconButton
+              className={classes.viewProfileButton}
+              onClick={handleViewProfile}
+              size="small"
+            >
+              <AccountCircleIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Delete Friend" arrow>
+            <IconButton
+              className={classes.deleteButton}
+              onClick={handleDeleteFriend}
+              size="small"
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+        </div>
+      )}
       <Dialog
         open={deleteDialogOpen}
         onClose={cancelDeleteFriend}
