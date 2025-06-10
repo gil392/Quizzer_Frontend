@@ -15,10 +15,7 @@ import { isNavBarAvailableInPath } from "../navBar/utils";
 import DisplayModeSwitch from "../settings/DisplayModeSwitch/DisplayModeSwitch";
 import { removeUserDisplayMode } from "../settings/DisplayModeSwitch/utils";
 import ProfileImage from "./components/ProfileImage";
-import {
-  MAX_MESSAGES_BADGE_CONTENT,
-  MESSAGES_INTERVAL_MS,
-} from "./const";
+import { MAX_MESSAGES_BADGE_CONTENT, MESSAGES_INTERVAL_MS } from "./const";
 import useStyles from "./styles";
 import { createAppbarMenu } from "./utils";
 
@@ -36,17 +33,21 @@ const AppBar: FunctionComponent = () => {
     [location]
   );
 
-  const fetchMessages = useCallback((abortController: AbortController) => {
-    getMessages(lastMessagesFetch?.getTime(), abortController).then(
-      ({ data }) => {
-        setMessages(data);
-        setUnReededMessagesCount(data.filter(({ reeded }) => !reeded).length);
-        setLastMessagesFetch(new Date());
-      }
-    );
-  }, []);
+  const fetchMessages = useCallback(
+    (abortController: AbortController) =>
+      getMessages(lastMessagesFetch?.getTime(), abortController).then(
+        ({ data }) => {
+          setMessages(data);
+          setUnReededMessagesCount(data.filter(({ reeded }) => !reeded).length);
+          setLastMessagesFetch(new Date());
+        }
+      ),
+    []
+  );
 
   useEffect(() => {
+    if (!isAppBarAvaiable) return () => {};
+
     const abortController = new AbortController();
 
     fetchMessages(abortController);
@@ -58,7 +59,7 @@ const AppBar: FunctionComponent = () => {
       clearInterval(messagesInterval);
       abortController.abort();
     };
-  }, []);
+  }, [isAppBarAvaiable]);
 
   const handleLogout = () => {
     removeUserDisplayMode();
