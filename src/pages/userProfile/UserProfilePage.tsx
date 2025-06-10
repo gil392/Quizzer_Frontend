@@ -16,6 +16,11 @@ const UserProfilePage: FunctionComponent = () => {
   const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(undefined);
 
   useEffect(() => {
+    setUser(null);
+    setProfileImageUrl(undefined);
+    setIsEditing(false);
+    setImageFile(undefined);
+
     const fetchFriend = async () => {
       if (userId) {
         try {
@@ -28,7 +33,7 @@ const UserProfilePage: FunctionComponent = () => {
       }
     };
     fetchFriend();
-  }, [userId]);
+  }, [userId]); 
 
   return (
     <div className={classes.root}>
