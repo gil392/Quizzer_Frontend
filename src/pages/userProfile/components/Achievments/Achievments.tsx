@@ -12,11 +12,12 @@ interface AchievmentsProps {
   className?: string;
   isEditing: boolean;
   setImageFile: (file: File | undefined) => void;
-  setProfileImageUrl: (url: string | undefined) => void; 
+  setProfileImageUrl: (url: string | undefined) => void;
+  userId?: string; // Add userId to fetch achievements for a specific user
 }
 
 const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
-  const { className, isEditing, setImageFile, setProfileImageUrl } = props; 
+  const { className, isEditing, setImageFile, setProfileImageUrl, userId } = props; 
   const classes = useStyles();
   const [achievments, setAchievments] = useState<Achievement[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -24,12 +25,17 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
   const fetchAchievements = useCallback(
     async (abortController?: AbortController) => {
       setIsLoading(true);
-      const { data } = await getAvailableAchievements(abortController);
-      const achivements = moveCompletedAchievementsToEnd(data);
-      setAchievments(achivements);
-      setIsLoading(false);
+      try {
+        const { data } = await getAvailableAchievements(userId, abortController); // Pass userId to API call
+        const sortedAchievements = moveCompletedAchievementsToEnd(data);
+        setAchievments(sortedAchievements);
+      } catch (error) {
+        console.error("Failed to fetch achievements:", error);
+      } finally {
+        setIsLoading(false);
+      }
     },
-    []
+    [userId]
   );
 
   useEffect(() => {
@@ -37,7 +43,7 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
     fetchAchievements(abortController);
 
     return () => abortController.abort();
-  }, []);
+  }, [fetchAchievements]);
 
   const achievementsList = isLoading ? (
     <SkeletonList itemClassName={classes.skeletonItem} numberOfItems={6} />
@@ -49,7 +55,7 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
           isEditing={isEditing} 
           setImageFile={setImageFile}
           setProfileImageUrl={setProfileImageUrl}
-          /> 
+        /> 
         {index !== achievments.length - 1 && <Divider />}
       </>
     ))

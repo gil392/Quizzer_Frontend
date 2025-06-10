@@ -14,7 +14,6 @@ const UserProfilePage: FunctionComponent = () => {
   const [imageFile, setImageFile] = useState<File>();
   const [isEditing, setIsEditing] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(undefined);
-  console.log("User", user);
 
   useEffect(() => {
     const fetchFriend = async () => {
@@ -36,9 +35,10 @@ const UserProfilePage: FunctionComponent = () => {
       <section className={classes.pannel}>
         <Achievments
           className={classes.achievements}
-          isEditing={isEditing}
+          isEditing={isEditing && !userId}
           setImageFile={setImageFile}
           setProfileImageUrl={setProfileImageUrl}
+          userId={userId}
         />
       </section>
       <section className={classes.pannel}>
