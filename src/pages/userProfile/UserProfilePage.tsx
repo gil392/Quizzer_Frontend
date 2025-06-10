@@ -14,6 +14,7 @@ const UserProfilePage: FunctionComponent = () => {
   const [imageFile, setImageFile] = useState<File>();
   const [isEditing, setIsEditing] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(undefined);
+  console.log("User", user);
 
   useEffect(() => {
     const fetchFriend = async () => {

@@ -22,20 +22,31 @@ interface UserProfileDetailsProps {
 }
 
 const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) => {
-  const { setIsEditing, isEditing, imageFile, setImageFile, profileImageUrl, setProfileImageUrl } = props; 
+  const {
+    user: passedUser,
+    setIsEditing,
+    isEditing,
+    imageFile,
+    setImageFile,
+    profileImageUrl,
+    setProfileImageUrl,
+  } = props;
   const classes = useStyles();
 
   const [username, setUsername] = useState<string>();
-
   const dispatch = useDispatch<AppDispatch>();
-  const { loggedUser: user } = useSelector((state: RootState) => state.user);
+  const { loggedUser } = useSelector((state: RootState) => state.user);
+
+  const user = passedUser || loggedUser;
 
   useEffect(() => {
-    const fetchUser = async () => {
-      await dispatch(fetchLoggedUser()).unwrap();
-    };
-    fetchUser();
-  }, []);
+    if (!passedUser) {
+      const fetchUser = async () => {
+        await dispatch(fetchLoggedUser()).unwrap();
+      };
+      fetchUser();
+    }
+  }, [passedUser, dispatch]);
 
   useEffect(() => {
     if (user) {
@@ -46,7 +57,7 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) =
 
   const stopEdit = () => {
     setImageFile(undefined);
-    setIsEditing(false); 
+    setIsEditing(false);
   };
 
   const handleCancel = () => {
@@ -80,7 +91,7 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) =
             fontSize: "3em",
           }}
         />
-        {isEditing && (
+        {isEditing && !passedUser && (
           <GenericIconButton
             component={"label"}
             title={"Upload image"}
@@ -114,7 +125,7 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) =
       >
         streak: {user ? user.streak : <Skeleton />}
       </Typography>
-      {isEditing ? (
+      {isEditing && !passedUser ? (
         <TextField
           label="Username"
           variant="outlined"
@@ -127,17 +138,25 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) =
           {user ? user.username : <Skeleton />}
         </Typography>
       )}
-      {isEditing ? (
-        <EditingActions user={user} username={username} imageFile={imageFile} cancelEditing={handleCancel} stopEdit={stopEdit}/>
-      ) : (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setIsEditing(true)} 
-          sx={{ mt: 3 }}
-        >
-          Edit Profile
-        </Button>
+      {!passedUser && (
+        isEditing ? (
+          <EditingActions
+            user={user}
+            username={username}
+            imageFile={imageFile}
+            cancelEditing={handleCancel}
+            stopEdit={stopEdit}
+          />
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setIsEditing(true)}
+            sx={{ mt: 3 }}
+          >
+            Edit Profile
+          </Button>
+        )
       )}
     </div>
   );
