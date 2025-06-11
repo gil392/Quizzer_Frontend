@@ -35,8 +35,13 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
       fetchNotifications,
       NOTIFICATIONS_INTERVAL_MS
     );
+
+    const handleUpdate = () => fetchNotifications(); // Listen for custom event to force refresh
+    window.addEventListener("notifications-updated", handleUpdate);
+
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
+      window.removeEventListener("notifications-updated", handleUpdate);
     };
   }, []);
 

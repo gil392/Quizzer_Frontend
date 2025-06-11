@@ -23,7 +23,9 @@ const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
         flex: 1,
     },
     buttonBox: {
-        paddingRight: theme.spacing(2),
+        paddingRight: theme.spacing(4),
+        display: "flex",
+        gap: theme.spacing(2),
     },
 }));
 

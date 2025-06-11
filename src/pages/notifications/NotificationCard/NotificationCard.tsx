@@ -12,6 +12,8 @@ import DoneIcon from "@mui/icons-material/Done";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import useStyles from "./NotificationCard.styles.ts";
 import { formatNotificationTime } from "../../../utils/utils.ts";
+import { useNavigate } from "react-router-dom";
+import { Launch } from "@mui/icons-material";
 
 interface NotificationCardProps {
   notification: Notification;
@@ -24,6 +26,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const classes = useStyles({ isRead: notification.read });
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(false);
@@ -34,6 +37,15 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
     setLoading(true);
     await onRead(notification._id);
     setLoading(false);
+  };
+
+  const handleCheckItOut = async () => {
+    if (!notification.read) {
+      await onRead(notification._id);
+    }
+    if (notification.relatedEntityId) {
+      navigate(`/${notification.relatedEntityId}`);
+    }
   };
 
   return (
@@ -54,6 +66,17 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
         </Typography>
       </CardContent>
       <Box className={classes.buttonBox}>
+        {notification.relatedEntityId && notification.entityType && (
+          <Button
+            variant={notification.read ? "outlined" : "contained"}
+            color="primary"
+            startIcon={notification.read ? <Launch /> : undefined}
+            onClick={handleCheckItOut}
+            sx={{ marginLeft: 1 }}
+          >
+            {"Check it out"}
+          </Button>
+        )}
         <Button
           variant={notification.read ? "outlined" : "contained"}
           color="primary"

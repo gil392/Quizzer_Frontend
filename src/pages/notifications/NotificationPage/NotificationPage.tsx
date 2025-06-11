@@ -20,6 +20,7 @@ const NotificationPage: React.FC = () => {
     setLoading(true);
     try {
       const { data } = await getNotifications();
+      console.log("Fetched notifications:", data);
       setNotifications(data);
     } catch {
       setNotifications([]);
@@ -33,6 +34,8 @@ const NotificationPage: React.FC = () => {
 
   const handleRead = async (id: string) => {
     await markNotificationAsRead(id);
+    window.dispatchEvent(new Event("notifications-updated"));
+
     fetchNotifications();
   };
 
