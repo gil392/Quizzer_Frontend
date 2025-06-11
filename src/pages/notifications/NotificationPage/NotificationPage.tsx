@@ -2,8 +2,8 @@ import React, { useEffect, useState, useCallback } from "react";
 import {
   getNotifications,
   markNotificationAsRead,
-} from "../../../api/notifications/api";
-import { Notification } from "../../../api/notifications/types";
+} from "../../../api/notification/api";
+import { Notification } from "../../../api/notification/types";
 import NotificationCard from "../NotificationCard/NotificationCard";
 import NotificationSkeleton from "../NotificationSkeleton/NotificationSkeleton";
 import { Box, Typography } from "@mui/material";
@@ -20,7 +20,6 @@ const NotificationPage: React.FC = () => {
     setLoading(true);
     try {
       const { data } = await getNotifications();
-      console.log("Fetched notifications:", data);
       setNotifications(data);
     } catch {
       setNotifications([]);

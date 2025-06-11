@@ -6,8 +6,8 @@ import {
   NOTIFICATIONS_INTERVAL_MS,
 } from "../const";
 import useStyles from "../styles";
-import { getNotifications } from "../../../api/notifications/api";
-import { Notification } from "../../../api/notifications/types";
+import { getNotifications } from "../../../api/notification/api";
+import { Notification } from "../../../api/notification/types";
 
 interface NotificationBellProps {
   onClick?: () => void;

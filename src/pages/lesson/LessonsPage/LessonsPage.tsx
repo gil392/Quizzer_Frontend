@@ -36,6 +36,7 @@ const LessonsPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const lessons = useSelector((state: RootState) => state.lessons.lessons);
+  const friends = useSelector((state: RootState) => state.user.friends);
 
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
@@ -154,6 +155,7 @@ const LessonsPage: React.FC = () => {
                 isMergeLessonsMode={isMergeLessonsMode}
                 setIsMergeLessonsMode={setIsMergeLessonsMode}
                 cancelMergingMode={cancelMergingMode}
+                friends={friends}
               />
             ))
           ) : (

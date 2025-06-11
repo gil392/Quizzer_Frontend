@@ -3,6 +3,7 @@ import lessonReducer from "./lessonReducer";
 import quizReducer from "./quizReducer";
 import userReducer from "./userReducer";
 import attemptReducer from "./attemptReducer";
+import notificaionReducer from "./notificationReducer";
 
 export const store = configureStore({
   reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
     quizzes: quizReducer,
     user: userReducer,
     attempt: attemptReducer,
+    notifications: notificaionReducer,
   },
 });
 

@@ -18,9 +18,11 @@ export const notifyFriendsAboutAchievement = (payload: {
 }): AxiosPromise<void> =>
     apiClient.post("/notifications/share-achievement", payload);
 
-export const shareQuizOrSummary = (payload: {
+export const shareLesson = (payload: {
     toUserIds: string[];
-    entityType: "quiz" | "summary";
     relatedEntityId: string;
-}): AxiosPromise<void> =>
-    apiClient.post("/notifications/share", payload);
+}): Promise<void> =>
+    apiClient.post("/notifications/share", {
+        ...payload,
+        entityType: "lesson",
+    });

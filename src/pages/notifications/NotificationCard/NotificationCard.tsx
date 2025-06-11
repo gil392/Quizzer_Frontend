@@ -6,7 +6,7 @@ import {
   Box,
   CircularProgress,
 } from "@mui/material";
-import { Notification } from "../../../api/notifications/types";
+import { Notification } from "../../../api/notification/types.ts";
 import { useState, useEffect } from "react";
 import DoneIcon from "@mui/icons-material/Done";
 import NotificationsIcon from "@mui/icons-material/Notifications";
