@@ -1,6 +1,7 @@
 import { makeStyles } from "@mui/styles";
+import { Theme } from "@mui/material";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   checkbox: {
     "& .MuiSvgIcon-root": {
       border: "2px solid transparent",
@@ -22,7 +23,7 @@ const useStyles = makeStyles(() => ({
   questionBox: {
     pageBreakInside: "avoid",
     padding: 24,
-    backgroundColor: "#f5f5f5",
+    backgroundColor: theme.palette.background.paper,
   },
 }));
 

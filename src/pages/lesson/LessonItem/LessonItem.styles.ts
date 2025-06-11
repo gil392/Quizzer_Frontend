@@ -2,9 +2,8 @@ import { makeStyles, createStyles } from "@mui/styles";
 import { Theme } from "@mui/material";
 
 const useStyles = makeStyles((theme: Theme) => {
-  const isDarkMode = theme.palette.mode === "dark";
-  const lessonItemBgColor = isDarkMode ? "#7c3b44" : "#fae1e4";
-  const lessonItemHoverBgColor = isDarkMode ? "#8b4a58" : "#ffc0cb";
+  const lessonItemBgColor = theme.palette.primary.dark;
+  const lessonItemHoverBgColor = theme.palette.primary.light;
 
   return createStyles({
     lessonItem: {
@@ -41,9 +40,6 @@ const useStyles = makeStyles((theme: Theme) => {
       "&:hover": {
         backgroundColor: "#a1a1a0",
       },
-    },
-    favoriteIcon: {
-      color: "#e0245e",
     },
   });
 });

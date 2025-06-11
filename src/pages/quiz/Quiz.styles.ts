@@ -1,6 +1,7 @@
 import { makeStyles } from "@mui/styles";
+import { Theme } from "@mui/material";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme: Theme) => ({
   container: {
     width: "75vw",
     margin: "auto",
@@ -10,8 +11,7 @@ const useStyles = makeStyles(() => ({
     maxWidth: "75vw",
     height: "85vh",
     overflowY: "auto",
-    backgroundColor: "#f5f5f5",
-    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    backgroundColor: theme.palette.background.default,
     padding: 16,
     "&::-webkit-scrollbar": {
       width: "8px",
