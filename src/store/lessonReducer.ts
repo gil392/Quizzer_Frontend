@@ -7,6 +7,7 @@ import {
   mergeLessons,
   generateLesson,
 } from "../api/lesson/api";
+import { RootState } from "./store";
 
 export const fetchLessons = createAsyncThunk(
   "lesson/fetchLessons",
@@ -18,8 +19,17 @@ export const fetchLessons = createAsyncThunk(
 
 export const createLessonAsync = createAsyncThunk(
   "lesson/createLesson",
-  async ({ videoUrl, relatedLessonGroupId }: { videoUrl: string; relatedLessonGroupId?: string }) => {
-    const response = await generateLesson(videoUrl, relatedLessonGroupId ?? null);
+  async ({
+    videoUrl,
+    relatedLessonGroupId,
+  }: {
+    videoUrl: string;
+    relatedLessonGroupId?: string;
+  }) => {
+    const response = await generateLesson(
+      videoUrl,
+      relatedLessonGroupId ?? null
+    );
     return response.data;
   }
 );
@@ -34,9 +44,13 @@ export const updateLessonAsync = createAsyncThunk(
 
 export const deleteLessonAsync = createAsyncThunk(
   "lesson/deleteLesson",
-  async (lessonId: string) => {
+  async (lessonId: string, {getState}) => {
     await deleteLesson(lessonId);
-    return lessonId;
+    const state = getState() as RootState;
+    const quizIds = Object.values(state.quizzes.quizzes)
+      .filter((quiz) => quiz.lessonId === lessonId)
+      .map((quiz) => quiz._id);
+    return {lessonId, quizIds};
   }
 );
 
@@ -72,7 +86,7 @@ const lessonSlice = createSlice({
       })
       .addCase(deleteLessonAsync.fulfilled, (state, action) => {
         state.lessons = state.lessons.filter(
-          (lesson) => lesson._id !== action.payload
+          (lesson) => lesson._id !== action.payload.lessonId
         );
       })
       .addCase(mergeLessonsAsync.fulfilled, (state, action) => {

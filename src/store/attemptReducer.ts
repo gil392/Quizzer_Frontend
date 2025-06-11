@@ -13,6 +13,7 @@ import {
   QuizAnswerUpdateSubmittion,
 } from "../api/quiz/types";
 import { deleteQuizAsync } from "./quizReducer";
+import { deleteLessonAsync } from "./lessonReducer";
 import { WritableDraft } from "immer";
 
 export const fetchQuizAttempts = createAsyncThunk(
@@ -83,6 +84,12 @@ const attemptSlice = createSlice({
       .addCase(updateAttemptWithAnswersAsync.fulfilled, updateAttempt)
       .addCase(deleteQuizAsync.fulfilled, (state, action) => {
         delete state.attemptsByQuiz[action.payload];
+      })
+      .addCase(deleteLessonAsync.fulfilled, (state, action) => {
+        const { quizIds } = action.payload;
+        for (const id of quizIds) {
+          delete state.attemptsByQuiz[id];
+        }
       });
   },
 });
