@@ -131,7 +131,11 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
         )}
       </Box>
       <Typography className={classes.successRateText}>
-        Success rate: 100%
+        {lesson.successRate ? (
+          `Success rate: ${lesson.successRate}%`
+        ) : (
+          <span style={{ visibility: "hidden" }}>Same height</span>
+        )}
       </Typography>
     </Box>
   );
