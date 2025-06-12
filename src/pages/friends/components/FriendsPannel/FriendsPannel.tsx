@@ -5,7 +5,7 @@ import { UserWithId } from "../../../../api/user/types";
 import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import { useStyles as useFriendsPageStyles } from "../../styles";
 import FriendItem from "./FriendItem/FriendItem";
-import NoFriendsFound from "./NoFriendsFound/NoFriendsFound";
+import FriendsNotFound from "./FriendsNotFound/FriendsNotFound";
 import { useStyles } from "./styles";
 
 interface FriendsPannelProps {
@@ -21,7 +21,7 @@ const FriendsPannel: FunctionComponent<FriendsPannelProps> = (props) => {
 
   const friendsList = isEmpty(friends) ? (
     <span className={classes.emptyFriendsListSpan}>
-      <NoFriendsFound />
+      <FriendsNotFound />
     </span>
   ) : (
     friends.map((user, index) => (

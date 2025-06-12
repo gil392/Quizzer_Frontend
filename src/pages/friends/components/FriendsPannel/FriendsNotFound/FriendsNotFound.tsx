@@ -2,7 +2,7 @@ import { Box, Paper, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useStyles } from "./styles";
 
-const NoFriendsFound: React.FC = () => {
+const FriendsNotFound: React.FC = () => {
   const classes = useStyles();
 
   return (
@@ -21,4 +21,4 @@ const NoFriendsFound: React.FC = () => {
   );
 };
 
-export default NoFriendsFound;
+export default FriendsNotFound;
