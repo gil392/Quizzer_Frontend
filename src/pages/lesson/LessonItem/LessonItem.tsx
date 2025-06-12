@@ -99,13 +99,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
           onEditModeChange={setIsEditing}
         />
         <GenericIconButton
-          icon={
-            lesson.isFavorite ? (
-              <FavoriteIcon className={classes.favoriteIcon} />
-            ) : (
-              <FavoriteBorderIcon />
-            )
-          }
+          icon={lesson.isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           title={"Favorite"}
           onClick={() => changeIsFavorite(lesson)}
         />
