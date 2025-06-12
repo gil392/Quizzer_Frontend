@@ -1,4 +1,4 @@
-import { Divider, Typography } from "@mui/material";
+import { Divider, Paper, Typography } from "@mui/material";
 import clsx from "clsx";
 import { isEmpty } from "ramda";
 import { FunctionComponent } from "react";
@@ -19,19 +19,16 @@ interface PendingFriendsPannelProps {
 const PendingFriendsPannel: FunctionComponent<PendingFriendsPannelProps> = (
   props
 ) => {
-  const {
-    pendingFriends,
-    loading,
-    excludedIdsFromSearch,
-    className,
-  } = props;
+  const { pendingFriends, loading, excludedIdsFromSearch, className } = props;
   const classes = useStyles();
   const friendsPageClasses = useFriendsPageStyles();
 
   const pendingFriendsList = isEmpty(pendingFriends) ? (
-    <Typography textAlign="center" variant="h6">
-      No Pending Friend Requests
-    </Typography>
+    <section className={classes.noPendingFriendsContainer}>
+      <Paper elevation={2} className={classes.noPendingFriendsPage}>
+        <Typography variant="h6">No Pending Friend Requests</Typography>
+      </Paper>
+    </section>
   ) : (
     pendingFriends.map((user, index) => (
       <FriendRequestItem
