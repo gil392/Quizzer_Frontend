@@ -29,6 +29,7 @@ import LessonItem from "../LessonItem/LessonItem";
 import { DEFAULT_SORT_OPTION, SORT_OPTIONS } from "./components/constants";
 import { sortLessons } from "./components/utils";
 import useStyles from "./LessonsPage.styles";
+import LessonsNotFound from "./components/LessonsNotFound/LessonsNotFound";
 
 type sortFieldType =
   | "_id"
@@ -165,13 +166,16 @@ const LessonsPage: React.FC = () => {
               />
             ))
           ) : (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              className={classes.noLessonsText}
-            >
-              No existing lessons.
-            </Typography>
+            // <Typography
+            //   variant="body2"
+            //   color="text.secondary"
+            //   className={classes.noLessonsText}
+            // >
+            //   No existing lessons.
+            // </Typography>
+            <span className={classes.lessonsNotFoundContainer}>
+              <LessonsNotFound />
+            </span>
           )}
           {isMergeLessonsMode && (
             <Box mt={2} display="flex" gap={2}>
