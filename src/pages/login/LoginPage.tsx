@@ -93,7 +93,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
           className={classes.link}
           onClick={navigateToRegisterPage}
         >
-          dont have account? register here
+          Don't have an account? Register here
         </Link>
       </section>
     </div>
