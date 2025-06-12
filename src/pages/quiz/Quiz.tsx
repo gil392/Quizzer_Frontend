@@ -261,7 +261,7 @@ const QuizPage: React.FC = () => {
           </Button>
         </>
       ) : (
-        <Box className={classes.quizBox}>
+        <>
           {currentAttempt && quizData && (
             <QuizTimer
               quizId={quizId}
@@ -383,7 +383,7 @@ const QuizPage: React.FC = () => {
               Failed to load quiz data.
             </Typography>
           )}
-        </Box>
+        </>
       )}
     </Box>
   );

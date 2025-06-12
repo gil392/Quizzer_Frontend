@@ -7,6 +7,7 @@ import { getDefaultQuizSettings } from "../../components/lessonConfig/components
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { RootState } from "../../store/store";
+import useStyles from "../../components/lessonConfig/components/styles";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ const GenerateLessonPage: React.FC = () => {
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
 
   const defaultQuizSettings = getDefaultQuizSettings(loggedUser?.settings);
-
+  const classes = useStyles();
   const [quizSettings, setQuizSettings] =
     useState<QuizSettings>(defaultQuizSettings);
 
@@ -35,12 +36,7 @@ const GenerateLessonPage: React.FC = () => {
       </Typography>
       <OutlinedInput
         placeholder="youtube.com/watch?v=j0u7ub3m473"
-        sx={{
-          borderRadius: "8px",
-          width: "100%",
-          height: "3rem",
-          marginBottom: 3,
-        }}
+        className={classes.typography}
         value={videoUrl}
         onChange={(e) => setVideoUrl(e.target.value)}
       />
@@ -53,13 +49,7 @@ const GenerateLessonPage: React.FC = () => {
 
       <Button
         variant="contained"
-        color="primary"
-        sx={{
-          width: "100%",
-          height: "3rem",
-          borderRadius: "8px",
-          marginTop: 3,
-        }}
+        className={classes.button}
         onClick={handleSummaryNavigation}
         disabled={!videoUrl.trim()}
       >
