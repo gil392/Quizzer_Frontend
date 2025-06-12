@@ -17,5 +17,16 @@ export const useStyles = makeStyles((theme: Theme) =>
         marginTop: theme.spacing(2),
       },
     },
+    noPendingFriendsContainer: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    },
+    noPendingFriendsPage: {
+      width: "99%",
+      padding: 16,
+      textAlign: "center",
+      borderRadius: 12,
+    },
   })
 );
