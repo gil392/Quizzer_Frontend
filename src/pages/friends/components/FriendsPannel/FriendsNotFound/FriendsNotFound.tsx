@@ -6,14 +6,14 @@ const FriendsNotFound: React.FC = () => {
   const classes = useStyles();
 
   return (
-    <Stack alignItems="center" p={4}>
+    <Box>
       <Box
         component="img"
         src="/images/friendsNotFound.png"
-        className={classes.container}
+        className={classes.image}
       />
       <Typography variant="h4">Learn And Share Lessons With Friends</Typography>
-    </Stack>
+    </Box>
   );
 };
 
