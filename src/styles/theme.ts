@@ -4,26 +4,26 @@ export const lightTheme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#7564c8",       // buttons primary color
-      light: "#e4e1f8",      // a lighter variant, derived from main
-      dark: "#cdc7f0",       // a darker variant, derived from main
+      main: "#7564c8",
+      light: "#e4e1f8",
+      dark: "#cdc7f0",
       contrastText: "#FFFFFF",
     },
     secondary: {
-      main: "#30286e",       // buttons secondary color
+      main: "#30286e",
     },
     background: {
-      default: "#fefdfE",    // background color
-      paper: "#fefefe",      // secondary background color (cards/paper)
+      default: "#fefdfE",
+      paper: "#fefefe",
     },
     error: {
       main: "#B3261E",
     },
     text: {
-      primary: "#000000",    // text primary color
-      secondary: "#cacbcd",  // secondary text color
+      primary: "#000000",
+      secondary: "#cacbcd",
     },
-    divider: "#cacbcd",      // match secondary text color for subtle divider
+    divider: "#cacbcd",
   },
   shape: {
     borderRadius: 8,
@@ -51,7 +51,7 @@ export const lightTheme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          boxShadow: "0 4px 20px rgba(117, 100, 200, 0.1)", // adjusted shadow to primary button color with transparency
+          boxShadow: "0 4px 20px rgba(117, 100, 200, 0.1)",
         },
       },
     },
@@ -62,26 +62,26 @@ export const darkTheme = createTheme({
   palette: {
     mode: "dark",
     primary: {
-      main: "#6053ce",       // buttons primary color
-      light: "#847be0",      // lighter variant derived from main
-      dark: "#3f36a7",       // darker variant derived from main
+      main: "#6053ce",
+      light: "#847be0",
+      dark: "#3f36a7",
       contrastText: "#121212",
     },
     secondary: {
-      main: "#35317b",       // buttons secondary color
+      main: "#35317b",
     },
     background: {
-      default: "#0f1117",    // background color
-      paper: "#171A24",      // secondary background color (cards/paper)
+      default: "#0f1117",
+      paper: "#171A24",
     },
     error: {
       main: "#F2B8B5",
     },
     text: {
-      primary: "#c1c1c2",    // text primary color
-      secondary: "#737478",  // secondary text color
+      primary: "#c1c1c2",
+      secondary: "#737478",
     },
-    divider: "#35317b",      // matching secondary button color for subtle divider
+    divider: "#35317b",
   },
   shape: {
     borderRadius: 8,
@@ -110,7 +110,7 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: "none",
-          boxShadow: "0 4px 20px rgba(96, 83, 206, 0.1)", // primary button color shadow with transparency
+          boxShadow: "0 4px 20px rgba(96, 83, 206, 0.1)",
         },
       },
     },
