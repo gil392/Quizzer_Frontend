@@ -13,7 +13,7 @@ const LessonsNotFound: React.FC = () => {
       <Stack spacing={2} alignItems="center" p={4}>
         <Box
           component="img"
-          src="https://static.vecteezy.com/system/resources/previews/054/627/359/large_2x/a-boy-is-sitting-and-doing-his-homework-vector.jpg"
+          src="/images/lessonsNotFound.png"
           className={classes.container}
         />
 
