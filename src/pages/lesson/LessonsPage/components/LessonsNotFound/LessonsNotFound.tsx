@@ -9,27 +9,25 @@ const LessonsNotFound: React.FC = () => {
   const navigate = useNavigate();
 
   return (
-    <Paper elevation={3} className={classes.root}>
-      <Stack spacing={2} alignItems="center" p={4}>
-        <Box
-          component="img"
-          src="/images/lessonsNotFound.png"
-          className={classes.container}
-        />
+    <Stack spacing={2} alignItems="center" p={4} width="45vw">
+      <Box
+        component="img"
+        src="/images/lessonsNotFound.png"
+        className={classes.container}
+      />
 
-        <Typography variant="h5">Haven't had a lesson?</Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          onClick={() => {
-            navigate(PAGES_ROUTES.GENERATE_LESSON);
-          }}
-        >
-          <Typography variant="button">Create Your First Lesson</Typography>
-        </Button>
-      </Stack>
-    </Paper>
+      <Typography variant="h5">Haven't had a lesson?</Typography>
+      <Button
+        variant="contained"
+        color="primary"
+        size="large"
+        onClick={() => {
+          navigate(PAGES_ROUTES.GENERATE_LESSON);
+        }}
+      >
+        <Typography variant="button">Create Your First Lesson</Typography>
+      </Button>
+    </Stack>
   );
 };
 
