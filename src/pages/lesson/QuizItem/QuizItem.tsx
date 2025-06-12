@@ -121,11 +121,6 @@ const QuizItem: React.FC<QuizItemProps> = ({
           onChange={(_, newValue) => handleRateQuiz(newValue)}
         />
       </Box>
-      {rating && (
-        <Typography variant="body2" mt={1}>
-          Your rating: {rating}
-        </Typography>
-      )}
     </Box>
   );
 };
