@@ -1,4 +1,3 @@
-import { Typography } from "@mui/material";
 import clsx from "clsx";
 import { isEmpty } from "ramda";
 import { FunctionComponent } from "react";
@@ -6,6 +5,7 @@ import { UserWithId } from "../../../../api/user/types";
 import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import { useStyles as useFriendsPageStyles } from "../../styles";
 import FriendItem from "./FriendItem/FriendItem";
+import FriendsNotFound from "./FriendsNotFound/FriendsNotFound";
 import { useStyles } from "./styles";
 
 interface FriendsPannelProps {
@@ -21,11 +21,7 @@ const FriendsPannel: FunctionComponent<FriendsPannelProps> = (props) => {
 
   const friendsList = isEmpty(friends) ? (
     <span className={classes.emptyFriendsListSpan}>
-      <Typography textAlign="center" variant="h4">
-        Seems you new Here
-        <br />
-        Try searching new friends
-      </Typography>
+      <FriendsNotFound />
     </span>
   ) : (
     friends.map((user, index) => (
