@@ -166,13 +166,6 @@ const LessonsPage: React.FC = () => {
               />
             ))
           ) : (
-            // <Typography
-            //   variant="body2"
-            //   color="text.secondary"
-            //   className={classes.noLessonsText}
-            // >
-            //   No existing lessons.
-            // </Typography>
             <span className={classes.lessonsNotFoundContainer}>
               <LessonsNotFound />
             </span>
