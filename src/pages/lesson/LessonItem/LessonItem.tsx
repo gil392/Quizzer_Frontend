@@ -7,12 +7,19 @@ import { GenericIconButton } from "../../../components/GenericIconButton";
 import MergeIcon from "@mui/icons-material/Merge";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import UncheckedBoxIcon from "@mui/icons-material/CheckBoxOutlineBlank";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import EditabletitleWithActions from "../../../components/EditabletitleWithActions";
 import clsx from "clsx";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../store/store";
+import {
+  deleteLessonAsync,
+  updateLessonAsync,
+} from "../../../store/lessonReducer";
 
 interface LessonItemProps {
   lesson: LessonData;
-  onLessonDeleted: (lessonId: string) => void;
   updateLessonTitle: (newTitle: string) => void;
   openLesson: () => void;
   className?: string;
@@ -25,8 +32,6 @@ interface LessonItemProps {
 
 const LessonItem: FunctionComponent<LessonItemProps> = ({
   lesson,
-  onLessonDeleted,
-  updateLessonTitle,
   openLesson,
   className,
   mergingLessons,
@@ -37,6 +42,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const classes = useStyles();
+  const dispatch = useDispatch<AppDispatch>();
 
   const isLessonMerging = () =>
     mergingLessons.some((lessonToCheck) => lessonToCheck._id === lesson._id);
@@ -44,8 +50,22 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
   const isRelatedLesson = () =>
     mergingLessons.some(
       (lessonToCheck) =>
-        lessonToCheck.relatedLessonId === lesson.relatedLessonId
+        lessonToCheck.relatedLessonGroupId === lesson.relatedLessonGroupId
     );
+
+  const handleUpdateTitle = async (title: string, lesson: LessonData) => {
+    await dispatch(updateLessonAsync({ ...lesson, title }));
+  };
+
+  const changeIsFavorite = async (lesson: LessonData) => {
+    await dispatch(
+      updateLessonAsync({ ...lesson, isFavorite: !lesson.isFavorite })
+    );
+  };
+
+  const handleLessonDeleted = async (lessonId: string) => {
+    await dispatch(deleteLessonAsync(lessonId));
+  };
 
   const handleToggleMergeLesson = () => {
     if (!isLessonMerging()) {
@@ -74,15 +94,22 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
       <Box className={classes.flexContainer}>
         <EditabletitleWithActions
           title={lesson.title}
-          onSave={updateLessonTitle}
-          onDelete={() => onLessonDeleted(lesson._id)}
+          onSave={(title: string) => handleUpdateTitle(title, lesson)}
+          onDelete={() => handleLessonDeleted(lesson._id)}
           onEditModeChange={setIsEditing}
+        />
+        <GenericIconButton
+          icon={lesson.isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          title={"Favorite"}
+          onClick={() => changeIsFavorite(lesson)}
         />
         {isMergeLessonsMode ? (
           <GenericIconButton
             icon={isLessonMerging() ? <CheckBoxIcon /> : <UncheckedBoxIcon />}
             onClick={() => {
-              isRelatedLesson() && handleToggleMergeLesson();
+              if (isRelatedLesson()) {
+                handleToggleMergeLesson();
+              }
             }}
             title={isRelatedLesson() ? "Merge this lesson" : "Cannot be merged"}
           />
@@ -98,7 +125,11 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
         )}
       </Box>
       <Typography className={classes.successRateText}>
-        Success rate: 100%
+        {lesson.successRate ? (
+          `Success rate: ${lesson.successRate}%`
+        ) : (
+          <span style={{ visibility: "hidden" }}>Same height</span>
+        )}
       </Typography>
     </Box>
   );

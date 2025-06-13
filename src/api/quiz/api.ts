@@ -4,10 +4,11 @@ import { LessonData } from "../lesson/types";
 import { deleteItem, updateItem } from "../utils";
 import {
   QuestionResults,
+  QuizAnswer,
   QuizAnswerSubmittion,
+  QuizAnswerUpdateSubmittion,
   QuizAttempt,
   QuizData,
-  QuizResult,
   QuizSettings,
 } from "./types";
 
@@ -37,7 +38,15 @@ export const getQuizAttempts = (quizId: string): AxiosPromise<QuizAttempt[]> =>
 
 export const createQuizAttempt = (
   data: QuizAnswerSubmittion
-): AxiosPromise<QuizResult> => apiClient.post("/attempt", data);
+): AxiosPromise<QuizAttempt> => apiClient.post("/attempt", data);
+
+export const updateAttemptWithAnswers = (
+  data: QuizAnswerUpdateSubmittion
+): AxiosPromise<QuizAttempt> => apiClient.put("/attempt/update", data);
+
+export const addAnswerToQuizAttempt = (
+  data: QuizAnswer
+): AxiosPromise<QuizAttempt> => apiClient.post("/attempt/answer", data);
 
 export const rateQuiz = (
   quizId: string,
@@ -51,10 +60,10 @@ export const rateQuiz = (
     }
   );
 
-  export const submitQuestionAnswer = (
-    questionId: string,
-    selectedAnswer: string
-  ): AxiosPromise<QuestionResults> =>
-    apiClient.get(`/attempt/question/${questionId}`, {
-      params: { selectedAnswer },
-    });
+export const submitQuestionAnswer = (
+  questionId: string,
+  selectedAnswer: string
+): AxiosPromise<QuestionResults> =>
+  apiClient.get(`/attempt/question/${questionId}`, {
+    params: { selectedAnswer },
+  });

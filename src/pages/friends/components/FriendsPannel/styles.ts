@@ -15,7 +15,7 @@ export const useStyles = makeStyles(() =>
     },
     emptyFriendsListSpan: {
       display: "flex",
-      height: "80%",
+      height: "100%",
       alignItems: "center",
     },
   })
