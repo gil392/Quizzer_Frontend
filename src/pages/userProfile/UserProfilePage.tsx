@@ -15,11 +15,15 @@ const UserProfilePage: FunctionComponent = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(undefined);
 
-  useEffect(() => {
+  const cleanState = () => {
     setUser(null);
     setProfileImageUrl(undefined);
     setIsEditing(false);
     setImageFile(undefined);
+  }
+
+  useEffect(() => {
+    cleanState();
 
     const fetchFriend = async () => {
       if (userId) {

@@ -7,13 +7,14 @@ import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import AchievementItem from "./AchievementItem/AchievementItem";
 import { useStyles } from "./styles";
 import { moveCompletedAchievementsToEnd } from "./utils";
+import { toast } from "sonner";
 
 interface AchievmentsProps {
   className?: string;
   isEditing: boolean;
   setImageFile: (file: File | undefined) => void;
   setProfileImageUrl: (url: string | undefined) => void;
-  userId?: string; // Add userId to fetch achievements for a specific user
+  userId?: string; 
 }
 
 const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
@@ -26,11 +27,11 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
     async (abortController?: AbortController) => {
       setIsLoading(true);
       try {
-        const { data } = await getAvailableAchievements(userId, abortController); // Pass userId to API call
+        const { data } = await getAvailableAchievements(userId, abortController);
         const sortedAchievements = moveCompletedAchievementsToEnd(data);
         setAchievments(sortedAchievements);
       } catch (error) {
-        console.error("Failed to fetch achievements:", error);
+        toast.error("Failed to fetch achievements. Please try again later.");
       } finally {
         setIsLoading(false);
       }
