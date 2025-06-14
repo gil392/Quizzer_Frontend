@@ -69,12 +69,12 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
         <Stack direction="row" alignItems="center" spacing={1}>
           <Typography>Video link:</Typography>
           <Link
-            href={lesson.videoUrl}
+            href={`https://www.youtube.com/watch?v=${lesson.videoDetails.videoId}`}
             target="_blank"
             rel="noopener"
             underline="hover"
           >
-            {lesson.videoUrl}
+            {`https://www.youtube.com/watch?v=${lesson.videoDetails.videoId}`}
           </Link>
         </Stack>
 

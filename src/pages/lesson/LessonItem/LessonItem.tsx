@@ -17,6 +17,7 @@ import {
   deleteLessonAsync,
   updateLessonAsync,
 } from "../../../store/lessonReducer";
+import { LessonImage } from "../RelatedVideo/LessonImage";
 
 interface LessonItemProps {
   lesson: LessonData;
@@ -92,6 +93,14 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
       onClick={() => !isEditing && openLesson()}
     >
       <Box className={classes.flexContainer}>
+        <Box style={{ marginTop: "2vh" }}>
+          <LessonImage
+            video={{
+              title: lesson.title,
+              url: `https://img.youtube.com/vi/${lesson.videoDetails?.videoId}/default.jpg`,
+            }}
+          />
+        </Box>
         <EditabletitleWithActions
           title={lesson.title}
           onSave={(title: string) => handleUpdateTitle(title, lesson)}
@@ -99,7 +108,13 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
           onEditModeChange={setIsEditing}
         />
         <GenericIconButton
-          icon={lesson.isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
+          icon={
+            lesson.isFavorite ? (
+              <FavoriteIcon style={{ color: "red" }} />
+            ) : (
+              <FavoriteBorderIcon />
+            )
+          }
           title={"Favorite"}
           onClick={() => changeIsFavorite(lesson)}
         />
