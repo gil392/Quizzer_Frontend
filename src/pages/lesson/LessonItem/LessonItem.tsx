@@ -93,59 +93,68 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
       onClick={() => !isEditing && openLesson()}
     >
       <Box className={classes.flexContainer}>
-        <Box style={{ marginTop: "2vh" }}>
+        <Box className={classes.image}>
           <LessonImage
             video={{
               title: lesson.title,
-              url: `https://img.youtube.com/vi/${lesson.videoDetails?.videoId}/default.jpg`,
+              url: `https://img.youtube.com/vi/${lesson.videoDetails?.videoId}/hqdefault.jpg`,
             }}
+            imageSizeClassname={classes.imageSize}
           />
         </Box>
-        <EditabletitleWithActions
-          title={lesson.title}
-          onSave={(title: string) => handleUpdateTitle(title, lesson)}
-          onDelete={() => handleLessonDeleted(lesson._id)}
-          onEditModeChange={setIsEditing}
-        />
-        <GenericIconButton
-          icon={
-            lesson.isFavorite ? (
-              <FavoriteIcon style={{ color: "red" }} />
-            ) : (
-              <FavoriteBorderIcon />
-            )
-          }
-          title={"Favorite"}
-          onClick={() => changeIsFavorite(lesson)}
-        />
-        {isMergeLessonsMode ? (
-          <GenericIconButton
-            icon={isLessonMerging() ? <CheckBoxIcon /> : <UncheckedBoxIcon />}
-            onClick={() => {
-              if (isRelatedLesson()) {
-                handleToggleMergeLesson();
+        <Box className={classes.editableActionsColumn}>
+          <Box className={classes.actions}>
+            <EditabletitleWithActions
+              title={lesson.title}
+              onSave={(title: string) => handleUpdateTitle(title, lesson)}
+              onDelete={() => handleLessonDeleted(lesson._id)}
+              onEditModeChange={setIsEditing}
+            />
+            <GenericIconButton
+              icon={
+                lesson.isFavorite ? (
+                  <FavoriteIcon style={{ color: "red" }} />
+                ) : (
+                  <FavoriteBorderIcon />
+                )
               }
-            }}
-            title={isRelatedLesson() ? "Merge this lesson" : "Cannot be merged"}
-          />
-        ) : (
-          <GenericIconButton
-            icon={<MergeIcon />}
-            title={"Merge Lessons"}
-            onClick={() => {
-              setIsMergeLessonsMode(true);
-              setMergingLessons([lesson]);
-            }}
-          />
-        )}
+              title={"Favorite"}
+              onClick={() => changeIsFavorite(lesson)}
+            />
+            {isMergeLessonsMode ? (
+              <GenericIconButton
+                icon={
+                  isLessonMerging() ? <CheckBoxIcon /> : <UncheckedBoxIcon />
+                }
+                onClick={() => {
+                  if (isRelatedLesson()) {
+                    handleToggleMergeLesson();
+                  }
+                }}
+                title={
+                  isRelatedLesson() ? "Merge this lesson" : "Cannot be merged"
+                }
+              />
+            ) : (
+              <GenericIconButton
+                icon={<MergeIcon />}
+                title={"Merge Lessons"}
+                onClick={() => {
+                  setIsMergeLessonsMode(true);
+                  setMergingLessons([lesson]);
+                }}
+              />
+            )}
+          </Box>
+          <Typography className={classes.successRateText}>
+            {lesson.successRate ? (
+              `Success rate: ${lesson.successRate}%`
+            ) : (
+              <span style={{ visibility: "hidden" }}>Same height</span>
+            )}
+          </Typography>
+        </Box>
       </Box>
-      <Typography className={classes.successRateText}>
-        {lesson.successRate ? (
-          `Success rate: ${lesson.successRate}%`
-        ) : (
-          <span style={{ visibility: "hidden" }}>Same height</span>
-        )}
-      </Typography>
     </Box>
   );
 };

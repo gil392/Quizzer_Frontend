@@ -93,6 +93,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     thumbnailSkeleton: {
         flexShrink: 0,
     },
+    imageSize: {
+        width: "100% !important",
+        height: "100% !important"
+    }
 }));
 
 export default useStyles;

@@ -55,6 +55,7 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({
                   title: video.snippet.title,
                 }}
                 onClick={() => handleOpenYoutube(video)}
+                imageSizeClassname={classes.imageSize}
               />
               <Box className={classes.dataBox}>
                 <Typography

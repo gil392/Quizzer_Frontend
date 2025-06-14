@@ -69,12 +69,12 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
         <Stack direction="row" alignItems="center" spacing={1}>
           <Typography>Video link:</Typography>
           <Link
-            href={`https://www.youtube.com/watch?v=${lesson.videoDetails.videoId}`}
+            href={getVideoLink(lesson)}
             target="_blank"
             rel="noopener"
             underline="hover"
           >
-            {`https://www.youtube.com/watch?v=${lesson.videoDetails.videoId}`}
+            {getVideoLink(lesson)}
           </Link>
         </Stack>
 
@@ -146,3 +146,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
 };
 
 export default LessonInfo;
+
+export function getVideoLink(lesson: LessonData): string | undefined {
+  return `https://www.youtube.com/watch?v=${lesson.videoDetails.videoId}`;
+}

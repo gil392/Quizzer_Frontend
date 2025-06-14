@@ -11,8 +11,6 @@ const useStyles = makeStyles(() => ({
     },
   },
   thumbnail: {
-    width: "100% !important",
-    height: "100% !important",
     objectFit: "cover",
     borderRadius: 8,
   },
