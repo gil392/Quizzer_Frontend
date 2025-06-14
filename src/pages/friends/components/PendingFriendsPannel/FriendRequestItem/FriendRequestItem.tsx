@@ -31,7 +31,7 @@ const FriendRequestItem: FunctionComponent<FriendRequestItemProps> = (
 
   return (
     <div className={clsx(className, classes.root)}>
-      <FriendItem user={user} />
+      <FriendItem user={user} isPending={true} />
 
       <div className={classes.actions}>
         <IconButton size="small" onClick={onAcceptClick}>

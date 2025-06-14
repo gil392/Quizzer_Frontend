@@ -2,32 +2,51 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Avatar, Button, Skeleton, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
 import { GenericIconButton } from "../../../../components/GenericIconButton";
-import { toastSuccess, toastWarning } from "../../../../utils/utils";
 import EditingActions from "../EditingActions/EditingActions";
 import { useStyles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import {
   fetchLoggedUser,
-  updateUserAsync,
 } from "../../../../store/userReducer";
+import { UserWithId } from "../../../../api/user/types";
 
-const UserProfileDetails: FunctionComponent = () => {
+interface UserProfileDetailsProps {
+  isEditing: boolean;
+  setIsEditing: (isEditing: boolean) => void;
+  imageFile?: File;
+  setImageFile: (file: File | undefined) => void;
+  profileImageUrl: string | undefined;
+  setProfileImageUrl: (url: string | undefined) => void;
+  user?: UserWithId | null;
+}
+
+const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) => {
+  const {
+    user: passedUser,
+    setIsEditing,
+    isEditing,
+    imageFile,
+    setImageFile,
+    profileImageUrl,
+    setProfileImageUrl,
+  } = props;
   const classes = useStyles();
 
-  const [isEditing, setIsEditing] = useState(false);
   const [username, setUsername] = useState<string>();
-  const [profileImageUrl, setProfileImageUrl] = useState<string>();
-  const [imageFile, setImageFile] = useState<File>();
   const dispatch = useDispatch<AppDispatch>();
-  const { loggedUser: user } = useSelector((state: RootState) => state.user);
+  const { loggedUser } = useSelector((state: RootState) => state.user);
+
+  const user = passedUser || loggedUser;
 
   useEffect(() => {
-    const fetchUser = async () => {
-      await dispatch(fetchLoggedUser()).unwrap();
-    };
-    fetchUser();
-  }, []);
+    if (!passedUser) {
+      const fetchUser = async () => {
+        await dispatch(fetchLoggedUser()).unwrap();
+      };
+      fetchUser();
+    }
+  }, [passedUser, dispatch]);
 
   useEffect(() => {
     if (user) {
@@ -39,24 +58,6 @@ const UserProfileDetails: FunctionComponent = () => {
   const stopEdit = () => {
     setImageFile(undefined);
     setIsEditing(false);
-  };
-
-  const handleSave = async () => {
-    try {
-      if (user && (username || imageFile)) {
-        await dispatch(
-          updateUserAsync({
-            username,
-            imageFile,
-          })
-        ).unwrap();
-        toastSuccess("Update user successfuly");
-        stopEdit();
-      }
-    } catch (error) {
-      console.error("Failed updating user: ", error);
-      toastWarning("Failed to update user. Please try again");
-    }
   };
 
   const handleCancel = () => {
@@ -71,6 +72,7 @@ const UserProfileDetails: FunctionComponent = () => {
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
+      console.log("Image URL:", imageUrl);
       setProfileImageUrl(imageUrl);
       setImageFile(file);
     }
@@ -89,7 +91,7 @@ const UserProfileDetails: FunctionComponent = () => {
             fontSize: "3em",
           }}
         />
-        {isEditing && (
+        {isEditing && !passedUser && (
           <GenericIconButton
             component={"label"}
             title={"Upload image"}
@@ -123,7 +125,7 @@ const UserProfileDetails: FunctionComponent = () => {
       >
         streak: {user ? user.streak : <Skeleton />}
       </Typography>
-      {isEditing ? (
+      {isEditing && !passedUser ? (
         <TextField
           label="Username"
           variant="outlined"
@@ -136,17 +138,25 @@ const UserProfileDetails: FunctionComponent = () => {
           {user ? user.username : <Skeleton />}
         </Typography>
       )}
-      {isEditing ? (
-        <EditingActions saveEdit={handleSave} cancelEditing={handleCancel} />
-      ) : (
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={() => setIsEditing(true)}
-          sx={{ mt: 3 }}
-        >
-          Edit Profile
-        </Button>
+      {!passedUser && (
+        isEditing ? (
+          <EditingActions
+            user={user}
+            username={username}
+            imageFile={imageFile}
+            cancelEditing={handleCancel}
+            stopEdit={stopEdit}
+          />
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => setIsEditing(true)}
+            sx={{ mt: 3 }}
+          >
+            Edit Profile
+          </Button>
+        )
       )}
     </div>
   );

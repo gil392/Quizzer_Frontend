@@ -10,6 +10,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       padding: theme.spacing(0.5, 1),
       position: "absolute",
+      bottom: 0,
       right: 0,
       top: 0,
     },

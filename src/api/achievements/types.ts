@@ -6,6 +6,7 @@ export type Reward = {
 export type RequirmentProgress = { count: number; value: number };
 
 export type Achievement = {
+  _id: string;
   title: string;
   description: string;
   reward: Reward;
