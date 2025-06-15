@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     flexContainer: {
       display: "flex",
-      gap: 10,
       width: "100%",
       alignItems: "center",
       paddingLeft: "0.5vw",
