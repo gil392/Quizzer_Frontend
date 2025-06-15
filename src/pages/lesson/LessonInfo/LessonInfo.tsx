@@ -69,12 +69,12 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
         <Stack direction="row" alignItems="center" spacing={1}>
           <Typography>Video link:</Typography>
           <Link
-            href={lesson.videoUrl}
+            href={getVideoLink(lesson)}
             target="_blank"
             rel="noopener"
             underline="hover"
           >
-            {lesson.videoUrl}
+            {getVideoLink(lesson)}
           </Link>
         </Stack>
 
@@ -95,7 +95,9 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
             className={classes.collapseContent}
           >
             <CardContent>
-              <Typography variant="body2">{lesson.summary}</Typography>
+              <Typography variant="body2" className={classes.summary}>
+                {lesson.summary}
+              </Typography>
             </CardContent>
           </Collapse>
         </Card>
@@ -137,3 +139,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
 };
 
 export default LessonInfo;
+
+export function getVideoLink(lesson: LessonData): string | undefined {
+  return `https://www.youtube.com/watch?v=${lesson.videoDetails.videoId}`;
+}

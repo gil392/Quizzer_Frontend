@@ -55,7 +55,16 @@ const Summary: React.FC<SummaryProps> = ({ lessonData, quizSettings }) => {
         <Typography variant="h5" component="div" gutterBottom>
           {lessonData.title}
         </Typography>
-        <Typography variant="body1">{lessonData.summary}</Typography>
+        <Typography
+          variant="body1"
+          style={{
+            whiteSpace: "pre-line",
+            maxHeight: "90vh",
+            overflowY: "auto",
+          }}
+        >
+          {lessonData.summary}
+        </Typography>
       </Box>
       <Box className={classes.buttonContainer}>
         <Button

@@ -44,13 +44,13 @@ export const updateLessonAsync = createAsyncThunk(
 
 export const deleteLessonAsync = createAsyncThunk(
   "lesson/deleteLesson",
-  async (lessonId: string, {getState}) => {
+  async (lessonId: string, { getState }) => {
     await deleteLesson(lessonId);
     const state = getState() as RootState;
     const quizIds = Object.values(state.quizzes.quizzes)
       .filter((quiz) => quiz.lessonId === lessonId)
       .map((quiz) => quiz._id);
-    return {lessonId, quizIds};
+    return { lessonId, quizIds };
   }
 );
 
@@ -64,10 +64,12 @@ export const mergeLessonsAsync = createAsyncThunk(
 
 interface LessonState {
   lessons: LessonData[];
+  fetchStatus: "idle" | "loading" | "succeeded" | "failed";
 }
 
 const initialState: LessonState = {
   lessons: [],
+  fetchStatus: "idle",
 };
 
 const lessonSlice = createSlice({
@@ -76,7 +78,14 @@ const lessonSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+      .addCase(fetchLessons.rejected, (state) => {
+        state.fetchStatus = "failed";
+      })
+      .addCase(fetchLessons.pending, (state) => {
+        state.fetchStatus = "loading";
+      })
       .addCase(fetchLessons.fulfilled, (state, action) => {
+        state.fetchStatus = "succeeded";
         state.lessons = action.payload;
       })
       .addCase(updateLessonAsync.fulfilled, (state, action) => {

@@ -1,4 +1,5 @@
 import { LessonData } from "../../../api/lesson/types";
+import { getVideoLink } from "../LessonInfo/LessonInfo";
 import { FilterOptions } from "./types";
 
 const includesText = (
@@ -16,5 +17,5 @@ export const getFilteredLessons = (
   lessons.filter(
     (lesson) =>
       includesText(lesson.title, filterOptions.searchText) ||
-      includesText(lesson.videoUrl, filterOptions.searchText)
+      includesText(getVideoLink(lesson), filterOptions.searchText)
   );
