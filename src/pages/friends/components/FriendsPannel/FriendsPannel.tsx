@@ -7,6 +7,7 @@ import { useStyles as useFriendsPageStyles } from "../../styles";
 import FriendItem from "./FriendItem/FriendItem";
 import FriendsNotFound from "./FriendsNotFound/FriendsNotFound";
 import { useStyles } from "./styles";
+import { Typography } from "@mui/material";
 
 interface FriendsPannelProps {
   friends: UserWithId[];

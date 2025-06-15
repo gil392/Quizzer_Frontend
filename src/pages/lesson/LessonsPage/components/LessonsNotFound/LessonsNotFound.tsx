@@ -1,8 +1,8 @@
-import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import React from "react";
-import { useStyles } from "./styles";
-import { PAGES_ROUTES } from "../../../../../routes/routes.const";
 import { useNavigate } from "react-router-dom";
+import { PAGES_ROUTES } from "../../../../../routes/routes.const";
+import { useStyles } from "./styles";
 
 const LessonsNotFound: React.FC = () => {
   const classes = useStyles();
