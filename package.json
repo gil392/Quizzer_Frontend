@@ -6,6 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:production": "npm run build && docker rmi -f quizzer_frontend && docker build . -t quizzer_frontend",
+    "shutdown:production": "docker rm -f frontend",
+    "start:production": "docker run --network quizzer_network -p 443:443 -p 80:80 -v ./certs/CSB.crt:/etc/ssl/certs/fullchain.pem:ro -v ./certs/myserver.key:/etc/ssl/private/privkey.pem:ro --name frontend -d quizzer_frontend",
+    "restart:production": "npm run shutdown:production && npm run build:production && npm run start:production",
     "lint": "eslint .",
     "preview": "vite preview"
   },
