@@ -25,6 +25,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: 24,
     backgroundColor: theme.palette.background.paper,
   },
+  card: {
+    paddingLeft: "1rem",
+  },
 }));
 
 export default useStyles;

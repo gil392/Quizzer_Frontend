@@ -40,6 +40,11 @@ const useStyles = makeStyles(() =>
       gap: "1rem",
       justifyContent: "center",
     },
+    summary: {
+      whiteSpace: "pre-line",
+      maxHeight: "70vh",
+      overflowY: "auto",
+    },
   })
 );
 

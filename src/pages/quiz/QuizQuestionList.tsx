@@ -78,7 +78,7 @@ const QuizQuestionList: React.FC<QuizQuestionListProps> = ({
             ));
         return (
           <Box key={index} className={classes.questionBox}>
-            <Card style={{ paddingLeft: "1rem" }}>
+            <Card className={classes.card}>
               <Typography variant="h6" gutterBottom>
                 {index + 1}. {question.text}
               </Typography>

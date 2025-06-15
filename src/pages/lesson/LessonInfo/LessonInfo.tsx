@@ -95,14 +95,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
             className={classes.collapseContent}
           >
             <CardContent>
-              <Typography
-                variant="body2"
-                style={{
-                  whiteSpace: "pre-line",
-                  maxHeight: "70vh",
-                  overflowY: "auto",
-                }}
-              >
+              <Typography variant="body2" className={classes.summary}>
                 {lesson.summary}
               </Typography>
             </CardContent>
