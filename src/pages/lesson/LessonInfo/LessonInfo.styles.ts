@@ -15,6 +15,7 @@ const useStyles = makeStyles(() =>
     rightBox: {
       flex: 4,
       minWidth: 0, // allows box to shrink if needed, to let overflow work
+      overflowY: "auto",
     },
     title: {
       "&.MuiTypography-root": {
