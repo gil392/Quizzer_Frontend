@@ -12,6 +12,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
     padding: 16,
   },
+  header: {
+    paddingLeft: 10,
+    marginBottom: 12,
+    color: theme.palette.text.primary,
+    fontWeight: 600,
+  },
+  title: {
+    paddingLeft: 10
+  },
   summaryBox: {
     height: "90%",
     flex: 2,
