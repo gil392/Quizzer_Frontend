@@ -26,13 +26,25 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     flexContainer: {
       display: "flex",
-      justifyContent: "space-between",
+      width: "100%",
       alignItems: "center",
       paddingLeft: "0.5vw",
     },
+    editableActionsColumn: {
+      display: "flex",
+      flexDirection: "column",
+      width: "82%",
+    },
+    actions: { display: "flex" },
+    image: {
+      marginTop: "1vh",
+      marginBottom: "1vh",
+    },
+    imageSize: {
+      height: "10vh !important",
+      width: "7vw !important",
+    },
     successRateText: {
-      marginTop: "0.5rem",
-      paddingLeft: "0.5vw",
       textAlign: "left",
     },
     unrelatedLesson: {

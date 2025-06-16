@@ -1,14 +1,11 @@
 import React from "react";
-import { Box, Typography, List, ListItem, Avatar, Button } from "@mui/material";
+import { Box, Typography, List, ListItem, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
 import { RelatedVideo } from "../../../api/lesson/types";
-import {
-  formatPublishTime,
-  formatViews,
-  formatDuration,
-} from "../../../utils/utils";
+import { formatPublishTime, formatViews } from "../../../utils/utils";
 import useStyles from "./RelatedVideos.styles";
+import { LessonImage } from "./LessonImage";
 
 interface RelatedVideosProps {
   videos: RelatedVideo[];
@@ -51,20 +48,15 @@ const RelatedVideos: React.FC<RelatedVideosProps> = ({
             disableGutters
           >
             <Box className={classes.itemBox}>
-              <Box
-                className={classes.thumbnailBox}
+              <LessonImage
+                video={{
+                  duration: video.duration,
+                  url: video.snippet.thumbnail.url,
+                  title: video.snippet.title,
+                }}
                 onClick={() => handleOpenYoutube(video)}
-              >
-                <Avatar
-                  variant="rounded"
-                  src={video.snippet.thumbnail.url}
-                  className={classes.thumbnail}
-                  alt={video.snippet.title}
-                />
-                <Box className={classes.durationOverlay}>
-                  {formatDuration(video.duration)}
-                </Box>
-              </Box>
+                imageSizeClassname={classes.imageSize}
+              />
               <Box className={classes.dataBox}>
                 <Typography
                   variant="subtitle2"

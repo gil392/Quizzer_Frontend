@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardActions,
-  CardContent,
   Collapse,
   Link,
   Stack,
@@ -23,6 +22,7 @@ import {
 } from "../../../store/quizReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
+import { Summary } from "../../summary/Summary";
 
 interface LessonInfoProps {
   lesson: LessonData;
@@ -69,12 +69,12 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
         <Stack direction="row" alignItems="center" spacing={1}>
           <Typography>Video link:</Typography>
           <Link
-            href={lesson.videoUrl}
+            href={getVideoLink(lesson)}
             target="_blank"
             rel="noopener"
             underline="hover"
           >
-            {lesson.videoUrl}
+            {getVideoLink(lesson)}
           </Link>
         </Stack>
 
@@ -94,9 +94,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
             unmountOnExit
             className={classes.collapseContent}
           >
-            <CardContent>
-              <Typography variant="body2">{lesson.summary}</Typography>
-            </CardContent>
+            <Summary summary={lesson.summary} />
           </Collapse>
         </Card>
       </Box>
@@ -137,3 +135,9 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
 };
 
 export default LessonInfo;
+
+export function getVideoLink(lesson: LessonData): string | undefined {
+  return lesson.videoDetails
+    ? `https://www.youtube.com/watch?v=${lesson.videoDetails.videoId}`
+    : undefined;
+}
