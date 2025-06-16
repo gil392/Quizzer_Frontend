@@ -2,7 +2,7 @@ import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({
   thumbnailBox: {
-    minWidth: "10vw",
+    minWidth: "10%",
     position: "relative",
     cursor: "pointer",
     flexShrink: 0,

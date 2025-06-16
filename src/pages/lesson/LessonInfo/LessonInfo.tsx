@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardActions,
-  CardContent,
   Collapse,
   Link,
   Stack,
@@ -23,7 +22,7 @@ import {
 } from "../../../store/quizReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
-import { Summary2 } from "../../summary/Summary2";
+import { Summary } from "../../summary/Summary";
 
 interface LessonInfoProps {
   lesson: LessonData;
@@ -95,7 +94,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
             unmountOnExit
             className={classes.collapseContent}
           >
-            <Summary2 summary={lesson.summary} />
+            <Summary summary={lesson.summary} />
           </Collapse>
         </Card>
       </Box>

@@ -139,7 +139,6 @@ const QuizPage: React.FC = () => {
       setQuizId(data._id);
       setIsLocked(false);
     } catch (error) {
-      console.error("Error generating quiz:", error);
       alert("Failed to generate a new quiz. Please try again.");
     } finally {
       setLoading(false);

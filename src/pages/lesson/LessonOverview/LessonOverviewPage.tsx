@@ -11,7 +11,7 @@ import { LessonData } from "../../../api/lesson/types";
 import { getRelatedLessons } from "../../../api/lesson/api";
 import { RelatedVideo } from "../../../api/lesson/types";
 import LessonOverviewSkeleton from "./LessonOverviewSkeleton.tsx";
-import { Summary2 } from "../../summary/Summary2.tsx";
+import { Summary } from "../../summary/Summary.tsx";
 import { PAGES_ROUTES } from "../../../routes/routes.const.ts";
 import { generateQuizAsync } from "../../../store/quizReducer.ts";
 
@@ -51,7 +51,6 @@ const LessonOverviewPage: React.FC = () => {
         },
       });
     } catch (error) {
-      console.error("Error generating quiz:", error);
       toastWarning("Failed to generate quiz. Please try again.");
     }
   };
@@ -86,14 +85,14 @@ const LessonOverviewPage: React.FC = () => {
     <Box className={classes.root}>
       <Box className={classes.summaryBox}>
         {lessonData && (
-          <Card>
+          <Card className={classes.summaryCard}>
             <Typography variant="h5" className={classes.header}>
               Summary
             </Typography>
             <Typography variant="body1" className={classes.title}>
               {lessonData.title}
             </Typography>
-            <Summary2 summary={lessonData.summary} />
+            <Summary summary={lessonData.summary} />
             <Box className={classes.buttonContainer}>
               <Button
                 variant="contained"

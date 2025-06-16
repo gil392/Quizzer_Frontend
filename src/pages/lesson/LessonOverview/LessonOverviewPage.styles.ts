@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     fontWeight: 600,
   },
   title: {
-    paddingLeft: 10
+    paddingLeft: 10,
   },
   summaryBox: {
     height: "90%",
@@ -32,6 +32,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down("md")]: {
       minWidth: 0,
     },
+  },
+  summaryCard: {
+    maxHeight: "97%",
   },
 }));
 
