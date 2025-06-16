@@ -3,36 +3,35 @@ import { IconButton } from "@mui/material";
 import clsx from "clsx";
 import { FunctionComponent } from "react";
 import { useStyles } from "./styles";
-import { FriendRequestItemAction } from "./types";
 import { UserWithId } from "../../../../../api/user/types";
-import { acceptFriendRequest, declineFriendRequest } from "../../../../../api/user/api";
 import FriendItem from "../../FriendsPannel/FriendItem/FriendItem";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../../store/store";
+import { acceptFriend, declineFriend } from "../../../../../store/userReducer";
 
 interface FriendRequestItemProps {
   user: UserWithId;
   className?: string;
-  onAction: (action: FriendRequestItemAction) => void;
 }
 
 const FriendRequestItem: FunctionComponent<FriendRequestItemProps> = (
   props
 ) => {
-  const { user, className, onAction } = props;
+  const { user, className } = props;
   const classes = useStyles();
+  const dispatch = useDispatch<AppDispatch>();
 
-  const onAcceptClick = () => {
-    acceptFriendRequest(user._id);
-    onAction("accept");
+  const onAcceptClick = async () => {
+    await dispatch(acceptFriend(user._id));
   };
 
-  const onDeclineClick = () => {
-    declineFriendRequest(user._id);
-    onAction("decline");
+  const onDeclineClick = async () => {
+    await dispatch(declineFriend(user._id));
   };
 
   return (
     <div className={clsx(className, classes.root)}>
-      <FriendItem user={user} />
+      <FriendItem user={user} isPending={true} />
 
       <div className={classes.actions}>
         <IconButton size="small" onClick={onAcceptClick}>

@@ -1,15 +1,19 @@
 import { Navigate, RouteProps } from "react-router-dom";
 import { SetAccessTokenFunction } from "../hooks/authentication/types";
+import FriendsPage from "../pages/friends/FriendsPage";
 import GenerateLessonPage from "../pages/generateLesson/GenerateLessonPage";
 import LessonsPage from "../pages/lesson/LessonsPage/LessonsPage";
 import LoginPage from "../pages/login/LoginPage";
-import QuizPage from "../pages/Quiz";
+import QuizPage from "../pages/quiz/Quiz";
 import RegisterPage from "../pages/register/RegisterPage";
-import SummaryPage from "../pages/Summary";
+import LessonOverviewPage from "../pages/lesson/LessonOverview/LessonOverviewPage";
 import { PAGES_ROUTES } from "./routes.const";
-import FriendsPage from "../pages/friends/FriendsPage";
 import SettingsPage from "../pages/settings/SettingsPage";
+<<<<<<< 30-google-login
 import AuthCallbackPage from "../pages/login/AuthCallbackPage";
+=======
+import UserProfilePage from "../pages/userProfile/UserProfilePage";
+>>>>>>> main
 
 export const createPagesRoutes = (
   setAccessToken: SetAccessTokenFunction
@@ -33,7 +37,11 @@ export const createPagesRoutes = (
   { path: PAGES_ROUTES.SETTINGS, element: <SettingsPage /> },
   { path: PAGES_ROUTES.GENERATE_LESSON, element: <GenerateLessonPage /> },
   { path: PAGES_ROUTES.QUIZ, element: <QuizPage /> },
-  { path: PAGES_ROUTES.SUMMARY, element: <SummaryPage /> },
+  { path: PAGES_ROUTES.SUMMARY, element: <LessonOverviewPage /> },
   { path: PAGES_ROUTES.LESSON, element: <LessonsPage /> },
   { path: PAGES_ROUTES.FRIENDS, element: <FriendsPage /> },
+  { path: PAGES_ROUTES.PROFILE, element: <UserProfilePage /> },
+  {
+    path: PAGES_ROUTES.PROFILE_WITH_ID, element: <UserProfilePage />,
+  },
 ];

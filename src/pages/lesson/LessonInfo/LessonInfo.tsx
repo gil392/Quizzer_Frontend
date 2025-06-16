@@ -2,7 +2,6 @@ import {
   Button,
   Card,
   CardActions,
-  CardContent,
   Collapse,
   Link,
   Stack,
@@ -12,11 +11,18 @@ import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LessonData } from "../../../api/lesson/types";
-import { deleteQuiz, getQuizzes, updateQuiz } from "../../../api/quiz/api";
 import { QuizData, QuizSettings } from "../../../api/quiz/types";
 import QuizItem from "../QuizItem/QuizItem";
 import useStyles from "./LessonInfo.styles";
 import { INITIAL_QUIZ_SETTINGS } from "../../../api/quiz/constants";
+import {
+  deleteQuizAsync,
+  fetchQuizzes,
+  updateQuizAsync,
+} from "../../../store/quizReducer";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/store";
+import { Summary } from "../../summary/Summary";
 
 interface LessonInfoProps {
   lesson: LessonData;
@@ -25,11 +31,11 @@ interface LessonInfoProps {
 
 const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   const classes = useStyles();
-  const [quizzes, setQuizzes] = useState<QuizData[]>([]);
+  const quizzes = useSelector((state: RootState) => state.quizzes.quizzes);
   const [isSummaryExpanded, setIsSummaryExpanded] = useState(true); // Default to true (show summary)
+  const dispatch = useDispatch<AppDispatch>();
 
   const navigate = useNavigate();
-  /** TODO: Issue 14 (Itay)- get these settings not hard-coded */
   const quizSettings: QuizSettings = INITIAL_QUIZ_SETTINGS;
 
   const onCreateQuiz = () => {
@@ -39,8 +45,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   useEffect(() => {
     const fetchQuizzesByLessonId = async () => {
       try {
-        const { data } = await getQuizzes(lesson._id);
-        setQuizzes(data);
+        await dispatch(fetchQuizzes(lesson._id)).unwrap();
       } catch (error) {
         console.error("Error fetching lessons:", error);
       }
@@ -50,17 +55,11 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   }, []);
 
   const handleDeleteQuiz = async (quizId: string) => {
-    await deleteQuiz(quizId);
-    setQuizzes((prevQuizzes) =>
-      prevQuizzes.filter((quiz) => quiz._id !== quizId)
-    );
+    await dispatch(deleteQuizAsync(quizId));
   };
 
   const handleUpdateQuiz = async (quiz: QuizData) => {
-    await updateQuiz(quiz._id, quiz);
-    setQuizzes((prevQuizzes) =>
-      prevQuizzes.map((q) => (q._id === quiz._id ? quiz : q))
-    );
+    await dispatch(updateQuizAsync({ quizId: quiz._id, updatedData: quiz }));
   };
 
   return (
@@ -70,12 +69,12 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
         <Stack direction="row" alignItems="center" spacing={1}>
           <Typography>Video link:</Typography>
           <Link
-            href={lesson.videoUrl}
+            href={getVideoLink(lesson)}
             target="_blank"
             rel="noopener"
             underline="hover"
           >
-            {lesson.videoUrl}
+            {getVideoLink(lesson)}
           </Link>
         </Stack>
 
@@ -95,9 +94,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
             unmountOnExit
             className={classes.collapseContent}
           >
-            <CardContent>
-              <Typography variant="body2">{lesson.summary}</Typography>
-            </CardContent>
+            <Summary summary={lesson.summary} />
           </Collapse>
         </Card>
       </Box>
@@ -112,6 +109,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
               updateQuizTitle={(newTitle: string) => {
                 handleUpdateQuiz({ ...quiz, title: newTitle });
               }}
+              lesson={lesson}
             />
           ))
         ) : (
@@ -137,3 +135,9 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
 };
 
 export default LessonInfo;
+
+export function getVideoLink(lesson: LessonData): string | undefined {
+  return lesson.videoDetails
+    ? `https://www.youtube.com/watch?v=${lesson.videoDetails.videoId}`
+    : undefined;
+}

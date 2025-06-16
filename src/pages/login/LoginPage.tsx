@@ -74,7 +74,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
           Login
         </Typography>
         <Typography variant="subtitle1" color="textSecondary" align="center">
-          Enter your email below to login your account
+          Enter your username below to login your account
         </Typography>
       </section>
 
@@ -97,7 +97,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
           className={classes.link}
           onClick={navigateToRegisterPage}
         >
-          dont have account? register here
+          Don't have an account? Register here
         </Link>
         <Typography className={classes.orText} variant="h4" gutterBottom>
           OR

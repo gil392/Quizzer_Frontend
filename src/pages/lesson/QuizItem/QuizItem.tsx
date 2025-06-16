@@ -6,54 +6,65 @@ import {
   AccordionDetails,
   AccordionSummary,
   Typography,
-  IconButton,
   Rating,
 } from "@mui/material";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-import { QuizAttempt, QuizData } from "../../../api/quiz/types";
-import { getQuizAttempts } from "../../../api/quiz/api";
+import { QuizData } from "../../../api/quiz/types";
 import EditableTitleWithActions from "../../../components/EditabletitleWithActions";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import useStyles from "./QuizItem.styles";
 import { rateQuiz } from "../../../api/quiz/api";
+import { GenericIconButton } from "../../../components/GenericIconButton";
+import { PAGES_ROUTES } from "../../../routes/routes.const";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/store";
+import { fetchQuizAttempts } from "../../../store/attemptReducer";
+import { areAllQuestionsSubmitted } from "../../quiz/Utils";
+import { AttemptItem } from "./AttemptItem";
+import { LessonData } from "../../../api/lesson/types";
 
 type QuizItemProps = {
   quiz: QuizData;
   deleteQuiz: () => void;
   updateQuizTitle: (newTitle: string) => void;
+  lesson: LessonData;
 };
 
 const QuizItem: React.FC<QuizItemProps> = ({
   quiz,
   deleteQuiz,
   updateQuizTitle,
+  lesson,
 }) => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [attempts, setAttempts] = useState<QuizAttempt[]>([]);
-  const [loadingAttempts, setLoadingAttempts] = useState<boolean>(true);
+  const dispatch = useDispatch<AppDispatch>();
+  const attempts = useSelector(
+    (state: RootState) => state.attempt.attemptsByQuiz[quiz._id]
+  );
+  const [loadingAttempts, setLoadingAttempts] = useState<boolean>(false);
 
   const handleRetakeQuiz = () => {
-    navigate("/quiz", {
-      state: { quizId: quiz._id, quizSettings: quiz.settings },
+    navigate(PAGES_ROUTES.QUIZ, {
+      state: {
+        quizId: quiz._id,
+        quizSettings: quiz.settings,
+        lessonData: lesson,
+      },
     });
-  };
-
-  const handleViewAttempt = (attempt: QuizAttempt) => {
-    navigate("/quiz", { state: { attempt } });
   };
 
   useEffect(() => {
     const fetchAttempts = async () => {
-      try {
-        setLoadingAttempts(true);
-        const { data } = await getQuizAttempts(quiz._id);
-        setAttempts(data);
-      } catch (error) {
-        console.error("Error fetching quiz attempts:", error);
-      } finally {
-        setLoadingAttempts(false);
+      if (!attempts) {
+        try {
+          setLoadingAttempts(true);
+          await dispatch(fetchQuizAttempts(quiz._id)).unwrap();
+        } catch (error) {
+          console.error("Error fetching quiz attempts:", error);
+        } finally {
+          setLoadingAttempts(false);
+        }
       }
     };
 
@@ -75,13 +86,11 @@ const QuizItem: React.FC<QuizItemProps> = ({
           onSave={(newTitle) => updateQuizTitle(newTitle)}
           onDelete={deleteQuiz}
         />
-        <IconButton
+        <GenericIconButton
+          icon={<ReplayIcon />}
+          title="Retake Quiz"
           onClick={handleRetakeQuiz}
-          aria-label="Retake Quiz"
-          className={classes.retakeButton}
-        >
-          <ReplayIcon />
-        </IconButton>
+        />
       </Box>
       <Accordion>
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
@@ -90,20 +99,14 @@ const QuizItem: React.FC<QuizItemProps> = ({
         <AccordionDetails>
           {loadingAttempts ? (
             <Typography variant="body2">Loading attempts...</Typography>
-          ) : attempts.length > 0 ? (
+          ) : attempts && attempts.length > 0 ? (
             attempts.map((attempt, index) => (
-              <Box key={attempt._id} className={classes.AttemptContainer}>
-                <Typography variant="body1">
-                  {index + 1}. Score: {attempt.score} / 100
-                </Typography>
-                <IconButton
-                  onClick={() => handleViewAttempt(attempt)}
-                  aria-label="View Attempt"
-                  size="small"
-                >
-                  <ArrowForwardIcon color="primary" />
-                </IconButton>
-              </Box>
+              <AttemptItem
+                attempt={attempt}
+                index={index}
+                isFinished={areAllQuestionsSubmitted(quiz, attempt)}
+                lesson={lesson}
+              />
             ))
           ) : (
             <Typography variant="body2">No attempts found.</Typography>
@@ -118,11 +121,6 @@ const QuizItem: React.FC<QuizItemProps> = ({
           onChange={(_, newValue) => handleRateQuiz(newValue)}
         />
       </Box>
-      {rating && (
-        <Typography variant="body2" mt={1}>
-          Your rating: {rating}
-        </Typography>
-      )}
     </Box>
   );
 };

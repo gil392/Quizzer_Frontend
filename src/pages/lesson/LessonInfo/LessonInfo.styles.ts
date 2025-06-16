@@ -6,7 +6,7 @@ const useStyles = makeStyles(() =>
       display: "flex",
       gap: "2vw",
       maxWidth: "100%",
-      overflowX: "hidden",
+      overflowY: "hidden",
     },
     leftBox: {
       flex: 6,
@@ -39,6 +39,11 @@ const useStyles = makeStyles(() =>
       display: "flex",
       gap: "1rem",
       justifyContent: "center",
+    },
+    summary: {
+      whiteSpace: "pre-line",
+      maxHeight: "70vh",
+      overflowY: "auto",
     },
   })
 );

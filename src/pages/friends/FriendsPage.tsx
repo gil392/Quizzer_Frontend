@@ -1,34 +1,34 @@
-import { concat, prop, remove } from "ramda";
+import { concat, prop } from "ramda";
 import { FunctionComponent, useCallback, useEffect, useState } from "react";
-import { getFriends, getPendingFriends } from "../../api/user/api";
-import { UserWithId } from "../../api/user/types";
 import FriendsPannel from "./components/FriendsPannel/FriendsPannel";
-import { FriendRequestItemAction } from "./components/PendingFriendsPannel/FriendRequestItem/types";
 import PendingFriendsPannel from "./components/PendingFriendsPannel/PendingFriendsPannel";
 import { useStyles } from "./styles";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { fetchFriends, fetchPendingFriends } from "../../store/userReducer";
 
 const FriendsPage: FunctionComponent = () => {
   const classes = useStyles();
   const [excludedIdsFromSearch, setExcludedIdsFromSearch] = useState<string[]>(
     []
   );
-  const [friends, setFriends] = useState<UserWithId[]>([]);
-  const [pendingFriends, setPendingFriends] = useState<UserWithId[]>([]);
+  const { pendingFriends, friends } = useSelector(
+    (state: RootState) => state.user
+  );
+  const dispatch = useDispatch<AppDispatch>();
   const [isFriendsLoading, setIsFriendsLoading] = useState(false);
   const [isPendingFriendsLoading, setIsPendingFriendsLoading] = useState(false);
 
-  const fetchFriends = useCallback(async (abortController: AbortController) => {
+  const getFriends = useCallback(async (abortController: AbortController) => {
     setIsFriendsLoading(true);
-    const { data: friends } = await getFriends(abortController);
-    setFriends(friends);
+    await dispatch(fetchFriends(abortController)).unwrap();
     setIsFriendsLoading(false);
   }, []);
 
-  const fetchPendingFriends = useCallback(
+  const getPendingFriends = useCallback(
     async (abortController: AbortController) => {
       setIsPendingFriendsLoading(true);
-      const { data: pendingFriends } = await getPendingFriends(abortController);
-      setPendingFriends(pendingFriends);
+      await dispatch(fetchPendingFriends(abortController)).unwrap();
       setIsPendingFriendsLoading(false);
     },
     []
@@ -36,8 +36,8 @@ const FriendsPage: FunctionComponent = () => {
 
   useEffect(() => {
     const abortController = new AbortController();
-    fetchFriends(abortController);
-    fetchPendingFriends(abortController);
+    getFriends(abortController);
+    getPendingFriends(abortController);
 
     return () => abortController.abort();
   }, []);
@@ -47,17 +47,6 @@ const FriendsPage: FunctionComponent = () => {
       concat(friends.map(prop("_id")), pendingFriends.map(prop("_id")))
     );
   }, [friends, pendingFriends]);
-
-  const removeFriendRequest = (
-    user: UserWithId,
-    requestIndex: number,
-    action: FriendRequestItemAction
-  ) => {
-    setPendingFriends(remove(requestIndex, 1));
-    if (action === "accept") {
-      setFriends(concat([user]));
-    }
-  };
 
   return (
     <div className={classes.root}>
@@ -69,7 +58,6 @@ const FriendsPage: FunctionComponent = () => {
       <PendingFriendsPannel
         pendingFriends={pendingFriends}
         excludedIdsFromSearch={excludedIdsFromSearch}
-        removePendingFriend={removeFriendRequest}
         loading={isPendingFriendsLoading}
         className={classes.pendingFriendsPannel}
       />

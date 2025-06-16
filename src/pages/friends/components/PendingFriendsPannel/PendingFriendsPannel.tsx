@@ -1,23 +1,17 @@
-import { Divider, Typography } from "@mui/material";
+import { Divider, Paper, Typography } from "@mui/material";
 import clsx from "clsx";
 import { isEmpty } from "ramda";
-import { FunctionComponent, useCallback } from "react";
+import { FunctionComponent } from "react";
 import { UserWithId } from "../../../../api/user/types";
 import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import { useStyles as useFriendsPageStyles } from "../../styles";
 import FriendRequestItem from "./FriendRequestItem/FriendRequestItem";
-import { FriendRequestItemAction } from "./FriendRequestItem/types";
 import UsersSearcher from "./UsersSearcher/UsersSearcher";
 import { useStyles } from "./styles";
 
 interface PendingFriendsPannelProps {
   pendingFriends: UserWithId[];
   loading?: boolean;
-  removePendingFriend: (
-    user: UserWithId,
-    requestIndex: number,
-    action: FriendRequestItemAction
-  ) => void;
   excludedIdsFromSearch: string[];
   className?: string;
 }
@@ -25,27 +19,16 @@ interface PendingFriendsPannelProps {
 const PendingFriendsPannel: FunctionComponent<PendingFriendsPannelProps> = (
   props
 ) => {
-  const {
-    pendingFriends,
-    removePendingFriend,
-    loading,
-    excludedIdsFromSearch,
-    className,
-  } = props;
+  const { pendingFriends, loading, excludedIdsFromSearch, className } = props;
   const classes = useStyles();
   const friendsPageClasses = useFriendsPageStyles();
 
-  const onPendingFriendAction = useCallback(
-    (user: UserWithId, requestIndex: number) =>
-      (action: FriendRequestItemAction) =>
-        removePendingFriend(user, requestIndex, action),
-    []
-  );
-
   const pendingFriendsList = isEmpty(pendingFriends) ? (
-    <Typography textAlign="center" variant="h6">
-      No Pending Friend Requests
-    </Typography>
+    <section className={classes.noPendingFriendsContainer}>
+      <Paper elevation={2} className={classes.noPendingFriendsPage}>
+        <Typography variant="h6">No Pending Friend Requests</Typography>
+      </Paper>
+    </section>
   ) : (
     pendingFriends.map((user, index) => (
       <FriendRequestItem
@@ -55,7 +38,6 @@ const PendingFriendsPannel: FunctionComponent<PendingFriendsPannelProps> = (
           [friendsPageClasses.lastItem]: index === pendingFriends.length - 1,
         })}
         user={user}
-        onAction={onPendingFriendAction(user, index)}
       />
     ))
   );

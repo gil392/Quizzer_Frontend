@@ -1,8 +1,14 @@
 import { LessonData } from "../../../api/lesson/types";
+import { getVideoLink } from "../LessonInfo/LessonInfo";
 import { FilterOptions } from "./types";
 
-const includesText = (lessonText: string, seatchText: string): boolean =>
-  lessonText.toLowerCase().includes(seatchText.toLowerCase());
+const includesText = (
+  lessonText: string | undefined,
+  seatchText: string
+): boolean =>
+  lessonText
+    ? lessonText.toLowerCase().includes(seatchText.toLowerCase())
+    : false;
 
 export const getFilteredLessons = (
   lessons: LessonData[],
@@ -11,5 +17,5 @@ export const getFilteredLessons = (
   lessons.filter(
     (lesson) =>
       includesText(lesson.title, filterOptions.searchText) ||
-      includesText(lesson.videoUrl, filterOptions.searchText)
+      includesText(getVideoLink(lesson), filterOptions.searchText)
   );
