@@ -4,7 +4,7 @@ export type LessonData = {
   isFavorite: boolean;
   successRate?: number;
   summary: string;
-  videoDetails: {
+  videoDetails?: {
     videoId: string;
   };
   relatedLessonGroupId?: string;

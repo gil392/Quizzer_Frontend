@@ -23,6 +23,7 @@ import {
 } from "../../../store/quizReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
+import { Summary2 } from "../../summary/Summary2";
 
 interface LessonInfoProps {
   lesson: LessonData;
@@ -94,11 +95,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
             unmountOnExit
             className={classes.collapseContent}
           >
-            <CardContent>
-              <Typography variant="body2" className={classes.summary}>
-                {lesson.summary}
-              </Typography>
-            </CardContent>
+            <Summary2 summary={lesson.summary} />
           </Collapse>
         </Card>
       </Box>
@@ -141,5 +138,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
 export default LessonInfo;
 
 export function getVideoLink(lesson: LessonData): string | undefined {
-  return `https://www.youtube.com/watch?v=${lesson.videoDetails.videoId}`;
+  return lesson.videoDetails
+    ? `https://www.youtube.com/watch?v=${lesson.videoDetails.videoId}`
+    : undefined;
 }

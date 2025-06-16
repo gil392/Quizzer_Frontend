@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Box, Typography, List, ListItem, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
