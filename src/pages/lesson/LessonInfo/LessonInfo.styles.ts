@@ -6,6 +6,7 @@ const useStyles = makeStyles(() =>
       display: "flex",
       gap: "2vw",
       maxWidth: "100%",
+      minWidth: 0, // allows box to shrink properly, otherwise there's an overflow
       overflowY: "hidden",
     },
     leftBox: {
