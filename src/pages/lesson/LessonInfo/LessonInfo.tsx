@@ -11,10 +11,9 @@ import Box from "@mui/material/Box";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LessonData } from "../../../api/lesson/types";
-import { QuizData, QuizSettings } from "../../../api/quiz/types";
+import { QuizData } from "../../../api/quiz/types";
 import QuizItem from "../QuizItem/QuizItem";
 import useStyles from "./LessonInfo.styles";
-import { INITIAL_QUIZ_SETTINGS } from "../../../api/quiz/constants";
 import {
   deleteQuizAsync,
   fetchQuizzes,
@@ -32,14 +31,12 @@ interface LessonInfoProps {
 const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
   const classes = useStyles();
   const quizzes = useSelector((state: RootState) => state.quizzes.quizzes);
-  const [isSummaryExpanded, setIsSummaryExpanded] = useState(true); // Default to true (show summary)
+  const [isSummaryExpanded, setIsSummaryExpanded] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
-
   const navigate = useNavigate();
-  const quizSettings: QuizSettings = INITIAL_QUIZ_SETTINGS;
 
   const onCreateQuiz = () => {
-    navigate("/quiz", { state: { lessonData: lesson, quizSettings } });
+    navigate("/quiz", { state: { lessonData: lesson } });
   };
 
   useEffect(() => {
