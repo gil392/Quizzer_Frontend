@@ -11,7 +11,7 @@ const useStyles = makeStyles(() =>
     },
     leftBox: {
       flex: 6,
-      minWidth: 0, // allows box to shrink if needed, to let overflow work
+      minWidth: "50%", // allows box to shrink if needed, to let overflow work
     },
     rightBox: {
       flex: 4,
