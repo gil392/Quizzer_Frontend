@@ -108,8 +108,14 @@ const QuizPage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [showQuizSettings, setShowQuizSettings] = useState(
-    !locationState.quizId && !locationState.quizSettings
+    !locationState.quizId &&
+      !locationState.quizSettings &&
+      !locationState.attemptToContinue &&
+      !locationState.viewAttempt
   );
+  const isGenerateNewQuiz =
+    locationState.quizId !== undefined ||
+    locationState.quizSettings !== undefined;
 
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
 
@@ -158,7 +164,7 @@ const QuizPage: React.FC = () => {
   }, [currentAttempt]);
 
   useEffect(() => {
-    if (!showQuizSettings) {
+    if (isGenerateNewQuiz) {
       generateNewQuiz();
     }
   }, []);
