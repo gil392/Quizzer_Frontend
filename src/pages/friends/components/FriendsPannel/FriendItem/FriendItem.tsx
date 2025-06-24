@@ -43,7 +43,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
   const confirmDeleteFriend = async () => {
     try {
       await deleteFriend(user._id);
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete friend. Please try again later.");
     }
 
