@@ -49,7 +49,6 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
-  console.log("friends", friends);
 
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();

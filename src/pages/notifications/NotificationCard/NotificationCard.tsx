@@ -60,7 +60,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 
   return (
     <Card
-      variant={notification.read ? "outlined" : "elevation"}
+      variant={notification.read ? "elevation" : "outlined"}
       className={classes.card}
     >
       <Box className={classes.iconBox}>
@@ -80,9 +80,9 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           <Button
             variant={notification.read ? "outlined" : "contained"}
             color="primary"
-            startIcon={notification.read ? <Launch /> : undefined}
+            startIcon={<Launch />}
             onClick={handleCheckItOut}
-            sx={{ marginLeft: 1 }}
+            sx={{ marginLeft: 1, minWidth: 150 }}
           >
             {"Check it out"}
           </Button>
@@ -93,6 +93,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           startIcon={notification.read ? <DoneIcon /> : undefined}
           onClick={handleRead}
           disabled={notification.read || loading}
+          sx={{ minWidth: 150 }}
         >
           {loading ? (
             <CircularProgress size={18} color="inherit" />

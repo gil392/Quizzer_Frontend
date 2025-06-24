@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme: Theme) => ({
         flex: 1,
     },
     buttonBox: {
+        display: "flex",
+        flexDirection: "row",
+        gap: theme.spacing(2),
+        alignItems: "center",
         paddingRight: theme.spacing(2),
     },
 }));

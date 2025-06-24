@@ -12,10 +12,13 @@ export const fetchNotifications = createAsyncThunk(
 
 interface NotificationState {
     notifications: Notification[];
+    fetchStatus: "loading" | "succeeded" | "failed";
+
 }
 
 const initialState: NotificationState = {
     notifications: [],
+    fetchStatus: "loading",
 };
 
 const notificationSlice = createSlice({
@@ -24,9 +27,16 @@ const notificationSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+            .addCase(fetchNotifications.rejected, (state) => {
+                state.fetchStatus = "failed";
+            })
+            .addCase(fetchNotifications.pending, (state) => {
+                state.fetchStatus = "loading";
+            })
             .addCase(fetchNotifications.fulfilled, (state, action) => {
+                state.fetchStatus = "succeeded";
                 state.notifications = action.payload;
-            });
+            })
     },
 });
 

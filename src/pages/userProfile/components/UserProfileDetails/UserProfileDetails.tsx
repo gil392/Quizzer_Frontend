@@ -6,9 +6,7 @@ import EditingActions from "../EditingActions/EditingActions";
 import { useStyles } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
-import {
-  fetchLoggedUser,
-} from "../../../../store/userReducer";
+import { fetchLoggedUser } from "../../../../store/userReducer";
 import { UserWithId } from "../../../../api/user/types";
 
 interface UserProfileDetailsProps {
@@ -21,7 +19,9 @@ interface UserProfileDetailsProps {
   user?: UserWithId | null;
 }
 
-const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) => {
+const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (
+  props
+) => {
   const {
     user: passedUser,
     setIsEditing,
@@ -72,7 +72,6 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) =
     const file = event.target.files?.[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      console.log("Image URL:", imageUrl);
       setProfileImageUrl(imageUrl);
       setImageFile(file);
     }
@@ -138,8 +137,8 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) =
           {user ? user.username : <Skeleton />}
         </Typography>
       )}
-      {!passedUser && (
-        isEditing ? (
+      {!passedUser &&
+        (isEditing ? (
           <EditingActions
             user={user}
             username={username}
@@ -156,8 +155,7 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (props) =
           >
             Edit Profile
           </Button>
-        )
-      )}
+        ))}
     </div>
   );
 };

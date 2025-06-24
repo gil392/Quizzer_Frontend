@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Badge, IconButton } from "@mui/material";
 import { NotificationsOutlined } from "@mui/icons-material";
 import {
@@ -6,44 +6,42 @@ import {
   NOTIFICATIONS_INTERVAL_MS,
 } from "../const";
 import useStyles from "../styles";
-import { getNotifications } from "../../../api/notification/api";
-import { Notification } from "../../../api/notification/types";
+import { fetchNotifications } from "../../../store/notificationReducer";
+import { AppDispatch, RootState } from "../../../store/store";
+import { useDispatch, useSelector } from "react-redux";
 
 interface NotificationBellProps {
   onClick?: () => void;
 }
 
 const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
-  const [unreadCount, setUnreadCount] = useState<number>(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const classes = useStyles({});
+  const dispatch = useDispatch<AppDispatch>();
 
-  const fetchNotifications = async () => {
-    try {
-      const { data } = await getNotifications();
-      setUnreadCount(
-        data.filter((notificaion: Notification) => !notificaion.read).length
-      );
-    } catch {
-      setUnreadCount(0);
-    }
-  };
+  const { notifications } = useSelector(
+    (state: RootState) => state.notifications
+  );
+  const unreadCount = notifications.filter(
+    (notification) => !notification.read
+  ).length;
 
   useEffect(() => {
-    fetchNotifications();
+    dispatch(fetchNotifications());
+
     intervalRef.current = setInterval(
-      fetchNotifications,
+      () => dispatch(fetchNotifications()),
       NOTIFICATIONS_INTERVAL_MS
     );
 
-    const handleUpdate = () => fetchNotifications();
+    const handleUpdate = () => dispatch(fetchNotifications());
     window.addEventListener("notifications-updated", handleUpdate);
 
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
       window.removeEventListener("notifications-updated", handleUpdate);
     };
-  }, []);
+  }, [dispatch]);
 
   return (
     <IconButton onClick={onClick} aria-label="notifications">
