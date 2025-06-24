@@ -26,7 +26,6 @@ const NotificationPage: React.FC = () => {
     (state: RootState) => state.notifications
   );
 
-  console.log("fetchNotificationsStatus", fetchNotificationsStatus);
   const handleRead = async (id: string) => {
     await markNotificationAsRead(id);
     window.dispatchEvent(new Event("notifications-updated"));

@@ -20,8 +20,8 @@ import {
 } from "../../../store/lessonReducer";
 import ShareLessonDialog from "../ShareLessonDialog/ShareLessonDialog";
 import { UserWithId } from "../../../api/user/types";
-import { shareLesson } from "../../../api/notification/api";
 import { LessonImage } from "../RelatedVideo/LessonImage";
+import { shareLessonAsync } from "../../../store/notificationReducer";
 
 interface LessonItemProps {
   lesson: LessonData;
@@ -82,7 +82,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
   };
 
   const handleShareLesson = async (friendIds: string[]) => {
-    await shareLesson({
+    await shareLessonAsync({
       toUserIds: friendIds,
       relatedEntityId: lesson._id,
     });
