@@ -78,6 +78,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
         <Card className={classes.card}>
           <CardActions>
             <Button
+              variant="outlined"
               size="small"
               onClick={() => setIsSummaryExpanded(!isSummaryExpanded)}
             >
@@ -119,10 +120,10 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
           </Typography>
         )}
         <Box className={classes.buttonsContainer}>
-          <Button variant="outlined" color="inherit" onClick={onCreateQuiz}>
+          <Button variant="contained" onClick={onCreateQuiz}>
             Create New Quiz
           </Button>
-          <Button variant="outlined" color="inherit" onClick={onClose}>
+          <Button variant="outlined" onClick={onClose}>
             Close
           </Button>
         </Box>

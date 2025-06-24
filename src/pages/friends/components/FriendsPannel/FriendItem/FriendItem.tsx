@@ -1,4 +1,14 @@
-import { Avatar, IconButton, Tooltip, Typography, Dialog, DialogActions, DialogContent, DialogContentText, Button } from "@mui/material";
+import {
+  Avatar,
+  IconButton,
+  Tooltip,
+  Typography,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  Button,
+} from "@mui/material";
 import clsx from "clsx";
 import { FunctionComponent, useState } from "react";
 import { UserWithId } from "../../../../../api/user/types";
@@ -33,7 +43,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
   const confirmDeleteFriend = async () => {
     try {
       await deleteFriend(user._id);
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete friend. Please try again later.");
     }
 
@@ -56,14 +66,14 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
         <div className={classes.detailsBox}>
           <Typography>{user.username}</Typography>
           <Typography className={classes.statisticText} color="textSecondary">
-            Streak: {user.streak}d
+            Streak: {user.streak} days
           </Typography>
           <Typography className={classes.statisticText} color="textSecondary">
             XP: {user.xp}
           </Typography>
         </div>
       </div>
-      { !isPending && (
+      {!isPending && (
         <div className={classes.rightIcons}>
           <Tooltip title="View Profile" arrow>
             <IconButton
@@ -85,13 +95,11 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
           </Tooltip>
         </div>
       )}
-      <Dialog
-        open={deleteDialogOpen}
-        onClose={cancelDeleteFriend}
-      >
+      <Dialog open={deleteDialogOpen} onClose={cancelDeleteFriend}>
         <DialogContent>
           <DialogContentText className={classes.modalText}>
-            Are you sure you want to delete {user.username} from your friends list?
+            Are you sure you want to delete {user.username} from your friends
+            list?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

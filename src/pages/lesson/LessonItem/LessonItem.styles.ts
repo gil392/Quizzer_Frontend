@@ -2,15 +2,15 @@ import { makeStyles, createStyles } from "@mui/styles";
 import { Theme } from "@mui/material";
 
 const useStyles = makeStyles((theme: Theme) => {
-  const lessonItemBgColor = theme.palette.primary.dark;
-  const lessonItemHoverBgColor = theme.palette.primary.light;
+  const lessonItemBgColor = theme.palette.background.paper;
+  const lessonItemHoverBgColor = theme.palette.action.hover;
 
   return createStyles({
     lessonItem: {
       padding: "2px",
       margin: "1px 0",
       boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
-      borderRadius: "2px",
+      borderRadius: "16px",
       transition: "0.3s",
       width: "60vw",
       marginTop: "2vh",

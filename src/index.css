@@ -23,6 +23,30 @@ body {
   height: 100%;
 }
 
+::-webkit-scrollbar {
+  width: 16px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(17, 17, 17, 0.3);
+  border-radius: 16px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(17, 17, 17, 0.6);
+}
+
+@media (prefers-color-scheme: light) {
+  ::-webkit-scrollbar-thumb {
+    background-color: rgba(60, 60, 60, 0.3);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(60, 60, 60, 0.6);
+  }
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;

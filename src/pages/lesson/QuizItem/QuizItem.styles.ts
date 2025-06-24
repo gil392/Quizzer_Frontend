@@ -5,7 +5,7 @@ const useStyles = makeStyles(() =>
     container: {
       marginBottom: "1rem",
       border: "1px solid #ccc",
-      borderRadius: "8px",
+      borderRadius: "16px",
       padding: "1rem",
     },
     header: {

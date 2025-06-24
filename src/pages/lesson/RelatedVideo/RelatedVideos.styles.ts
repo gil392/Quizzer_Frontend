@@ -6,8 +6,8 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: "100%",
         height: "fit-content",
         background: theme.palette.background.paper,
-        borderRadius: 12,
         boxShadow: theme.shadows[1],
+        borderRadius: 16,
         padding: 16,
     },
     header: {
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: "100%",
     },
     listItem: {
-        borderRadius: 8,
+        borderRadius: 12,
         marginBottom: 8,
         minHeight: 75,
         paddingLeft: 0,

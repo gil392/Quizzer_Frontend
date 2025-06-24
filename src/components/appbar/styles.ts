@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
     notifications: {},
     badge: {
       backgroundColor: theme.palette.primary.main,
-      color: theme.palette.primary.contrastText,
+      color: theme.palette.text.primary,
     },
     menu: {
       marginTop: theme.spacing(1),
