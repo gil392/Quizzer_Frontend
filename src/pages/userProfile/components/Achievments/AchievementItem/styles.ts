@@ -19,9 +19,40 @@ export const useStyles = makeStyles(() =>
       justifyContent: "center",
     },
     rewardIcon: {
-      width: "4em",
+      width: "5em",
       height: "5em",
       borderRadius: "16px",
+      transition: "0.3s ease",
+      "&:hover": {
+        filter: "grayscale(100%)", 
+      },
+    },
+    iconWrapper: {
+      position: "relative",
+      display: "inline-block",
+    },
+    iconOverlay: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "5em",
+      height: "5em",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "rgba(0, 0, 0, 0.5)", 
+      borderRadius: "16px",
+      opacity: 0,
+      transition: "opacity 0.3s ease",
+      "&:hover": {
+        opacity: 1, 
+      },
+    },
+    overlayText: {
+      color: "#fff",
+      fontWeight: "bold",
+      fontSize: "0.8em",
+      textAlign: "center",
     },
     rewardXp: {
       fontWeight: "bold",
@@ -47,15 +78,6 @@ export const useStyles = makeStyles(() =>
     detailsSection: {
       width: "100%",
       paddingBottom: "0.2em",
-    },
-    completedPlate: {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      backgroundColor: "green",
-      opacity: "0.3",
     },
   })
 );

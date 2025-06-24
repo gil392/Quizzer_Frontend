@@ -31,8 +31,8 @@ const useStyles = makeStyles(() =>
       },
       width: "7rem",
     },
-    noLessonsText: {
-      marginBottom: "1rem",
+    lessonsNotFoundContainer: {
+      width: "55vw",
     },
   })
 );

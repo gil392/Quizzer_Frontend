@@ -16,7 +16,7 @@ const useStyles = makeStyles(() =>
       justifyContent: "center",
     },
     achievements: {
-      width: "66%",
+      width: "100%",
       paddingBottom: '2em'
     },
   })

@@ -8,14 +8,17 @@ const useStyles = makeStyles(() =>
       maxWidth: "100%",
       overflowX: "hidden",
       padding: "1rem",
+      minWidth: 0, // allows box to shrink properly, otherwise there's an overflow
+      overflowY: "hidden",
     },
     leftBox: {
       flex: 6,
-      minWidth: 0, // allows box to shrink if needed, to let overflow work
+      minWidth: "50%", // allows box to shrink if needed, to let overflow work
     },
     rightBox: {
       flex: 4,
       minWidth: 0, // allows box to shrink if needed, to let overflow work
+      overflowY: "auto",
     },
     title: {
       "&.MuiTypography-root": {
@@ -40,6 +43,11 @@ const useStyles = makeStyles(() =>
       display: "flex",
       gap: "1rem",
       justifyContent: "center",
+    },
+    summary: {
+      whiteSpace: "pre-line",
+      maxHeight: "70vh",
+      overflowY: "auto",
     },
   })
 );

@@ -1,5 +1,5 @@
+import { Theme } from "@mui/material";
 import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material/styles";
 
 const useStyles = makeStyles((theme: Theme) => ({
     container: {
@@ -28,23 +28,25 @@ const useStyles = makeStyles((theme: Theme) => ({
             backgroundColor: "#f1f1f1",
         },
     },
-    header: {
-        marginBottom: 12,
-        color: theme.palette.text.primary,
-        fontWeight: 600,
+    summary: {
+        whiteSpace: "pre-line",
+        maxHeight: "70vh",
+        overflowY: "auto",
+        "&::-webkit-scrollbar": {
+            width: "8px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "#888",
+            borderRadius: "4px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+            backgroundColor: "#555",
+        },
+        "&::-webkit-scrollbar-track": {
+            backgroundColor: theme.palette.mode === "dark" ? "black" : "white",
+        },
     },
-    skeletonContainer: {
-        width: "100%",
-        padding: 16,
-    },
-    cardContent: {
-        textAlign: "left",
-    },
-    buttonContainer: {
-        display: "flex",
-        justifyContent: "center",
-        padding: 16,
-    },
-}));
+})
+);
 
 export default useStyles;

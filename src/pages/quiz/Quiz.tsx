@@ -26,7 +26,7 @@ const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
 type LocationProps =
   | {
-      quizSettings: QuizSettings;
+      quizSettings?: QuizSettings;
       quizId?: undefined;
       viewAttempt?: undefined;
       attemptToContinue?: undefined;
@@ -107,7 +107,15 @@ const QuizPage: React.FC = () => {
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const [showQuizSettings, setShowQuizSettings] = useState(false);
+  const [showQuizSettings, setShowQuizSettings] = useState(
+    !locationState.quizId &&
+      !locationState.quizSettings &&
+      !locationState.attemptToContinue &&
+      !locationState.viewAttempt
+  );
+  const isGenerateNewQuiz =
+    locationState.quizId !== undefined ||
+    locationState.quizSettings !== undefined;
 
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
 
@@ -133,13 +141,12 @@ const QuizPage: React.FC = () => {
       const data = await dispatch(
         generateQuizAsync({
           lessonId: locationState.lessonData._id,
-          settings: locationState.quizSettings ?? quizData?.settings,
+          settings: quizSettings,
         })
       ).unwrap();
       setQuizId(data._id);
       setIsLocked(false);
     } catch (error) {
-      console.error("Error generating quiz:", error);
       alert("Failed to generate a new quiz. Please try again.");
     } finally {
       setLoading(false);
@@ -157,7 +164,7 @@ const QuizPage: React.FC = () => {
   }, [currentAttempt]);
 
   useEffect(() => {
-    if (!quizId) {
+    if (isGenerateNewQuiz) {
       generateNewQuiz();
     }
   }, []);

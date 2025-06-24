@@ -1,6 +1,5 @@
-import { Box } from "@mui/material";
-import { useLocation } from "react-router-dom";
-import Summary from "../../summary/Summary";
+import { Box, Button, Card, Typography } from "@mui/material";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { createLessonAsync } from "../../../store/lessonReducer";
@@ -12,6 +11,8 @@ import { LessonData } from "../../../api/lesson/types";
 import { getRelatedLessons } from "../../../api/lesson/api";
 import { RelatedVideo } from "../../../api/lesson/types";
 import LessonOverviewSkeleton from "./LessonOverviewSkeleton.tsx";
+import { Summary } from "../../summary/Summary.tsx";
+import { PAGES_ROUTES } from "../../../routes/routes.const.ts";
 
 const LessonOverviewPage: React.FC = () => {
   const location = useLocation();
@@ -25,6 +26,25 @@ const LessonOverviewPage: React.FC = () => {
   const [relatedVideos, setRelatedVideos] = useState<RelatedVideo[]>([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+
+  const handleQuizNavigation = async () => {
+    if (!lessonData) {
+      toastWarning("Lesson data is not available.");
+      return;
+    }
+
+    try {
+      navigate(PAGES_ROUTES.QUIZ, {
+        state: {
+          lessonData,
+          quizSettings,
+        },
+      });
+    } catch (error) {
+      toastWarning("Failed to generate quiz. Please try again.");
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -56,7 +76,24 @@ const LessonOverviewPage: React.FC = () => {
     <Box className={classes.root}>
       <Box className={classes.summaryBox}>
         {lessonData && (
-          <Summary lessonData={lessonData} quizSettings={quizSettings} />
+          <Card className={classes.summaryCard}>
+            <Typography variant="h5" className={classes.header}>
+              Summary
+            </Typography>
+            <Typography variant="body1" className={classes.title}>
+              {lessonData.title}
+            </Typography>
+            <Summary summary={lessonData.summary} />
+            <Box className={classes.buttonContainer}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleQuizNavigation}
+              >
+                Go to Quiz
+              </Button>
+            </Box>
+          </Card>
         )}
       </Box>
       <Box className={classes.relatedBox}>

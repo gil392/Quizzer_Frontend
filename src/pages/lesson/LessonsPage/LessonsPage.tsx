@@ -29,12 +29,13 @@ import LessonItem from "../LessonItem/LessonItem";
 import { DEFAULT_SORT_OPTION, SORT_OPTIONS } from "./components/constants";
 import { sortLessons } from "./components/utils";
 import useStyles from "./LessonsPage.styles";
+import LessonsNotFound from "./components/LessonsNotFound/LessonsNotFound";
 
 type sortFieldType =
   | "_id"
   | "summary"
   | "title"
-  | "videoUrl"
+  | "videoDetails"
   | "relatedLessonGroupId"
   | "isFavorite";
 
@@ -43,7 +44,9 @@ const LessonsPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const lessons = useSelector((state: RootState) => state.lessons.lessons);
+  const { lessons, fetchStatus: fetchLessonsStatus } = useSelector(
+    (state: RootState) => state.lessons
+  );
 
   const [selectedLesson, setSelectedLesson] = useState<LessonData | null>(null);
   const { openPopup, closePopup } = usePopupNavigation("/lesson", "info", () =>
@@ -148,31 +151,27 @@ const LessonsPage: React.FC = () => {
             </Stack>
           </Box>
 
-          {displayLessons.length > 0 ? (
-            displayLessons.map((lesson) => (
-              <LessonItem
-                key={lesson._id}
-                lesson={lesson}
-                openLesson={() => openLesson(lesson)}
-                updateLessonTitle={(newTitle: string) => {
-                  handleUpdateLesson({ ...lesson, title: newTitle });
-                }}
-                mergingLessons={mergingLessons}
-                setMergingLessons={setMergingLessons}
-                isMergeLessonsMode={isMergeLessonsMode}
-                setIsMergeLessonsMode={setIsMergeLessonsMode}
-                cancelMergingMode={cancelMergingMode}
-              />
-            ))
-          ) : (
-            <Typography
-              variant="body2"
-              color="text.secondary"
-              className={classes.noLessonsText}
-            >
-              No existing lessons.
-            </Typography>
-          )}
+          {displayLessons.length > 0
+            ? displayLessons.map((lesson) => (
+                <LessonItem
+                  key={lesson._id}
+                  lesson={lesson}
+                  openLesson={() => openLesson(lesson)}
+                  updateLessonTitle={(newTitle: string) => {
+                    handleUpdateLesson({ ...lesson, title: newTitle });
+                  }}
+                  mergingLessons={mergingLessons}
+                  setMergingLessons={setMergingLessons}
+                  isMergeLessonsMode={isMergeLessonsMode}
+                  setIsMergeLessonsMode={setIsMergeLessonsMode}
+                  cancelMergingMode={cancelMergingMode}
+                />
+              ))
+            : fetchLessonsStatus !== "loading" && (
+                <span className={classes.lessonsNotFoundContainer}>
+                  <LessonsNotFound />
+                </span>
+              )}
           {isMergeLessonsMode && (
             <Box mt={2} display="flex" gap={2}>
               <Button

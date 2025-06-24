@@ -33,4 +33,7 @@ export const createPagesRoutes = (
   { path: PAGES_ROUTES.LESSON, element: <LessonsPage /> },
   { path: PAGES_ROUTES.FRIENDS, element: <FriendsPage /> },
   { path: PAGES_ROUTES.PROFILE, element: <UserProfilePage /> },
+  {
+    path: PAGES_ROUTES.PROFILE_WITH_ID, element: <UserProfilePage />,
+  },
 ];
