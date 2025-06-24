@@ -4,7 +4,8 @@ import {
     getNotifications,
     markNotificationAsRead,
     notifyFriendsAboutAchievement,
-    shareLesson
+    shareLesson,
+    notifyFriendRequest,
 } from "../api/notification/api";
 import { Notification } from "../api/notification/types";
 
@@ -28,7 +29,7 @@ export const shareLessonAsync = createAsyncThunk(
 );
 
 export const notifyFriendsAboutAchievementAsync = createAsyncThunk(
-    "notification//shareAchievement",
+    "notification/shareAchievement",
     async () => {
         const response = await notifyFriendsAboutAchievement();
         return response.data;
@@ -48,6 +49,14 @@ export const deleteNotificationAsync = createAsyncThunk(
     async (id: string) => {
         deleteNotification(id);
         return id;
+    }
+);
+
+export const notifyFriendRequestAsync = createAsyncThunk(
+    "notification/notifyFriendRequest",
+    async (toUserId: string) => {
+        const response = await notifyFriendRequest(toUserId);
+        return response.data;
     }
 );
 
@@ -88,7 +97,8 @@ const notificationSlice = createSlice({
             .addCase(deleteNotificationAsync.fulfilled, (state, action) => {
                 state.notifications = state.notifications.filter((notification) => notification._id !== action.payload);
             })
-            .addCase(notifyFriendsAboutAchievementAsync.fulfilled, () => { });
+            .addCase(notifyFriendsAboutAchievementAsync.fulfilled, () => { })
+            .addCase(notifyFriendRequestAsync.fulfilled, () => { });
     },
 });
 

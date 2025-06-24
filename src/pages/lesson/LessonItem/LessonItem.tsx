@@ -82,10 +82,12 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
   };
 
   const handleShareLesson = async (friendIds: string[]) => {
-    await shareLessonAsync({
-      toUserIds: friendIds,
-      relatedEntityId: lesson._id,
-    });
+    await dispatch(
+      shareLessonAsync({
+        toUserIds: friendIds,
+        relatedEntityId: lesson._id,
+      })
+    );
     setShareDialogOpen(false);
   };
 

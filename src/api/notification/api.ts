@@ -23,3 +23,7 @@ export const shareLesson = (
 ) => {
     return apiClient.post("/notifications/share-lesson", { toUserIds, relatedEntityId });
 }
+
+export const notifyFriendRequest = (toUserId: string) => {
+    return apiClient.post("/notifications/friend-request", { toUserId });
+};

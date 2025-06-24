@@ -16,6 +16,8 @@ import { Launch } from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store.ts";
 import { LessonData } from "../../../api/lesson/types.ts";
+import { useNavigate } from "react-router-dom";
+import { PAGES_ROUTES } from "../../../routes/routes.const.ts";
 
 interface NotificationCardProps {
   notification: Notification;
@@ -32,6 +34,8 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 }) => {
   const [loading, setLoading] = useState(false);
   const classes = useStyles({ isRead: notification.read });
+  const navigate = useNavigate();
+
   const { lessons } = useSelector((state: RootState) => state.lessons);
   const selectedLesson = lessons.find(
     (lesson) => lesson._id === notification.relatedEntityId
@@ -53,8 +57,16 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
       await onRead(notification._id);
     }
     if (notification.relatedEntityId) {
-      setSelectedLesson(selectedLesson);
-      openPopup();
+      if (notification.entityType === "lesson") {
+        setSelectedLesson(selectedLesson);
+        openPopup();
+      } else {
+        if (notification.type === "friendRequest") {
+          navigate(PAGES_ROUTES.FRIENDS);
+        } else {
+          console.log("not implemented yet");
+        }
+      }
     }
   };
 
@@ -84,7 +96,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
             onClick={handleCheckItOut}
             sx={{ marginLeft: 1, minWidth: 150 }}
           >
-            {"Check it out"}
+            Check it out
           </Button>
         )}
         <Button
