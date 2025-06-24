@@ -27,7 +27,7 @@ const useStyles = makeStyles(() =>
     },
     sortOption: {
       "&.MuiSelect-root": {
-        borderRadius: "10px",
+        borderRadius: "16px",
       },
       width: "7rem",
     },

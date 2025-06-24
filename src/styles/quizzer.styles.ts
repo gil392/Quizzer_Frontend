@@ -9,7 +9,7 @@ export const createScrollerStyleClass = (theme: Theme): CSSProperties => ({
       theme.palette.mode === "light"
         ? "rgba(0, 0, 0, 0.2)"
         : "rgba(255, 255, 255, 0.8)",
-    borderRadius: "4px",
+    borderRadius: "16px",
     border: "2px solid transparent",
     backgroundClip: "content-box",
   },

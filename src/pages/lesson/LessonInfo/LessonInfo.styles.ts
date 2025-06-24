@@ -7,6 +7,7 @@ const useStyles = makeStyles(() =>
       gap: "2vw",
       maxWidth: "100%",
       overflowX: "hidden",
+      padding: "1rem",
     },
     leftBox: {
       flex: 6,

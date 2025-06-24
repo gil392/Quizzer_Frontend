@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme: Theme) => {
   const customRadioTextColor = theme.palette.text.primary;
   const customRadioBorderColor = theme.palette.divider;
   const selectedRadioBgColor = theme.palette.primary.light;
-  const selectedRadioTextColor = theme.palette.text.primary;
+  const selectedRadioTextColor = theme.palette.primary.contrastText;
 
   return createStyles({
     typography: {
@@ -61,7 +61,7 @@ const useStyles = makeStyles((theme: Theme) => {
     button: {
       width: "100%",
       height: "3rem",
-      borderRadius: "8px",
+      borderRadius: "16px",
       marginTop: 3,
       backgroundColor: theme.palette.primary.main,
       color: theme.palette.text.primary,

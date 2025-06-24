@@ -1,5 +1,5 @@
-import { ShieldMoon, Sunny } from "@mui/icons-material";
-import { Button } from "@mui/material";
+import { DarkMode, Sunny } from "@mui/icons-material";
+import { IconButton } from "@mui/material";
 import { FunctionComponent, useEffect } from "react";
 import { useDisplayMode } from "./globalProvider";
 import {
@@ -46,14 +46,17 @@ const DisplayModeSwitch: FunctionComponent = () => {
   };
 
   return (
-    <>
-      <Button
-        onClick={() => changeDisplayMode(getOppositeDisplayMode(displayMode))}
-        aria-label={`Switch to ${getOppositeDisplayMode(displayMode)} mode`}
-      >
-        {displayMode === "Dark" ? <ShieldMoon /> : <Sunny />}
-      </Button>
-    </>
+    <IconButton
+      onClick={() => changeDisplayMode(getOppositeDisplayMode(displayMode))}
+      aria-label={`Switch to ${getOppositeDisplayMode(displayMode)} mode`}
+      sx={{
+        boxShadow: "none !important",
+        background: "none !important",
+        color: "primary.main !important",
+      }}
+    >
+      {displayMode === "Dark" ? <DarkMode /> : <Sunny />}
+    </IconButton>
   );
 };
 

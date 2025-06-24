@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         width: "100%",
         height: "100%",
         background: theme.palette.background.paper,
-        borderRadius: 12,
+        borderRadius: 16,
         boxShadow: theme.shadows[1],
         padding: 24,
     },
@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         },
         "&::-webkit-scrollbar-thumb": {
             backgroundColor: "#888",
-            borderRadius: "4px",
+            borderRadius: "16px",
         },
         "&::-webkit-scrollbar-thumb:hover": {
             backgroundColor: "#555",

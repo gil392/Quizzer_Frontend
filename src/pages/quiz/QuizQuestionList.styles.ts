@@ -5,19 +5,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   checkbox: {
     "& .MuiSvgIcon-root": {
       border: "2px solid transparent",
-      borderRadius: "4px",
+      borderRadius: "16px",
     },
   },
   checkboxGreen: {
     "& .MuiSvgIcon-root": {
       border: "2px solid green",
-      borderRadius: "4px",
+      borderRadius: "16px",
     },
   },
   checkboxRed: {
     "& .MuiSvgIcon-root": {
       border: "2px solid red",
-      borderRadius: "4px",
+      borderRadius: "16px",
     },
   },
   questionBox: {

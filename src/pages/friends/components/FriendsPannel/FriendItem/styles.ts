@@ -10,14 +10,15 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       width: "100%",
       boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
-      borderRadius: "2px",
+      borderRadius: "16px",
       transition: "0.3s",
-      backgroundColor: "#fae1e43b",
+      backgroundColor: theme.palette.background.paper,
     },
     avatarBox: {
       padding: theme.spacing(0, 2, 0, 0),
     },
     statisticText: {
+      color: theme.palette.text.primary,
       "&.MuiTypography-root": {
         fontSize: "0.7em",
       },
