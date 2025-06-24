@@ -1,4 +1,3 @@
-import { Typography } from "@mui/material";
 import clsx from "clsx";
 import { isEmpty } from "ramda";
 import { FunctionComponent } from "react";
@@ -6,7 +5,9 @@ import { UserWithId } from "../../../../api/user/types";
 import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import { useStyles as useFriendsPageStyles } from "../../styles";
 import FriendItem from "./FriendItem/FriendItem";
+import FriendsNotFound from "./FriendsNotFound/FriendsNotFound";
 import { useStyles } from "./styles";
+import { Typography } from "@mui/material";
 
 interface FriendsPannelProps {
   friends: UserWithId[];
@@ -21,15 +22,11 @@ const FriendsPannel: FunctionComponent<FriendsPannelProps> = (props) => {
 
   const friendsList = isEmpty(friends) ? (
     <span className={classes.emptyFriendsListSpan}>
-      <Typography textAlign="center" variant="h4">
-        Seems you new Here
-        <br />
-        Try searching new friends
-      </Typography>
+      <FriendsNotFound />
     </span>
   ) : (
     friends.map((user, index) => (
-      <FriendItem
+      <FriendItem 
         key={index}
         className={clsx({
           [friendsPageClasses.firstItem]: index === 0,
@@ -42,6 +39,9 @@ const FriendsPannel: FunctionComponent<FriendsPannelProps> = (props) => {
 
   return (
     <div className={clsx(classes.root, className)}>
+      <Typography variant="h5" gutterBottom>
+        Friends List
+      </Typography>
       <span className={clsx(classes.friendsList, friendsPageClasses.scroller)}>
         {loading ? (
           <SkeletonList

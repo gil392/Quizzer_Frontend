@@ -8,6 +8,7 @@ import {
   updateUser,
 } from "../api/user/api";
 import { User, UserSettings, UserWithId } from "../api/user/types";
+import { logout } from "../api/authentication/api";
 
 export const fetchFriends = createAsyncThunk(
   "user/fetchFriends",
@@ -60,6 +61,11 @@ export const updateUserAsync = createAsyncThunk(
     return response.data;
   }
 );
+
+export const logoutAsync = createAsyncThunk("auth/logout", async () => {
+  const response = await logout();
+  return response.data;
+});
 
 interface UserState {
   friends: UserWithId[];

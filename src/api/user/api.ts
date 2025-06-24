@@ -53,3 +53,9 @@ export const uploadProfileImage = (profileImage: File) => {
     },
   });
 };
+
+export const deleteFriend = (userId: string) =>
+  apiClient.delete(`/user/friend/${userId}`);
+
+export const fetchFriendById = (userId: string): AxiosPromise<UserWithId> =>
+  apiClient.get<UserWithId>(`/user/friend/${userId}`);

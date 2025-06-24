@@ -121,13 +121,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
           onEditModeChange={setIsEditing}
         />
         <GenericIconButton
-          icon={
-            lesson.isFavorite ? (
-              <FavoriteIcon className={classes.favoriteIcon} />
-            ) : (
-              <FavoriteBorderIcon />
-            )
-          }
+          icon={lesson.isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
           title={"Favorite"}
           onClick={() => changeIsFavorite(lesson)}
         />
@@ -166,10 +160,14 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
             }}
           />
         )}
+        <Typography className={classes.successRateText}>
+          {lesson.successRate !== undefined ? (
+            `Success rate: ${lesson.successRate}%`
+          ) : (
+            <span style={{ visibility: "hidden" }}>Same height</span>
+          )}
+        </Typography>
       </Box>
-      <Typography className={classes.successRateText}>
-        Success rate: 100%
-      </Typography>
     </Box>
   );
 };

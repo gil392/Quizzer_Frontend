@@ -2,8 +2,11 @@ export type LessonData = {
   _id: string;
   title: string;
   isFavorite: boolean;
+  successRate?: number;
   summary: string;
-  videoUrl: string;
+  videoDetails?: {
+    videoId: string;
+  };
   relatedLessonGroupId?: string;
 };
 

@@ -7,14 +7,18 @@ import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import AchievementItem from "./AchievementItem/AchievementItem";
 import { useStyles } from "./styles";
 import { moveCompletedAchievementsToEnd } from "./utils";
+import { toast } from "sonner";
 
 interface AchievmentsProps {
   className?: string;
+  isEditing: boolean;
+  setImageFile: (file: File | undefined) => void;
+  setProfileImageUrl: (url: string | undefined) => void;
+  userId?: string; 
 }
 
 const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
-  const { className } = props;
-
+  const { className, isEditing, setImageFile, setProfileImageUrl, userId } = props; 
   const classes = useStyles();
   const [achievments, setAchievments] = useState<Achievement[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -22,12 +26,17 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
   const fetchAchievements = useCallback(
     async (abortController?: AbortController) => {
       setIsLoading(true);
-      const { data } = await getAvailableAchievements(abortController);
-      const achivements = moveCompletedAchievementsToEnd(data);
-      setAchievments(achivements);
-      setIsLoading(false);
+      try {
+        const { data } = await getAvailableAchievements(userId, abortController);
+        const sortedAchievements = moveCompletedAchievementsToEnd(data);
+        setAchievments(sortedAchievements);
+      } catch (error) {
+        toast.error("Failed to fetch achievements. Please try again later.");
+      } finally {
+        setIsLoading(false);
+      }
     },
-    []
+    [userId]
   );
 
   useEffect(() => {
@@ -35,14 +44,19 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
     fetchAchievements(abortController);
 
     return () => abortController.abort();
-  }, []);
+  }, [fetchAchievements]);
 
   const achievementsList = isLoading ? (
     <SkeletonList itemClassName={classes.skeletonItem} numberOfItems={6} />
   ) : (
-    achievments.map((achievment, index) => (
+    achievments.map((achievement, index) => (
       <>
-        <AchievementItem achievement={achievment} />
+        <AchievementItem 
+          achievement={achievement}
+          isEditing={isEditing} 
+          setImageFile={setImageFile}
+          setProfileImageUrl={setProfileImageUrl}
+        /> 
         {index !== achievments.length - 1 && <Divider />}
       </>
     ))

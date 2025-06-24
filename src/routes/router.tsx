@@ -35,4 +35,7 @@ export const createPagesRoutes = (
   { path: PAGES_ROUTES.FRIENDS, element: <FriendsPage /> },
   { path: PAGES_ROUTES.NOTIFICATIONS, element: <NotificationPage /> },
   { path: PAGES_ROUTES.PROFILE, element: <UserProfilePage /> },
+  {
+    path: PAGES_ROUTES.PROFILE_WITH_ID, element: <UserProfilePage />,
+  },
 ];

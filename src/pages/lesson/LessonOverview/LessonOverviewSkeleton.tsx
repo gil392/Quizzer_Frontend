@@ -44,7 +44,7 @@ const LessonOverviewSkeleton = () => {
           flexDirection: "column",
         }}
       >
-        <Typography variant="h6" sx={{ mb: 3 }}>
+        <Typography variant="h5" sx={{ mb: 3 }}>
           Related Videos
         </Typography>
         {[...Array(5)].map((_, idx) => (

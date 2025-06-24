@@ -1,21 +1,24 @@
 import { Toolbar, Menu, MenuItem } from "@mui/material";
 import { isNotNil, pipe } from "ramda";
 import { FunctionComponent, useMemo, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { NavigateFunction, useLocation, useNavigate } from "react-router-dom";
 import { isNavBarAvailableInPath } from "../navBar/utils";
 import DisplayModeSwitch from "../settings/DisplayModeSwitch/DisplayModeSwitch";
 import { removeUserDisplayMode } from "../settings/DisplayModeSwitch/utils";
 import ProfileImage from "./components/ProfileImage";
-import { createAppbarMenu } from "./utils";
 import useStyles from "./styles";
 import NotificationBell from "./components/NotificationBell";
 import { PAGES_ROUTES } from "../../routes/routes.const";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
+import { logoutAsync } from "../../store/userReducer";
 
 const AppBar: FunctionComponent = () => {
   const classes = useStyles({});
   const navigate = useNavigate();
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const dispatch = useDispatch<AppDispatch>();
 
   const isAppBarAvaiable = useMemo(
     () => isNavBarAvailableInPath(location.pathname),
@@ -33,6 +36,26 @@ const AppBar: FunctionComponent = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const createAppbarMenu = (
+    navigate: NavigateFunction,
+    handleLogout: () => void
+  ): { label: string; onClick: () => void }[] => [
+    {
+      label: "Profile",
+      onClick: () => {
+        navigate(PAGES_ROUTES.PROFILE);
+      },
+    },
+    {
+      label: "Sign Out",
+      onClick: async () => {
+        handleLogout();
+        await dispatch(logoutAsync());
+        navigate(PAGES_ROUTES.LOGIN);
+      },
+    },
+  ];
 
   const menuItems = createAppbarMenu(navigate, handleLogout).map(
     ({ label, onClick }, index) => (
