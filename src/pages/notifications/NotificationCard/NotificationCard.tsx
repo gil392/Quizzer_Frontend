@@ -12,21 +12,30 @@ import DoneIcon from "@mui/icons-material/Done";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import useStyles from "./NotificationCard.styles.ts";
 import { formatNotificationTime } from "../../../utils/utils.ts";
-import { useNavigate } from "react-router-dom";
 import { Launch } from "@mui/icons-material";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store/store.ts";
+import { LessonData } from "../../../api/lesson/types.ts";
 
 interface NotificationCardProps {
   notification: Notification;
   onRead: (id: string) => Promise<void>;
+  setSelectedLesson: (lesson: LessonData | undefined) => void;
+  openPopup: () => void;
 }
 
 const NotificationCard: React.FC<NotificationCardProps> = ({
   notification,
   onRead,
+  setSelectedLesson,
+  openPopup,
 }) => {
   const [loading, setLoading] = useState(false);
   const classes = useStyles({ isRead: notification.read });
-  const navigate = useNavigate();
+  const { lessons } = useSelector((state: RootState) => state.lessons);
+  const selectedLesson = lessons.find(
+    (lesson) => lesson._id === notification.relatedEntityId
+  );
 
   useEffect(() => {
     setLoading(false);
@@ -44,7 +53,8 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
       await onRead(notification._id);
     }
     if (notification.relatedEntityId) {
-      navigate(`/${notification.relatedEntityId}`);
+      setSelectedLesson(selectedLesson);
+      openPopup();
     }
   };
 

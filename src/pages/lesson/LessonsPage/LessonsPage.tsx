@@ -30,6 +30,7 @@ import { DEFAULT_SORT_OPTION, SORT_OPTIONS } from "./components/constants";
 import { sortLessons } from "./components/utils";
 import useStyles from "./LessonsPage.styles";
 import LessonsNotFound from "./components/LessonsNotFound/LessonsNotFound";
+import { fetchFriends } from "../../../store/userReducer";
 
 type sortFieldType =
   | "_id"
@@ -64,6 +65,7 @@ const LessonsPage: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchLessons());
+    dispatch(fetchFriends());
   }, [dispatch]);
 
   const filteredLessons = useMemo(

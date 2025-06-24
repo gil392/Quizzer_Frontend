@@ -68,7 +68,9 @@ const AppBar: FunctionComponent = () => {
   return isAppBarAvaiable ? (
     <Toolbar className={classes.toolbar}>
       <DisplayModeSwitch />
-      <NotificationBell onClick={() => navigate(PAGES_ROUTES.NOTIFICATIONS)} />
+      <NotificationBell
+        onClick={() => navigate(PAGES_ROUTES.NOTIFICATIONS_LIST)}
+      />
       <ProfileImage handleMenu={handleMenu} />
 
       <Menu

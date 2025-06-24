@@ -21,6 +21,7 @@ import {
 import ShareLessonDialog from "../ShareLessonDialog/ShareLessonDialog";
 import { UserWithId } from "../../../api/user/types";
 import { shareLesson } from "../../../api/notification/api";
+import { LessonImage } from "../RelatedVideo/LessonImage";
 
 interface LessonItemProps {
   lesson: LessonData;
@@ -114,59 +115,78 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
       onClick={() => !isEditing && openLesson()}
     >
       <Box className={classes.flexContainer}>
-        <EditabletitleWithActions
-          title={lesson.title}
-          onSave={(title: string) => handleUpdateTitle(title, lesson)}
-          onDelete={() => handleLessonDeleted(lesson._id)}
-          onEditModeChange={setIsEditing}
-        />
-        <GenericIconButton
-          icon={lesson.isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />}
-          title={"Favorite"}
-          onClick={() => changeIsFavorite(lesson)}
-        />
-        <GenericIconButton
-          icon={<ShareIcon />}
-          title="Share Lesson"
-          onClick={(e) => {
-            e.stopPropagation();
-            e.preventDefault();
-            setShareDialogOpen(true);
-          }}
-        />
-        <ShareLessonDialog
-          open={shareDialogOpen}
-          onClose={handleCloseShareDialog}
-          friends={friends}
-          onShare={handleShareLesson}
-        />
-        {isMergeLessonsMode ? (
-          <GenericIconButton
-            icon={isLessonMerging() ? <CheckBoxIcon /> : <UncheckedBoxIcon />}
-            onClick={() => {
-              if (isRelatedLesson()) {
-                handleToggleMergeLesson();
+        <Box className={classes.image}>
+          <LessonImage
+            video={{
+              title: lesson.title,
+              url: `https://img.youtube.com/vi/${lesson.videoDetails?.videoId}/hqdefault.jpg`,
+            }}
+            imageSizeClassname={classes.imageSize}
+          />
+        </Box>
+        <Box className={classes.editableActionsColumn}>
+          <Box className={classes.actions}>
+            <EditabletitleWithActions
+              title={lesson.title}
+              onSave={(title: string) => handleUpdateTitle(title, lesson)}
+              onDelete={() => handleLessonDeleted(lesson._id)}
+              onEditModeChange={setIsEditing}
+            />
+            <GenericIconButton
+              icon={
+                lesson.isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />
               }
-            }}
-            title={isRelatedLesson() ? "Merge this lesson" : "Cannot be merged"}
-          />
-        ) : (
-          <GenericIconButton
-            icon={<MergeIcon />}
-            title={"Merge Lessons"}
-            onClick={() => {
-              setIsMergeLessonsMode(true);
-              setMergingLessons([lesson]);
-            }}
-          />
-        )}
-        <Typography className={classes.successRateText}>
-          {lesson.successRate !== undefined ? (
-            `Success rate: ${lesson.successRate}%`
-          ) : (
-            <span style={{ visibility: "hidden" }}>Same height</span>
-          )}
-        </Typography>
+              title={"Favorite"}
+              onClick={() => changeIsFavorite(lesson)}
+            />
+            <GenericIconButton
+              icon={<ShareIcon />}
+              title="Share Lesson"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                setShareDialogOpen(true);
+              }}
+            />
+            <ShareLessonDialog
+              open={shareDialogOpen}
+              onClose={handleCloseShareDialog}
+              friends={friends}
+              onShare={handleShareLesson}
+            />
+            {isMergeLessonsMode ? (
+              <GenericIconButton
+                icon={
+                  isLessonMerging() ? <CheckBoxIcon /> : <UncheckedBoxIcon />
+                }
+                onClick={() => {
+                  if (isRelatedLesson()) {
+                    handleToggleMergeLesson();
+                  }
+                }}
+                title={
+                  isRelatedLesson() ? "Merge this lesson" : "Cannot be merged"
+                }
+              />
+            ) : (
+              <GenericIconButton
+                icon={<MergeIcon />}
+                title={"Merge Lessons"}
+                onClick={() => {
+                  setIsMergeLessonsMode(true);
+                  setMergingLessons([lesson]);
+                }}
+              />
+            )}
+          </Box>
+          <Typography className={classes.successRateText}>
+            {lesson.successRate !== undefined ? (
+              `Success rate: ${lesson.successRate}%`
+            ) : (
+              <span style={{ visibility: "hidden" }}>Same height</span>
+            )}
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
