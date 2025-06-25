@@ -6,6 +6,12 @@ import { formatNumberWithPostfix } from "./utils";
 import { getAchievementImage } from "../../../../../api/achievements/api";
 import { useStyles } from "./styles";
 import { Share } from "@mui/icons-material";
+import ShareDialog from "../../../../../components/Share/ShareDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../store/store";
+import { shareAchievementAsync } from "../../../../../store/notificationReducer";
+import { fetchFriends } from "../../../../../store/userReducer";
+import { UserWithId } from "../../../../../api/user/types";
 
 interface AchievementItemProps {
   achievement: Achievement;
@@ -13,7 +19,7 @@ interface AchievementItemProps {
   setImageFile: (file: File | undefined) => void;
   setProfileImageUrl: (url: string | undefined) => void;
   showShare: boolean;
-  onShareClick?: () => void;
+  user: UserWithId;
 }
 
 const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
@@ -23,10 +29,18 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     setImageFile,
     setProfileImageUrl,
     showShare,
-    onShareClick,
+    user,
   } = props;
   const classes = useStyles();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const friends = useSelector((state: RootState) => state.user.friends);
+
+  useEffect(() => {
+    dispatch(fetchFriends());
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchAchievementImage = async () => {
@@ -58,6 +72,21 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     } catch (error) {
       console.error("Failed to update profile image:", error);
     }
+  };
+
+  const handleCloseShareDialog = (e?: React.SyntheticEvent) => {
+    if (e) e.stopPropagation();
+    setShareDialogOpen(false);
+  };
+
+  const handleShareAchievement = async (friendIds: string[]) => {
+    await dispatch(
+      shareAchievementAsync({
+        toUserIds: friendIds,
+        relatedEntityId: user._id,
+      })
+    );
+    setShareDialogOpen(false);
   };
 
   const progresses = achievement.requirements.map(({ value, count }) => (
@@ -135,13 +164,23 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
             <IconButton
               color="primary"
               size="small"
-              onClick={onShareClick}
+              onClick={(e) => {
+                e.stopPropagation();
+                setShareDialogOpen(true);
+              }}
               sx={{ alignSelf: "flex-start", marginLeft: 1 }}
               title="Share this achievement"
             >
               <Share />
             </IconButton>
           )}
+          <ShareDialog
+            open={shareDialogOpen}
+            dialogType="Achievement"
+            onClose={handleCloseShareDialog}
+            friends={friends}
+            onShare={handleShareAchievement}
+          />
         </div>
         {progresses}
       </section>

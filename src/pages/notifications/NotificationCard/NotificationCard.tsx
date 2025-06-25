@@ -70,7 +70,9 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
         if (notification.type === "friendRequest") {
           navigate(PAGES_ROUTES.FRIENDS);
         } else {
-          console.log("not implemented yet");
+          navigate(PAGES_ROUTES.PROFILE, {
+            state: { userId: notification.relatedEntityId },
+          });
         }
       }
     }

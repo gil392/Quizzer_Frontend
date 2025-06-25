@@ -57,21 +57,25 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
   const achievementsList = isLoading ? (
     <SkeletonList itemClassName={classes.skeletonItem} numberOfItems={6} />
   ) : (
-    achievments.map((achievement, index) => (
-      <div
-        key={achievement._id}
-        style={{ display: "flex", alignItems: "center" }}
-      >
-        <AchievementItem
-          achievement={achievement}
-          isEditing={isEditing}
-          setImageFile={setImageFile}
-          setProfileImageUrl={setProfileImageUrl}
-          showShare={userId === loggedUser?._id}
-        />
-        {index !== achievments.length - 1 && <Divider />}
-      </div>
-    ))
+    achievments.map(
+      (achievement, index) =>
+        loggedUser && (
+          <div
+            key={achievement._id}
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <AchievementItem
+              achievement={achievement}
+              isEditing={isEditing}
+              setImageFile={setImageFile}
+              setProfileImageUrl={setProfileImageUrl}
+              showShare={userId === loggedUser._id}
+              user={loggedUser}
+            />
+            {index !== achievments.length - 1 && <Divider />}
+          </div>
+        )
+    )
   );
 
   return (

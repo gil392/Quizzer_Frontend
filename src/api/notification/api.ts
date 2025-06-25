@@ -13,8 +13,11 @@ export const deleteNotification = (id: string): AxiosPromise<void> => {
     return apiClient.delete(`/notifications/${id}`);
 }
 
-export const notifyFriendsAboutAchievement = (relatedEntityId: string) => {
-    return apiClient.post("/notifications/share-achievement", relatedEntityId);
+export const shareAchievement = (
+    toUserIds: string[],
+    relatedEntityId: string
+) => {
+    return apiClient.post("/notifications/share-achievement", { toUserIds, relatedEntityId });
 }
 
 export const shareLesson = (
