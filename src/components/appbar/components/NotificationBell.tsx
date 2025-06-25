@@ -54,7 +54,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
       >
         <NotificationsOutlined
           className={classes.notificaion}
-          color="inherit"
+          color="primary"
         />
       </Badge>
     </IconButton>

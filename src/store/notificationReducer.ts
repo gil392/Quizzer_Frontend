@@ -30,8 +30,8 @@ export const shareLessonAsync = createAsyncThunk(
 
 export const notifyFriendsAboutAchievementAsync = createAsyncThunk(
     "notification/shareAchievement",
-    async () => {
-        const response = await notifyFriendsAboutAchievement();
+    async (relatedEntityId: string) => {
+        const response = await notifyFriendsAboutAchievement(relatedEntityId);
         return response.data;
     }
 );

@@ -18,7 +18,7 @@ import {
   deleteLessonAsync,
   updateLessonAsync,
 } from "../../../store/lessonReducer";
-import ShareLessonDialog from "../ShareLessonDialog/ShareLessonDialog";
+import ShareDialog from "../../../components/Share/ShareDialog";
 import { UserWithId } from "../../../api/user/types";
 import { LessonImage } from "../RelatedVideo/LessonImage";
 import { shareLessonAsync } from "../../../store/notificationReducer";
@@ -149,8 +149,9 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
                 setShareDialogOpen(true);
               }}
             />
-            <ShareLessonDialog
+            <ShareDialog
               open={shareDialogOpen}
+              dialogType="Lesson"
               onClose={handleCloseShareDialog}
               friends={friends}
               onShare={handleShareLesson}

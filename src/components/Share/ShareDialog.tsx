@@ -18,15 +18,17 @@ interface Friend {
   username: string;
 }
 
-interface ShareLessonDialogProps {
+interface ShareDialogProps {
   open: boolean;
+  dialogType: string;
   onClose: () => void;
   friends: Friend[];
   onShare: (selected: string[]) => void;
 }
 
-const ShareLessonDialog: React.FC<ShareLessonDialogProps> = ({
+const ShareDialog: React.FC<ShareDialogProps> = ({
   open,
+  dialogType,
   onClose,
   friends,
   onShare,
@@ -49,7 +51,7 @@ const ShareLessonDialog: React.FC<ShareLessonDialogProps> = ({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Share Lesson With Friends</DialogTitle>
+      <DialogTitle>Share {dialogType} With Friends</DialogTitle>
       <DialogContent onClick={(e) => e.stopPropagation()}>
         <List>
           {friends.map((friend) => (
@@ -88,4 +90,4 @@ const ShareLessonDialog: React.FC<ShareLessonDialogProps> = ({
   );
 };
 
-export default ShareLessonDialog;
+export default ShareDialog;

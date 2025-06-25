@@ -7,7 +7,7 @@ import {
   declineFriendRequest,
   updateUser,
 } from "../api/user/api";
-import { User, UserSettings, UserWithId } from "../api/user/types";
+import { UserSettings, UserWithId } from "../api/user/types";
 import { logout } from "../api/authentication/api";
 
 export const fetchFriends = createAsyncThunk(
@@ -70,7 +70,7 @@ export const logoutAsync = createAsyncThunk("auth/logout", async () => {
 interface UserState {
   friends: UserWithId[];
   pendingFriends: UserWithId[];
-  loggedUser: User | null;
+  loggedUser: UserWithId | null;
 }
 
 const initialState: UserState = {

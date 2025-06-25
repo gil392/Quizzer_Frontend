@@ -12,7 +12,13 @@ import DoneIcon from "@mui/icons-material/Done";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import useStyles from "./NotificationCard.styles.ts";
 import { formatNotificationTime } from "../../../utils/utils.ts";
-import { Launch } from "@mui/icons-material";
+import {
+  AutoStories,
+  EmojiEvents,
+  Launch,
+  NotificationsActive,
+  PeopleAlt,
+} from "@mui/icons-material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store/store.ts";
 import { LessonData } from "../../../api/lesson/types.ts";
@@ -70,16 +76,31 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
     }
   };
 
+  function getNotificationIcon(type: string, read: boolean) {
+    const color = read ? "disabled" : "primary";
+    switch (type) {
+      case "share":
+        return <AutoStories color={color} fontSize="large" />;
+      case "friendRequest":
+        return <PeopleAlt color={color} fontSize="large" />;
+      case "achievement":
+        return <EmojiEvents color={color} fontSize="large" />;
+      default:
+        return read ? (
+          <NotificationsIcon color="disabled" fontSize="large" />
+        ) : (
+          <NotificationsActive color="primary" fontSize="large" />
+        );
+    }
+  }
+
   return (
     <Card
       variant={notification.read ? "elevation" : "outlined"}
       className={classes.card}
     >
       <Box className={classes.iconBox}>
-        <NotificationsIcon
-          color={notification.read ? "disabled" : "primary"}
-          fontSize="large"
-        />
+        {getNotificationIcon(notification.type, notification.read)}
       </Box>
       <CardContent className={classes.content}>
         <Typography variant="h6">{notification.message}</Typography>

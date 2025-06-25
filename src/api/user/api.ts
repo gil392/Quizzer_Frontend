@@ -30,7 +30,7 @@ export const declineFriendRequest = (userId: string) =>
 export const submitFriendRequest = (userId: string) =>
   apiClient.post("/user/friend", { user: userId });
 
-export const getLoggedUser = (): AxiosPromise<User> =>
+export const getLoggedUser = (): AxiosPromise<UserWithId> =>
   apiClient.get("/user/me");
 
 export const updateUser = async (updateFields: {
