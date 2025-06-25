@@ -5,6 +5,7 @@ import {
   Button,
   Box,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import { Notification } from "../../../api/notification/types.ts";
 import { useState, useEffect } from "react";
@@ -14,16 +15,18 @@ import useStyles from "./NotificationCard.styles.ts";
 import { formatNotificationTime } from "../../../utils/utils.ts";
 import {
   AutoStories,
+  Delete,
   EmojiEvents,
   Launch,
   NotificationsActive,
   PeopleAlt,
 } from "@mui/icons-material";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store.ts";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/store.ts";
 import { LessonData } from "../../../api/lesson/types.ts";
 import { useNavigate } from "react-router-dom";
 import { PAGES_ROUTES } from "../../../routes/routes.const.ts";
+import { deleteNotificationAsync } from "../../../store/notificationReducer.ts";
 
 interface NotificationCardProps {
   notification: Notification;
@@ -41,6 +44,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
   const [loading, setLoading] = useState(false);
   const classes = useStyles({ isRead: notification.read });
   const navigate = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const { lessons } = useSelector((state: RootState) => state.lessons);
   const selectedLesson = lessons.find(
@@ -76,6 +80,10 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
         }
       }
     }
+  };
+
+  const handleDeleteNotification = async (id: string) => {
+    await dispatch(deleteNotificationAsync(id));
   };
 
   function getNotificationIcon(type: string, read: boolean) {
@@ -138,6 +146,15 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
             "Mark as Read"
           )}
         </Button>
+        <IconButton
+          color="inherit"
+          onClick={() => handleDeleteNotification(notification._id)}
+          disabled={loading}
+          sx={{ marginLeft: 1 }}
+          aria-label="Delete notification"
+        >
+          <Delete />
+        </IconButton>
       </Box>
     </Card>
   );

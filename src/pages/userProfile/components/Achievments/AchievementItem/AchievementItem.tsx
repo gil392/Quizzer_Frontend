@@ -160,7 +160,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
               {achievement.description}
             </Typography>
           </div>
-          {showShare && (
+          {showShare && achievement.isCompleted && (
             <IconButton
               color="primary"
               size="small"
