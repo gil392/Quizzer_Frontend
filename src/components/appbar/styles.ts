@@ -23,10 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     notificaion: {
       fontSize: 28,
-      color: (props: { unreadCount?: number }) =>
-        props.unreadCount && props.unreadCount > 0
-          ? theme.palette.primary.main
-          : theme.palette.text.secondary,
+      color: theme.palette.primary.main,
       transition: "color 0.2s",
     },
     menu: {

@@ -16,7 +16,7 @@ interface NotificationBellProps {
 
 const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const classes = useStyles({});
+  const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
 
   const { notifications } = useSelector(
