@@ -74,6 +74,12 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     }
   };
 
+  const handleOpenShareDialog = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setShareDialogOpen(true);
+  };
+
   const handleCloseShareDialog = (e?: React.SyntheticEvent) => {
     if (e) e.stopPropagation();
     setShareDialogOpen(false);
@@ -164,10 +170,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
             <IconButton
               color="primary"
               size="small"
-              onClick={(e) => {
-                e.stopPropagation();
-                setShareDialogOpen(true);
-              }}
+              onClick={handleOpenShareDialog}
               sx={{ alignSelf: "flex-start", marginLeft: 1 }}
               title="Share this achievement"
             >

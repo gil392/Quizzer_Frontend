@@ -76,6 +76,12 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
     await dispatch(deleteLessonAsync(lessonId));
   };
 
+  const handleOpenShareDialog = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setShareDialogOpen(true);
+  };
+
   const handleCloseShareDialog = (e?: React.SyntheticEvent) => {
     if (e) e.stopPropagation();
     setShareDialogOpen(false);
@@ -143,11 +149,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
             <GenericIconButton
               icon={<ShareIcon />}
               title="Share Lesson"
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setShareDialogOpen(true);
-              }}
+              onClick={handleOpenShareDialog}
             />
             <ShareDialog
               open={shareDialogOpen}
