@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { LessonData } from "../../../api/lesson/types";
 import useStyles from "./LessonItem.styles";
 import { GenericIconButton } from "../../../components/GenericIconButton";
@@ -12,16 +12,16 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import EditabletitleWithActions from "../../../components/EditabletitleWithActions";
 import clsx from "clsx";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/store";
 import {
   deleteLessonAsync,
   updateLessonAsync,
 } from "../../../store/lessonReducer";
 import ShareDialog from "../../../components/Share/ShareDialog";
-import { UserWithId } from "../../../api/user/types";
 import { LessonImage } from "../RelatedVideo/LessonImage";
 import { shareLessonAsync } from "../../../store/notificationReducer";
+import { fetchFriends } from "../../../store/userReducer";
 
 interface LessonItemProps {
   lesson: LessonData;
@@ -33,7 +33,6 @@ interface LessonItemProps {
   isMergeLessonsMode: boolean;
   setIsMergeLessonsMode: (isMergeMode: boolean) => void;
   cancelMergingMode: () => void;
-  friends: UserWithId[];
 }
 
 const LessonItem: FunctionComponent<LessonItemProps> = ({
@@ -45,13 +44,17 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
   isMergeLessonsMode,
   setIsMergeLessonsMode,
   cancelMergingMode,
-  friends,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
+  const friends = useSelector((state: RootState) => state.user.friends);
+
+  useEffect(() => {
+    dispatch(fetchFriends());
+  }, [dispatch]);
 
   const isLessonMerging = () =>
     mergingLessons.some((lessonToCheck) => lessonToCheck._id === lesson._id);

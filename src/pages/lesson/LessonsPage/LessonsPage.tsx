@@ -30,7 +30,6 @@ import { DEFAULT_SORT_OPTION, SORT_OPTIONS } from "./components/constants";
 import { sortLessons } from "./components/utils";
 import useStyles from "./LessonsPage.styles";
 import LessonsNotFound from "./components/LessonsNotFound/LessonsNotFound";
-import { fetchFriends } from "../../../store/userReducer";
 
 type sortFieldType =
   | "_id"
@@ -45,7 +44,6 @@ const LessonsPage: React.FC = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
-  const friends = useSelector((state: RootState) => state.user.friends);
   const { lessons, fetchStatus: fetchLessonsStatus } = useSelector(
     (state: RootState) => state.lessons
   );
@@ -65,7 +63,6 @@ const LessonsPage: React.FC = () => {
 
   useEffect(() => {
     dispatch(fetchLessons());
-    dispatch(fetchFriends());
   }, [dispatch]);
 
   const filteredLessons = useMemo(
@@ -168,7 +165,6 @@ const LessonsPage: React.FC = () => {
                   isMergeLessonsMode={isMergeLessonsMode}
                   setIsMergeLessonsMode={setIsMergeLessonsMode}
                   cancelMergingMode={cancelMergingMode}
-                  friends={friends}
                 />
               ))
             : fetchLessonsStatus !== "loading" && (
