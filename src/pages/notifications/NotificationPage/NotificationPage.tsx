@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { markNotificationAsRead } from "../../../api/notification/api";
 import NotificationCard from "../NotificationCard/NotificationCard";
 import NotificationSkeleton from "../NotificationSkeleton/NotificationSkeleton";
 import { Box, Typography } from "@mui/material";
@@ -7,11 +6,13 @@ import useStyles from "./NotificationPage.styles";
 import LessonInfo from "../../lesson/LessonInfo/LessonInfo";
 import { LessonData } from "../../../api/lesson/types";
 import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/store";
+import { markNotificationAsReadAsync } from "../../../store/notificationReducer";
 
 const NotificationPage: React.FC = () => {
   const classes = useStyles();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [selectedLesson, setSelectedLesson] = useState<LessonData | undefined>(
     undefined
@@ -27,7 +28,7 @@ const NotificationPage: React.FC = () => {
   );
 
   const handleRead = async (id: string) => {
-    await markNotificationAsRead(id);
+    await dispatch(markNotificationAsReadAsync(id));
     window.dispatchEvent(new Event("notifications-updated"));
   };
 
