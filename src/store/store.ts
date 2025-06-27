@@ -3,12 +3,15 @@ import lessonReducer from "./lessonReducer";
 import quizReducer from "./quizReducer";
 import userReducer, { logoutAsync } from "./userReducer";
 import attemptReducer from "./attemptReducer";
+import notificaionReducer from "./notificationReducer";
 
 const appReducer = combineReducers({
   lessons: lessonReducer,
   quizzes: quizReducer,
   user: userReducer,
   attempt: attemptReducer,
+  notifications: notificaionReducer,
+
 });
 
 const rootReducer = (

@@ -10,6 +10,7 @@ import LessonOverviewPage from "../pages/lesson/LessonOverview/LessonOverviewPag
 import { PAGES_ROUTES } from "./routes.const";
 import SettingsPage from "../pages/settings/SettingsPage";
 import UserProfilePage from "../pages/userProfile/UserProfilePage";
+import NotificationPage from "../pages/notifications/NotificationPage/NotificationPage";
 
 export const createPagesRoutes = (
   setAccessToken: SetAccessTokenFunction
@@ -32,6 +33,7 @@ export const createPagesRoutes = (
   { path: PAGES_ROUTES.SUMMARY, element: <LessonOverviewPage /> },
   { path: PAGES_ROUTES.LESSON, element: <LessonsPage /> },
   { path: PAGES_ROUTES.FRIENDS, element: <FriendsPage /> },
+  { path: PAGES_ROUTES.NOTIFICATIONS, element: <NotificationPage /> },
   { path: PAGES_ROUTES.PROFILE, element: <UserProfilePage /> },
   {
     path: PAGES_ROUTES.PROFILE_WITH_ID, element: <UserProfilePage />,

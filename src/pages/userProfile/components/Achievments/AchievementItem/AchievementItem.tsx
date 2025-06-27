@@ -1,22 +1,46 @@
-import { LinearProgress, Typography } from "@mui/material";
+import { IconButton, LinearProgress, Typography, Box } from "@mui/material";
 import { min } from "ramda";
 import { FunctionComponent, useEffect, useState } from "react";
 import { Achievement } from "../../../../../api/achievements/types";
 import { formatNumberWithPostfix } from "./utils";
 import { getAchievementImage } from "../../../../../api/achievements/api";
 import { useStyles } from "./styles";
+import { Share } from "@mui/icons-material";
+import ShareDialog from "../../../../../components/Share/ShareDialog";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../../../store/store";
+import { shareAchievementAsync } from "../../../../../store/notificationReducer";
+import { fetchFriends } from "../../../../../store/userReducer";
+import { UserWithId } from "../../../../../api/user/types";
 
 interface AchievementItemProps {
   achievement: Achievement;
   isEditing: boolean;
   setImageFile: (file: File | undefined) => void;
   setProfileImageUrl: (url: string | undefined) => void;
+  showShare: boolean;
+  user: UserWithId;
 }
 
 const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
-  const { achievement, isEditing, setImageFile, setProfileImageUrl} = props;
+  const {
+    achievement,
+    isEditing,
+    setImageFile,
+    setProfileImageUrl,
+    showShare,
+    user,
+  } = props;
   const classes = useStyles();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+
+  const dispatch = useDispatch<AppDispatch>();
+  const friends = useSelector((state: RootState) => state.user.friends);
+
+  useEffect(() => {
+    dispatch(fetchFriends());
+  }, [dispatch]);
 
   useEffect(() => {
     const fetchAchievementImage = async () => {
@@ -25,7 +49,10 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
         const blobUrl = URL.createObjectURL(response);
         setImageSrc(blobUrl);
       } catch (error) {
-        console.error(`Error fetching image for achievement ${achievement._id}:`, error);
+        console.error(
+          `Error fetching image for achievement ${achievement._id}:`,
+          error
+        );
       }
     };
 
@@ -36,16 +63,36 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     try {
       const response = await fetch(imageSrc || "//images/achievement1.png");
       const blob = await response.blob();
-      const file = new File([blob], `${achievement.title}.png`, { type: "image/png" });
+      const file = new File([blob], `${achievement.title}.png`, {
+        type: "image/png",
+      });
 
       setImageFile(file);
       setProfileImageUrl(URL.createObjectURL(blob));
-
     } catch (error) {
-
       console.error("Failed to update profile image:", error);
-
     }
+  };
+
+  const handleOpenShareDialog = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setShareDialogOpen(true);
+  };
+
+  const handleCloseShareDialog = (e?: React.SyntheticEvent) => {
+    if (e) e.stopPropagation();
+    setShareDialogOpen(false);
+  };
+
+  const handleShareAchievement = async (friendIds: string[]) => {
+    await dispatch(
+      shareAchievementAsync({
+        toUserIds: friendIds,
+        relatedEntityId: user._id,
+      })
+    );
+    setShareDialogOpen(false);
   };
 
   const progresses = achievement.requirements.map(({ value, count }) => (
@@ -70,7 +117,9 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     <div
       className={classes.root}
       style={{
-        backgroundColor: achievement.isCompleted ? "rgba(0, 255, 0, 0.2)" : "transparent",
+        backgroundColor: achievement.isCompleted
+          ? "rgba(0, 255, 0, 0.2)"
+          : "transparent",
         position: "relative",
       }}
     >
@@ -81,7 +130,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
             src={imageSrc || "//images/achievement1.png"}
             alt={achievement.title}
             style={{
-              filter: achievement.isCompleted ? "none" : "grayscale(100%)", 
+              filter: achievement.isCompleted ? "none" : "grayscale(100%)",
             }}
           />
           {achievement.isCompleted && isEditing && (
@@ -95,23 +144,47 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
             </div>
           )}
         </div>
-        <Typography
-          variant="caption"
-          fontFamily="monospace"
-          color="textSecondary"
-        >
-          {formatNumberWithPostfix(achievement.reward.xp)}
-          <span className={classes.rewardXp}>xp</span>
-        </Typography>
+        <Box className={classes.rewardInfo}>
+          <Typography
+            variant="caption"
+            fontFamily="monospace"
+            color="textSecondary"
+          >
+            {formatNumberWithPostfix(achievement.reward.xp)}
+            <span className={classes.rewardXp}>xp</span>
+          </Typography>
+        </Box>
       </section>
 
       <section className={classes.detailsSection}>
-        <Typography variant="subtitle1" fontWeight="bold">
-          {achievement.title}
-        </Typography>
-        <Typography variant="body2" color="textSecondary">
-          {achievement.description}
-        </Typography>
+        <div className={classes.detailsHeader}>
+          <div>
+            <Typography variant="subtitle1" fontWeight="bold">
+              {achievement.title}
+            </Typography>
+            <Typography variant="body2" color="textSecondary">
+              {achievement.description}
+            </Typography>
+          </div>
+          {showShare && achievement.isCompleted && (
+            <IconButton
+              color="primary"
+              size="small"
+              onClick={handleOpenShareDialog}
+              sx={{ alignSelf: "flex-start", marginLeft: 1 }}
+              title="Share this achievement"
+            >
+              <Share />
+            </IconButton>
+          )}
+          <ShareDialog
+            open={shareDialogOpen}
+            dialogType="Achievement"
+            onClose={handleCloseShareDialog}
+            friends={friends}
+            onShare={handleShareAchievement}
+          />
+        </div>
         {progresses}
       </section>
     </div>
