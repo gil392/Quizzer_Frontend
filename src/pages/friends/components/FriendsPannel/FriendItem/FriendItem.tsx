@@ -18,6 +18,7 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
 import { deleteFriend } from "../../../../../api/user/api";
 import { toast } from "sonner";
+import { PAGES_ROUTES } from "../../../../../routes/routes.const";
 
 interface FriendItemProps {
   user: UserWithId;
@@ -33,7 +34,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
   const handleViewProfile = () => {
-    navigate(`/profile/${user._id}`);
+    navigate(PAGES_ROUTES.PROFILE, { state: { userId: user._id } });
   };
 
   const handleDeleteFriend = () => {

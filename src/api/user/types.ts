@@ -21,5 +21,3 @@ export type User = {
 
 export type UserWithId = User & { _id: string };
 export type SearchedUser = Omit<UserWithId, "streak" | "xp">;
-
-export type Message = { reeded: boolean };

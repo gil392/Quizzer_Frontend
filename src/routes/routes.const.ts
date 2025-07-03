@@ -10,5 +10,7 @@ export const PAGES_ROUTES = {
   LESSONS_LIST: "/lesson",
   LESSON: "/lesson/*",
   FRIENDS: "/friends",
+  NOTIFICATIONS_LIST: "/notifications",
+  NOTIFICATIONS: "/notifications/*",
   SETTINGS: "/settings",
 };

@@ -1,23 +1,27 @@
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useEffect, useState } from "react";
 import { LessonData } from "../../../api/lesson/types";
 import useStyles from "./LessonItem.styles";
 import { GenericIconButton } from "../../../components/GenericIconButton";
 import MergeIcon from "@mui/icons-material/Merge";
+import ShareIcon from "@mui/icons-material/Share";
 import CheckBoxIcon from "@mui/icons-material/CheckBox";
 import UncheckedBoxIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import EditabletitleWithActions from "../../../components/EditabletitleWithActions";
 import clsx from "clsx";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/store";
 import {
   deleteLessonAsync,
   updateLessonAsync,
 } from "../../../store/lessonReducer";
+import ShareDialog from "../../../components/Share/ShareDialog";
 import { LessonImage } from "../RelatedVideo/LessonImage";
+import { shareLessonAsync } from "../../../store/notificationReducer";
+import { fetchFriends } from "../../../store/userReducer";
 
 interface LessonItemProps {
   lesson: LessonData;
@@ -42,8 +46,15 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
   cancelMergingMode,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
+  const friends = useSelector((state: RootState) => state.user.friends);
+
+  useEffect(() => {
+    dispatch(fetchFriends());
+  }, [dispatch]);
 
   const isLessonMerging = () =>
     mergingLessons.some((lessonToCheck) => lessonToCheck._id === lesson._id);
@@ -66,6 +77,27 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
 
   const handleLessonDeleted = async (lessonId: string) => {
     await dispatch(deleteLessonAsync(lessonId));
+  };
+
+  const handleOpenShareDialog = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    setShareDialogOpen(true);
+  };
+
+  const handleCloseShareDialog = (e?: React.SyntheticEvent) => {
+    if (e) e.stopPropagation();
+    setShareDialogOpen(false);
+  };
+
+  const handleShareLesson = async (friendIds: string[]) => {
+    await dispatch(
+      shareLessonAsync({
+        toUserIds: friendIds,
+        relatedEntityId: lesson._id,
+      })
+    );
+    setShareDialogOpen(false);
   };
 
   const handleToggleMergeLesson = () => {
@@ -112,14 +144,22 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
             />
             <GenericIconButton
               icon={
-                lesson.isFavorite ? (
-                  <FavoriteIcon style={{ color: "red" }} />
-                ) : (
-                  <FavoriteBorderIcon />
-                )
+                lesson.isFavorite ? <FavoriteIcon /> : <FavoriteBorderIcon />
               }
               title={"Favorite"}
               onClick={() => changeIsFavorite(lesson)}
+            />
+            <GenericIconButton
+              icon={<ShareIcon />}
+              title="Share Lesson"
+              onClick={handleOpenShareDialog}
+            />
+            <ShareDialog
+              open={shareDialogOpen}
+              dialogType="Lesson"
+              onClose={handleCloseShareDialog}
+              friends={friends}
+              onShare={handleShareLesson}
             />
             {isMergeLessonsMode ? (
               <GenericIconButton

@@ -14,9 +14,16 @@ export const useStyles = makeStyles(() =>
     rewardSection: {
       padding: "0 12px 0 0",
       display: "flex",
-      flexDirection: "column",
+      flexDirection: "row",
       alignItems: "center",
       justifyContent: "center",
+      gap: "0.5em",
+    },
+    rewardInfo: {
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "0.2em",
     },
     rewardIcon: {
       width: "5em",
@@ -24,7 +31,7 @@ export const useStyles = makeStyles(() =>
       borderRadius: "16px",
       transition: "0.3s ease",
       "&:hover": {
-        filter: "grayscale(100%)", 
+        filter: "grayscale(100%)",
       },
     },
     iconWrapper: {
@@ -40,12 +47,12 @@ export const useStyles = makeStyles(() =>
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
-      backgroundColor: "rgba(0, 0, 0, 0.5)", 
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
       borderRadius: "16px",
       opacity: 0,
       transition: "opacity 0.3s ease",
       "&:hover": {
-        opacity: 1, 
+        opacity: 1,
       },
     },
     overlayText: {
@@ -76,8 +83,19 @@ export const useStyles = makeStyles(() =>
       backgroundColor: "#ffc800 !important",
     },
     detailsSection: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
       width: "100%",
-      paddingBottom: "0.2em",
+    },
+
+    detailsHeader: {
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+      alignItems: "flex-start",
+      width: "100%",
+      marginBottom: "0.5em",
     },
   })
 );

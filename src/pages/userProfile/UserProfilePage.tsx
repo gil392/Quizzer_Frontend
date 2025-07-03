@@ -1,5 +1,5 @@
 import { FunctionComponent, useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Achievments from "./components/Achievments/Achievments";
 import UserProfileDetails from "./components/UserProfileDetails/UserProfileDetails";
 import useStyles from "./styles";
@@ -7,20 +7,28 @@ import { UserWithId } from "../../api/user/types";
 import { fetchFriendById } from "../../api/user/api";
 import { toast } from "sonner";
 
+type LocationProps = {
+  userId: string;
+};
+
 const UserProfilePage: FunctionComponent = () => {
   const classes = useStyles();
-  const { userId } = useParams(); 
+  const location = useLocation();
+  const locationState = (location.state as LocationProps) || undefined;
+  const userId = locationState?.userId;
   const [user, setUser] = useState<UserWithId | null>(null);
   const [imageFile, setImageFile] = useState<File>();
   const [isEditing, setIsEditing] = useState(false);
-  const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(undefined);
+  const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(
+    undefined
+  );
 
   const cleanState = () => {
     setUser(null);
     setProfileImageUrl(undefined);
     setIsEditing(false);
     setImageFile(undefined);
-  }
+  };
 
   useEffect(() => {
     cleanState();
@@ -37,7 +45,7 @@ const UserProfilePage: FunctionComponent = () => {
       }
     };
     fetchFriend();
-  }, [userId]); 
+  }, [userId]);
 
   return (
     <div className={classes.root}>
