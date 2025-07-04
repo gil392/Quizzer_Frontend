@@ -22,6 +22,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       flexDirection: "column",
       alignItems: "center",
       padding: theme.spacing(4),
-    }
+    },
+    noPendingFriendsImage: {
+      maxWidth: "400px",
+      height: "auto",
+      marginTop: theme.spacing(1),
+      display: "block",
+      mx: "auto",
+    },
   })
 );

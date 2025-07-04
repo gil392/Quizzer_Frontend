@@ -1,4 +1,4 @@
-import { Divider, Paper, Typography } from "@mui/material";
+import { Box, Divider, Paper, Typography } from "@mui/material";
 import clsx from "clsx";
 import { isEmpty } from "ramda";
 import { FunctionComponent } from "react";
@@ -26,6 +26,12 @@ const PendingFriendsPannel: FunctionComponent<PendingFriendsPannelProps> = (
   const pendingFriendsList = isEmpty(pendingFriends) ? (
     <section className={classes.noPendingFriendsContainer}>
       <Typography variant="h6">No Pending Friend Requests</Typography>
+      <Box
+        component="img"
+        src="/images/noPendingFriends.png"
+        alt="No Pending Friend Requests"
+        className={classes.noPendingFriendsImage}
+      />
     </section>
   ) : (
     pendingFriends.map((user, index) => (

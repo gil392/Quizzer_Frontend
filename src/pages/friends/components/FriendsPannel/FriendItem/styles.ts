@@ -18,13 +18,13 @@ export const useStyles = makeStyles((theme: Theme) =>
     leftContent: {
       display: "flex",
       alignItems: "center",
-      flex: 1, 
+      flex: 1,
     },
     avatarBox: {
       padding: theme.spacing(0, 2, 0, 0),
     },
     detailsBox: {
-      flex: 1, 
+      flex: 1,
     },
     statisticText: {
       color: theme.palette.text.primary,
@@ -37,14 +37,15 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
     },
     viewProfileButton: {
-      marginRight: theme.spacing(1), 
+      marginRight: theme.spacing(1),
+      color: theme.palette.primary.main + " !important",
     },
     deleteButton: {
       marginLeft: theme.spacing(1),
     },
     modalText: {
-      fontSize: "0.875rem !important", 
+      fontSize: "0.875rem !important",
     },
-    
+
   })
 );

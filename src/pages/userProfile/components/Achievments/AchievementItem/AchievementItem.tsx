@@ -120,7 +120,6 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
         backgroundColor: achievement.isCompleted
           ? theme.palette.secondary.main
           : "transparent",
-        opacity: achievement.isCompleted ? 0.7 : 1,
         position: "relative",
       }}
     >
