@@ -21,8 +21,9 @@ import {
   listItemSx,
   listItemTextSx,
   listSx,
+  logoContainerSx,
   logoIconSx,
-  logoTextSx,
+  logoImageSx,
 } from "./styles";
 import { NavBarItem } from "./types";
 import { isNavBarAvailableInPath } from "./utils";
@@ -39,7 +40,7 @@ const navBarNavigations: readonly NavBarItem[] = [
     route: "LESSONS_LIST",
   },
   {
-    text: "My Friends",
+    text: "Friends",
     icon: <People />,
     route: "FRIENDS",
   },
@@ -90,24 +91,27 @@ const NavBar: FunctionComponent = () => {
       onMouseEnter={handleDrawerOpen}
       onMouseLeave={handleDrawerClose}
     >
-      <Box
-        sx={{
-          ...logoIconSx(open),
-        }}
-        onClick={createNavigationHandle("HOME")}
-      >
-        <img
-          src="/images/qLogo.svg"
-          alt="Quizzer Logo"
-          style={{
-            height: 50,
-            width: 50,
-            objectFit: "contain",
-            display: "block",
-          }}
-        />{" "}
-        {open ? <Typography sx={logoTextSx(open)}>Quizzer</Typography> : null}
-      </Box>
+      {open ? (
+        <Box
+          sx={logoContainerSx(open)}
+          onClick={createNavigationHandle("HOME")}
+        >
+          <img
+            src="/images/logo.png"
+            alt="Quizzer Logo"
+            style={logoImageSx as React.CSSProperties}
+          />
+        </Box>
+      ) : (
+        <Box sx={logoIconSx(open)} onClick={createNavigationHandle("HOME")}>
+          <img
+            src="/images/qLogo.svg"
+            alt="Quizzer Logo"
+            style={logoImageSx as React.CSSProperties}
+          />{" "}
+        </Box>
+      )}
+
       <Divider />
       <List sx={listSx}>{navBarItems}</List>
       <Divider />

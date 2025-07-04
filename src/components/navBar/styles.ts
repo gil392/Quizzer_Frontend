@@ -1,6 +1,6 @@
 import { CSSObject, Drawer as MuiDrawer, styled, Theme } from '@mui/material';
 
-const DRAWER_WIDTH = 200;
+const DRAWER_WIDTH = 205;
 
 const openedMixin = (theme: Theme): CSSObject => ({
     width: DRAWER_WIDTH,
@@ -52,6 +52,22 @@ export const Drawer = styled(MuiDrawer, {
     ]
 }));
 
+export const logoContainerSx = (open: boolean) => ({
+    py: 1,
+    pl: 1.5,
+    display: "flex",
+    justifyContent: open ? "initial" : "center",
+    mr: "auto",
+    cursor: "pointer",
+});
+
+export const logoImageSx = {
+    height: 50,
+    width: "auto",
+    objectFit: "contain",
+    display: "block",
+};
+
 export const listSx = {
     flexGrow: 1
 };
@@ -63,12 +79,6 @@ export const logoIconSx = (open: boolean) => ({
     justifyContent: open ? 'initial' : 'center',
     mr: 'auto',
     cursor: 'pointer'
-});
-
-export const logoTextSx = (open: boolean) => ({
-    py: 1.5,
-    pl: 1.5,
-    justifyContent: open ? 'initial' : 'center',
 });
 
 export const listItemSx = { display: 'block' };
