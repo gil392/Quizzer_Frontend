@@ -80,7 +80,7 @@ export const listItemIconSx = (open: boolean) => ({
 });
 
 export const listItemButtonSx = (open: boolean) => ({
-    minHeight: 48,
+    minHeight: 64,
     px: 2.5,
     justifyContent: open ? 'initial' : 'center'
 });

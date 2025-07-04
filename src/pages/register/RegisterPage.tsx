@@ -19,6 +19,7 @@ import { SetAccessTokenFunction } from "../../hooks/authentication/types";
 import { useFormOf } from "../../hooks/form";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import useStyles from "./styles";
+import DisplayModeSwitch from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 
 export interface RegisterPageProps {
   setAccessToken: SetAccessTokenFunction;
@@ -89,6 +90,9 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
         </div>
       </div>
       <div className={classes.right}>
+        <div className={classes.displayModeSwitch}>
+          <DisplayModeSwitch />
+        </div>
         <section>
           <Typography component="h1" variant="h4">
             Create an account

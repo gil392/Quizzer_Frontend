@@ -9,7 +9,6 @@ const useStyles = makeStyles((theme: Theme) => {
     lessonItem: {
       padding: "2px",
       margin: "1px 0",
-      boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
       borderRadius: "16px",
       transition: "0.3s",
       width: "60vw",
@@ -19,7 +18,6 @@ const useStyles = makeStyles((theme: Theme) => {
     },
     lessonItemHover: {
       "&:hover": {
-        boxShadow: "4px 4px 10px rgba(0, 0, 0, 0.3)",
         backgroundColor: lessonItemHoverBgColor,
         cursor: "pointer",
       },

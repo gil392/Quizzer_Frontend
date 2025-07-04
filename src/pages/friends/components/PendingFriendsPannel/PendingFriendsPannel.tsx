@@ -1,4 +1,4 @@
-import { Box, Divider, Paper, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 import clsx from "clsx";
 import { isEmpty } from "ramda";
 import { FunctionComponent } from "react";

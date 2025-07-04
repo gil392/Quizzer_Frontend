@@ -11,6 +11,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       alignItems: "stretch",
       textAlign: "center",
+      position: "relative",
       margin: 0,
     },
     left: {
@@ -48,7 +49,13 @@ export const useStyles = makeStyles((theme: Theme) =>
       maxWidth: "25%",
       height: "auto",
       alignSelf: "center",
-      marginTop: theme.spacing(1),
+      marginTop: theme.spacing(2),
+    },
+    displayModeSwitch: {
+      position: "absolute",
+      top: 4,
+      right: 8,
+      zIndex: 10,
     },
     formSection: { width: "70%" },
     textField: {

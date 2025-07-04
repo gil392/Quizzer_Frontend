@@ -42,12 +42,12 @@ export const lightTheme = createTheme({
       styleOverrides: {
         root: {
           color: "#FFFFFFff",
-          boxShadow: "0 4px 20px rgba(117, 100, 200, 0.06)",
+          boxShadow: "0 4px 8px rgba(117, 100, 200, 0.05)",
           "&:hover": {
-            boxShadow: "0 6px 24px rgba(117, 100, 200, 0.10)",
+            boxShadow: "0 4px 16px rgba(117, 100, 200, 0.10)",
           },
           "&:active": {
-            boxShadow: "0 2px 8px rgba(117, 100, 200, 0.12)",
+            boxShadow: "0 2px 12px rgba(117, 100, 200, 0.13)",
           },
           "&.MuiButton-contained": {
             color: "#FFFFFF",
@@ -61,7 +61,7 @@ export const lightTheme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          boxShadow: "0 4px 20px rgba(117, 100, 200, 0.1)",
+          boxShadow: "0 4px 8px rgba(117, 100, 200, 0.09)",
         },
       },
     },
@@ -110,12 +110,12 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           color: "#FFFFFFff",
-          boxShadow: "0 4px 20px rgba(96, 83, 206, 0.06)",
+          boxShadow: "0 4px 8px rgba(96, 83, 206, 0.05)",
           "&:hover": {
-            boxShadow: "0 6px 24px rgba(96, 83, 206, 0.10)",
+            boxShadow: "0 4px 16px rgba(96, 83, 206, 0.10)",
           },
           "&:active": {
-            boxShadow: "0 2px 8px rgba(96, 83, 206, 0.12)",
+            boxShadow: "0 2px 12px rgba(96, 83, 206, 0.13)",
           },
           "&.MuiButton-contained": {
             color: "#FFFFFF",
@@ -130,7 +130,7 @@ export const darkTheme = createTheme({
       styleOverrides: {
         root: {
           backgroundImage: "none",
-          boxShadow: "0 4px 20px rgba(96, 83, 206, 0.1)",
+          boxShadow: "0 4px 8px rgba(96, 83, 206, 0.09)",
         },
       },
     },

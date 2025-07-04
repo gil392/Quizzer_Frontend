@@ -15,7 +15,8 @@ import { LoginFormData, LoginResponse } from "../../api/authentication/types";
 import { SetAccessTokenFunction } from "../../hooks/authentication/types";
 import { useFormOf } from "../../hooks/form";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import useStyles from "../register/styles"; // use the same styles as RegisterPage
+import useStyles from "../register/styles";
+import DisplayModeSwitch from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
 
 export interface LoginPageProps {
   setAccessToken: SetAccessTokenFunction;
@@ -83,6 +84,9 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
         </div>
       </div>
       <div className={classes.right}>
+        <div className={classes.displayModeSwitch}>
+          <DisplayModeSwitch />
+        </div>
         <section>
           <Typography component="h1" variant="h4">
             Login

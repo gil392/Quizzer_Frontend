@@ -1,5 +1,5 @@
 import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material";
+import { alpha, Theme } from "@mui/material";
 
 const useStyles = makeStyles((theme: Theme) => ({
   checkbox: {
@@ -10,14 +10,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   checkboxGreen: {
     "& .MuiSvgIcon-root": {
-      border: "2px solid green",
-      borderRadius: "16px",
+      border: `2px solid ${theme.palette.primary.main}`,
     },
   },
   checkboxRed: {
     "& .MuiSvgIcon-root": {
-      border: "2px solid red",
-      borderRadius: "16px",
+      border: `1px dashed ${alpha(theme.palette.primary.main, 0.5)}`,
     },
   },
   questionBox: {
