@@ -1,5 +1,5 @@
 import { concat, prop } from "ramda";
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
+import { FunctionComponent, useCallback, useEffect, useMemo, useState } from "react";
 import FriendsPannel from "./components/FriendsPannel/FriendsPannel";
 import PendingFriendsPannel from "./components/PendingFriendsPannel/PendingFriendsPannel";
 import { useStyles } from "./styles";
@@ -10,11 +10,14 @@ import { fetchFriends, fetchPendingFriends } from "../../store/userReducer";
 const FriendsPage: FunctionComponent = () => {
   const classes = useStyles();
   const { loggedUser } = useSelector((state: RootState) => state.user);
-  const [excludedIdsFromSearch, setExcludedIdsFromSearch] = useState<string[]>([
-    loggedUser?._id || "",
-  ]);
   const { pendingFriends, friends } = useSelector(
     (state: RootState) => state.user
+  );
+  const excludedIdsFromSearch = useMemo<string[]>(
+    () => 
+      [loggedUser?._id || "",
+      ...concat(friends.map(prop("_id")), pendingFriends.map(prop("_id"))),
+    ], [loggedUser, friends, pendingFriends]
   );
   const dispatch = useDispatch<AppDispatch>();
   const [isFriendsLoading, setIsFriendsLoading] = useState(false);
@@ -42,13 +45,6 @@ const FriendsPage: FunctionComponent = () => {
 
     return () => abortController.abort();
   }, []);
-
-  useEffect(() => {
-    setExcludedIdsFromSearch([
-      loggedUser?._id || "",
-      ...concat(friends.map(prop("_id")), pendingFriends.map(prop("_id"))),
-    ]);
-  }, [friends, pendingFriends, loggedUser]);
 
   return (
     <div className={classes.root}>
