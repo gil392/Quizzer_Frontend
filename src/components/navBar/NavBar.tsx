@@ -1,4 +1,4 @@
-import { AutoStories, LogoDev, People, Settings, YouTube } from "@mui/icons-material";
+import { AutoStories, People, Settings, YouTube } from "@mui/icons-material";
 import { Box, Divider, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -15,7 +15,8 @@ import {
   listItemSx,
   listItemTextSx,
   listSx,
-  logoBoxSx,
+  logoIconSx,
+  logoTextSx,
 } from "./styles";
 import { NavBarItem } from "./types";
 import { isNavBarAvailableInPath } from "./utils";
@@ -78,9 +79,23 @@ const NavBar: FunctionComponent = () => {
       onMouseEnter={handleDrawerOpen}
       onMouseLeave={handleDrawerClose}
     >
-      <Box sx={logoBoxSx(open)} onClick={createNavigationHandle("HOME")}>
-        <LogoDev sx={listItemIconSx(open)} />
-        {open ? <Typography textAlign="center">Quizzer</Typography> : null}
+      <Box
+        sx={{
+          ...logoIconSx(open),
+        }}
+        onClick={createNavigationHandle("HOME")}
+      >
+        <img
+          src="/images/qLogo.svg"
+          alt="Quizzer Logo"
+          style={{
+            height: 50,
+            width: 50,
+            objectFit: "contain",
+            display: "block",
+          }}
+        />{" "}
+        {open ? <Typography sx={logoTextSx(open)}>Quizzer</Typography> : null}
       </Box>
       <Divider />
       <List sx={listSx}>{navBarItems}</List>

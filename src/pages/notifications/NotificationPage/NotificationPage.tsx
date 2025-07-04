@@ -39,7 +39,7 @@ const NotificationPage: React.FC = () => {
         <LessonInfo lesson={selectedLesson} onClose={closePopup} />
       ) : (
         <Box className={classes.root}>
-          <Typography variant="h3" className={classes.title} gutterBottom>
+          <Typography variant="h4" className={classes.title} gutterBottom>
             Notifications
           </Typography>
           {fetchNotificationsStatus === "loading" && (

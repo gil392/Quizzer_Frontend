@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Link,
   TextField,
@@ -14,7 +15,7 @@ import { LoginFormData, LoginResponse } from "../../api/authentication/types";
 import { SetAccessTokenFunction } from "../../hooks/authentication/types";
 import { useFormOf } from "../../hooks/form";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import useStyles from "../register/styles";
+import useStyles from "../register/styles"; // use the same styles as RegisterPage
 
 export interface LoginPageProps {
   setAccessToken: SetAccessTokenFunction;
@@ -65,37 +66,55 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
 
   return (
     <div className={classes.root}>
-      <section>
-        <Typography component="h1" variant="h4">
-          Login
-        </Typography>
-        <Typography variant="subtitle1" color="textSecondary" align="center">
-          Enter your username below to login your account
-        </Typography>
-      </section>
+      <div className={classes.left}>
+        <Box
+          component="img"
+          src="/images/logo.png"
+          alt="Logo"
+          className={classes.logo}
+        />
+        <div className={classes.imageWrapper}>
+          <Box
+            component="img"
+            src="/images/login.png"
+            alt="Login"
+            className={classes.image}
+          />
+        </div>
+      </div>
+      <div className={classes.right}>
+        <section>
+          <Typography component="h1" variant="h4">
+            Login
+          </Typography>
+          <Typography variant="subtitle1" color="textSecondary" align="center">
+            Enter your username and password to login your account
+          </Typography>
+        </section>
 
-      <section className={classes.formSection}>
-        <TextField {...usernameInputProps} />
-        <TextField {...passwordTextFieldProps} type="password" />
+        <section className={classes.formSection}>
+          <TextField {...usernameInputProps} />
+          <TextField {...passwordTextFieldProps} type="password" />
 
-        <Button
-          fullWidth
-          variant="contained"
-          className={classes.submitButton}
-          onClick={submitLoginForm}
-        >
-          Login
-        </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            className={classes.submitButton}
+            onClick={submitLoginForm}
+          >
+            Login
+          </Button>
 
-        <Link
-          variant="body2"
-          underline="none"
-          className={classes.link}
-          onClick={navigateToRegisterPage}
-        >
-          Don't have an account? Register here
-        </Link>
-      </section>
+          <Link
+            variant="body2"
+            underline="none"
+            className={classes.link}
+            onClick={navigateToRegisterPage}
+          >
+            Don't have an account? Register here
+          </Link>
+        </section>
+      </div>
     </div>
   );
 };

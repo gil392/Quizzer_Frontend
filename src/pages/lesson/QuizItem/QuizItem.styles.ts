@@ -1,6 +1,7 @@
+import { Theme } from "@mui/material";
 import { makeStyles, createStyles } from "@mui/styles";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       marginBottom: "1rem",
@@ -27,6 +28,14 @@ const useStyles = makeStyles(() =>
     },
     ratingContainer: {
       marginTop: "1rem",
+    },
+    rating: {
+      "& .MuiRating-iconFilled": {
+        color: theme.palette.primary.main,
+      },
+      "& .MuiRating-iconHover": {
+        color: theme.palette.primary.main,
+      },
     },
   })
 );

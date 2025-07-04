@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Link,
   TextField,
@@ -71,38 +72,56 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
 
   return (
     <div className={classes.root}>
-      <section>
-        <Typography component="h1" variant="h4">
-          Create an account
-        </Typography>
-        <Typography variant="subtitle1" color="textSecondary" align="center">
-          Enter your email below to create your account
-        </Typography>
-      </section>
+      <div className={classes.left}>
+        <Box
+          component="img"
+          src="/images/logo.png"
+          alt="Logo"
+          className={classes.logo}
+        />
+        <div className={classes.imageWrapper}>
+          <Box
+            component="img"
+            src="/images/login.png"
+            alt="Login"
+            className={classes.image}
+          />
+        </div>
+      </div>
+      <div className={classes.right}>
+        <section>
+          <Typography component="h1" variant="h4">
+            Create an account
+          </Typography>
+          <Typography variant="subtitle1" color="textSecondary" align="center">
+            Enter your email, username and password to create your account
+          </Typography>
+        </section>
 
-      <section className={classes.formSection}>
-        <TextField {...usernameInputProps} />
-        <TextField {...emailTextFieldProps} />
-        <TextField {...passwordTextFieldProps} type="password" />
+        <section className={classes.formSection}>
+          <TextField {...usernameInputProps} />
+          <TextField {...emailTextFieldProps} />
+          <TextField {...passwordTextFieldProps} type="password" />
 
-        <Button
-          fullWidth
-          variant="contained"
-          className={classes.submitButton}
-          onClick={submitRegistration}
-        >
-          Register
-        </Button>
+          <Button
+            fullWidth
+            variant="contained"
+            className={classes.submitButton}
+            onClick={submitRegistration}
+          >
+            Register
+          </Button>
 
-        <Link
-          variant="body2"
-          underline="none"
-          className={classes.link}
-          onClick={navigateToLoginPage}
-        >
-          already have account? login here
-        </Link>
-      </section>
+          <Link
+            variant="body2"
+            underline="none"
+            className={classes.link}
+            onClick={navigateToLoginPage}
+          >
+            already have an account? Login here
+          </Link>
+        </section>
+      </div>
     </div>
   );
 };

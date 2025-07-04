@@ -56,13 +56,19 @@ export const listSx = {
     flexGrow: 1
 };
 
-export const logoBoxSx = (open: boolean) => ({
+export const logoIconSx = (open: boolean) => ({
     py: 1,
-    px: 2.5,
+    pl: 1,
     display: 'flex',
     justifyContent: open ? 'initial' : 'center',
     mr: 'auto',
     cursor: 'pointer'
+});
+
+export const logoTextSx = (open: boolean) => ({
+    py: 1.5,
+    pl: 1.5,
+    justifyContent: open ? 'initial' : 'center',
 });
 
 export const listItemSx = { display: 'block' };
