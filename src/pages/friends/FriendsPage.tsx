@@ -9,9 +9,10 @@ import { fetchFriends, fetchPendingFriends } from "../../store/userReducer";
 
 const FriendsPage: FunctionComponent = () => {
   const classes = useStyles();
-  const [excludedIdsFromSearch, setExcludedIdsFromSearch] = useState<string[]>(
-    []
-  );
+  const { loggedUser } = useSelector((state: RootState) => state.user);
+  const [excludedIdsFromSearch, setExcludedIdsFromSearch] = useState<string[]>([
+    loggedUser?._id || "",
+  ]);
   const { pendingFriends, friends } = useSelector(
     (state: RootState) => state.user
   );
@@ -43,10 +44,11 @@ const FriendsPage: FunctionComponent = () => {
   }, []);
 
   useEffect(() => {
-    setExcludedIdsFromSearch(
-      concat(friends.map(prop("_id")), pendingFriends.map(prop("_id")))
-    );
-  }, [friends, pendingFriends]);
+    setExcludedIdsFromSearch([
+      loggedUser?._id || "",
+      ...concat(friends.map(prop("_id")), pendingFriends.map(prop("_id"))),
+    ]);
+  }, [friends, pendingFriends, loggedUser]);
 
   return (
     <div className={classes.root}>
