@@ -79,9 +79,6 @@ export const useStyles = makeStyles(() =>
         borderRadius: "16px",
       },
     },
-    progressBar: {
-      backgroundColor: "#ffc800 !important",
-    },
     detailsSection: {
       flex: 1,
       display: "flex",

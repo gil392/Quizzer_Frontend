@@ -22,6 +22,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { Summary } from "../../summary/Summary";
+import NoQuizzesFound from "./QuizNotFound/QuizNotFound";
 
 interface LessonInfoProps {
   lesson: LessonData;
@@ -111,13 +112,7 @@ const LessonInfo: React.FC<LessonInfoProps> = ({ lesson, onClose }) => {
             />
           ))
         ) : (
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            className={classes.noQuizzesText}
-          >
-            No quizzes available for this lesson.
-          </Typography>
+          <NoQuizzesFound />
         )}
         <Box className={classes.buttonsContainer}>
           <Button variant="contained" onClick={onCreateQuiz}>

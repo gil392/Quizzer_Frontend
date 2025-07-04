@@ -25,9 +25,7 @@ const PendingFriendsPannel: FunctionComponent<PendingFriendsPannelProps> = (
 
   const pendingFriendsList = isEmpty(pendingFriends) ? (
     <section className={classes.noPendingFriendsContainer}>
-      <Paper elevation={2} className={classes.noPendingFriendsPage}>
-        <Typography variant="h6">No Pending Friend Requests</Typography>
-      </Paper>
+      <Typography variant="h6">No Pending Friend Requests</Typography>
     </section>
   ) : (
     pendingFriends.map((user, index) => (

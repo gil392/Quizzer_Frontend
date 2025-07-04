@@ -12,6 +12,7 @@ import { AppDispatch, RootState } from "../../../../../store/store";
 import { shareAchievementAsync } from "../../../../../store/notificationReducer";
 import { fetchFriends } from "../../../../../store/userReducer";
 import { UserWithId } from "../../../../../api/user/types";
+import { useTheme } from "@mui/material/styles";
 
 interface AchievementItemProps {
   achievement: Achievement;
@@ -32,6 +33,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     user,
   } = props;
   const classes = useStyles();
+  const theme = useTheme();
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
 
@@ -97,17 +99,15 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
 
   const progresses = achievement.requirements.map(({ value, count }) => (
     <div className={classes.progress} key={value}>
-      <Typography
-        variant="subtitle2"
-        color="textSecondary"
-        className={classes.progressLabel}
-      >
+      <Typography variant="subtitle2" className={classes.progressLabel}>
         {min(value, count)}/{count}
       </Typography>
       <LinearProgress
         variant="determinate"
-        classes={{ bar: classes.progressBar }}
         className={classes.progressBarRoot}
+        sx={{
+          backgroundColor: theme.palette.primary.main,
+        }}
         value={(value / count) * 100}
       />
     </div>
@@ -118,8 +118,9 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
       className={classes.root}
       style={{
         backgroundColor: achievement.isCompleted
-          ? "rgba(0, 255, 0, 0.2)"
+          ? theme.palette.secondary.main
           : "transparent",
+        opacity: achievement.isCompleted ? 0.7 : 1,
         position: "relative",
       }}
     >
@@ -145,11 +146,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
           )}
         </div>
         <Box className={classes.rewardInfo}>
-          <Typography
-            variant="caption"
-            fontFamily="monospace"
-            color="textSecondary"
-          >
+          <Typography variant="caption" fontFamily="monospace">
             {formatNumberWithPostfix(achievement.reward.xp)}
             <span className={classes.rewardXp}>xp</span>
           </Typography>
@@ -162,9 +159,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
             <Typography variant="subtitle1" fontWeight="bold">
               {achievement.title}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              {achievement.description}
-            </Typography>
+            <Typography variant="body2">{achievement.description}</Typography>
           </div>
           {showShare && achievement.isCompleted && (
             <IconButton

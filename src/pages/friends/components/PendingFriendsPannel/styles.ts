@@ -21,12 +21,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       flexDirection: "column",
       alignItems: "center",
-    },
-    noPendingFriendsPage: {
-      width: "99%",
-      padding: 16,
-      textAlign: "center",
-      borderRadius: 12,
-    },
+      padding: theme.spacing(4),
+    }
   })
 );
