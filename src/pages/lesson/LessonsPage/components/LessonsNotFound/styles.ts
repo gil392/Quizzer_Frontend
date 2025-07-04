@@ -7,7 +7,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       textAlign: "center",
       width: "100%",
       borderRadius: 2,
-      maxWidth: '400px',
+      maxWidth: '450px',
       minWidth: '200px',
       height: 'auto',
     },

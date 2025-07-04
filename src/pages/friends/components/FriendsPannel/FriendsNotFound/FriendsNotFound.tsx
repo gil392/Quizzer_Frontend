@@ -16,7 +16,7 @@ const FriendsNotFound: React.FC = () => {
         You're flying solo
       </Typography>
       <Typography variant="body1" className={classes.message}>
-        No friends found. Time to search for quiz buddies!
+        No friends found. Let's search for quiz buddies!
       </Typography>
     </Box>
   );
