@@ -6,7 +6,7 @@ const useStyles = makeStyles(() => ({
     alignItems: "center",
     px: 2,
     py: 1,
-    borderRadius: 3,
+    borderRadius: 16,
     minWidth: 120,
     maxWidth: 200,
   },

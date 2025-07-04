@@ -10,5 +10,8 @@ export const styles = createStyles({
         alignItems: 'center',
         overflow: 'auto',
         flexGrow: 1
+    },
+    noPadding: {
+        padding: 0
     }
 });

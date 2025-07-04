@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     notificaion: {
       fontSize: 28,
-      color: theme.palette.primary.main,
       transition: "color 0.2s",
     },
     menu: {

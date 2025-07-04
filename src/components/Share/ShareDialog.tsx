@@ -12,6 +12,7 @@ import {
   ListItemButton,
 } from "@mui/material";
 import { useState } from "react";
+import { useTheme } from "@mui/material/styles";
 
 interface Friend {
   _id: string;
@@ -34,6 +35,7 @@ const ShareDialog: React.FC<ShareDialogProps> = ({
   onShare,
 }) => {
   const [selected, setSelected] = useState<string[]>([]);
+  const theme = useTheme();
 
   const handleToggle = (id: string) => {
     setSelected((prevSelected) =>
@@ -77,7 +79,13 @@ const ShareDialog: React.FC<ShareDialogProps> = ({
         </List>
       </DialogContent>
       <DialogActions onClick={(e) => e.stopPropagation()}>
-        <Button onClick={onClose}>Cancel</Button>
+        <Button
+          color="primary"
+          onClick={onClose}
+          sx={{ color: theme.palette.text.secondary }}
+        >
+          Cancel
+        </Button>
         <Button
           onClick={handleShare}
           disabled={selected.length === 0}

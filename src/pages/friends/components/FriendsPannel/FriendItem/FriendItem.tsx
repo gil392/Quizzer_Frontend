@@ -8,6 +8,7 @@ import {
   DialogContent,
   DialogContentText,
   Button,
+  Paper,
 } from "@mui/material";
 import clsx from "clsx";
 import { FunctionComponent, useState } from "react";
@@ -44,7 +45,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
   const confirmDeleteFriend = async () => {
     try {
       await deleteFriend(user._id);
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete friend. Please try again later.");
     }
 
@@ -56,7 +57,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
   };
 
   return (
-    <div className={clsx(className, classes.root)}>
+    <Paper className={clsx(className, classes.root)}>
       <div className={classes.leftContent}>
         <div className={classes.avatarBox}>
           <Avatar
@@ -67,7 +68,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
         <div className={classes.detailsBox}>
           <Typography>{user.username}</Typography>
           <Typography className={classes.statisticText} color="textSecondary">
-            Streak: {user.streak}d
+            Streak: {user.streak} days
           </Typography>
           <Typography className={classes.statisticText} color="textSecondary">
             XP: {user.xp}
@@ -112,7 +113,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Paper>
   );
 };
 

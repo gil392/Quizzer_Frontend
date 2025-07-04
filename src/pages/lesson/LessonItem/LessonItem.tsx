@@ -1,4 +1,4 @@
-import { Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import { FunctionComponent, useEffect, useState } from "react";
 import { LessonData } from "../../../api/lesson/types";
@@ -115,7 +115,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
   };
 
   return (
-    <Box
+    <Paper
       className={clsx(
         classes.lessonItem,
         !isEditing && classes.lessonItemHover,
@@ -195,7 +195,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
           </Typography>
         </Box>
       </Box>
-    </Box>
+    </Paper>
   );
 };
 

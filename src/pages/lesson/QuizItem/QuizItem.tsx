@@ -119,6 +119,7 @@ const QuizItem: React.FC<QuizItemProps> = ({
           name={`quiz-rating-${quiz._id}`}
           value={rating}
           onChange={(_, newValue) => handleRateQuiz(newValue)}
+          className={classes.rating}
         />
       </Box>
     </Box>

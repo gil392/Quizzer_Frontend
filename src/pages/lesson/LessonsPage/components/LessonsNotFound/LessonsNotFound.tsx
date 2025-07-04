@@ -1,4 +1,4 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import { Box, Link, Stack, Typography } from "@mui/material";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { PAGES_ROUTES } from "../../../../../routes/routes.const";
@@ -16,17 +16,19 @@ const LessonsNotFound: React.FC = () => {
         className={classes.container}
       />
 
-      <Typography variant="h5">Haven't had a lesson?</Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        onClick={() => {
-          navigate(PAGES_ROUTES.GENERATE_LESSON);
-        }}
-      >
-        <Typography variant="button">Create Your First Lesson</Typography>
-      </Button>
+      <Typography variant="h4" className={classes.title}>
+        Haven't had a lesson?
+      </Typography>
+      <Typography variant="body1" className={classes.message}>
+        Every great quizzer starts somewhere... This is your blank canvas.{" "}
+        <Link
+          component="button"
+          underline="hover"
+          onClick={() => navigate(PAGES_ROUTES.GENERATE_LESSON)}
+        >
+          create your first lesson!
+        </Link>
+      </Typography>
     </Stack>
   );
 };

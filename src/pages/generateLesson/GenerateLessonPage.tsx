@@ -30,7 +30,19 @@ const GenerateLessonPage: React.FC = () => {
   };
 
   return (
-    <Box sx={{ width: "60vw", margin: "auto" }}>
+    <Box
+      sx={{
+        width: "60vw",
+        display: "flex",
+        flexDirection: "column",
+      }}
+    >
+      <Box
+        component="img"
+        src="/images/generateLesson.png"
+        alt="Generate Lesson"
+        className={classes.image}
+      />
       <Typography variant="h6" gutterBottom>
         Insert YouTube Video
       </Typography>

@@ -6,12 +6,23 @@ const useStyles = makeStyles((theme: Theme) => {
   const customRadioTextColor = theme.palette.text.primary;
   const customRadioBorderColor = theme.palette.divider;
   const selectedRadioBgColor = theme.palette.primary.light;
-  const selectedRadioTextColor = theme.palette.text.primary;
+  const selectedRadioTextColor = theme.palette.primary.contrastText;
 
   return createStyles({
+    image: {
+      display: "block",
+      marginLeft: "auto",
+      marginRight: "auto",
+      width: "100%",
+      borderRadius: 2,
+      maxWidth: '250px',
+      minWidth: '100px',
+      textAlign: "center",
+    },
+
     typography: {
       display: "flex",
-      marginBottom: 3,
+      marginBottom: 20,
       border: `1px solid ${customRadioBorderColor}`,
       borderRadius: theme.shape.borderRadius,
       height: "3rem",
@@ -61,7 +72,7 @@ const useStyles = makeStyles((theme: Theme) => {
     button: {
       width: "100%",
       height: "3rem",
-      borderRadius: "8px",
+      borderRadius: "16px",
       marginTop: 3,
       backgroundColor: theme.palette.primary.main,
       color: theme.palette.text.primary,

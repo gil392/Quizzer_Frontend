@@ -1,6 +1,7 @@
+import { Theme } from "@mui/material";
 import { makeStyles, createStyles } from "@mui/styles";
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     headerContainer: {
       display: "flex",
@@ -27,12 +28,15 @@ const useStyles = makeStyles(() =>
     },
     sortOption: {
       "&.MuiSelect-root": {
-        borderRadius: "10px",
+        borderRadius: "16px",
       },
       width: "7rem",
     },
     lessonsNotFoundContainer: {
       width: "55vw",
+    },
+    createLessonButton: {
+      color: theme.palette.primary.main + " !important",
     },
   })
 );

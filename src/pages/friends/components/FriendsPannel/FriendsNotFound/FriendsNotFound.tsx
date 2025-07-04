@@ -12,7 +12,12 @@ const FriendsNotFound: React.FC = () => {
         src="/images/friendsNotFound.png"
         className={classes.image}
       />
-      <Typography variant="h4">Learn And Share Lessons With Friends</Typography>
+      <Typography variant="h4" className={classes.title}>
+        You're flying solo
+      </Typography>
+      <Typography variant="body1" className={classes.message}>
+        No friends found. Let's search for quiz buddies!
+      </Typography>
     </Box>
   );
 };

@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { QuizSettings, QuizAttempt } from "../../api/quiz/types";
 import useStyles from "./Quiz.styles";
 import { exportToPDF } from "../../utils/pdfUtils";
-import { Box, Button, Skeleton, Typography } from "@mui/material";
+import { Box, Button, Paper, Skeleton, Typography } from "@mui/material";
 import { toastWarning } from "../../utils/utils";
 import {
   createQuizAttemptAsync,
@@ -21,6 +21,7 @@ import { PAGES_ROUTES } from "../../routes/routes.const";
 import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { getDefaultQuizSettings } from "../../components/lessonConfig/components/utils";
 import { isNotNil } from "ramda";
+import { useTheme } from "@mui/material/styles";
 
 const QUIZ_CONTENT_PDF_ID = "quiz-content";
 
@@ -43,6 +44,23 @@ type LocationProps =
       quizId?: undefined;
       viewAttempt?: undefined;
     };
+
+const feedbackMap = [
+  { min: 100, message: "Flawless score - You're unstoppable!" },
+  { min: 95, message: "Perfect - Nothing left to say!" },
+  { min: 90, message: "Amazing - You're dominating this topic!" },
+  { min: 85, message: "Fantastic job - Keep up the great work!" },
+  { min: 80, message: "Great job - You're clearly getting it." },
+  { min: 75, message: "Nice work - You've got the hang of it." },
+  { min: 70, message: "Solid performance - You understand the basics." },
+  { min: 65, message: "Okay-ish - But there's room for improvement." },
+  { min: 60, message: "Just enough to scrape by - Review is needed." },
+  { min: 0, message: "Not great - Keep practicing and You'll get there!" },
+];
+
+function getFeedback(score: number): string {
+  return feedbackMap.find((entry) => score >= entry.min)?.message ?? "";
+}
 
 const QuizPage: React.FC = () => {
   const classes = useStyles();
@@ -73,6 +91,7 @@ const QuizPage: React.FC = () => {
 
     syncRedux();
   }, []);
+  const theme = useTheme();
 
   const [loading, setLoading] = useState(false);
   const [selectedAnswers, setSelectedAnswers] = useState<{
@@ -251,7 +270,7 @@ const QuizPage: React.FC = () => {
             gutterBottom
             className={classes.settingsTitle}
           >
-            New Quiz Settings
+            Quiz Settings
           </Typography>
           <LessonConfig
             onChange={(quizSettings: QuizSettings) => {
@@ -302,20 +321,19 @@ const QuizPage: React.FC = () => {
             <Box>
               <Box id={QUIZ_CONTENT_PDF_ID}>
                 {currentAttempt && isLocked && (
-                  <Box
+                  <Paper
                     className={classes.resultBox}
                     style={{
-                      backgroundColor:
-                        currentAttempt.score >= 60 ? "#e8f5e9" : "#ffebee",
+                      backgroundColor: theme.palette.background.paper,
                     }}
                   >
-                    <Typography
-                      variant="h5"
-                      color={currentAttempt.score >= 60 ? "green" : "red"}
-                    >
-                      Your Score: {currentAttempt.score} / 100
+                    <Typography variant="h5" color="primary">
+                      You scored {currentAttempt.score} out of 100
                     </Typography>
-                  </Box>
+                    <Typography variant="subtitle2" color="primary">
+                      {getFeedback(currentAttempt.score)}
+                    </Typography>
+                  </Paper>
                 )}
                 <Box>
                   <Typography variant="h5" component="div" gutterBottom>

@@ -6,6 +6,7 @@ import {
   Box,
   CircularProgress,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import { Notification } from "../../../api/notification/types.ts";
 import { useState, useEffect } from "react";
@@ -146,15 +147,17 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
             "Mark as Read"
           )}
         </Button>
-        <IconButton
-          color="inherit"
-          onClick={() => handleDeleteNotification(notification._id)}
-          disabled={loading}
-          sx={{ marginLeft: 1 }}
-          aria-label="Delete notification"
-        >
-          <Delete />
-        </IconButton>
+        <Tooltip title="Delete Notification" arrow>
+          <IconButton
+            color="inherit"
+            onClick={() => handleDeleteNotification(notification._id)}
+            disabled={loading}
+            sx={{ marginLeft: 1 }}
+            aria-label="Delete notification"
+          >
+            <Delete />
+          </IconButton>
+        </Tooltip>
       </Box>
     </Card>
   );

@@ -1,4 +1,10 @@
-import { AutoStories, LogoDev, People, Settings, YouTube } from "@mui/icons-material";
+import {
+  AutoStories,
+  People,
+  Notifications,
+  Settings,
+  YouTube,
+} from "@mui/icons-material";
 import { Box, Divider, Typography } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -15,7 +21,9 @@ import {
   listItemSx,
   listItemTextSx,
   listSx,
-  logoBoxSx,
+  logoContainerSx,
+  logoIconSx,
+  logoImageSx,
 } from "./styles";
 import { NavBarItem } from "./types";
 import { isNavBarAvailableInPath } from "./utils";
@@ -32,9 +40,14 @@ const navBarNavigations: readonly NavBarItem[] = [
     route: "LESSONS_LIST",
   },
   {
-    text: "My Friends",
+    text: "Friends",
     icon: <People />,
     route: "FRIENDS",
+  },
+  {
+    text: "Noifications",
+    icon: <Notifications />,
+    route: "NOTIFICATIONS",
   },
 ];
 
@@ -78,10 +91,27 @@ const NavBar: FunctionComponent = () => {
       onMouseEnter={handleDrawerOpen}
       onMouseLeave={handleDrawerClose}
     >
-      <Box sx={logoBoxSx(open)} onClick={createNavigationHandle("HOME")}>
-        <LogoDev sx={listItemIconSx(open)} />
-        {open ? <Typography textAlign="center">Quizzer</Typography> : null}
-      </Box>
+      {open ? (
+        <Box
+          sx={logoContainerSx(open)}
+          onClick={createNavigationHandle("HOME")}
+        >
+          <img
+            src="/images/logo.png"
+            alt="Quizzer Logo"
+            style={logoImageSx as React.CSSProperties}
+          />
+        </Box>
+      ) : (
+        <Box sx={logoIconSx(open)} onClick={createNavigationHandle("HOME")}>
+          <img
+            src="/images/qLogo.svg"
+            alt="Quizzer Logo"
+            style={logoImageSx as React.CSSProperties}
+          />{" "}
+        </Box>
+      )}
+
       <Divider />
       <List sx={listSx}>{navBarItems}</List>
       <Divider />
