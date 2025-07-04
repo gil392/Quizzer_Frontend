@@ -20,7 +20,7 @@ const LessonsNotFound: React.FC = () => {
         Haven't had a lesson?
       </Typography>
       <Typography variant="body1" className={classes.message}>
-        Every great quizzer starts somewhere. This is your blank canvas.{" "}
+        Every great quizzer starts somewhere... This is your blank canvas.{" "}
         <Link
           component="button"
           underline="hover"
