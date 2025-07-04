@@ -109,7 +109,7 @@ const LessonsPage: React.FC = () => {
       ) : (
         <>
           <Box className={classes.headerContainer}>
-            <Typography variant="h4" className={classes.title}>
+            <Typography variant="h3" className={classes.title}>
               Lessons
             </Typography>
             {selectedLesson === null && (
