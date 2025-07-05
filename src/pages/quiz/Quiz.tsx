@@ -7,6 +7,7 @@ import { Box, Button, Skeleton, Typography } from "@mui/material";
 import { toastWarning } from "../../utils/utils";
 import {
   createQuizAttemptAsync,
+  fetchQuizAttempts,
   updateAttemptWithAnswersAsync,
 } from "../../store/attemptReducer";
 import { fetchQuizzes, generateQuizAsync } from "../../store/quizReducer";
@@ -64,6 +65,8 @@ const QuizPage: React.FC = () => {
     quizId ? state.quizzes.quizzes.find((q) => q._id === quizId) : null
   );
 
+  const [finishedLoading, setFinishedLoading] = useState(false);
+
   useEffect(() => {
     const syncRedux = async () => {
       if (quizId && !quizData && locationState) {
@@ -79,13 +82,26 @@ const QuizPage: React.FC = () => {
     [questionId: string]: string | null;
   }>({});
 
-  const currentAttempt: QuizAttempt | undefined = useSelector(
-    (state: RootState) => selectAttemptSelector(state, quizId, attemptId)
+  useEffect(() => {
+    const loadAttempts = async () => {
+      if (quizId) {
+        await dispatch(fetchQuizAttempts(quizId));
+      }
+      setFinishedLoading(true);
+    };
+    loadAttempts();
+  }, [quizId]);
+
+  const currentAttempt: QuizAttempt | null | undefined = useSelector(
+    (state: RootState) =>
+      finishedLoading
+        ? selectAttemptSelector(state, quizId, attemptId)
+        : undefined
   );
 
   useEffect(() => {
     const createEmptyAttemptIfNeeded = async () => {
-      if (!currentAttempt && quizId) {
+      if (currentAttempt === null && quizId) {
         const emptyAttempt = await dispatch(
           createQuizAttemptAsync({
             quizId: quizId,
@@ -97,7 +113,7 @@ const QuizPage: React.FC = () => {
     };
 
     createEmptyAttemptIfNeeded();
-  }, [quizId, currentAttempt !== undefined]);
+  }, [quizId, currentAttempt !== null]);
 
   const selectedAnswersRef = useRef(selectedAnswers);
 

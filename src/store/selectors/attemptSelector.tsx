@@ -5,8 +5,8 @@ export const selectAttemptSelector = (
   quizId?: string,
   attemptId?: string
 ) => {
-  if (!quizId || !attemptId) return undefined;
+  if (!quizId || !attemptId) return null;
   const attempts = state.attempt.attemptsByQuiz[quizId];
-  if (!attempts) return undefined;
-  return attempts.find((attempt) => attempt._id === attemptId);
+  if (!attempts) return null;
+  return attempts.find((attempt) => attempt._id === attemptId) ?? null;
 };
