@@ -38,9 +38,6 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (
   const { loggedUser } = useSelector((state: RootState) => state.user);
 
   const user = passedUser || loggedUser;
-  console.log("UserProfileDetails user:", user);
-  console.log("UserProfileDetails passedUser:", passedUser);
-  console.log("UserProfileDetails loggedUser:", loggedUser);
 
   useEffect(() => {
     if (!passedUser) {
