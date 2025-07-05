@@ -13,4 +13,5 @@ export const PAGES_ROUTES = {
   NOTIFICATIONS_LIST: "/notifications",
   NOTIFICATIONS: "/notifications/*",
   SETTINGS: "/settings",
+  AUTH_CALLBACK: "/auth/callback",
 };
