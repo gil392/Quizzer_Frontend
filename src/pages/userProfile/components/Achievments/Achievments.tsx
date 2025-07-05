@@ -8,17 +8,20 @@ import AchievementItem from "./AchievementItem/AchievementItem";
 import { useStyles } from "./styles";
 import { moveCompletedAchievementsToEnd } from "./utils";
 import { toast } from "sonner";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../store/store";
 
 interface AchievmentsProps {
   className?: string;
   isEditing: boolean;
   setImageFile: (file: File | undefined) => void;
   setProfileImageUrl: (url: string | undefined) => void;
-  userId?: string; 
+  userId?: string;
 }
 
 const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
-  const { className, isEditing, setImageFile, setProfileImageUrl, userId } = props; 
+  const { className, isEditing, setImageFile, setProfileImageUrl, userId } =
+    props;
   const classes = useStyles();
   const [achievments, setAchievments] = useState<Achievement[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -27,7 +30,10 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
     async (abortController?: AbortController) => {
       setIsLoading(true);
       try {
-        const { data } = await getAvailableAchievements(userId, abortController);
+        const { data } = await getAvailableAchievements(
+          userId,
+          abortController
+        );
         const sortedAchievements = moveCompletedAchievementsToEnd(data);
         setAchievments(sortedAchievements);
       } catch (error) {
@@ -46,20 +52,30 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
     return () => abortController.abort();
   }, [fetchAchievements]);
 
+  const { loggedUser } = useSelector((state: RootState) => state.user);
+
   const achievementsList = isLoading ? (
     <SkeletonList itemClassName={classes.skeletonItem} numberOfItems={6} />
   ) : (
-    achievments.map((achievement, index) => (
-      <>
-        <AchievementItem 
-          achievement={achievement}
-          isEditing={isEditing} 
-          setImageFile={setImageFile}
-          setProfileImageUrl={setProfileImageUrl}
-        /> 
-        {index !== achievments.length - 1 && <Divider />}
-      </>
-    ))
+    achievments.map(
+      (achievement, index) =>
+        loggedUser && (
+          <div
+            key={achievement._id}
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <AchievementItem
+              achievement={achievement}
+              isEditing={isEditing}
+              setImageFile={setImageFile}
+              setProfileImageUrl={setProfileImageUrl}
+              showShare={userId === loggedUser._id}
+              user={loggedUser}
+            />
+            {index !== achievments.length - 1 && <Divider />}
+          </div>
+        )
+    )
   );
 
   return (

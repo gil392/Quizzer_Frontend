@@ -13,7 +13,6 @@ import { RelatedVideo } from "../../../api/lesson/types";
 import LessonOverviewSkeleton from "./LessonOverviewSkeleton.tsx";
 import { Summary } from "../../summary/Summary.tsx";
 import { PAGES_ROUTES } from "../../../routes/routes.const.ts";
-import { generateQuizAsync } from "../../../store/quizReducer.ts";
 
 const LessonOverviewPage: React.FC = () => {
   const location = useLocation();
@@ -36,18 +35,10 @@ const LessonOverviewPage: React.FC = () => {
     }
 
     try {
-      const data = await dispatch(
-        generateQuizAsync({
-          lessonId: lessonData._id,
-          settings: quizSettings,
-        })
-      ).unwrap();
-
       navigate(PAGES_ROUTES.QUIZ, {
         state: {
           lessonData,
-          quizId: data._id,
-          quizSettings: quizSettings,
+          quizSettings,
         },
       });
     } catch (error) {

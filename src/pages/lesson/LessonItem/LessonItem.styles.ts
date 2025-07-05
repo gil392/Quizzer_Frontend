@@ -31,6 +31,7 @@ const useStyles = makeStyles((theme: Theme) => {
       paddingLeft: "0.5vw",
     },
     editableActionsColumn: {
+      marginLeft: "0.5vw",
       display: "flex",
       flexDirection: "column",
       width: "82%",

@@ -9,11 +9,9 @@ import RegisterPage from "../pages/register/RegisterPage";
 import LessonOverviewPage from "../pages/lesson/LessonOverview/LessonOverviewPage";
 import { PAGES_ROUTES } from "./routes.const";
 import SettingsPage from "../pages/settings/SettingsPage";
-<<<<<<< 30-google-login
 import AuthCallbackPage from "../pages/login/AuthCallbackPage";
-=======
 import UserProfilePage from "../pages/userProfile/UserProfilePage";
->>>>>>> main
+import NotificationPage from "../pages/notifications/NotificationPage/NotificationPage";
 
 export const createPagesRoutes = (
   setAccessToken: SetAccessTokenFunction
@@ -40,6 +38,7 @@ export const createPagesRoutes = (
   { path: PAGES_ROUTES.SUMMARY, element: <LessonOverviewPage /> },
   { path: PAGES_ROUTES.LESSON, element: <LessonsPage /> },
   { path: PAGES_ROUTES.FRIENDS, element: <FriendsPage /> },
+  { path: PAGES_ROUTES.NOTIFICATIONS, element: <NotificationPage /> },
   { path: PAGES_ROUTES.PROFILE, element: <UserProfilePage /> },
   {
     path: PAGES_ROUTES.PROFILE_WITH_ID, element: <UserProfilePage />,

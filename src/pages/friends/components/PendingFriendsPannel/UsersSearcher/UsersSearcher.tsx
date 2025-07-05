@@ -25,6 +25,9 @@ import {
 } from "../../../../../api/user/api";
 import { SearchedUser } from "../../../../../api/user/types";
 import { useStyles } from "./styles";
+import { notifyFriendRequestAsync } from "../../../../../store/notificationReducer";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../../store/store";
 
 interface UsersSearcherProps {
   excludedIds?: string[];
@@ -38,6 +41,7 @@ const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
   const [inputValue, setInputValue] = useState("");
   const [options, setOptions] = useState<SearchedUser[]>([]);
   const [loading, setLoading] = useState(false);
+  const dispatch = useDispatch<AppDispatch>();
 
   const fetchUsers = useCallback(
     async (searchTerm: string) => {
@@ -65,6 +69,7 @@ const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
   const handleSelect = (_event: SyntheticEvent, value: SearchedUser | null) => {
     if (isNotNil(value)) {
       submitFriendRequest(value._id);
+      dispatch(notifyFriendRequestAsync(value._id));
     }
     setInputValue("");
     setValue(null);
