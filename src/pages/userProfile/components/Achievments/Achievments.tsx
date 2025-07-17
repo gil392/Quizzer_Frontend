@@ -62,7 +62,11 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
         loggedUser && (
           <div
             key={achievement._id}
-            style={{ display: "flex", alignItems: "center" }}
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+            }}
           >
             <AchievementItem
               achievement={achievement}
@@ -72,7 +76,9 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
               showShare={userId === loggedUser._id}
               user={loggedUser}
             />
-            {index !== achievments.length - 1 && <Divider />}
+            {index !== achievments.length - 1 && (
+              <Divider style={{ width: "100%" }} />
+            )}
           </div>
         )
     )

@@ -22,6 +22,12 @@ const SettingsPage: FunctionComponent = () => {
 
   return (
     <Box className={classes.root}>
+      <Box
+        component="img"
+        src="/images/settings.png"
+        alt="Settings"
+        className={classes.image}
+      />
       <Typography variant="h6" gutterBottom>
         Display Mode
       </Typography>

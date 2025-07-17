@@ -4,7 +4,7 @@ const useStyles = makeStyles(() =>
   createStyles({
     searchText: {
       "& .MuiOutlinedInput-root": {
-        borderRadius: "20px",
+        borderRadius: "16px",
       },
       width: "45vw",
     },

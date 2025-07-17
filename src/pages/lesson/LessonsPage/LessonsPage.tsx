@@ -114,6 +114,7 @@ const LessonsPage: React.FC = () => {
             </Typography>
             {selectedLesson === null && (
               <GenericIconButton
+                className={classes.createLessonButton}
                 icon={<Add />}
                 onClick={() => {
                   navigate(PAGES_ROUTES.GENERATE_LESSON);

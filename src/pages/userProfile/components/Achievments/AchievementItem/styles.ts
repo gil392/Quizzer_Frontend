@@ -76,11 +76,8 @@ export const useStyles = makeStyles(() =>
       "&.MuiLinearProgress-root": {
         backgroundColor: "#e5e5e5",
         height: "0.6em",
-        borderRadius: "4px",
+        borderRadius: "16px",
       },
-    },
-    progressBar: {
-      backgroundColor: "#ffc800 !important",
     },
     detailsSection: {
       flex: 1,

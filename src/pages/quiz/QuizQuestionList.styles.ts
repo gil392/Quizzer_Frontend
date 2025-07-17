@@ -1,23 +1,21 @@
 import { makeStyles } from "@mui/styles";
-import { Theme } from "@mui/material";
+import { alpha, Theme } from "@mui/material";
 
 const useStyles = makeStyles((theme: Theme) => ({
   checkbox: {
     "& .MuiSvgIcon-root": {
       border: "2px solid transparent",
-      borderRadius: "4px",
+      borderRadius: "16px",
     },
   },
   checkboxGreen: {
     "& .MuiSvgIcon-root": {
-      border: "2px solid green",
-      borderRadius: "4px",
+      border: `2px solid ${theme.palette.primary.main}`,
     },
   },
   checkboxRed: {
     "& .MuiSvgIcon-root": {
-      border: "2px solid red",
-      borderRadius: "4px",
+      border: `1px dashed ${alpha(theme.palette.primary.main, 0.5)}`,
     },
   },
   questionBox: {

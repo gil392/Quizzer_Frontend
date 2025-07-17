@@ -11,22 +11,23 @@ export const useStyles = makeStyles((theme: Theme) =>
       boxSizing: "border-box",
       width: "100%",
       boxShadow: "2px 2px 5px rgba(0, 0, 0, 0.2)",
-      borderRadius: "2px",
+      borderRadius: "16px",
       transition: "0.3s",
-      backgroundColor: "#fae1e43b",
+      backgroundColor: theme.palette.background.paper,
     },
     leftContent: {
       display: "flex",
       alignItems: "center",
-      flex: 1, 
+      flex: 1,
     },
     avatarBox: {
       padding: theme.spacing(0, 2, 0, 0),
     },
     detailsBox: {
-      flex: 1, 
+      flex: 1,
     },
     statisticText: {
+      color: theme.palette.text.primary,
       "&.MuiTypography-root": {
         fontSize: "0.7em",
       },
@@ -36,14 +37,15 @@ export const useStyles = makeStyles((theme: Theme) =>
       alignItems: "center",
     },
     viewProfileButton: {
-      marginRight: theme.spacing(1), 
+      marginRight: theme.spacing(1),
+      color: theme.palette.primary.main + " !important",
     },
     deleteButton: {
       marginLeft: theme.spacing(1),
     },
     modalText: {
-      fontSize: "0.875rem !important", 
+      fontSize: "0.875rem !important",
     },
-    
+
   })
 );

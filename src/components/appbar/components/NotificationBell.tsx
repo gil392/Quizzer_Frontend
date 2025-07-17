@@ -52,10 +52,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
         classes={{ badge: classes.badge }}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
       >
-        <NotificationsOutlined
-          className={classes.notificaion}
-          color="primary"
-        />
+        <NotificationsOutlined className={classes.notificaion} />
       </Badge>
     </IconButton>
   );

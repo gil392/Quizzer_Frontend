@@ -9,6 +9,7 @@ import { usePopupNavigation } from "../../../hooks/usePopupNavigation";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { markNotificationAsReadAsync } from "../../../store/notificationReducer";
+import NotificationsNotFound from "../NotificationsNotFound/NotificationsNotFound";
 
 const NotificationPage: React.FC = () => {
   const classes = useStyles();
@@ -50,11 +51,7 @@ const NotificationPage: React.FC = () => {
           )}
           {fetchNotificationsStatus !== "loading" &&
             notifications &&
-            notifications.length === 0 && (
-              <Typography className={classes.empty}>
-                You have no notifications.
-              </Typography>
-            )}
+            notifications.length === 0 && <NotificationsNotFound />}
           {fetchNotificationsStatus !== "loading" &&
             notifications &&
             notifications.map((notification) => (

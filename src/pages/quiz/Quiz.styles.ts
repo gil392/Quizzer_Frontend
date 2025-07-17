@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     "&::-webkit-scrollbar-thumb": {
       backgroundColor: "#888",
-      borderRadius: "4px",
+      borderRadius: "16px",
     },
     "&::-webkit-scrollbar-thumb:hover": {
       backgroundColor: "#555",
@@ -31,13 +31,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     textAlign: "center",
     marginBottom: 24,
     padding: 16,
-    borderRadius: "8px",
     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+    borderRadius: "16px",
   },
   card: {
     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
     textAlign: "left",
-    borderRadius: 8,
+    borderRadius: 16,
     padding: 16,
   },
   buttonContainer: {
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   submitSettingsButton: {
     width: "100%",
     height: "3rem",
-    borderRadius: "8px",
+    borderRadius: "16px",
   },
 }));
 
