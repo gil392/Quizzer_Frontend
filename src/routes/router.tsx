@@ -9,6 +9,7 @@ import RegisterPage from "../pages/register/RegisterPage";
 import LessonOverviewPage from "../pages/lesson/LessonOverview/LessonOverviewPage";
 import { PAGES_ROUTES } from "./routes.const";
 import SettingsPage from "../pages/settings/SettingsPage";
+import AuthCallbackPage from "../pages/login/AuthCallbackPage";
 import UserProfilePage from "../pages/userProfile/UserProfilePage";
 import NotificationPage from "../pages/notifications/NotificationPage/NotificationPage";
 
@@ -26,6 +27,10 @@ export const createPagesRoutes = (
   {
     path: PAGES_ROUTES.REGISTER,
     element: <RegisterPage setAccessToken={setAccessToken} />,
+  },
+  {
+    path: PAGES_ROUTES.AUTH_CALLBACK,
+    element: <AuthCallbackPage />,
   },
   { path: PAGES_ROUTES.SETTINGS, element: <SettingsPage /> },
   { path: PAGES_ROUTES.GENERATE_LESSON, element: <GenerateLessonPage /> },

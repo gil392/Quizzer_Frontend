@@ -9,7 +9,7 @@ import {
 import { isNotNil } from "ramda";
 import { FunctionComponent } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../../api/authentication/api";
+import { googleLogin, loginUser } from "../../api/authentication/api";
 import { loginSchema } from "../../api/authentication/schemas";
 import { LoginFormData, LoginResponse } from "../../api/authentication/types";
 import { SetAccessTokenFunction } from "../../hooks/authentication/types";
@@ -65,6 +65,10 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
   const usernameInputProps = createLoginFormFieldProps("username");
   const passwordTextFieldProps = createLoginFormFieldProps("password");
 
+  const handleGoogleLogin = () => {
+    googleLogin()
+  };
+
   return (
     <div className={classes.root}>
       <div className={classes.left}>
@@ -117,8 +121,18 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
           >
             Don't have an account? Register here
           </Link>
-        </section>
-      </div>
+        <Typography className={classes.orText} variant="h4" gutterBottom>
+          OR
+        </Typography>
+        <Button
+        fullWidth
+          variant="contained"
+          className={classes.submitButton}
+          onClick={handleGoogleLogin}
+        >
+          Continue with Google
+        </Button>
+      </section>
     </div>
   );
 };

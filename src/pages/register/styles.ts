@@ -31,7 +31,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       justifyContent: "center",
       alignItems: "center",
       textAlign: "center",
-      margin: '2rem 0'
+      margin: "2rem 0",
     },
     image: {
       maxWidth: "85%",
@@ -70,6 +70,9 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     link: {
       cursor: "pointer",
+    },
+    orText: {
+      marginTop: "1em !important", 
     },
   })
 );
