@@ -28,6 +28,7 @@ import { useStyles } from "./styles";
 import { notifyFriendRequestAsync } from "../../../../../store/notificationReducer";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../../store/store";
+import { toastSuccess } from "../../../../../utils/utils";
 
 interface UsersSearcherProps {
   excludedIds?: string[];
@@ -66,10 +67,18 @@ const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
     }
   }, [inputValue, searchUsers]);
 
-  const handleSelect = (_event: SyntheticEvent, value: SearchedUser | null) => {
+  const handleSelect = async (
+    _event: SyntheticEvent,
+    value: SearchedUser | null
+  ) => {
     if (isNotNil(value)) {
-      submitFriendRequest(value._id);
-      dispatch(notifyFriendRequestAsync(value._id));
+      try {
+        await submitFriendRequest(value._id);
+        await dispatch(notifyFriendRequestAsync(value._id));
+        toastSuccess("Friend request sent successfully!");
+      } catch (error) {
+        toastSuccess("Failed to send friend request. Please try again.");
+      }
     }
     setInputValue("");
     setValue(null);
