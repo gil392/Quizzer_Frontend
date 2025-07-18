@@ -15,6 +15,7 @@ import {
 import { deleteQuizAsync } from "./quizReducer";
 import { deleteLessonAsync } from "./lessonReducer";
 import { WritableDraft } from "immer";
+import { addHandlerWithToast } from "./addHandlerWithToast";
 
 export const fetchQuizAttempts = createAsyncThunk(
   "attempt/fetchQuizAttempts",
@@ -69,18 +70,18 @@ const attemptSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchQuizAttempts.fulfilled, (state, action) => {
+    addHandlerWithToast(builder, fetchQuizAttempts, (state, action) => {
         state.attemptsByQuiz[action.payload.quizId] = action.payload.attempts;
-      })
-      .addCase(createQuizAttemptAsync.fulfilled, (state, action) => {
+      }, "fetch quiz attempts", true);
+      addHandlerWithToast(builder, createQuizAttemptAsync, (state, action) => {
         const quizId = action.payload.quizId;
         if (!state.attemptsByQuiz[quizId]) {
           state.attemptsByQuiz[quizId] = [];
         }
         state.attemptsByQuiz[quizId].push(action.payload);
-      })
-      .addCase(addAnswerToQuizAttemptAsync.fulfilled, updateAttempt)
+      }, "create quiz attempt", true);
+      addHandlerWithToast(builder, addAnswerToQuizAttemptAsync, updateAttempt, "add an answer", true);
+    builder
       .addCase(updateAttemptWithAnswersAsync.fulfilled, updateAttempt)
       .addCase(deleteQuizAsync.fulfilled, (state, action) => {
         delete state.attemptsByQuiz[action.payload];

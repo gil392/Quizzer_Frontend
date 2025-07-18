@@ -83,7 +83,6 @@ const quizSlice = createSlice({
         state.quizzes = action.payload;
       },
       "fetch quizzes",
-      undefined,
       true
     );
     addHandlerWithToast(

@@ -9,6 +9,7 @@ import {
 } from "../api/user/api";
 import { UserSettings, UserWithId } from "../api/user/types";
 import { logout } from "../api/authentication/api";
+import { addHandlerWithToast } from "./addHandlerWithToast";
 
 export const fetchFriends = createAsyncThunk(
   "user/fetchFriends",
@@ -84,25 +85,50 @@ const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchFriends.fulfilled, (state, action) => {
+    addHandlerWithToast(
+      builder,
+      fetchFriends,
+      (state, action) => {
         state.friends = action.payload;
-      })
-      .addCase(fetchPendingFriends.fulfilled, (state, action) => {
+      },
+      "fetch friends",
+      true
+    );
+    addHandlerWithToast(
+      builder,
+      fetchPendingFriends,
+      (state, action) => {
         state.pendingFriends = action.payload;
-      })
-      .addCase(fetchLoggedUser.fulfilled, (state, action) => {
+      },
+      "fetch pending friends",
+      true
+    );
+    addHandlerWithToast(
+      builder,
+      fetchLoggedUser,
+      (state, action) => {
         state.loggedUser = action.payload;
-      })
-      .addCase(updateUserAsync.fulfilled, (state, action) => {
+      },
+      "fetch logged user",
+      true
+    );
+    addHandlerWithToast(
+      builder,
+      updateUserAsync,
+      (state, action) => {
         if (state.loggedUser) {
           state.loggedUser = {
             ...state.loggedUser,
             ...action.payload,
           };
         }
-      })
-      .addCase(acceptFriend.fulfilled, (state, action) => {
+      },
+      "update user"
+    );
+    addHandlerWithToast(
+      builder,
+      acceptFriend,
+      (state, action) => {
         const acceptedUser = state.pendingFriends.find(
           (user) => user._id === action.payload
         );
@@ -112,12 +138,21 @@ const userSlice = createSlice({
         state.pendingFriends = state.pendingFriends.filter(
           (user) => user._id !== action.payload
         );
-      })
-      .addCase(declineFriend.fulfilled, (state, action) => {
+      },
+      "accept friend request",
+      true
+    );
+    addHandlerWithToast(
+      builder,
+      declineFriend,
+      (state, action) => {
         state.pendingFriends = state.pendingFriends.filter(
           (user) => user._id !== action.payload
         );
-      });
+      },
+      "decline friend request",
+      true
+    );
   },
 });
 

@@ -17,8 +17,8 @@ export function addHandlerWithToast<
     action: PayloadAction<ReturnType<any>>
   ) => void,
   message: string,
-  noErrorMessage?: boolean,
-  noSuccessMessage?: boolean
+  noSuccessMessage?: boolean,
+  noErrorMessage?: boolean
 ) {
   builder.addCase(asyncThunk.fulfilled, (state, action) => {
     onFulfilled(state, action);
@@ -39,9 +39,7 @@ function pastVerb(label: string) {
   if (parts.length === 0) return "";
 
   let verb = parts[0];
-  if (!verb.endsWith("d")) {
-    verb = verb + "d";
-  }
+  verb = verb.endsWith("e") ? verb + "d" : verb + "ed";
 
   const rest = parts.slice(1).join(" ");
   return `${verb} ${rest}`.trim();
