@@ -7,6 +7,7 @@ import {
 } from "../api/quiz/api";
 import { QuizData, QuizSettings } from "../api/quiz/types";
 import { deleteLessonAsync } from "./lessonReducer";
+import { addHandlerWithToast } from "./addHandlerWithToast";
 
 export const fetchQuizzes = createAsyncThunk(
   "quiz/fetchQuizzes",
@@ -65,28 +66,49 @@ const quizSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    builder
-      .addCase(fetchQuizzes.fulfilled, (state, action) => {
-        state.quizzes = action.payload;
-      })
-      .addCase(deleteQuizAsync.fulfilled, (state, action) => {
+    addHandlerWithToast(
+      builder,
+      deleteQuizAsync,
+      (state, action) => {
         state.quizzes = state.quizzes.filter(
           (quiz) => quiz._id !== action.payload
         );
-      })
-      .addCase(generateQuizAsync.fulfilled, (state, action) => {
+      },
+      "delete quiz"
+    );
+    addHandlerWithToast(
+      builder,
+      fetchQuizzes,
+      (state, action) => {
+        state.quizzes = action.payload;
+      },
+      "fetch quizzes",
+      undefined,
+      true
+    );
+    addHandlerWithToast(
+      builder,
+      generateQuizAsync,
+      (state, action) => {
         state.quizzes.push(action.payload);
-      })
-      .addCase(updateQuizAsync.fulfilled, (state, action) => {
+      },
+      "generate quiz"
+    );
+    addHandlerWithToast(
+      builder,
+      updateQuizAsync,
+      (state, action) => {
         state.quizzes = state.quizzes.map((quiz) =>
           quiz._id === action.payload._id ? action.payload : quiz
         );
-      })
-      .addCase(deleteLessonAsync.fulfilled, (state, action) => {
-        state.quizzes = state.quizzes.filter(
-          (quiz) => quiz.lessonId !== action.payload.lessonId
-        );
-      });
+      },
+      "update quiz"
+    );
+    builder.addCase(deleteLessonAsync.fulfilled, (state, action) => {
+      state.quizzes = state.quizzes.filter(
+        (quiz) => quiz.lessonId !== action.payload.lessonId
+      );
+    });
   },
 });
 

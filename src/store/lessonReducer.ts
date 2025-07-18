@@ -8,6 +8,8 @@ import {
   generateLesson,
 } from "../api/lesson/api";
 import { RootState } from "./store";
+import { toastWarning } from "../utils/utils";
+import { addHandlerWithToast } from "./addHandlerWithToast";
 
 export const fetchLessons = createAsyncThunk(
   "lesson/fetchLessons",
@@ -77,9 +79,46 @@ const lessonSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    addHandlerWithToast(
+      builder,
+      deleteLessonAsync,
+      (state, action) => {
+        state.lessons = state.lessons.filter(
+          (lesson) => lesson._id !== action.payload.lessonId
+        );
+      },
+      "delete lesson"
+    );
+    addHandlerWithToast(
+      builder,
+      updateLessonAsync,
+      (state, action) => {
+        state.lessons = state.lessons.map((lesson) =>
+          lesson._id === action.payload._id ? action.payload : lesson
+        );
+      },
+      "update lesson"
+    );
+    addHandlerWithToast(
+      builder,
+      createLessonAsync,
+      (state, action) => {
+        state.lessons.push(action.payload);
+      },
+      "create lesson"
+    );
+    addHandlerWithToast(
+      builder,
+      mergeLessonsAsync,
+      (state, action) => {
+        state.lessons.push(action.payload);
+      },
+      "merge lessons"
+    );
     builder
       .addCase(fetchLessons.rejected, (state) => {
         state.fetchStatus = "failed";
+        toastWarning("Failed to fetch lessons.");
       })
       .addCase(fetchLessons.pending, (state) => {
         state.fetchStatus = "loading";
@@ -87,22 +126,6 @@ const lessonSlice = createSlice({
       .addCase(fetchLessons.fulfilled, (state, action) => {
         state.fetchStatus = "succeeded";
         state.lessons = action.payload;
-      })
-      .addCase(updateLessonAsync.fulfilled, (state, action) => {
-        state.lessons = state.lessons.map((lesson) =>
-          lesson._id === action.payload._id ? action.payload : lesson
-        );
-      })
-      .addCase(deleteLessonAsync.fulfilled, (state, action) => {
-        state.lessons = state.lessons.filter(
-          (lesson) => lesson._id !== action.payload.lessonId
-        );
-      })
-      .addCase(mergeLessonsAsync.fulfilled, (state, action) => {
-        state.lessons.push(action.payload);
-      })
-      .addCase(createLessonAsync.fulfilled, (state, action) => {
-        state.lessons.push(action.payload);
       });
   },
 });

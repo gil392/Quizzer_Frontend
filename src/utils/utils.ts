@@ -17,6 +17,10 @@ export const toastWarning = (message: string) => {
   toast.warning(message);
 }
 
+export const toastError = (message: string) => {
+  toast.error(message);
+}
+
 export const formatPublishTime = (publishTime: string) => {
   const date = new Date(publishTime);
   const now = new Date();

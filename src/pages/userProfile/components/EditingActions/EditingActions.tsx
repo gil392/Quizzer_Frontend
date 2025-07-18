@@ -2,10 +2,9 @@ import { Box, Button } from '@mui/material';
 import { FunctionComponent } from 'react';
 import { User } from '../../../../api/user/types';
 import { updateUserAsync } from '../../../../store/userReducer';
-import { toastSuccess } from '../../../../utils/utils';
+import { toastError, toastSuccess } from '../../../../utils/utils';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '../../../../store/store';
-import { toast } from 'sonner';
 
 interface EditingActionsProps {
     user: User | null;
@@ -32,7 +31,7 @@ const EditingActions: FunctionComponent<EditingActionsProps> = (props) => {
             stopEdit();
             }
         } catch (error) {
-            toast.error("Failed to update user. Please try again");
+            toastError("Failed to update user. Please try again");
         }
     }
 
