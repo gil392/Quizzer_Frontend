@@ -123,7 +123,8 @@ const userSlice = createSlice({
           };
         }
       },
-      "update user"
+      "update user",
+      true
     );
     addHandlerWithToast(
       builder,

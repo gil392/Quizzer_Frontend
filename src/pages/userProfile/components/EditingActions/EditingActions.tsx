@@ -4,6 +4,8 @@ import { User } from "../../../../api/user/types";
 import { updateUserAsync } from "../../../../store/userReducer";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../store/store";
+import { toast } from "sonner";
+import { toastError, toastSuccess } from "../../../../utils/utils";
 
 interface EditingActionsProps {
   user: User | null;
@@ -27,9 +29,11 @@ const EditingActions: FunctionComponent<EditingActionsProps> = (props) => {
           })
         ).unwrap();
         stopEdit();
+        toastSuccess("Successfully updated user");
       }
     } catch (error) {
       console.error("Error updating user:", error);
+      toastError("Failed to update user");
     }
   };
 
