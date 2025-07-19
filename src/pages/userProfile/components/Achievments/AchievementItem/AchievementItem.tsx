@@ -39,6 +39,10 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
 
   const dispatch = useDispatch<AppDispatch>();
   const friends = useSelector((state: RootState) => state.user.friends);
+  const friendsWithSharedAchievement = friends.map((friend) => ({
+    ...friend,
+    wasSentTo: false,
+  }));
 
   useEffect(() => {
     dispatch(fetchFriends());
@@ -175,7 +179,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
             open={shareDialogOpen}
             dialogType="Achievement"
             onClose={handleCloseShareDialog}
-            friends={friends}
+            friends={friendsWithSharedAchievement}
             onShare={handleShareAchievement}
           />
         </div>

@@ -51,6 +51,10 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const friends = useSelector((state: RootState) => state.user.friends);
+  const friendsWithSharedLesson = friends.map((friend) => ({
+    ...friend,
+    wasSentTo: lesson.sharedUsers.includes(friend._id),
+  }));
 
   useEffect(() => {
     dispatch(fetchFriends());
@@ -154,13 +158,15 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
               title="Share Lesson"
               onClick={handleOpenShareDialog}
             />
-            <ShareDialog
-              open={shareDialogOpen}
-              dialogType="Lesson"
-              onClose={handleCloseShareDialog}
-              friends={friends}
-              onShare={handleShareLesson}
-            />
+            {shareDialogOpen && (
+              <ShareDialog
+                open={shareDialogOpen}
+                dialogType="Lesson"
+                onClose={handleCloseShareDialog}
+                friends={friendsWithSharedLesson}
+                onShare={handleShareLesson}
+              />
+            )}
             {isMergeLessonsMode ? (
               <GenericIconButton
                 icon={

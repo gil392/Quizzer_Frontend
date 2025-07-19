@@ -8,6 +8,8 @@ import {
   generateLesson,
 } from "../api/lesson/api";
 import { RootState } from "./store";
+import { shareLessonAsync } from "./notificationReducer";
+import { toastSuccess } from "../utils/utils";
 
 export const fetchLessons = createAsyncThunk(
   "lesson/fetchLessons",
@@ -100,6 +102,15 @@ const lessonSlice = createSlice({
       })
       .addCase(mergeLessonsAsync.fulfilled, (state, action) => {
         state.lessons.push(action.payload);
+      })
+      .addCase(shareLessonAsync.fulfilled, (state, action) => {
+        const updatedLesson: LessonData = action.payload;
+        state.lessons = state.lessons.map((lesson) =>
+          lesson._id === updatedLesson._id
+            ? { ...lesson, sharedUsers: updatedLesson.sharedUsers }
+            : lesson
+        );
+        toastSuccess("Lesson shared successfully!");
       })
       .addCase(createLessonAsync.fulfilled, (state, action) => {
         state.lessons.push(action.payload);

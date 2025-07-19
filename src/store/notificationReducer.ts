@@ -90,7 +90,6 @@ const notificationSlice = createSlice({
                 state.fetchStatus = "succeeded";
                 state.notifications = action.payload;
             })
-            .addCase(shareLessonAsync.fulfilled, () => { })
             .addCase(markNotificationAsReadAsync.fulfilled, (state, action) => {
                 const notification = state.notifications.find((notification) => notification._id === action.payload);
                 if (notification) {

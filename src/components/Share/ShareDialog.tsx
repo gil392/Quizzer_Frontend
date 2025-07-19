@@ -17,6 +17,7 @@ import { useTheme } from "@mui/material/styles";
 interface Friend {
   _id: string;
   username: string;
+  wasSentTo: boolean;
 }
 
 interface ShareDialogProps {
@@ -34,7 +35,9 @@ const ShareDialog: React.FC<ShareDialogProps> = ({
   friends,
   onShare,
 }) => {
-  const [selected, setSelected] = useState<string[]>([]);
+  const [selected, setSelected] = useState<string[]>(
+    friends.filter((friend) => friend.wasSentTo).map((friend) => friend._id)
+  );
   const theme = useTheme();
 
   const handleToggle = (id: string) => {
@@ -61,13 +64,14 @@ const ShareDialog: React.FC<ShareDialogProps> = ({
               <ListItemButton
                 onClick={(e) => {
                   e.stopPropagation();
-                  handleToggle(friend._id);
+                  !friend.wasSentTo && handleToggle(friend._id);
                 }}
               >
                 <ListItemIcon>
                   <Checkbox
                     edge="start"
                     checked={selected.includes(friend._id)}
+                    disabled={friend.wasSentTo}
                     tabIndex={-1}
                     disableRipple
                   />

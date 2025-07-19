@@ -8,6 +8,7 @@ export type LessonData = {
     videoId: string;
   };
   relatedLessonGroupId?: string;
+  sharedUsers: string[];
 };
 
 export type RelatedVideo = {
