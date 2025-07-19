@@ -13,6 +13,7 @@ import { shareAchievementAsync } from "../../../../../store/notificationReducer"
 import { fetchFriends } from "../../../../../store/userReducer";
 import { UserWithId } from "../../../../../api/user/types";
 import { useTheme } from "@mui/material/styles";
+import { toastSuccess } from "../../../../../utils/utils";
 
 interface AchievementItemProps {
   achievement: Achievement;
@@ -94,6 +95,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
         relatedEntityId: user._id,
       })
     );
+    toastSuccess("Shared the achievement with selected friends");
     setShareDialogOpen(false);
   };
 

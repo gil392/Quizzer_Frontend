@@ -5,7 +5,9 @@ import UserProfileDetails from "./components/UserProfileDetails/UserProfileDetai
 import useStyles from "./styles";
 import { UserWithId } from "../../api/user/types";
 import { fetchFriendById } from "../../api/user/api";
-import { toast } from "sonner";
+import { toastError } from "../../utils/utils";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
 
 type LocationProps = {
   userId: string;
@@ -16,6 +18,7 @@ const UserProfilePage: FunctionComponent = () => {
   const location = useLocation();
   const locationState = (location.state as LocationProps) || undefined;
   const userId = locationState?.userId;
+  const { loggedUser } = useSelector((state: RootState) => state.user);
   const [user, setUser] = useState<UserWithId | null>(null);
   const [imageFile, setImageFile] = useState<File>();
   const [isEditing, setIsEditing] = useState(false);
@@ -40,7 +43,7 @@ const UserProfilePage: FunctionComponent = () => {
           setUser(fetchedFriend.data);
           setProfileImageUrl(fetchedFriend.data.profileImage);
         } catch (error) {
-          toast.error("Failed to fetch user profile. Please try again later.");
+          toastError("Failed to fetch user profile. Please try again later.");
         }
       }
     };
@@ -55,7 +58,7 @@ const UserProfilePage: FunctionComponent = () => {
           isEditing={isEditing && !userId}
           setImageFile={setImageFile}
           setProfileImageUrl={setProfileImageUrl}
-          userId={userId}
+          userId={userId ?? loggedUser?._id}
         />
       </section>
       <section className={classes.pannel}>

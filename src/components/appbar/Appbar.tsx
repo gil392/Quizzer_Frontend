@@ -45,7 +45,9 @@ const AppBar: FunctionComponent = () => {
     {
       label: "Profile",
       onClick: () => {
-        navigate(PAGES_ROUTES.PROFILE);
+        navigate(PAGES_ROUTES.PROFILE, {
+          state: { userId: loggedUser?._id },
+        });
       },
     },
     {

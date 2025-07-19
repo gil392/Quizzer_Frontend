@@ -22,6 +22,7 @@ import ShareDialog from "../../../components/Share/ShareDialog";
 import { LessonImage } from "../RelatedVideo/LessonImage";
 import { shareLessonAsync } from "../../../store/notificationReducer";
 import { fetchFriends } from "../../../store/userReducer";
+import { toastSuccess } from "../../../utils/utils";
 
 interface LessonItemProps {
   lesson: LessonData;
@@ -97,6 +98,7 @@ const LessonItem: FunctionComponent<LessonItemProps> = ({
         relatedEntityId: lesson._id,
       })
     );
+    toastSuccess("Shared the lesson with selected friends");
     setShareDialogOpen(false);
   };
 

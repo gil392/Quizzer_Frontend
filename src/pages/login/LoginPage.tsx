@@ -66,7 +66,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
   const passwordTextFieldProps = createLoginFormFieldProps("password");
 
   const handleGoogleLogin = () => {
-    googleLogin()
+    googleLogin();
   };
 
   return (
@@ -121,18 +121,19 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
           >
             Don't have an account? Register here
           </Link>
-        <Typography className={classes.orText} variant="h4" gutterBottom>
-          OR
-        </Typography>
-        <Button
-        fullWidth
-          variant="contained"
-          className={classes.submitButton}
-          onClick={handleGoogleLogin}
-        >
-          Continue with Google
-        </Button>
-      </section>
+          <Typography className={classes.orText} variant="h4" gutterBottom>
+            OR
+          </Typography>
+          <Button
+            fullWidth
+            variant="contained"
+            className={classes.submitButton}
+            onClick={handleGoogleLogin}
+          >
+            Continue with Google
+          </Button>
+        </section>
+      </div>
     </div>
   );
 };
