@@ -73,8 +73,17 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
               isEditing={isEditing}
               setImageFile={setImageFile}
               setProfileImageUrl={setProfileImageUrl}
-              showShare={userId === loggedUser._id}
+              showShare
               user={loggedUser}
+              setFriendsWithSharedAchievement={(friends) =>
+                setAchievments((prev) =>
+                  prev.map((achievementToCheck) =>
+                    achievementToCheck._id === achievement._id
+                      ? { ...achievementToCheck, sharedUsers: friends }
+                      : achievementToCheck
+                  )
+                )
+              }
             />
             {index !== achievments.length - 1 && (
               <Divider style={{ width: "100%" }} />

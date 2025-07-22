@@ -12,4 +12,5 @@ export type Achievement = {
   reward: Reward;
   requirements: RequirmentProgress[];
   isCompleted: boolean;
+  sharedUsers: string[];
 };

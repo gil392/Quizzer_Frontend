@@ -76,7 +76,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
           navigate(PAGES_ROUTES.FRIENDS);
         } else {
           navigate(PAGES_ROUTES.PROFILE, {
-            state: { userId: notification.relatedEntityId },
+            state: { userId: notification.fromUserId },
           });
         }
       }
