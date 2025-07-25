@@ -16,12 +16,17 @@ interface AchievmentsProps {
   isEditing: boolean;
   setImageFile: (file: File | undefined) => void;
   setProfileImageUrl: (url: string | undefined) => void;
-  userId?: string;
+  friendUserId?: string;
 }
 
 const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
-  const { className, isEditing, setImageFile, setProfileImageUrl, userId } =
-    props;
+  const {
+    className,
+    isEditing,
+    setImageFile,
+    setProfileImageUrl,
+    friendUserId: friendUserId,
+  } = props;
   const classes = useStyles();
   const [achievments, setAchievments] = useState<Achievement[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -31,7 +36,7 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
       setIsLoading(true);
       try {
         const { data } = await getAvailableAchievements(
-          userId,
+          friendUserId,
           abortController
         );
         const sortedAchievements = moveCompletedAchievementsToEnd(data);
@@ -42,7 +47,7 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
         setIsLoading(false);
       }
     },
-    [userId]
+    [friendUserId]
   );
 
   useEffect(() => {
@@ -73,7 +78,7 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
               isEditing={isEditing}
               setImageFile={setImageFile}
               setProfileImageUrl={setProfileImageUrl}
-              showShare
+              showShare={friendUserId ? false : true}
               user={loggedUser}
               setFriendsWithSharedAchievement={(friends) =>
                 setAchievments((prev) =>

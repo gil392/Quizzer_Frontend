@@ -15,8 +15,8 @@ const UserProfilePage: FunctionComponent = () => {
   const classes = useStyles();
   const location = useLocation();
   const locationState = (location.state as LocationProps) || undefined;
-  const userId = locationState?.userId;
-  const [user, setUser] = useState<UserWithId | null>(null);
+  const friendUserId = locationState?.userId;
+  const [friendUser, setFriendUser] = useState<UserWithId | null>(null);
   const [imageFile, setImageFile] = useState<File>();
   const [isEditing, setIsEditing] = useState(false);
   const [profileImageUrl, setProfileImageUrl] = useState<string | undefined>(
@@ -24,7 +24,7 @@ const UserProfilePage: FunctionComponent = () => {
   );
 
   const cleanState = () => {
-    setUser(null);
+    setFriendUser(null);
     setProfileImageUrl(undefined);
     setIsEditing(false);
     setImageFile(undefined);
@@ -34,10 +34,10 @@ const UserProfilePage: FunctionComponent = () => {
     cleanState();
 
     const fetchFriend = async () => {
-      if (userId) {
+      if (friendUserId) {
         try {
-          const fetchedFriend = await fetchFriendById(userId);
-          setUser(fetchedFriend.data);
+          const fetchedFriend = await fetchFriendById(friendUserId);
+          setFriendUser(fetchedFriend.data);
           setProfileImageUrl(fetchedFriend.data.profileImage);
         } catch (error) {
           toast.error("Failed to fetch user profile. Please try again later.");
@@ -45,17 +45,17 @@ const UserProfilePage: FunctionComponent = () => {
       }
     };
     fetchFriend();
-  }, [userId]);
+  }, [friendUserId]);
 
   return (
     <div className={classes.root}>
       <section className={classes.pannel}>
         <Achievments
           className={classes.achievements}
-          isEditing={isEditing && !userId}
+          isEditing={isEditing && !friendUserId}
           setImageFile={setImageFile}
           setProfileImageUrl={setProfileImageUrl}
-          userId={userId}
+          friendUserId={friendUserId}
         />
       </section>
       <section className={classes.pannel}>
@@ -66,7 +66,7 @@ const UserProfilePage: FunctionComponent = () => {
           imageFile={imageFile}
           profileImageUrl={profileImageUrl}
           setProfileImageUrl={setProfileImageUrl}
-          user={user}
+          user={friendUser}
         />
       </section>
     </div>
