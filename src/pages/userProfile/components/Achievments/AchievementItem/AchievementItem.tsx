@@ -16,6 +16,7 @@ import {
 import { fetchFriends } from "../../../../../store/userReducer";
 import { UserWithId } from "../../../../../api/user/types";
 import { useTheme } from "@mui/material/styles";
+import { toastSuccess } from "../../../../../utils/utils";
 
 interface AchievementItemProps {
   achievement: Achievement;
@@ -103,6 +104,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
       })
     );
     setFriendsWithSharedAchievement(friendIds);
+    toastSuccess("Shared the achievement with selected friends");
     setShareDialogOpen(false);
   };
 

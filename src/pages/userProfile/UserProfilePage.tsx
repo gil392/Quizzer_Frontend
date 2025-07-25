@@ -5,7 +5,7 @@ import UserProfileDetails from "./components/UserProfileDetails/UserProfileDetai
 import useStyles from "./styles";
 import { UserWithId } from "../../api/user/types";
 import { fetchFriendById } from "../../api/user/api";
-import { toast } from "sonner";
+import { toastError } from "../../utils/utils";
 
 type LocationProps = {
   userId: string;
@@ -40,7 +40,7 @@ const UserProfilePage: FunctionComponent = () => {
           setFriendUser(fetchedFriend.data);
           setProfileImageUrl(fetchedFriend.data.profileImage);
         } catch (error) {
-          toast.error("Failed to fetch user profile. Please try again later.");
+          toastError("Failed to fetch user profile. Please try again later.");
         }
       }
     };

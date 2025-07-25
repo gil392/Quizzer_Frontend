@@ -10,6 +10,7 @@ import { moveCompletedAchievementsToEnd } from "./utils";
 import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
+import { toastError } from "../../../../utils/utils";
 
 interface AchievmentsProps {
   className?: string;
@@ -42,7 +43,7 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
         const sortedAchievements = moveCompletedAchievementsToEnd(data);
         setAchievments(sortedAchievements);
       } catch (error) {
-        toast.error("Failed to fetch achievements. Please try again later.");
+        toastError("Failed to fetch achievements. Please try again later.");
       } finally {
         setIsLoading(false);
       }
