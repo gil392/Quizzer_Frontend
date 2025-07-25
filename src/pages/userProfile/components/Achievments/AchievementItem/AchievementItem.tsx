@@ -9,7 +9,10 @@ import { Share } from "@mui/icons-material";
 import ShareDialog from "../../../../../components/Share/ShareDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../store/store";
-import { shareAchievementAsync } from "../../../../../store/notificationReducer";
+
+import {
+  shareAchievementAsync,
+} from "../../../../../store/notificationReducer";
 import { fetchFriends } from "../../../../../store/userReducer";
 import { UserWithId } from "../../../../../api/user/types";
 import { useTheme } from "@mui/material/styles";
@@ -22,6 +25,7 @@ interface AchievementItemProps {
   setProfileImageUrl: (url: string | undefined) => void;
   showShare: boolean;
   user: UserWithId;
+  setFriendsWithSharedAchievement: (friends: string[]) => void;
 }
 
 const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
@@ -31,7 +35,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     setImageFile,
     setProfileImageUrl,
     showShare,
-    user,
+    setFriendsWithSharedAchievement,
   } = props;
   const classes = useStyles();
   const theme = useTheme();
@@ -40,6 +44,10 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
 
   const dispatch = useDispatch<AppDispatch>();
   const friends = useSelector((state: RootState) => state.user.friends);
+  const friendsWithSharedAchievement = friends.map((friend) => ({
+    ...friend,
+    wasSentTo: achievement.sharedUsers.includes(friend._id),
+  }));
 
   useEffect(() => {
     dispatch(fetchFriends());
@@ -92,9 +100,10 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     await dispatch(
       shareAchievementAsync({
         toUserIds: friendIds,
-        relatedEntityId: user._id,
+        relatedEntityId: achievement._id,
       })
     );
+    setFriendsWithSharedAchievement(friendIds);
     toastSuccess("Shared the achievement with selected friends");
     setShareDialogOpen(false);
   };
@@ -173,13 +182,15 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
               <Share />
             </IconButton>
           )}
-          <ShareDialog
-            open={shareDialogOpen}
-            dialogType="Achievement"
-            onClose={handleCloseShareDialog}
-            friends={friends}
-            onShare={handleShareAchievement}
-          />
+          {shareDialogOpen && (
+            <ShareDialog
+              open={shareDialogOpen}
+              dialogType="Achievement"
+              onClose={handleCloseShareDialog}
+              friends={friendsWithSharedAchievement}
+              onShare={handleShareAchievement}
+            />
+          )}
         </div>
         {progresses}
       </section>

@@ -9,8 +9,8 @@ import ProfileImage from "./components/ProfileImage";
 import useStyles from "./styles";
 import NotificationBell from "./components/NotificationBell";
 import { PAGES_ROUTES } from "../../routes/routes.const";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../store/store";
 import { logoutAsync } from "../../store/userReducer";
 
 const AppBar: FunctionComponent = () => {
@@ -19,7 +19,6 @@ const AppBar: FunctionComponent = () => {
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const dispatch = useDispatch<AppDispatch>();
-  const { loggedUser } = useSelector((state: RootState) => state.user);
 
   const isAppBarAvaiable = useMemo(
     () => isNavBarAvailableInPath(location.pathname),

@@ -7,7 +7,6 @@ import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import AchievementItem from "./AchievementItem/AchievementItem";
 import { useStyles } from "./styles";
 import { moveCompletedAchievementsToEnd } from "./utils";
-import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import { toastError } from "../../../../utils/utils";
@@ -17,12 +16,17 @@ interface AchievmentsProps {
   isEditing: boolean;
   setImageFile: (file: File | undefined) => void;
   setProfileImageUrl: (url: string | undefined) => void;
-  userId?: string;
+  friendUserId?: string;
 }
 
 const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
-  const { className, isEditing, setImageFile, setProfileImageUrl, userId } =
-    props;
+  const {
+    className,
+    isEditing,
+    setImageFile,
+    setProfileImageUrl,
+    friendUserId: friendUserId,
+  } = props;
   const classes = useStyles();
   const [achievments, setAchievments] = useState<Achievement[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +36,7 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
       setIsLoading(true);
       try {
         const { data } = await getAvailableAchievements(
-          userId,
+          friendUserId,
           abortController
         );
         const sortedAchievements = moveCompletedAchievementsToEnd(data);
@@ -43,7 +47,7 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
         setIsLoading(false);
       }
     },
-    [userId]
+    [friendUserId]
   );
 
   useEffect(() => {
@@ -74,8 +78,17 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
               isEditing={isEditing}
               setImageFile={setImageFile}
               setProfileImageUrl={setProfileImageUrl}
-              showShare={userId === loggedUser._id}
+              showShare={friendUserId ? false : true}
               user={loggedUser}
+              setFriendsWithSharedAchievement={(friends) =>
+                setAchievments((prev) =>
+                  prev.map((achievementToCheck) =>
+                    achievementToCheck._id === achievement._id
+                      ? { ...achievementToCheck, sharedUsers: friends }
+                      : achievementToCheck
+                  )
+                )
+              }
             />
             {index !== achievments.length - 1 && (
               <Divider style={{ width: "100%" }} />

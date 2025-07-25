@@ -5,7 +5,7 @@ import {
   Settings,
   YouTube,
 } from "@mui/icons-material";
-import { Box, Divider, Typography } from "@mui/material";
+import { Box, Divider } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
