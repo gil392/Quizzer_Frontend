@@ -8,6 +8,7 @@ import {
     notifyFriendRequest,
 } from "../api/notification/api";
 import { Notification } from "../api/notification/types";
+import { toastWarning } from "../utils/utils";
 
 export const fetchNotifications = createAsyncThunk(
     "notification/getNotifications",
@@ -82,6 +83,7 @@ const notificationSlice = createSlice({
         builder
             .addCase(fetchNotifications.rejected, (state) => {
                 state.fetchStatus = "failed";
+                toastWarning("Failed to fetch notifications.");
             })
             .addCase(fetchNotifications.pending, (state) => {
                 state.fetchStatus = "loading";

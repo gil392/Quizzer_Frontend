@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteFriend } from "../../../../../api/user/api";
 import { toast } from "sonner";
 import { PAGES_ROUTES } from "../../../../../routes/routes.const";
+import { toastError } from "../../../../../utils/utils";
 
 interface FriendItemProps {
   user: UserWithId;
@@ -46,7 +47,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
     try {
       await deleteFriend(user._id);
     } catch {
-      toast.error("Failed to delete friend. Please try again later.");
+      toastError("Failed to delete friend. Please try again later.");
     }
 
     setDeleteDialogOpen(false);
