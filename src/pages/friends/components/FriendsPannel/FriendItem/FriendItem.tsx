@@ -18,7 +18,6 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { useNavigate } from "react-router-dom";
 import { deleteFriend } from "../../../../../api/user/api";
-import { toast } from "sonner";
 import { PAGES_ROUTES } from "../../../../../routes/routes.const";
 import { toastError } from "../../../../../utils/utils";
 

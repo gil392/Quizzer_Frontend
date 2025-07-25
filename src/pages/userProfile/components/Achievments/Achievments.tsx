@@ -7,7 +7,6 @@ import SkeletonList from "../../../../components/SkeletonList/SkeletonList";
 import AchievementItem from "./AchievementItem/AchievementItem";
 import { useStyles } from "./styles";
 import { moveCompletedAchievementsToEnd } from "./utils";
-import { toast } from "sonner";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 import { toastError } from "../../../../utils/utils";

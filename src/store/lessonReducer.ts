@@ -129,19 +129,6 @@ const lessonSlice = createSlice({
         state.fetchStatus = "succeeded";
         state.lessons = action.payload;
       })
-      .addCase(updateLessonAsync.fulfilled, (state, action) => {
-        state.lessons = state.lessons.map((lesson) =>
-          lesson._id === action.payload._id ? action.payload : lesson
-        );
-      })
-      .addCase(deleteLessonAsync.fulfilled, (state, action) => {
-        state.lessons = state.lessons.filter(
-          (lesson) => lesson._id !== action.payload.lessonId
-        );
-      })
-      .addCase(mergeLessonsAsync.fulfilled, (state, action) => {
-        state.lessons.push(action.payload);
-      })
       .addCase(shareLessonAsync.fulfilled, (state, action) => {
         const updatedLesson: LessonData = action.payload;
         state.lessons = state.lessons.map((lesson) =>
@@ -150,9 +137,6 @@ const lessonSlice = createSlice({
             : lesson
         );
         toastSuccess("Lesson shared successfully!");
-      })
-      .addCase(createLessonAsync.fulfilled, (state, action) => {
-        state.lessons.push(action.payload);
       });
   },
 });

@@ -4,7 +4,6 @@ import { User } from "../../../../api/user/types";
 import { updateUserAsync } from "../../../../store/userReducer";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../../store/store";
-import { toast } from "sonner";
 import { toastError, toastSuccess } from "../../../../utils/utils";
 
 interface EditingActionsProps {
