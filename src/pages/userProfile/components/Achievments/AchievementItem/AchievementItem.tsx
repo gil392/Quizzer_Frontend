@@ -5,18 +5,23 @@ import { Achievement } from "../../../../../api/achievements/types";
 import { formatNumberWithPostfix } from "./utils";
 import { getAchievementImage } from "../../../../../api/achievements/api";
 import { useStyles } from "./styles";
-import { Share } from "@mui/icons-material";
+import { Share, Twitter } from "@mui/icons-material";
 import ShareDialog from "../../../../../components/Share/ShareDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../store/store";
 
-import {
-  shareAchievementAsync,
-} from "../../../../../store/notificationReducer";
+import { shareAchievementAsync } from "../../../../../store/notificationReducer";
 import { fetchFriends } from "../../../../../store/userReducer";
 import { UserWithId } from "../../../../../api/user/types";
 import { useTheme } from "@mui/material/styles";
 import { toastSuccess } from "../../../../../utils/utils";
+import WhatsAppIcon from "@mui/icons-material/WhatsApp";
+import WhatsAppShareButton from "../../WhatsappShareButton";
+import TwitterShareButton from "../../TwitterShareButton";
+
+// Use a public image for testing
+const SHARE_IMAGE_URL =
+  "https://upload.wikimedia.org/wikipedia/commons/6/6e/Golde33443.jpg";
 
 interface AchievementItemProps {
   achievement: Achievement;
@@ -48,6 +53,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     ...friend,
     wasSentTo: achievement.sharedUsers.includes(friend._id),
   }));
+  const shareMessage = `🎉 I just unlocked "${achievement.title}" on Quizzer!\nDescription: ${achievement.description}\nXP: ${achievement.reward.xp}`;
 
   useEffect(() => {
     dispatch(fetchFriends());
@@ -171,16 +177,22 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
             </Typography>
             <Typography variant="body2">{achievement.description}</Typography>
           </div>
-          {showShare && achievement.isCompleted && (
-            <IconButton
-              color="primary"
-              size="small"
-              onClick={handleOpenShareDialog}
-              sx={{ alignSelf: "flex-start", marginLeft: 1 }}
-              title="Share this achievement"
-            >
-              <Share />
-            </IconButton>
+          {achievement.isCompleted && (
+            <div>
+              {showShare && (
+                <IconButton
+                  color="primary"
+                  size="small"
+                  onClick={handleOpenShareDialog}
+                  sx={{ alignSelf: "flex-start", marginLeft: 1 }}
+                  title="Share this achievement"
+                >
+                  <Share />
+                </IconButton>
+              )}
+              <WhatsAppShareButton message={shareMessage} />
+              <TwitterShareButton message={shareMessage} />
+            </div>
           )}
           {shareDialogOpen && (
             <ShareDialog
