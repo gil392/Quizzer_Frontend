@@ -26,6 +26,9 @@ export function AttemptItem({
   const navigate = useNavigate();
   const classes = useStyles();
   const shareMessage = `I completed an attempt for the lesson "${lesson.title}" on Quizzer and got ${attempt.score} / 100!`;
+  const messageEmojis = `${attempt.score >= 80 ? "🎉" : ""} ${
+    attempt.score >= 60 ? "😎" : ""
+  } ${attempt.score >= 90 ? "🏆" : ""}`;
 
   const handleViewAttempt = (attempt: QuizAttempt) => {
     navigate(PAGES_ROUTES.QUIZ, {
@@ -53,7 +56,7 @@ export function AttemptItem({
         {(isFinished || timeLeft < 0) && (
           <>
             <WhatsAppShareButton message={shareMessage} />
-            <TwitterShareButton message={shareMessage} />
+            <TwitterShareButton message={shareMessage + messageEmojis} />
           </>
         )}
 

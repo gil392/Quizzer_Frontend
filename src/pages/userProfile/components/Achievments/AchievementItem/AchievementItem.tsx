@@ -53,7 +53,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     ...friend,
     wasSentTo: achievement.sharedUsers.includes(friend._id),
   }));
-  const shareMessage = `🎉 I just unlocked "${achievement.title}" on Quizzer!\nDescription: ${achievement.description}\nXP: ${achievement.reward.xp}`;
+  const shareMessage = `I just unlocked "${achievement.title}" on Quizzer!\nDescription: ${achievement.description}\nXP: ${achievement.reward.xp}`;
 
   useEffect(() => {
     dispatch(fetchFriends());
@@ -191,7 +191,7 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
                 </IconButton>
               )}
               <WhatsAppShareButton message={shareMessage} />
-              <TwitterShareButton message={shareMessage} />
+              <TwitterShareButton message={"🎉" + shareMessage} />
             </div>
           )}
           {shareDialogOpen && (
