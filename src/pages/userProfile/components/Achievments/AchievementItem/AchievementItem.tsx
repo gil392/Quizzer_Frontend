@@ -5,7 +5,7 @@ import { Achievement } from "../../../../../api/achievements/types";
 import { formatNumberWithPostfix } from "./utils";
 import { getAchievementImage } from "../../../../../api/achievements/api";
 import { useStyles } from "./styles";
-import { Share, Twitter } from "@mui/icons-material";
+import { Share } from "@mui/icons-material";
 import ShareDialog from "../../../../../components/Share/ShareDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../store/store";
@@ -15,13 +15,8 @@ import { fetchFriends } from "../../../../../store/userReducer";
 import { UserWithId } from "../../../../../api/user/types";
 import { useTheme } from "@mui/material/styles";
 import { toastSuccess } from "../../../../../utils/utils";
-import WhatsAppIcon from "@mui/icons-material/WhatsApp";
 import WhatsAppShareButton from "../../WhatsappShareButton";
 import TwitterShareButton from "../../TwitterShareButton";
-
-// Use a public image for testing
-const SHARE_IMAGE_URL =
-  "https://upload.wikimedia.org/wikipedia/commons/6/6e/Golde33443.jpg";
 
 interface AchievementItemProps {
   achievement: Achievement;
