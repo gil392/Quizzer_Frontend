@@ -99,8 +99,8 @@ const AchievementIconPicker: React.FC<AchievementIconPickerProps> = ({
                   src={ach.reward.icon}
                   alt={ach.title}
                   style={{
-                    width: 48,
-                    height: 48,
+                    width: 96,
+                    height: 96,
                     borderRadius: 8,
                     border:
                       profileImageUrl === ach.reward.icon
