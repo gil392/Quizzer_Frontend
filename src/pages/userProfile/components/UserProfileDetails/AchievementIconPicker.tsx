@@ -42,14 +42,14 @@ const AchievementIconPicker: React.FC<AchievementIconPickerProps> = ({
 
         const achievementsWithImages: Achievement[] = (
           await Promise.all(
-            completed.map(async (ach) => {
+            completed.map(async (achievement) => {
               try {
-                const response = await getAchievementImage(ach._id);
+                const response = await getAchievementImage(achievement._id);
                 const relativeUrl = URL.createObjectURL(response);
                 return {
-                  ...ach,
+                  ...achievement,
                   reward: {
-                    ...ach.reward,
+                    ...achievement.reward,
                     icon: relativeUrl,
                   },
                 };

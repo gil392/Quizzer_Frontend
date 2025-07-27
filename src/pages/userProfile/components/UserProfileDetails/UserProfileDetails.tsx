@@ -40,7 +40,7 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = ({
   const classes = useStyles();
 
   const [username, setUsername] = useState<string>();
-  const [open, setOpen] = useState(false);
+  const [openAchievementIconPicker, setOpenAchievementIconPicker] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { loggedUser } = useSelector((state: RootState) => state.user);
 
@@ -87,7 +87,7 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = ({
   const handleChooseIcon = async (iconUrl: string, file: File) => {
     setProfileImageUrl(iconUrl);
     setImageFile(file);
-    setOpen(false);
+    setOpenAchievementIconPicker(false);
   };
 
   return (
@@ -124,7 +124,7 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = ({
             <GenericIconButton
               component={"label"}
               title="Choose Achievement Icon"
-              onClick={() => setOpen(true)}
+              onClick={() => setOpenAchievementIconPicker(true)}
               icon={<EmojiEventsIcon color="secondary" />}
             />
           </>
@@ -179,8 +179,8 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = ({
         ))}
 
       <AchievementIconPicker
-        open={open}
-        onClose={() => setOpen(false)}
+        open={openAchievementIconPicker}
+        onClose={() => setOpenAchievementIconPicker(false)}
         profileImageUrl={profileImageUrl}
         onChooseIcon={handleChooseIcon}
       />
