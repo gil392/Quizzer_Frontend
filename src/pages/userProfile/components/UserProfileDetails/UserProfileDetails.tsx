@@ -1,5 +1,13 @@
 import EditIcon from "@mui/icons-material/Edit";
-import { Avatar, Button, Skeleton, TextField, Typography } from "@mui/material";
+import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  Skeleton,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
 import { GenericIconButton } from "../../../../components/GenericIconButton";
 import EditingActions from "../EditingActions/EditingActions";
@@ -8,6 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../store/store";
 import { fetchLoggedUser } from "../../../../store/userReducer";
 import { UserWithId } from "../../../../api/user/types";
+import AchievementIconPicker from "./AchievementIconPicker";
 
 interface UserProfileDetailsProps {
   isEditing: boolean;
@@ -19,21 +28,19 @@ interface UserProfileDetailsProps {
   user?: UserWithId | null;
 }
 
-const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (
-  props
-) => {
-  const {
-    user: passedUser,
-    setIsEditing,
-    isEditing,
-    imageFile,
-    setImageFile,
-    profileImageUrl,
-    setProfileImageUrl,
-  } = props;
+const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = ({
+  user: passedUser,
+  setIsEditing,
+  isEditing,
+  imageFile,
+  setImageFile,
+  profileImageUrl,
+  setProfileImageUrl,
+}) => {
   const classes = useStyles();
 
   const [username, setUsername] = useState<string>();
+  const [open, setOpen] = useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { loggedUser } = useSelector((state: RootState) => state.user);
 
@@ -77,6 +84,12 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (
     }
   };
 
+  const handleChooseIcon = async (iconUrl: string, file: File) => {
+    setProfileImageUrl(iconUrl);
+    setImageFile(file);
+    setOpen(false);
+  };
+
   return (
     <div className={classes.root}>
       <div className={classes.profileImageDiv}>
@@ -91,22 +104,30 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (
           }}
         />
         {isEditing && !passedUser && (
-          <GenericIconButton
-            component={"label"}
-            title={"Upload image"}
-            className={classes.imageEditIcon}
-            icon={
-              <>
-                <EditIcon />
-                <input
-                  type="file"
-                  accept="image/*"
-                  hidden
-                  onChange={handleProfileImageChange}
-                />
-              </>
-            }
-          />
+          <>
+            <GenericIconButton
+              component={"label"}
+              title={"Upload image"}
+              className={classes.imageEditIcon}
+              icon={
+                <>
+                  <EditIcon />
+                  <input
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    onChange={handleProfileImageChange}
+                  />
+                </>
+              }
+            />
+            <GenericIconButton
+              component={"label"}
+              title="Choose Achievement Icon"
+              onClick={() => setOpen(true)}
+              icon={<EmojiEventsIcon color="secondary" />}
+            />
+          </>
         )}
       </div>
 
@@ -156,6 +177,13 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = (
             Edit Profile
           </Button>
         ))}
+
+      <AchievementIconPicker
+        open={open}
+        onClose={() => setOpen(false)}
+        profileImageUrl={profileImageUrl}
+        onChooseIcon={handleChooseIcon}
+      />
     </div>
   );
 };
