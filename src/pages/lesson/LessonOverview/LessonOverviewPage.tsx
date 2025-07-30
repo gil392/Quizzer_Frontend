@@ -13,6 +13,9 @@ import { RelatedVideo } from "../../../api/lesson/types";
 import LessonOverviewSkeleton from "./LessonOverviewSkeleton.tsx";
 import { Summary } from "../../summary/Summary.tsx";
 import { PAGES_ROUTES } from "../../../routes/routes.const.ts";
+import { getLessonById } from "../../../api/quiz/api.ts";
+
+export const LESSON_CREATED_FLAG = "lessonCreated";
 
 const LessonOverviewPage: React.FC = () => {
   const location = useLocation();
@@ -27,6 +30,22 @@ const LessonOverviewPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
+
+  const fetchCurrentLesson = async () => {
+    if (localStorage.getItem(LESSON_CREATED_FLAG) !== null) {
+      const response = await getLessonById(
+        localStorage.getItem(LESSON_CREATED_FLAG)!
+      );
+      setLessonData(response.data);
+      const { data: related } = await getRelatedLessons(response.data._id);
+      setRelatedVideos(related);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCurrentLesson();
+  }, []);
 
   const handleQuizNavigation = async () => {
     if (!lessonData) {
@@ -48,24 +67,29 @@ const LessonOverviewPage: React.FC = () => {
 
   useEffect(() => {
     setLoading(true);
-    (async () => {
-      try {
-        const data = await dispatch(
-          createLessonAsync({ videoUrl, relatedLessonGroupId })
-        ).unwrap();
-        setLessonData(data);
+    if (!localStorage.getItem(LESSON_CREATED_FLAG)) {
+      (async () => {
+        try {
+          const data = await dispatch(
+            createLessonAsync({ videoUrl, relatedLessonGroupId })
+          ).unwrap();
+          setLessonData(data);
 
-        const { data: related } = await getRelatedLessons(data._id);
-        setRelatedVideos(related);
-        setLoading(false);
-      } catch (error) {
-        toastWarning("Failed to generate Lesson. Please try again.");
-        console.error("Error generating lesson:", error);
-        setLessonData(null);
-        setRelatedVideos([]);
-        setLoading(false);
-      }
-    })();
+          localStorage.setItem(LESSON_CREATED_FLAG, data._id);
+
+          console.debug("fetch related videos");
+          const { data: related } = await getRelatedLessons(data._id);
+          setRelatedVideos(related);
+          setLoading(false);
+        } catch (error) {
+          toastWarning("Failed to generate Lesson. Please try again.");
+          console.error("Error generating lesson:", error);
+          setLessonData(null);
+          setRelatedVideos([]);
+          setLoading(false);
+        }
+      })();
+    }
   }, [videoUrl]);
 
   if (loading) {
