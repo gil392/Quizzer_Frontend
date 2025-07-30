@@ -20,7 +20,7 @@ type QuizQuestionListProps = {
   isLocked: boolean;
   setIsLocked: (locked: boolean) => void;
   isOnSelectAnswerMode: boolean;
-  currentAttempt?: QuizAttempt;
+  currentAttempt?: QuizAttempt | null;
   attempt?: QuizAttempt;
   handleOptionChange: (questionId: string, option: string) => void;
 };
