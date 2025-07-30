@@ -8,6 +8,7 @@ import LessonConfig from "../../components/lessonConfig/LessonConfig";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import { RootState } from "../../store/store";
 import useStyles from "../../components/lessonConfig/components/styles";
+import { LESSON_CREATED_FLAG } from "../lesson/LessonOverview/LessonOverviewPage";
 
 const GenerateLessonPage: React.FC = () => {
   const navigate = useNavigate();
@@ -24,6 +25,7 @@ const GenerateLessonPage: React.FC = () => {
     useState<QuizSettings>(defaultQuizSettings);
 
   const handleSummaryNavigation = (): void => {
+    localStorage.removeItem(LESSON_CREATED_FLAG);
     navigate(PAGES_ROUTES.SUMMARY, {
       state: { videoUrl, quizSettings, relatedLessonGroupId },
     });
