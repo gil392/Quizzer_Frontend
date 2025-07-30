@@ -7,6 +7,8 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import useStyles from "./AttemptItem.styles";
 import { LessonData } from "../../../api/lesson/types";
+import TwitterShareButton from "../../userProfile/components/TwitterShareButton";
+import WhatsAppShareButton from "../../userProfile/components/WhatsappShareButton";
 
 type AttemptItemProps = {
   attempt: QuizAttempt;
@@ -15,16 +17,29 @@ type AttemptItemProps = {
   lesson: LessonData;
 };
 
-export function AttemptItem({ attempt, index, isFinished, lesson }: AttemptItemProps) {
+export function AttemptItem({
+  attempt,
+  index,
+  isFinished,
+  lesson,
+}: AttemptItemProps) {
   const navigate = useNavigate();
   const classes = useStyles();
+  const shareMessage = `I completed an attempt for the lesson "${lesson.title}" on Quizzer and got ${attempt.score} / 100!`;
+  const messageEmojis = `${attempt.score >= 80 ? "🎉" : ""} ${
+    attempt.score >= 60 ? "😎" : ""
+  } ${attempt.score >= 90 ? "🏆" : ""}`;
 
   const handleViewAttempt = (attempt: QuizAttempt) => {
-    navigate(PAGES_ROUTES.QUIZ, { state: { viewAttempt: attempt, lessonData: lesson } });
+    navigate(PAGES_ROUTES.QUIZ, {
+      state: { viewAttempt: attempt, lessonData: lesson },
+    });
   };
 
   const handleContinueAttempt = (attemptToContinue: QuizAttempt) => {
-    navigate(PAGES_ROUTES.QUIZ, { state: { attemptToContinue, lessonData: lesson } });
+    navigate(PAGES_ROUTES.QUIZ, {
+      state: { attemptToContinue, lessonData: lesson },
+    });
   };
 
   const timeLeft = attempt.expiryTime - new Date().getTime();
@@ -37,16 +52,26 @@ export function AttemptItem({ attempt, index, isFinished, lesson }: AttemptItemP
           : "Unfinished"}
       </Typography>
       {!isFinished && <QuizTimer initialTime={timeLeft} />}
+      <Box>
+        {(isFinished || timeLeft < 0) && (
+          <>
+            <WhatsAppShareButton message={shareMessage} />
+            <TwitterShareButton message={shareMessage + messageEmojis} />
+          </>
+        )}
 
-      <GenericIconButton
-        icon={<ArrowForwardIcon color="primary" />}
-        title={isFinished || timeLeft < 0 ? "View Attempt" : "Continue Attempt"}
-        onClick={
-          isFinished || timeLeft < 0
-            ? () => handleViewAttempt(attempt)
-            : () => handleContinueAttempt(attempt)
-        }
-      />
+        <GenericIconButton
+          icon={<ArrowForwardIcon color="primary" />}
+          title={
+            isFinished || timeLeft < 0 ? "View Attempt" : "Continue Attempt"
+          }
+          onClick={
+            isFinished || timeLeft < 0
+              ? () => handleViewAttempt(attempt)
+              : () => handleContinueAttempt(attempt)
+          }
+        />
+      </Box>
     </Box>
   );
 }
