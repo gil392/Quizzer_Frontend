@@ -7,8 +7,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       textAlign: "center",
       width: "100%",
       borderRadius: 2,
-      maxWidth: '450px',
-      minWidth: '200px',
+      maxWidth: '45%',
+      minWidth: '20%',
       height: 'auto',
     },
     title: {

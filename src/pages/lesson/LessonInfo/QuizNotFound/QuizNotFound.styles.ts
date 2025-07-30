@@ -5,8 +5,8 @@ export const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         image: {
             height: "auto",
-            maxWidth: 300,
-            minWidth: 50,
+            maxWidth: "40%",
+            minWidth: "10%",
             borderRadius: 2,
         },
         title: {

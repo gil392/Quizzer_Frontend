@@ -15,8 +15,8 @@ const useStyles = makeStyles((theme: Theme) => {
       marginRight: "auto",
       width: "100%",
       borderRadius: 2,
-      maxWidth: '250px',
-      minWidth: '100px',
+      maxWidth: '25%',
+      minWidth: '10%',
       textAlign: "center",
     },
 

@@ -24,7 +24,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(4),
     },
     noPendingFriendsImage: {
-      maxWidth: "400px",
+      maxWidth: "100%",
       height: "auto",
       marginTop: theme.spacing(1),
       display: "block",
