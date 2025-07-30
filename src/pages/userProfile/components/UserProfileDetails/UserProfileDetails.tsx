@@ -3,7 +3,6 @@ import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
 import {
   Avatar,
   Button,
-  IconButton,
   Skeleton,
   TextField,
   Typography,
