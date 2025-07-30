@@ -15,6 +15,7 @@ const LessonOverviewSkeleton = () => {
           display: "flex",
           flexDirection: "column",
           gap: 2,
+          padding: "16px",
         }}
       >
         <Typography variant="h5" sx={{ mb: 2 }}>

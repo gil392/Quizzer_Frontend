@@ -1,4 +1,4 @@
-import { Box, Button, Card, Typography } from "@mui/material";
+import { Box, Button, Typography, Paper } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -74,9 +74,9 @@ const LessonOverviewPage: React.FC = () => {
 
   return (
     <Box className={classes.root}>
-      <Box className={classes.summaryBox}>
+      <Paper className={classes.summaryBox}>
         {lessonData && (
-          <Card className={classes.summaryCard}>
+          <Box className={classes.summaryCard}>
             <Typography variant="h5" className={classes.header}>
               Summary
             </Typography>
@@ -93,9 +93,9 @@ const LessonOverviewPage: React.FC = () => {
                 Go to Quiz
               </Button>
             </Box>
-          </Card>
+          </Box>
         )}
-      </Box>
+      </Paper>
       <Box className={classes.relatedBox}>
         <RelatedVideos
           videos={relatedVideos}

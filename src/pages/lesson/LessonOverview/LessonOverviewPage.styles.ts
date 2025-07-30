@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
     gap: 12,
-    width: "75vw",
+    width: "85vw",
   },
   buttonContainer: {
     display: "flex",
@@ -22,9 +22,15 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingLeft: 10,
   },
   summaryBox: {
-    height: "90%",
+    height: "100%",
     flex: 2,
     minWidth: 0,
+    borderRadius: 1.5,
+    p: 3,
+    minHeight: "100%",
+    display: "flex",
+    flexDirection: "column",
+    gap: 2,
   },
   relatedBox: {
     flex: 1,
@@ -34,7 +40,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   summaryCard: {
-    maxHeight: "97%",
+    maxHeight: "100%",
+    borderRadius: 16,
+    padding: 16,
   },
 }));
 
