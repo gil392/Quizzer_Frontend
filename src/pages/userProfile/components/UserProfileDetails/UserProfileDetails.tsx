@@ -1,13 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
-import {
-  Avatar,
-  Button,
-  IconButton,
-  Skeleton,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Avatar, Button, Skeleton, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
 import { GenericIconButton } from "../../../../components/GenericIconButton";
 import EditingActions from "../EditingActions/EditingActions";
