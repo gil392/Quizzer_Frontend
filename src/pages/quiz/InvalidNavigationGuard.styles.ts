@@ -1,7 +1,7 @@
 import { makeStyles } from "@mui/styles";
 
 const useStyles = makeStyles(() => ({
-  paper: { p: 4, maxWidth: 500, width: "100%" },
+  paper: { p: 4, maxWidth: '50%', width: "100%" },
   container: {
     width: "75vw",
     margin: "auto",

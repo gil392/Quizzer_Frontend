@@ -7,8 +7,8 @@ export const useStyles = makeStyles((theme: Theme) =>
             width: "100%",
             height: "auto",
             borderRadius: 2,
-            maxWidth: '600px',
-            minWidth: '200px',
+            maxWidth: '55%',
+            minWidth: '20%',
         },
         title: {
             color: theme.palette.primary.main,

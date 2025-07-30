@@ -10,8 +10,8 @@ export const useStyles = makeStyles(() =>
       marginLeft: "auto",
       marginRight: "auto",
       width: "100%",
-      maxWidth: '250px',
-      minWidth: '100px',
+      maxWidth: '25%',
+      minWidth: '10%',
       textAlign: "center",
     },
   })
