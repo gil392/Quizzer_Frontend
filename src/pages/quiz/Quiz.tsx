@@ -362,7 +362,7 @@ const QuizPage: React.FC = () => {
                     isLocked={isLocked}
                     setIsLocked={setIsLocked}
                     isOnSelectAnswerMode={isOnSelectAnswerMode}
-                    currentAttempt={currentAttempt ?? undefined}
+                    currentAttempt={currentAttempt}
                     handleOptionChange={handleOptionChange}
                   />
                 </Box>
