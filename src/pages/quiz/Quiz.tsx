@@ -149,7 +149,8 @@ const QuizPage: React.FC = () => {
       !locationState.viewAttempt
   );
   const isGenerateNewQuiz =
-    locationState.quizId !== undefined ||
+    locationState.lessonData !== undefined &&
+    locationState.quizId === undefined &&
     locationState.quizSettings !== undefined;
 
   const loggedUser = useSelector((state: RootState) => state.user.loggedUser);
