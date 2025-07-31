@@ -2,7 +2,6 @@ import { makeStyles, createStyles } from "@mui/styles";
 import { Theme } from "@mui/material";
 
 const useStyles = makeStyles((theme: Theme) => {
-  const lessonItemBgColor = theme.palette.background.paper;
   const lessonItemHoverBgColor = theme.palette.action.hover;
 
   return createStyles({
@@ -14,11 +13,10 @@ const useStyles = makeStyles((theme: Theme) => {
       width: "60vw",
       marginTop: "2vh",
       marginBottom: "2vh",
-      backgroundColor: lessonItemBgColor,
     },
     lessonItemHover: {
       "&:hover": {
-        backgroundColor: lessonItemHoverBgColor,
+        backgroundColor: `${lessonItemHoverBgColor} !important`,
         cursor: "pointer",
       },
     },
@@ -47,9 +45,9 @@ const useStyles = makeStyles((theme: Theme) => {
       textAlign: "left",
     },
     unrelatedLesson: {
-      backgroundColor: "#b1aaaa",
+      backgroundColor: "#b1aaaa !important",
       "&:hover": {
-        backgroundColor: "#a1a1a0",
+        backgroundColor: "#a1a1a0 !important",
       },
     },
   });
