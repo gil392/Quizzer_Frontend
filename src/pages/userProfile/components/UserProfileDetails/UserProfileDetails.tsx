@@ -1,5 +1,6 @@
 import EditIcon from "@mui/icons-material/Edit";
 import EmojiEventsIcon from "@mui/icons-material/EmojiEvents";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
 import { Avatar, Button, Skeleton, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FunctionComponent, useEffect, useState } from "react";
 import { GenericIconButton } from "../../../../components/GenericIconButton";
@@ -10,6 +11,7 @@ import { AppDispatch, RootState } from "../../../../store/store";
 import { fetchLoggedUser } from "../../../../store/userReducer";
 import { UserWithId } from "../../../../api/user/types";
 import AchievementIconPicker from "./AchievementIconPicker";
+import { EmojiEvents } from "@mui/icons-material";
 
 interface UserProfileDetailsProps {
   isEditing: boolean;
@@ -33,7 +35,8 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = ({
   const classes = useStyles();
 
   const [username, setUsername] = useState<string>();
-  const [openAchievementIconPicker, setOpenAchievementIconPicker] = useState(false);
+  const [openAchievementIconPicker, setOpenAchievementIconPicker] =
+    useState(false);
   const dispatch = useDispatch<AppDispatch>();
   const { loggedUser } = useSelector((state: RootState) => state.user);
 
@@ -132,11 +135,34 @@ const UserProfileDetails: FunctionComponent<UserProfileDetailsProps> = ({
         {user ? user.email : <Skeleton />}
       </Typography>
       <Typography
+        variant="subtitle1"
         className={classes.userTextProperty}
+        color="textSecondary"
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 0.5,
+        }}
+      >
+        streak: {user ? user.streak : <Skeleton />} days
+        {user && (
+          <WhatshotIcon color="primary" fontSize="medium" sx={{ ml: 0.5 }} />
+        )}
+      </Typography>
+      <Typography
         variant="subtitle1"
         color="textSecondary"
+        className={classes.userTextProperty}
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: 0.5,
+        }}
       >
-        streak: {user ? user.streak : <Skeleton />}
+        XP: {user ? user.xp : <Skeleton />}
+        <EmojiEvents color="primary" fontSize="small" sx={{ ml: 0.5 }} />
       </Typography>
       {isEditing && !passedUser ? (
         <TextField
