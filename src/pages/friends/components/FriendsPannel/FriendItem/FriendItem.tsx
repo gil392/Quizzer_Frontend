@@ -9,6 +9,7 @@ import {
   DialogContentText,
   Button,
   Paper,
+  Skeleton,
 } from "@mui/material";
 import clsx from "clsx";
 import { FunctionComponent, useState } from "react";
@@ -16,6 +17,8 @@ import { UserWithId } from "../../../../../api/user/types";
 import { useStyles } from "./styles";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import WhatshotIcon from "@mui/icons-material/Whatshot";
+import EmojiEvents from "@mui/icons-material/EmojiEvents";
 import { useNavigate } from "react-router-dom";
 import { deleteFriend } from "../../../../../api/user/api";
 import { PAGES_ROUTES } from "../../../../../routes/routes.const";
@@ -63,15 +66,31 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
           <Avatar
             src={user.picture ?? "error"}
             alt={user.username.toUpperCase()}
+            sx={{
+              width: "3rem",
+              height: "3rem",
+            }}
           />
         </div>
         <div className={classes.detailsBox}>
-          <Typography>{user.username}</Typography>
-          <Typography className={classes.statisticText} color="textSecondary">
-            Streak: {user.streak} days
+          <Typography variant="h5">{user.username}</Typography>
+          <Typography
+            variant="subtitle2"
+            color="textSecondary"
+            sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+          >
+            streak: {user ? user.streak : <Skeleton />}
+            {user && (
+              <WhatshotIcon color="primary" fontSize="small" sx={{ ml: 0.5 }} />
+            )}
           </Typography>
-          <Typography className={classes.statisticText} color="textSecondary">
+          <Typography
+            variant="subtitle2"
+            color="textSecondary"
+            sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+          >
             XP: {user.xp}
+            <EmojiEvents color="primary" fontSize="small" sx={{ ml: 0.5 }} />
           </Typography>
         </div>
       </div>
@@ -81,7 +100,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
             <IconButton
               className={classes.viewProfileButton}
               onClick={handleViewProfile}
-              size="small"
+              size="medium"
             >
               <AccountCircleIcon />
             </IconButton>
@@ -90,7 +109,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
             <IconButton
               className={classes.deleteButton}
               onClick={handleDeleteFriend}
-              size="small"
+              size="medium"
             >
               <DeleteIcon />
             </IconButton>
