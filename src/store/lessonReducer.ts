@@ -10,7 +10,6 @@ import {
 import { RootState } from "./store";
 import { shareLessonAsync } from "./notificationReducer";
 import { toastSuccess } from "../utils/utils";
-import { toastWarning } from "../utils/utils";
 import { addHandlerWithToast } from "./addHandlerWithToast";
 
 export const fetchLessons = createAsyncThunk(
@@ -120,7 +119,6 @@ const lessonSlice = createSlice({
     builder
       .addCase(fetchLessons.rejected, (state) => {
         state.fetchStatus = "failed";
-        toastWarning("Failed to fetch lessons.");
       })
       .addCase(fetchLessons.pending, (state) => {
         state.fetchStatus = "loading";

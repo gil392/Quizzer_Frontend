@@ -89,7 +89,6 @@ const notificationSlice = createSlice({
     builder
       .addCase(fetchNotifications.rejected, (state) => {
         state.fetchStatus = "failed";
-        toastWarning("Failed to fetch notifications.");
       })
       .addCase(fetchNotifications.pending, (state) => {
         state.fetchStatus = "loading";
