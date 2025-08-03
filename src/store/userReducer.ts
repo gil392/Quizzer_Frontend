@@ -103,15 +103,9 @@ const userSlice = createSlice({
       "fetch pending friends",
       true
     );
-    addHandlerWithToast(
-      builder,
-      fetchLoggedUser,
-      (state, action) => {
-        state.loggedUser = action.payload;
-      },
-      "fetch logged user",
-      true
-    );
+    builder.addCase(fetchLoggedUser.fulfilled, (state, action) => {
+      state.loggedUser = action.payload;
+    });
     addHandlerWithToast(
       builder,
       updateUserAsync,
