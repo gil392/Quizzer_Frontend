@@ -9,7 +9,6 @@ import {
 } from "../api/notification/api";
 import { Notification } from "../api/notification/types";
 import { toastSuccess } from "../utils/utils";
-import { toastWarning } from "../utils/utils";
 
 export const fetchNotifications = createAsyncThunk(
   "notification/getNotifications",
@@ -97,7 +96,7 @@ const notificationSlice = createSlice({
         state.fetchStatus = "succeeded";
         state.notifications = action.payload;
       })
-      .addCase(shareLessonAsync.fulfilled, () => {})
+      .addCase(shareLessonAsync.fulfilled, () => { })
       .addCase(markNotificationAsReadAsync.fulfilled, (state, action) => {
         const notification = state.notifications.find(
           (notification) => notification._id === action.payload
@@ -114,7 +113,7 @@ const notificationSlice = createSlice({
       .addCase(shareAchievementAsync.fulfilled, () => {
         toastSuccess("Achievement shared successfully!");
       })
-      .addCase(notifyFriendRequestAsync.fulfilled, () => {});
+      .addCase(notifyFriendRequestAsync.fulfilled, () => { });
   },
 });
 
