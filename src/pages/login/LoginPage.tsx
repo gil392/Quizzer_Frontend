@@ -137,15 +137,24 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
             </Typography>
             <Divider sx={{ flexGrow: 1 }} />
           </Box>
-          <GoogleLogin
-            type="standard"
-            shape="pill"
-            text="signin_with"
-            logo_alignment="left"
-            theme={googleTheme}
-            onSuccess={googleLogin}
-            onError={googleErrorMessage}
-          />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              "& > div": { width: "80%" },
+            }}
+          >
+            <GoogleLogin
+              type="standard"
+              shape="pill"
+              text="signin_with"
+              logo_alignment="left"
+              theme={googleTheme}
+              onSuccess={googleLogin}
+              onError={googleErrorMessage}
+            />
+          </Box>
         </section>
       </div>
     </div>
