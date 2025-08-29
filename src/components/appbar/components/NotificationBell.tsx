@@ -101,6 +101,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
           console.log(
             `Closing browser notification for read message: ${notificationId}`
           );
+          browserNotification.onclose = null; // prevent it triggering onclose which removes the notification in the app
           browserNotification.close();
           activeNotifications.current.delete(notificationId);
         }
