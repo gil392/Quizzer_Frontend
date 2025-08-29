@@ -46,7 +46,6 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
     }
   };
 
-
   function notifyUser(notification: AppNotification) {
     if (!("Notification" in window)) {
       console.log("This browser does not support desktop notification");
