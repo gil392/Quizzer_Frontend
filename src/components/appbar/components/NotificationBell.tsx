@@ -7,6 +7,7 @@ import {
 } from "../const";
 import useStyles from "../styles";
 import {
+  deleteNotificationAsync,
   fetchNotifications,
   markNotificationAsReadAsync,
 } from "../../../store/notificationReducer";
@@ -22,6 +23,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
+  const activeNotifications = useRef<Map<string, Notification>>(new Map());
 
   const handleRead = async (id: string) => {
     await dispatch(markNotificationAsReadAsync(id));
@@ -31,6 +33,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   function notifyUser(notification: AppNotifications) {
     if (!("Notification" in window)) {
       console.log("This browser does not support desktop notification");
+      return null;
     } else if (Notification.permission === "granted") {
       console.log("Notification permission granted.");
       const browserNotification = new Notification(notification.message, {
@@ -40,15 +43,23 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
         console.log("Notification was read");
         handleRead(notification._id);
       };
+      browserNotification.onclose = () => {
+        console.log("Notification was closed");
+        dispatch(deleteNotificationAsync(notification._id));
+      };
+      return browserNotification;
     } else if (Notification.permission !== "denied") {
       Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
-          new Notification(notification.message, {
+          const browserNotification = new Notification(notification.message, {
             tag: `quizzer-notification-${notification._id}`,
           });
+          return browserNotification;
         }
       });
+      return null;
     }
+    return null;
   }
 
   const { notifications } = useSelector(
@@ -63,8 +74,29 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   );
 
   useEffect(() => {
+    const unreadIds = new Set(unreadMessages.map((message) => message._id));
+
+    activeNotifications.current.forEach(
+      (browserNotification, notificationId) => {
+        if (!unreadIds.has(notificationId)) {
+          console.log(
+            `Closing browser notification for read message: ${notificationId}`
+          );
+          browserNotification.close();
+          activeNotifications.current.delete(notificationId);
+        }
+      }
+    );
     unreadMessages.forEach((notification) => {
-      notifyUser(notification);
+      if (!activeNotifications.current.has(notification._id)) {
+        const browserNotification = notifyUser(notification);
+        if (browserNotification) {
+          activeNotifications.current.set(
+            notification._id,
+            browserNotification
+          );
+        }
+      }
     });
   }, [unreadMessages]);
 
