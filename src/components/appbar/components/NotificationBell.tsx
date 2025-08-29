@@ -25,7 +25,9 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
-  const activeNotifications = useRef<Map<string, Notification>>(new Map());
+  const activeComputerNotifications = useRef<Map<string, Notification>>(
+    new Map()
+  );
   const navigate = useNavigate();
 
   const handleRead = async (id: string) => {
@@ -49,36 +51,16 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   function notifyUser(notification: AppNotification) {
     if (!("Notification" in window)) {
       console.log("This browser does not support desktop notification");
-      return null;
     } else if (Notification.permission === "granted") {
       console.log("Notification permission granted.");
-      const browserNotification = new Notification(notification.message, {
-        tag: `quizzer-notification-${notification._id}`,
-      });
-      browserNotification.onclick = () => {
-        console.log("Notification was read");
-
-        window.focus();
-        navigate(getNotificationRoute(notification));
-        handleRead(notification._id);
-      };
-      browserNotification.onclose = () => {
-        console.log("Notification was closed");
-        dispatch(deleteNotificationAsync(notification._id));
-      };
-      return browserNotification;
+      createComputerNotification(notification);
     } else if (Notification.permission !== "denied") {
       Notification.requestPermission().then((permission) => {
         if (permission === "granted") {
-          const browserNotification = new Notification(notification.message, {
-            tag: `quizzer-notification-${notification._id}`,
-          });
-          return browserNotification;
+          createComputerNotification(notification);
         }
       });
-      return null;
     }
-    return null;
   }
 
   const { notifications } = useSelector(
@@ -95,27 +77,21 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   useEffect(() => {
     const unreadIds = new Set(unreadMessages.map((message) => message._id));
 
-    activeNotifications.current.forEach(
-      (browserNotification, notificationId) => {
+    activeComputerNotifications.current.forEach(
+      (computerNotification, notificationId) => {
         if (!unreadIds.has(notificationId)) {
           console.log(
             `Closing browser notification for read message: ${notificationId}`
           );
-          browserNotification.onclose = null; // prevent it triggering onclose which removes the notification in the app
-          browserNotification.close();
-          activeNotifications.current.delete(notificationId);
+          computerNotification.onclose = null; // prevent it triggering onclose which removes the notification in the app
+          computerNotification.close();
+          activeComputerNotifications.current.delete(notificationId);
         }
       }
     );
     unreadMessages.forEach((notification) => {
-      if (!activeNotifications.current.has(notification._id)) {
-        const browserNotification = notifyUser(notification);
-        if (browserNotification) {
-          activeNotifications.current.set(
-            notification._id,
-            browserNotification
-          );
-        }
+      if (!activeComputerNotifications.current.has(notification._id)) {
+        notifyUser(notification);
       }
     });
   }, [unreadMessages]);
@@ -150,6 +126,27 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
       </Badge>
     </IconButton>
   );
+
+  function createComputerNotification(notification: AppNotification) {
+    const computerNotification = new Notification(notification.message, {
+      tag: `quizzer-notification-${notification._id}`,
+    });
+    computerNotification.onclick = () => {
+      console.log("Computer notification was read");
+
+      window.focus();
+      navigate(getNotificationRoute(notification));
+      handleRead(notification._id);
+    };
+    computerNotification.onclose = () => {
+      console.log("Computer notification was closed");
+      dispatch(deleteNotificationAsync(notification._id));
+    };
+    activeComputerNotifications.current.set(
+      notification._id,
+      computerNotification
+    );
+  }
 };
 
 export default NotificationBell;
