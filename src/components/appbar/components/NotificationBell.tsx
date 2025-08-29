@@ -14,6 +14,8 @@ import {
 import { AppDispatch, RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Notification as AppNotifications } from "../../../api/notification/types";
+import { useNavigate } from "react-router-dom";
+import { PAGES_ROUTES } from "../../../routes/routes.const";
 
 interface NotificationBellProps {
   onClick?: () => void;
@@ -24,10 +26,24 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const activeNotifications = useRef<Map<string, Notification>>(new Map());
+  const navigate = useNavigate();
 
   const handleRead = async (id: string) => {
     await dispatch(markNotificationAsReadAsync(id));
     window.dispatchEvent(new Event("notifications-updated"));
+  };
+
+  const getNotificationRoute = (notification: AppNotifications): string => {
+    switch (notification.type) {
+      case "friendRequest":
+        return PAGES_ROUTES.FRIENDS;
+      case "achievement":
+        return PAGES_ROUTES.PROFILE;
+      case "share":
+        return PAGES_ROUTES.LESSONS_LIST;
+      default:
+        return PAGES_ROUTES.NOTIFICATIONS;
+    }
   };
 
   function notifyUser(notification: AppNotifications) {
@@ -41,6 +57,9 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
       });
       browserNotification.onclick = () => {
         console.log("Notification was read");
+
+        window.focus();
+        navigate(getNotificationRoute(notification));
         handleRead(notification._id);
       };
       browserNotification.onclose = () => {
