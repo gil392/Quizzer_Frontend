@@ -1,5 +1,5 @@
 import WhatsAppIcon from "@mui/icons-material/WhatsApp";
-import { IconButton } from "@mui/material";
+import { IconButton, Tooltip } from "@mui/material";
 
 interface WhatsAppShareButtonProps {
   message: string;
@@ -8,21 +8,24 @@ interface WhatsAppShareButtonProps {
 const WhatsAppShareButton: React.FC<WhatsAppShareButtonProps> = ({
   message,
 }) => (
-  <IconButton
-    component="a"
-    href={`https://wa.me/?text=${encodeURIComponent(message)}`}
-    target="_blank"
-    rel="noopener noreferrer"
-    color="success"
-    title="Share on WhatsApp"
-    sx={{
-      "&:hover": {
-        color: "success.main", // keep the WhatsApp green color on hover
-      },
-    }}
-  >
-    <WhatsAppIcon />
-  </IconButton>
+  <Tooltip title="Share on WhatsApp" arrow>
+    <IconButton
+      component="a"
+      href={`https://wa.me/?text=${encodeURIComponent(message)}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      color="success"
+      aria-label="Share on WhatsApp"
+      style={{ outline: "none" }}
+      sx={{
+        "&:hover": {
+          color: "success.main",
+        },
+      }}
+    >
+      <WhatsAppIcon />
+    </IconButton>
+  </Tooltip>
 );
 
 export default WhatsAppShareButton;

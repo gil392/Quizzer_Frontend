@@ -1,4 +1,4 @@
-import { IconButton, LinearProgress, Typography, Box } from "@mui/material";
+import { LinearProgress, Typography, Box } from "@mui/material";
 import { min } from "ramda";
 import { FunctionComponent, useEffect, useState } from "react";
 import { Achievement } from "../../../../../api/achievements/types";
@@ -9,14 +9,13 @@ import { Share } from "@mui/icons-material";
 import ShareDialog from "../../../../../components/Share/ShareDialog";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../store/store";
-
 import { shareAchievementAsync } from "../../../../../store/notificationReducer";
 import { fetchFriends } from "../../../../../store/userReducer";
-import { UserWithId } from "../../../../../api/user/types";
 import { useTheme } from "@mui/material/styles";
 import { toastSuccess } from "../../../../../utils/utils";
 import WhatsAppShareButton from "../../WhatsappShareButton";
 import TwitterShareButton from "../../TwitterShareButton";
+import { GenericIconButton } from "../../../../../components/GenericIconButton";
 
 interface AchievementItemProps {
   achievement: Achievement;
@@ -24,7 +23,6 @@ interface AchievementItemProps {
   setImageFile: (file: File | undefined) => void;
   setProfileImageUrl: (url: string | undefined) => void;
   showShare: boolean;
-  user: UserWithId;
   setFriendsWithSharedAchievement: (friends: string[]) => void;
 }
 
@@ -172,19 +170,14 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
             </Typography>
             <Typography variant="body2">{achievement.description}</Typography>
           </div>
-          {achievement.isCompleted && (
+          {achievement.isCompleted && showShare && (
             <div>
-              {showShare && (
-                <IconButton
-                  color="primary"
-                  size="small"
-                  onClick={handleOpenShareDialog}
-                  sx={{ alignSelf: "flex-start", marginLeft: 1 }}
-                  title="Share this achievement"
-                >
-                  <Share />
-                </IconButton>
-              )}
+              <GenericIconButton
+                title="Share this achievement"
+                icon={<Share />}
+                onClick={handleOpenShareDialog}
+                className={classes.shareButton}
+              />
               <WhatsAppShareButton message={shareMessage} />
               <TwitterShareButton message={"🎉" + shareMessage} />
             </div>

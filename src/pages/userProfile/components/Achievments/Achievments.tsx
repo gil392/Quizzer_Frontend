@@ -25,7 +25,7 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
     isEditing,
     setImageFile,
     setProfileImageUrl,
-    friendUserId: friendUserId,
+    friendUserId,
   } = props;
   const classes = useStyles();
   const [achievments, setAchievments] = useState<Achievement[]>([]);
@@ -79,7 +79,6 @@ const Achievments: FunctionComponent<AchievmentsProps> = (props) => {
               setImageFile={setImageFile}
               setProfileImageUrl={setProfileImageUrl}
               showShare={friendUserId ? false : true}
-              user={loggedUser}
               setFriendsWithSharedAchievement={(friends) =>
                 setAchievments((prev) =>
                   prev.map((achievementToCheck) =>
