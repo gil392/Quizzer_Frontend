@@ -13,7 +13,7 @@ import {
 } from "../../../store/notificationReducer";
 import { AppDispatch, RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
-import { Notification as AppNotifications } from "../../../api/notification/types";
+import { Notification as AppNotification } from "../../../api/notification/types";
 import { useNavigate } from "react-router-dom";
 import { PAGES_ROUTES } from "../../../routes/routes.const";
 
@@ -33,7 +33,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
     window.dispatchEvent(new Event("notifications-updated"));
   };
 
-  const getNotificationRoute = (notification: AppNotifications): string => {
+  const getNotificationRoute = (notification: AppNotification): string => {
     switch (notification.type) {
       case "friendRequest":
         return PAGES_ROUTES.FRIENDS;
@@ -46,7 +46,8 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
     }
   };
 
-  function notifyUser(notification: AppNotifications) {
+
+  function notifyUser(notification: AppNotification) {
     if (!("Notification" in window)) {
       console.log("This browser does not support desktop notification");
       return null;
