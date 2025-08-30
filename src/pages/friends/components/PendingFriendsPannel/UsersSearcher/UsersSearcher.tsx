@@ -88,11 +88,11 @@ const UsersSearcher: FunctionComponent<UsersSearcherProps> = (props) => {
     props: HTMLAttributes<HTMLLIElement> & {
       key: any;
     },
-    { picture, username, email }: SearchedUser
+    { profileImage, username, email }: SearchedUser
   ) => (
     <Box component="li" {...props} key={username}>
       <Avatar
-        src={picture ?? "error"}
+        src={profileImage ?? "error"}
         alt={username.toUpperCase()}
         className={classes.oprionAvatar}
       />
