@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { GoogleLogin } from "@react-oauth/google";
 import { isNotNil } from "ramda";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { googleLogin, loginUser } from "../../api/authentication/api";
 import { loginSchema } from "../../api/authentication/schemas";
@@ -30,6 +30,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
   const { setAccessToken } = props;
   const classes = useStyles();
   const navigate = useNavigate();
+  const [loginError, setLoginError] = useState("");
   const { form, errors, validateForm, fieldsChangeHandlers } = useFormOf(
     loginSchema,
     {
@@ -44,11 +45,24 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
   };
 
   const submitLoginForm = async () => {
+    setLoginError(""); 
+
     if (validateForm()) {
-      const { data } = await loginUser(form);
-      onSuccessfulLogin(data);
+      try {
+        const { data } = await loginUser(form);
+        onSuccessfulLogin(data);
+
+      } catch (error: any) {
+        if (error?.response?.status === 400) {
+          setLoginError("Incorrect username or password.");
+
+        } else {
+          setLoginError("Login failed. Please try again.");
+        }
+      }
     }
   };
+
 
   const navigateToRegisterPage = () => {
     navigate(PAGES_ROUTES.REGISTER);
@@ -109,8 +123,18 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
         </section>
 
         <section className={classes.formSection}>
+          
           <TextField {...usernameInputProps} />
           <TextField {...passwordTextFieldProps} type="password" />
+
+          {loginError && (
+            <Typography
+              variant="body2"
+              className={classes.loginError}
+            >
+              {loginError}
+            </Typography>
+          )}
 
           <Button
             fullWidth

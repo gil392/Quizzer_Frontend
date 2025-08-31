@@ -12,6 +12,7 @@ import { PAGES_ROUTES } from "../../routes/routes.const";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { logoutAsync } from "../../store/userReducer";
+import { useAuthentication } from "../../hooks/authentication/authentication";
 
 const AppBar: FunctionComponent = () => {
   const classes = useStyles();
@@ -19,6 +20,7 @@ const AppBar: FunctionComponent = () => {
   const location = useLocation();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const dispatch = useDispatch<AppDispatch>();
+  const setAccessToken = useAuthentication();
 
   const isAppBarAvaiable = useMemo(
     () => isNavBarAvailableInPath(location.pathname),
@@ -27,6 +29,7 @@ const AppBar: FunctionComponent = () => {
 
   const handleLogout = () => {
     removeUserDisplayMode();
+    setAccessToken(null);
   };
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
