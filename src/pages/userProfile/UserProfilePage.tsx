@@ -30,8 +30,6 @@ const UserProfilePage: FunctionComponent = () => {
     setImageFile(undefined);
   };
 
-  console.log('entered user profile page');
-
   useEffect(() => {
     cleanState();
 
