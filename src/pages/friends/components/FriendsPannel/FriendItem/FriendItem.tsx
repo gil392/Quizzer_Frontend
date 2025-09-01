@@ -5,11 +5,10 @@ import {
   Typography,
   Dialog,
   DialogActions,
-  DialogContent,
-  DialogContentText,
   Button,
   Paper,
   Skeleton,
+  DialogTitle,
 } from "@mui/material";
 import clsx from "clsx";
 import { FunctionComponent, useState } from "react";
@@ -23,6 +22,7 @@ import { useNavigate } from "react-router-dom";
 import { deleteFriend } from "../../../../../api/user/api";
 import { PAGES_ROUTES } from "../../../../../routes/routes.const";
 import { toastError } from "../../../../../utils/utils";
+import { useTheme } from "@mui/material/styles";
 
 interface FriendItemProps {
   user: UserWithId;
@@ -34,6 +34,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
   const { user, className, isPending } = props;
   const classes = useStyles();
   const navigate = useNavigate();
+  const theme = useTheme();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -117,17 +118,23 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
         </div>
       )}
       <Dialog open={deleteDialogOpen} onClose={cancelDeleteFriend}>
-        <DialogContent>
-          <DialogContentText className={classes.modalText}>
-            Are you sure you want to delete {user.username} from your friends
-            list?
-          </DialogContentText>
-        </DialogContent>
+        <DialogTitle>
+          Are you sure you want to delete {user.username} from your friends
+          list?
+        </DialogTitle>
         <DialogActions>
-          <Button onClick={cancelDeleteFriend} color="primary">
+          <Button
+            onClick={cancelDeleteFriend}
+            color="primary"
+            sx={{ color: theme.palette.text.secondary }}
+          >
             Cancel
           </Button>
-          <Button onClick={confirmDeleteFriend} color="secondary">
+          <Button
+            onClick={confirmDeleteFriend}
+            color="secondary"
+            sx={{ color: theme.palette.text.secondary }}
+          >
             Delete
           </Button>
         </DialogActions>
