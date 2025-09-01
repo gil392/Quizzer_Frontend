@@ -6,6 +6,7 @@ import {
   acceptFriendRequest,
   declineFriendRequest,
   updateUser,
+  deleteFriend,
 } from "../api/user/api";
 import { UserSettings, UserWithId } from "../api/user/types";
 import { logout } from "../api/authentication/api";
@@ -47,6 +48,14 @@ export const declineFriend = createAsyncThunk(
   "user/declineFriend",
   async (userId: string) => {
     await declineFriendRequest(userId);
+    return userId;
+  }
+);
+
+export const deleteFriendAsync = createAsyncThunk(
+  "user/deleteFriend",
+  async (userId: string) => {
+    await deleteFriend(userId);
     return userId;
   }
 );
@@ -146,6 +155,17 @@ const userSlice = createSlice({
         );
       },
       "decline friend request",
+      true
+    );
+    addHandlerWithToast(
+      builder,
+      deleteFriendAsync,
+      (state, action) => {
+        state.friends = state.friends.filter(
+          (user) => user._id !== action.payload
+        );
+      },
+      "delete friend",
       true
     );
   },
