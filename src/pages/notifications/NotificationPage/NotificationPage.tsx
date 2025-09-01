@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import NotificationCard from "../NotificationCard/NotificationCard";
 import NotificationSkeleton from "../NotificationSkeleton/NotificationSkeleton";
 import { Box, Typography } from "@mui/material";
@@ -14,6 +14,7 @@ import NotificationsNotFound from "../NotificationsNotFound/NotificationsNotFoun
 const NotificationPage: React.FC = () => {
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
+  const [hasInitiallyLoaded, setHasInitiallyLoaded] = useState(false);
 
   const [selectedLesson, setSelectedLesson] = useState<LessonData | undefined>(
     undefined
@@ -28,10 +29,19 @@ const NotificationPage: React.FC = () => {
     (state: RootState) => state.notifications
   );
 
+  useEffect(() => {
+    if (fetchNotificationsStatus === "succeeded") {
+      setHasInitiallyLoaded(true);
+    }
+  }, [fetchNotificationsStatus]);
+
   const handleRead = async (id: string) => {
     await dispatch(markNotificationAsReadAsync(id));
     window.dispatchEvent(new Event("notifications-updated"));
   };
+
+  const isAfterFirstLoading =
+    hasInitiallyLoaded || fetchNotificationsStatus !== "loading";
 
   return (
     <>
@@ -42,17 +52,17 @@ const NotificationPage: React.FC = () => {
           <Typography variant="h4" className={classes.title} gutterBottom>
             Notifications
           </Typography>
-          {fetchNotificationsStatus === "loading" && (
+          {fetchNotificationsStatus === "loading" && !hasInitiallyLoaded && (
             <>
               <NotificationSkeleton />
               <NotificationSkeleton />
               <NotificationSkeleton />
             </>
           )}
-          {fetchNotificationsStatus !== "loading" &&
+          {isAfterFirstLoading &&
             notifications &&
             notifications.length === 0 && <NotificationsNotFound />}
-          {fetchNotificationsStatus !== "loading" &&
+          {isAfterFirstLoading &&
             notifications &&
             notifications.map((notification) => (
               <NotificationCard

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Badge, IconButton } from "@mui/material";
 import { NotificationsOutlined } from "@mui/icons-material";
 import {
@@ -6,9 +6,16 @@ import {
   NOTIFICATIONS_INTERVAL_MS,
 } from "../const";
 import useStyles from "../styles";
-import { fetchNotifications } from "../../../store/notificationReducer";
+import {
+  deleteNotificationAsync,
+  fetchNotifications,
+  markNotificationAsReadAsync,
+} from "../../../store/notificationReducer";
 import { AppDispatch, RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
+import { Notification as AppNotification } from "../../../api/notification/types";
+import { useNavigate } from "react-router-dom";
+import { getNotificationRoute } from "../../../utils/utils";
 
 interface NotificationBellProps {
   onClick?: () => void;
@@ -18,6 +25,51 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
+  const activeComputerNotifications = useRef<Map<string, Notification>>(
+    new Map()
+  );
+  const navigate = useNavigate();
+  const [hasNotificationPermission, setHasNotificationPermission] =
+    useState(false);
+
+  useEffect(() => {
+    if ("Notification" in window) {
+      if (Notification.permission === "granted") {
+        setHasNotificationPermission(true);
+      } else if (Notification.permission !== "denied") {
+        Notification.requestPermission().then((permission) => {
+          if (permission === "granted") {
+            setHasNotificationPermission(true);
+          }
+        });
+      }
+    }
+  }, []);
+
+  const handleRead = async (id: string) => {
+    await dispatch(markNotificationAsReadAsync(id));
+    window.dispatchEvent(new Event("notifications-updated"));
+  };
+
+  function createComputerNotification(notification: AppNotification) {
+    const computerNotification = new Notification(notification.message, {
+      tag: `quizzer-notification-${notification._id}`,
+    });
+    computerNotification.onclick = () => {
+      console.log("Computer notification was read");
+      window.focus();
+      navigate(getNotificationRoute(notification));
+      handleRead(notification._id);
+    };
+    computerNotification.onclose = () => {
+      console.log("Computer notification was closed");
+      dispatch(deleteNotificationAsync(notification._id));
+    };
+    activeComputerNotifications.current.set(
+      notification._id,
+      computerNotification
+    );
+  }
 
   const { notifications } = useSelector(
     (state: RootState) => state.notifications
@@ -25,6 +77,37 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   const unreadCount = notifications.filter(
     (notification) => !notification.read
   ).length;
+
+  const unreadMessages = notifications.filter(
+    (notification) => !notification.read
+  );
+
+  useEffect(() => {
+    if (!hasNotificationPermission) {
+      return;
+    }
+
+    const unreadIds = new Set(unreadMessages.map((message) => message._id));
+
+    activeComputerNotifications.current.forEach(
+      (computerNotification, notificationId) => {
+        if (!unreadIds.has(notificationId)) {
+          console.log(
+            `Closing computer notification for read message: ${notificationId}`
+          );
+          computerNotification.onclose = null; // prevent it triggering onclose which removes the notification in the app
+          computerNotification.close();
+          activeComputerNotifications.current.delete(notificationId);
+        }
+      }
+    );
+
+    unreadMessages.forEach((notification) => {
+      if (!activeComputerNotifications.current.has(notification._id)) {
+        createComputerNotification(notification);
+      }
+    });
+  }, [unreadMessages, hasNotificationPermission]);
 
   useEffect(() => {
     dispatch(fetchNotifications());
