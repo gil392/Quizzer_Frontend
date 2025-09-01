@@ -1,5 +1,7 @@
 import { ZodError } from 'zod';
 import { toast } from 'sonner';
+import { PAGES_ROUTES } from '../routes/routes.const';
+import { Notification } from "../api/notification/types";
 
 export const extractZodErrorMessagesByFields = <T extends object>({
   errors,
@@ -91,3 +93,16 @@ export function formatNotificationTime(dateString: string): string {
 export const toastSuccess = (message: string) => {
   toast.success(message);
 };
+
+  export const getNotificationRoute = (notification: Notification): string => {
+    switch (notification.type) {
+      case "friendRequest":
+        return PAGES_ROUTES.FRIENDS;
+      case "achievement":
+        return PAGES_ROUTES.PROFILE;
+      case "share":
+        return PAGES_ROUTES.LESSONS_LIST;
+      default:
+        return PAGES_ROUTES.NOTIFICATIONS;
+    }
+  };

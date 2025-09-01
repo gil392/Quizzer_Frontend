@@ -15,7 +15,7 @@ import { AppDispatch, RootState } from "../../../store/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Notification as AppNotification } from "../../../api/notification/types";
 import { useNavigate } from "react-router-dom";
-import { PAGES_ROUTES } from "../../../routes/routes.const";
+import { getNotificationRoute } from "../../../utils/utils";
 
 interface NotificationBellProps {
   onClick?: () => void;
@@ -49,19 +49,6 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
   const handleRead = async (id: string) => {
     await dispatch(markNotificationAsReadAsync(id));
     window.dispatchEvent(new Event("notifications-updated"));
-  };
-
-  const getNotificationRoute = (notification: AppNotification): string => {
-    switch (notification.type) {
-      case "friendRequest":
-        return PAGES_ROUTES.FRIENDS;
-      case "achievement":
-        return PAGES_ROUTES.PROFILE;
-      case "share":
-        return PAGES_ROUTES.LESSONS_LIST;
-      default:
-        return PAGES_ROUTES.NOTIFICATIONS;
-    }
   };
 
   function createComputerNotification(notification: AppNotification) {
