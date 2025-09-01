@@ -5,11 +5,10 @@ import {
   Typography,
   Dialog,
   DialogActions,
-  DialogContent,
-  DialogContentText,
   Button,
   Paper,
   Skeleton,
+  DialogTitle,
 } from "@mui/material";
 import clsx from "clsx";
 import { FunctionComponent, useState } from "react";
@@ -20,9 +19,11 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import WhatshotIcon from "@mui/icons-material/Whatshot";
 import EmojiEvents from "@mui/icons-material/EmojiEvents";
 import { useNavigate } from "react-router-dom";
-import { deleteFriend } from "../../../../../api/user/api";
 import { PAGES_ROUTES } from "../../../../../routes/routes.const";
-import { toastError } from "../../../../../utils/utils";
+import { useTheme } from "@mui/material/styles";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../../../../../store/store";
+import { deleteFriendAsync } from "../../../../../store/userReducer";
 
 interface FriendItemProps {
   user: UserWithId;
@@ -34,6 +35,8 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
   const { user, className, isPending } = props;
   const classes = useStyles();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const dispatch = useDispatch<AppDispatch>();
 
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
@@ -46,12 +49,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
   };
 
   const confirmDeleteFriend = async () => {
-    try {
-      await deleteFriend(user._id);
-    } catch {
-      toastError("Failed to delete friend. Please try again later.");
-    }
-
+    await dispatch(deleteFriendAsync(user._id));
     setDeleteDialogOpen(false);
   };
 
@@ -117,17 +115,23 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
         </div>
       )}
       <Dialog open={deleteDialogOpen} onClose={cancelDeleteFriend}>
-        <DialogContent>
-          <DialogContentText className={classes.modalText}>
-            Are you sure you want to delete {user.username} from your friends
-            list?
-          </DialogContentText>
-        </DialogContent>
+        <DialogTitle>
+          Are you sure you want to delete {user.username} from your friends
+          list?
+        </DialogTitle>
         <DialogActions>
-          <Button onClick={cancelDeleteFriend} color="primary">
+          <Button
+            onClick={cancelDeleteFriend}
+            color="primary"
+            sx={{ color: theme.palette.text.secondary }}
+          >
             Cancel
           </Button>
-          <Button onClick={confirmDeleteFriend} color="secondary">
+          <Button
+            onClick={confirmDeleteFriend}
+            color="secondary"
+            sx={{ color: theme.palette.text.secondary }}
+          >
             Delete
           </Button>
         </DialogActions>

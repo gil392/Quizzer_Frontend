@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../store/store";
 import { logoutAsync } from "../../store/userReducer";
 import { useAuthentication } from "../../hooks/authentication/authentication";
+import { LESSON_CREATED_FLAG } from "../../pages/lesson/LessonOverview/LessonOverviewPage";
 
 const AppBar: FunctionComponent = () => {
   const classes = useStyles();
@@ -29,6 +30,7 @@ const AppBar: FunctionComponent = () => {
 
   const handleLogout = () => {
     removeUserDisplayMode();
+    localStorage.removeItem(LESSON_CREATED_FLAG)
     setAccessToken(null);
   };
 

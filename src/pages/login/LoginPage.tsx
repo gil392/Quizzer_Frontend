@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { GoogleLogin } from "@react-oauth/google";
 import { isNotNil } from "ramda";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent } from "react";
 import { useNavigate } from "react-router-dom";
 import { googleLogin, loginUser } from "../../api/authentication/api";
 import { loginSchema } from "../../api/authentication/schemas";
