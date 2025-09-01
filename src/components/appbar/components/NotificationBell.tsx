@@ -56,13 +56,15 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
       tag: `quizzer-notification-${notification._id}`,
     });
     computerNotification.onclick = () => {
-      console.log("Computer notification was read");
+      console.debug("Computer notification was read");
       window.focus();
-      navigate(getNotificationRoute(notification));
+      navigate(getNotificationRoute(notification), {
+        state: { userId: notification.fromUserId },
+      });
       handleRead(notification._id);
     };
     computerNotification.onclose = () => {
-      console.log("Computer notification was closed");
+      console.debug("Computer notification was closed");
       dispatch(deleteNotificationAsync(notification._id));
     };
     activeComputerNotifications.current.set(
@@ -92,7 +94,7 @@ const NotificationBell: React.FC<NotificationBellProps> = ({ onClick }) => {
     activeComputerNotifications.current.forEach(
       (computerNotification, notificationId) => {
         if (!unreadIds.has(notificationId)) {
-          console.log(
+          console.debug(
             `Closing computer notification for read message: ${notificationId}`
           );
           computerNotification.onclose = null; // prevent it triggering onclose which removes the notification in the app

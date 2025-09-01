@@ -20,6 +20,7 @@ import { useFormOf } from "../../hooks/form";
 import { PAGES_ROUTES } from "../../routes/routes.const";
 import useStyles from "./styles";
 import DisplayModeSwitch from "../../components/settings/DisplayModeSwitch/DisplayModeSwitch";
+import { toastWarning } from "../../utils/utils";
 
 export interface RegisterPageProps {
   setAccessToken: SetAccessTokenFunction;
@@ -45,9 +46,13 @@ const RegisterPage: FunctionComponent<RegisterPageProps> = (props) => {
 
   const submitRegistration = async () => {
     if (validateForm()) {
-      await registerUser(form);
-      const { data } = await loginUser(form);
-      onSuccessfulLogin(data);
+      try {
+        await registerUser(form);
+        const { data } = await loginUser(form);
+        onSuccessfulLogin(data);
+      } catch (error) {
+        toastWarning("Failed to register user");
+      }
     }
   };
 
