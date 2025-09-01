@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { GoogleLogin } from "@react-oauth/google";
 import { isNotNil } from "ramda";
-import { FunctionComponent } from "react";
+import { FunctionComponent, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { googleLogin, loginUser } from "../../api/authentication/api";
 import { loginSchema } from "../../api/authentication/schemas";
@@ -44,11 +44,18 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
   };
 
   const submitLoginForm = async () => {
+
     if (validateForm()) {
-      const { data } = await loginUser(form);
-      onSuccessfulLogin(data);
+      try {
+        const { data } = await loginUser(form);
+        onSuccessfulLogin(data);
+
+      } catch (error: any) {
+        toastError(error.response.data.message || "Invalid request.");
+      }
     }
   };
+
 
   const navigateToRegisterPage = () => {
     navigate(PAGES_ROUTES.REGISTER);
@@ -109,6 +116,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
         </section>
 
         <section className={classes.formSection}>
+          
           <TextField {...usernameInputProps} />
           <TextField {...passwordTextFieldProps} type="password" />
 

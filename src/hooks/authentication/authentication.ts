@@ -21,6 +21,8 @@ export const useAuthentication = (): SetAccessTokenFunction => {
         (token: string | null) => {
             if (token) {
                 localStorage.setItem('accessToken', token);
+            } else {
+                localStorage.removeItem('accessToken');
             }
             setToken(token);
         },

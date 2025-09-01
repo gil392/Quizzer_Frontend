@@ -73,7 +73,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     orText: {
       marginTop: "1em !important", 
-    },
+    }
   })
 );
 
