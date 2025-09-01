@@ -13,13 +13,13 @@ export const GenericIconButton: FunctionComponent<GenericIconButtonProps> = ({
   title,
   icon,
   onClick,
-  component,
+  component = "button",
   className,
 }) => {
   return (
     <Tooltip title={title} arrow>
       <IconButton
-        component={component ?? "button"}
+        component={component}
         className={className}
         aria-label={title}
         style={{ outline: "none" }}

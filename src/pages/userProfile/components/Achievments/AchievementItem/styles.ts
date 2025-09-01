@@ -94,5 +94,9 @@ export const useStyles = makeStyles(() =>
       width: "100%",
       marginBottom: "0.5em",
     },
+    shareButton: {
+      alignSelf: "flex-start",
+      marginLeft: "8px",
+    },
   })
 );
