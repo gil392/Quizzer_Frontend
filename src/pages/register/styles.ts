@@ -73,12 +73,7 @@ export const useStyles = makeStyles((theme: Theme) =>
     },
     orText: {
       marginTop: "1em !important", 
-    },
-    loginError: {
-      color: theme.palette.error.main,
-      marginBottom: "1em",
-      textAlign: "center",
-    },
+    }
   })
 );
 

@@ -48,6 +48,8 @@ const AchievementItem: FunctionComponent<AchievementItemProps> = (props) => {
     ...friend,
     wasSentTo: achievement.sharedUsers.includes(friend._id),
   }));
+  console.log('friends:', friends);
+  console.log(friendsWithSharedAchievement);
   const shareMessage = `I just unlocked "${achievement.title}" on Quizzer!\nDescription: ${achievement.description}\nXP: ${achievement.reward.xp}`;
 
   useEffect(() => {

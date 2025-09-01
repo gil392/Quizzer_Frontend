@@ -30,7 +30,6 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
   const { setAccessToken } = props;
   const classes = useStyles();
   const navigate = useNavigate();
-  const [loginError, setLoginError] = useState("");
   const { form, errors, validateForm, fieldsChangeHandlers } = useFormOf(
     loginSchema,
     {
@@ -45,7 +44,6 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
   };
 
   const submitLoginForm = async () => {
-    setLoginError(""); 
 
     if (validateForm()) {
       try {
@@ -53,12 +51,7 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
         onSuccessfulLogin(data);
 
       } catch (error: any) {
-        if (error?.response?.status === 400) {
-          setLoginError("Incorrect username or password.");
-
-        } else {
-          setLoginError("Login failed. Please try again.");
-        }
+        toastError(error.response.data.message || "Invalid request.");
       }
     }
   };
@@ -126,15 +119,6 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
           
           <TextField {...usernameInputProps} />
           <TextField {...passwordTextFieldProps} type="password" />
-
-          {loginError && (
-            <Typography
-              variant="body2"
-              className={classes.loginError}
-            >
-              {loginError}
-            </Typography>
-          )}
 
           <Button
             fullWidth
