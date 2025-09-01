@@ -15,7 +15,6 @@ export type User = {
   friendRequests?: string[];
   friends?: string[];
   favoriteLessons?: string[];
-  picture?: string;
   settings?: Partial<UserSettings>;
 };
 

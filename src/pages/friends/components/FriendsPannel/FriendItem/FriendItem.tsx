@@ -64,7 +64,7 @@ const FriendItem: FunctionComponent<FriendItemProps> = (props) => {
       <div className={classes.leftContent}>
         <div className={classes.avatarBox}>
           <Avatar
-            src={user.picture ?? "error"}
+            src={user.profileImage ?? "error"}
             alt={user.username.toUpperCase()}
             sx={{
               width: "3rem",
