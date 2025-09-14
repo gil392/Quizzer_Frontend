@@ -44,18 +44,15 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
   };
 
   const submitLoginForm = async () => {
-
     if (validateForm()) {
       try {
         const { data } = await loginUser(form);
         onSuccessfulLogin(data);
-
       } catch (error: any) {
         toastError(error.response.data.message || "Invalid request.");
       }
     }
   };
-
 
   const navigateToRegisterPage = () => {
     navigate(PAGES_ROUTES.REGISTER);
@@ -116,7 +113,6 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
         </section>
 
         <section className={classes.formSection}>
-          
           <TextField {...usernameInputProps} />
           <TextField {...passwordTextFieldProps} type="password" />
 
@@ -150,10 +146,12 @@ const LoginPage: FunctionComponent<LoginPageProps> = (props) => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              "& > div": { width: "80%" },
+              direction: "rtl",
             }}
           >
             <GoogleLogin
+              auto_select={false}
+              context="signin"
               type="standard"
               shape="pill"
               text="signin_with"
